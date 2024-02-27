@@ -10,7 +10,7 @@ spring:
   datasource:
     username: abhishek
     password: abhishek
-    url: jdbc:mysql://inventory-service:3306/abhishek
+    url: jdbc:mysql://mysql-service:3306/abhishek
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       idle-timeout: 60000
