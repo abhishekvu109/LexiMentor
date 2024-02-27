@@ -142,10 +142,10 @@ public class ServiceImplUtil {
                     .pos(wordMetadata.getPos().name())
                     .status(Status.getStatus(wordMetadata.getStatus()))
                     .pronunciation(wordMetadata.getPronunciation())
-                    .meanings(wordMetadata.getMeanings().stream().map(mean -> new MeaningUtil().generateMeaningWrapper(mean)).collect(Collectors.toList()))
-                    .synonyms(wordMetadata.getSynonyms().stream().map(syn -> new SynonymUtil().generateSynonymWrapper(syn)).collect(Collectors.toList()))
-                    .antonyms(wordMetadata.getAntonyms().stream().map(ant -> new AntonymUtil().generateAntonymWrapper(ant)).collect(Collectors.toList()))
-                    .examples(wordMetadata.getExamples().stream().map(example -> new ExampleUtil().generateExampleWrapper(example)).collect(Collectors.toList()))
+                    .meanings(collectionUtil.isNotEmpty(wordMetadata.getMeanings()) ? wordMetadata.getMeanings().stream().map(mean -> new MeaningUtil().generateMeaningWrapper(mean)).collect(Collectors.toList()) : null)
+                    .synonyms(collectionUtil.isNotEmpty(wordMetadata.getSynonyms()) ? wordMetadata.getSynonyms().stream().map(syn -> new SynonymUtil().generateSynonymWrapper(syn)).collect(Collectors.toList()) : null)
+                    .antonyms(collectionUtil.isNotEmpty(wordMetadata.getAntonyms()) ? wordMetadata.getAntonyms().stream().map(ant -> new AntonymUtil().generateAntonymWrapper(ant)).collect(Collectors.toList()) : null)
+                    .examples(collectionUtil.isNotEmpty(wordMetadata.getExamples()) ? wordMetadata.getExamples().stream().map(example -> new ExampleUtil().generateExampleWrapper(example)).collect(Collectors.toList()) : null)
                     .category(wordMetadata.getCategory())
                     .build();
         }
