@@ -117,7 +117,7 @@ public class ServiceImplUtil {
                     .word(dto.getWord())
                     .pos(getPos(dto.getPos()))
                     .pronunciation(dto.getPronunciation())
-                    .language(languageRepository.findByLanguage(WordLanguage.ENGLISH.toString()))
+                    .language(languageRepository.findByLanguage(dto.getLanguage()))
                     .status(Status.ACTIVE)
                     .category(dto.getCategory())
                     .build();
