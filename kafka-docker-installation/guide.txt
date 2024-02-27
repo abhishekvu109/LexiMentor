@@ -1,0 +1,4 @@
+1. Start Zookeeper Server
+    sh bin/zookepper-server-start.sh config/zookeeper.properties
+
+2.
