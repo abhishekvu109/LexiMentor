@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
-import java.util.Collection;
-
 @Builder
 @Data
 @ToString

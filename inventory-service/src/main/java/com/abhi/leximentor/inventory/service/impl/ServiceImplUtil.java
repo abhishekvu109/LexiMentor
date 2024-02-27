@@ -1,6 +1,9 @@
 package com.abhi.leximentor.inventory.service.impl;
 
-import com.abhi.leximentor.inventory.constants.*;
+import com.abhi.leximentor.inventory.constants.ExceptionMessageConstants;
+import com.abhi.leximentor.inventory.constants.PartsOfSpeech;
+import com.abhi.leximentor.inventory.constants.Status;
+import com.abhi.leximentor.inventory.constants.WordLanguage;
 import com.abhi.leximentor.inventory.dto.*;
 import com.abhi.leximentor.inventory.entities.*;
 import com.abhi.leximentor.inventory.exceptions.entities.ServerException;

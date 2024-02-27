@@ -1,6 +1,5 @@
 package com.abhi.leximentor.inventory.entities;
 
-import com.abhi.leximentor.inventory.constants.PartsOfSpeech;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

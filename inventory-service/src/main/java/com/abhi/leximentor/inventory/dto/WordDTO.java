@@ -1,5 +1,7 @@
 package com.abhi.leximentor.inventory.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -11,11 +13,16 @@ import java.util.Collection;
 @Data
 @ToString
 public class WordDTO {
+
     private String wordKey;
     private String word;
+
     private String language;
     private LocalDate crtnDate;
     private LocalDate lastUpdDate;
+
+    @NotEmpty(message = "Cannot be null")
+    @NotBlank(message = "cannot be blank")
     private String pos;
     private String status;
     private String pronunciation;
