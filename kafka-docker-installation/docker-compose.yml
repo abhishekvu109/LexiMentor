@@ -3,7 +3,7 @@ version: '3.1'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
-    container_name: zookepper-service
+    container_name: zookeeper-service
     ports:
       - "2181:2181"
   kafka:
