@@ -1,0 +1,81 @@
+package com.abhi.leximentor.inventory.service.impl;
+
+import com.abhi.leximentor.inventory.dto.WordDTO;
+import com.abhi.leximentor.inventory.entities.WordMetadata;
+import com.abhi.leximentor.inventory.repository.WordRepository;
+import com.abhi.leximentor.inventory.service.WordService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class WordServiceImpl implements WordService {
+    private final WordRepository wordRepository;
+    private final ServiceImplUtil util;
+
+
+    @Override
+    @Transactional
+    public WordDTO add(WordDTO word) {
+        WordMetadata wordMetadata = util.new WordMetadataUtil().buildWordEntity(word);
+        wordMetadata = wordRepository.save(wordMetadata);
+        return util.new WordMetadataUtil().generateWordWrapper(wordMetadata);
+    }
+
+    @Override
+    public Collection<WordDTO> addAll(Collection<WordDTO> words) {
+        Collection<WordMetadata> wordMetadataList = words.stream().map(word -> util.new WordMetadataUtil().buildWordEntity(word)).collect(Collectors.toList());
+        wordMetadataList = wordRepository.saveAll(wordMetadataList);
+        return wordMetadataList.stream().map(entity -> util.new WordMetadataUtil().generateWordWrapper(entity)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<WordDTO> get(int limit) {
+        return null;
+    }
+
+    @Override
+    public Collection<WordDTO> getAll() {
+        return null;
+    }
+
+    @Override
+    public WordDTO get(long wordId) {
+        return null;
+    }
+
+    @Override
+    public Collection<WordDTO> get(String word) {
+        return null;
+    }
+
+    @Override
+    public Collection<WordDTO> getByPos(String pos) {
+        return null;
+    }
+
+    @Override
+    public Collection<WordDTO> getByCategory(String categoryId) {
+        return null;
+    }
+
+    @Override
+    public WordDTO update(WordDTO word) {
+        return null;
+    }
+
+    @Override
+    public boolean remove(WordDTO word) {
+        return false;
+    }
+
+    @Override
+    public boolean removeAll(Collection<WordDTO> words) {
+        return false;
+    }
+}
