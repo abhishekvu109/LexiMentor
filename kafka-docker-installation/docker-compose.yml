@@ -1,6 +1,16 @@
 version: '3.1'
 
 services:
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 5050:5050
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper-service
