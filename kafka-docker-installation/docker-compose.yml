@@ -54,3 +54,8 @@ services:
     container_name: datamuse-word-service
     ports:
       - "7700:7700"
+  word-publisher:
+    image: word-publisher-service:latest
+    container_name: word-publisher-service
+    ports:
+      - "9393:9393"
