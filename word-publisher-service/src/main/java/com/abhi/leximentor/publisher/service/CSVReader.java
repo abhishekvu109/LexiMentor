@@ -21,11 +21,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CSVReader {
-    private String csvFilePath = "gre_words.csv";
+    private String csvFilePath;
     private List<String> getWords;
 
 
-    public List<String> getGetWords() {
+    public List<String> getGetWords(String csvFilePath) {
+        this.csvFilePath = csvFilePath;
         if (CollectionUtils.isNotEmpty(getWords)) {
             return getWords;
         }
@@ -35,8 +36,8 @@ public class CSVReader {
 
     private void read() {
         getWords = new LinkedList<>();
-        InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(csvFilePath);
-        try (FileReader fileReader = new FileReader(new ClassPathResource(csvFilePath).getFile())) {
+//        InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(csvFilePath);
+        try (FileReader fileReader = new FileReader(csvFilePath)) {
             List<CsvDTO> records = new CsvToBeanBuilder<CsvDTO>(fileReader)
                     .withType(CsvDTO.class)
                     .build()
