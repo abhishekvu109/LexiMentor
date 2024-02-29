@@ -44,3 +44,8 @@ services:
       - "9191:9191"
     depends_on:
       - mysql
+  wordnet:
+    image: wordnet-service:latest
+    container_name: wordnet-service
+    ports:
+      - "5600:5600"
