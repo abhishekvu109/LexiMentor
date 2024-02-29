@@ -44,8 +44,13 @@ services:
       - "9191:9191"
     depends_on:
       - mysql
-  wordnet:
-    image: wordnet-service:latest
-    container_name: wordnet-service
+  nltk:
+    image: nltk-word-service:latest
+    container_name: nltk-word-service
     ports:
       - "5600:5600"
+  datamuse:
+    image: datamuse-word-service:latest
+    container_name: datamuse-word-service
+    ports:
+      - "7700:7700"
