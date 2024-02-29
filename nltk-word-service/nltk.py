@@ -1,6 +1,8 @@
 
 import nltk
-# Check if 'wordnet' is already downloaded
+from flask import Flask, request, jsonify
+from nltk.corpus import wordnet
+
 try:
     nltk.data.find('corpora/wordnet')
 except LookupError:
@@ -8,8 +10,7 @@ except LookupError:
     nltk.download('wordnet')
     print("Downloading 'wordnet'...")
 
-from flask import Flask, request, jsonify
-from nltk.corpus import wordnet
+
 
 app = Flask(__name__)
 
