@@ -73,4 +73,4 @@ def word_info():
     return jsonify(result)
 
 if __name__ == '__main__':
-    app.run(debug=True,port=5600)
+    app.run(debug=True,host='0.0.0.0',port=5600)
