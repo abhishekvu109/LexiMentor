@@ -12,7 +12,7 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org flask nltk
+# RUN pip install --trusted-host pypi.python.org flask nltk
 
 # Make port 5600 available to the world outside this container
 EXPOSE 5600
