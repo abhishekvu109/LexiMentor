@@ -1,9 +1,15 @@
+
 import nltk
-nltk.download('punkt')
+# Check if 'wordnet' is already downloaded
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    # 'wordnet' is not downloaded, so download it
+    nltk.download('wordnet')
+    print("Downloading 'wordnet'...")
+
 from flask import Flask, request, jsonify
 from nltk.corpus import wordnet
-from nltk import pos_tag
-from nltk.tokenize import word_tokenize
 
 app = Flask(__name__)
 
@@ -16,16 +22,15 @@ def get_word_info(word):
 
     # Extract information from the first synset
     first_synset = synsets[0]
-
+    
     # Definition
     definition = first_synset.definition()
-
+    
     # Parts of speech
-    pos_tags = pos_tag(word_tokenize(word))
-    pos = pos_tags[0][1] if pos_tags else None
+    pos = first_synset.pos()
 
     # Word category (lexical category)
-    word_category = first_synset.pos()
+    word_category = wordnet.synset(first_synset.name()).pos()
 
     # Pronunciation
     pronunciation = first_synset.lexname()
@@ -50,7 +55,8 @@ def get_word_info(word):
     return {
         "Word": word,
         "Definition": definition,
-        "Pos": word_category,
+        "Pos": pos,
+        "Category":word_category,
         "Synonyms": list(synonyms),
         "Antonyms": list(antonyms),
         "Examples": examples
@@ -68,4 +74,4 @@ def word_info():
     return jsonify(result)
 
 if __name__ == '__main__':
-    app.run(debug=True,port=5700)
+    app.run(debug=True,host='0.0.0.0',port=5600)
