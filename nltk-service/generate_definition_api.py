@@ -56,6 +56,7 @@ def get_word_info(word):
         "Word": word,
         "Definition": definition,
         "Pos": pos,
+        "Category":word_category,
         "Synonyms": list(synonyms),
         "Antonyms": list(antonyms),
         "Examples": examples
