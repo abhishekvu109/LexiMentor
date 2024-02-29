@@ -9,8 +9,8 @@ import lombok.ToString;
 @ToString
 public class AntonymDTO {
     private String antonymKey;
-    private String wordKey;
     private String word;
     private String antonym;
-    private String status;
+    private String source;
+
 }

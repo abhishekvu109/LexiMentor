@@ -14,21 +14,13 @@ import java.util.Collection;
 @ToString
 public class WordDTO {
 
-    private String wordKey;
     private String word;
-
     private String language;
-    private LocalDate crtnDate;
-    private LocalDate lastUpdDate;
-
-    @NotEmpty(message = "Cannot be null")
-    @NotBlank(message = "cannot be blank")
+    private String source;
     private String pos;
-    private String status;
     private String pronunciation;
     private Collection<MeaningDTO> meanings;
     private Collection<SynonymDTO> synonyms;
     private Collection<AntonymDTO> antonyms;
     private Collection<ExampleDTO> examples;
-    private String category;
 }

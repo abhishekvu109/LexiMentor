@@ -9,8 +9,8 @@ import lombok.ToString;
 @Data
 @ToString
 public class SynonymDTO {
-    private String synonymKey;
-    private String wordKey;
     private String word;
     private String synonym;
+    private String source;
+
 }

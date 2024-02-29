@@ -10,4 +10,6 @@ import lombok.ToString;
 public class CategoryDTO {
     private String key;
     private String category;
+    private String source;
+
 }
