@@ -13,4 +13,6 @@ public class SynonymDTO {
     private String wordKey;
     private String word;
     private String synonym;
+    private String source;
+
 }

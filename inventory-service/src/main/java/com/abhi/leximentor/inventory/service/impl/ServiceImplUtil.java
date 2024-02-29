@@ -34,6 +34,7 @@ public class ServiceImplUtil {
                     .key(UUID.randomUUID().toString())
                     .synonymWordId(synonym.getId())
                     .synonym(synonym.getWord())
+                    .source(synonym.getSource())
                     .build();
 
         }
@@ -44,6 +45,7 @@ public class ServiceImplUtil {
                     .wordKey(synonym.getWordId().getKey())
                     .word(synonym.getWordId().getWord())
                     .synonym(synonym.getSynonym())
+                    .source(synonym.getSource())
                     .build();
         }
     }
@@ -58,6 +60,7 @@ public class ServiceImplUtil {
                     .key(UUID.randomUUID().toString())
                     .antonymWordId(antonym.getId())
                     .antonym(antonym.getWord())
+                    .source(antonym.getSource())
                     .build();
         }
 
@@ -67,6 +70,7 @@ public class ServiceImplUtil {
                     .wordKey(antonym.getWordId().getKey())
                     .word(antonym.getWordId().getWord())
                     .antonym(antonym.getAntonym())
+                    .source(antonym.getSource())
                     .build();
         }
     }
@@ -98,6 +102,7 @@ public class ServiceImplUtil {
                     .wordId(wordMetadata)
                     .example(dto.getExample())
                     .key(UUID.randomUUID().toString())
+                    .source(dto.getSource())
                     .build();
         }
 
@@ -106,6 +111,7 @@ public class ServiceImplUtil {
                     .exampleKey(example.getKey())
                     .wordKey(example.getWordId().getKey())
                     .example(example.getExample())
+                    .source(example.getSource())
                     .build();
         }
     }
@@ -115,10 +121,12 @@ public class ServiceImplUtil {
             WordMetadata wordMetadata = WordMetadata.builder()
                     .key(UUID.randomUUID().toString())
                     .word(dto.getWord())
-                    .pos(getPos(dto.getPos()))
+//                    .pos(getPos(dto.getPos()))
+                    .pos(dto.getPos())
                     .pronunciation(dto.getPronunciation())
                     .language(languageRepository.findByLanguage(dto.getLanguage()))
                     .status(Status.ACTIVE)
+                    .source(dto.getSource())
                     .category(dto.getCategory())
                     .build();
             if (collectionUtil.isNotEmpty(dto.getSynonyms()))
@@ -139,7 +147,8 @@ public class ServiceImplUtil {
                     .language(wordMetadata.getLanguage().getLanguage())
                     .crtnDate(wordMetadata.getCrtnDate().toLocalDate())
                     .lastUpdDate(wordMetadata.getLastUpdDate().toLocalDate())
-                    .pos(wordMetadata.getPos().name())
+//                    .pos(wordMetadata.getPos().name())
+                    .pos(wordMetadata.getPos())
                     .status(Status.getStatus(wordMetadata.getStatus()))
                     .pronunciation(wordMetadata.getPronunciation())
                     .meanings(collectionUtil.isNotEmpty(wordMetadata.getMeanings()) ? wordMetadata.getMeanings().stream().map(mean -> new MeaningUtil().generateMeaningWrapper(mean)).collect(Collectors.toList()) : null)
@@ -147,6 +156,7 @@ public class ServiceImplUtil {
                     .antonyms(collectionUtil.isNotEmpty(wordMetadata.getAntonyms()) ? wordMetadata.getAntonyms().stream().map(ant -> new AntonymUtil().generateAntonymWrapper(ant)).collect(Collectors.toList()) : null)
                     .examples(collectionUtil.isNotEmpty(wordMetadata.getExamples()) ? wordMetadata.getExamples().stream().map(example -> new ExampleUtil().generateExampleWrapper(example)).collect(Collectors.toList()) : null)
                     .category(wordMetadata.getCategory())
+                    .source(wordMetadata.getSource())
                     .build();
         }
     }

@@ -11,4 +11,6 @@ public class ExampleDTO {
     private String exampleKey;
     private String wordKey;
     private String example;
+    private String source;
+
 }

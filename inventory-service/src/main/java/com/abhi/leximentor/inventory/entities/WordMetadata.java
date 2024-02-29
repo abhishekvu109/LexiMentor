@@ -38,7 +38,10 @@ public class WordMetadata {
     private Language language;
 
     @Column(name = "pos")
-    private PartsOfSpeech pos;
+    private String pos;
+
+    @Column(name = "source")
+    private String source;
 
     @Column(name = "pronunciation")
     private String pronunciation;

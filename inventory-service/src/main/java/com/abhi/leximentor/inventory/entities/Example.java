@@ -24,6 +24,9 @@ public class Example {
     @Column(name = "b_key")
     private String key;
 
+    @Column(name = "source")
+    private String source;
+
     @ManyToOne
     @JoinColumn(name = "word_id")
     private WordMetadata wordId;

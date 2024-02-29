@@ -25,6 +25,9 @@ public class Language {
     @Column(name = "b_key")
     private String key;
 
+    @Column(name = "source")
+    private String source;
+
     @Column(name = "langauge")
     private String language;
 

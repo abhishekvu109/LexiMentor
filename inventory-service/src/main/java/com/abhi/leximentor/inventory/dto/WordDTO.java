@@ -16,7 +16,7 @@ public class WordDTO {
 
     private String wordKey;
     private String word;
-
+    private String source;
     private String language;
     private LocalDate crtnDate;
     private LocalDate lastUpdDate;

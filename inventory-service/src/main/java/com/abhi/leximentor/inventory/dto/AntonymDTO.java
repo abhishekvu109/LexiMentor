@@ -13,4 +13,6 @@ public class AntonymDTO {
     private String word;
     private String antonym;
     private String status;
+    private String source;
+
 }

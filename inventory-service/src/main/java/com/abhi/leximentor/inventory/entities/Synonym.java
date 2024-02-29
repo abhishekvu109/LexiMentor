@@ -33,6 +33,9 @@ public class Synonym {
     @Column(name = "synonym_word_id")
     private long synonymWordId;
 
+    @Column(name = "source")
+    private String source;
+
     @Column(name = "synonym")
     private String synonym;
 
