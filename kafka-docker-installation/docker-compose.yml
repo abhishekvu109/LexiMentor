@@ -17,7 +17,7 @@ services:
     ports:
       - "2181:2181"
   kafka:
-    image: wurstmeister/kafka
+    image: gwilym/wurstmeister-kafka-docker
     container_name: kafka-service
     ports:
       - "9092:9092"
