@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class WordPublisherServiceApplication {
 
     public static void main(String[] args) {
+        Thread.currentThread().setContextClassLoader(null);
         SpringApplication.run(WordPublisherServiceApplication.class, args);
     }
 
