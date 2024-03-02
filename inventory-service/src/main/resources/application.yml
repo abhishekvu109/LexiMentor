@@ -15,5 +15,9 @@ spring:
     hikari:
       idle-timeout: 60000
       maximum-pool-size: 50
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: word-group-1
 server:
   port: 9191

@@ -6,6 +6,8 @@ import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 public class ApplicationConstants {
 
 
+    public static final String KAFKA_TOPIC = "word_topic";
+    public static final String KAFKA_GROUP = "word-group-1";
     public static final int STATUS_SUCCESS = 0;
     public static final int STATUS_FAILURE = 1;
 

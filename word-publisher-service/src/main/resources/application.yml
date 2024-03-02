@@ -2,7 +2,7 @@ server:
   port: 9393
 spring:
   kafka:
-    bootstrap-servers: 192.168.1.7:9092
+    bootstrap-servers: localhost:9092
     producer:
       value-serializer: com.abhi.leximentor.publisher.service.WordDTOSerializer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
