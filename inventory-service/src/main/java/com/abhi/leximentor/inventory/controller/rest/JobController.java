@@ -35,9 +35,11 @@ public class JobController {
     public @ResponseBody ResponseEntity<RestApiResponse> createJob(@RequestBody JobControllerDTO dto) {
         String refId = service.createJob();
         JobDTO jobDTO = service.getJobByRefId(refId);
-        List<Long> listOfWords = new LinkedList<>();
-        for (String word : dto.getWords())
-            listOfWords.add(loadLoggingService.loadWord(word, jobDTO.getJobId()));
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+            List<Long> listOfWords = new LinkedList<>();
+            for (String word : dto.getWords())
+                listOfWords.add(loadLoggingService.loadWord(word, jobDTO.getJobId()));
+        });
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Job creation is in progress, JobId : " + jobDTO.getJobId());
     }
 
