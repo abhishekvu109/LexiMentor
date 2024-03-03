@@ -14,15 +14,24 @@ public class JobService {
 
     private final JobRepository repository;
 
-    public long createJob() {
+    public String createJob() {
         return repository.createJob(JobDTO.builder()
                 .refId(UUID.randomUUID().toString())
-                .status("IN_PROGRESS")
+                .status(0)
                 .crtnDate(LocalDateTime.now())
                 .build());
+    }
+
+    public void updateStatus(long jobId, int status) {
+        repository.updateJob(jobId, status);
     }
 
     public JobDTO getJob(long jobId) {
         return repository.getJob(jobId);
     }
+
+    public JobDTO getJobByRefId(String refId) {
+        return repository.getJobByRefId(refId);
+    }
+
 }

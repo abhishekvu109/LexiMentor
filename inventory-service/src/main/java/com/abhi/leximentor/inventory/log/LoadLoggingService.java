@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -25,13 +26,22 @@ public class LoadLoggingService {
                 .loadDate(LocalDateTime.now())
                 .word(word)
                 .refId(UUID.randomUUID().toString())
-                .status("LOADED")
+                .status(0)
                 .build());
     }
 
-    public List<String> getWordsByJobId(long jobId){
-        List<WordRecord> wordRecords=repository.getByJobId(jobId);
-        return wordRecords.stream().map(words-> words.getWord()).collect(Collectors.toList());
+    public Map<Long, String> getWordsByJobId(long jobId) {
+        return repository.getByJobId(jobId).stream()
+                .collect(Collectors.toMap(
+                        WordRecord::getId,
+                        WordRecord::getWord
+                ));
+
     }
+
+    public void updateStatus(long wordId, int status) {
+        repository.updateLog(wordId, status);
+    }
+
 
 }

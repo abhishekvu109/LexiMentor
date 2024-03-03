@@ -9,10 +9,10 @@ public class JobMapper implements RowMapper<JobDTO> {
     @Override
     public JobDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return JobDTO.builder()
-                .jobId(rs.getLong("jobId"))
-                .crtnDate(rs.getTimestamp("crtnDate").toLocalDateTime())
-                .status(rs.getString("status"))
-                .refId(rs.getString("refId"))
+                .jobId(rs.getLong("job_id"))
+                .crtnDate(rs.getTimestamp("crtn_date").toLocalDateTime())
+                .status(rs.getInt("status"))
+                .refId(rs.getString("ref_id"))
                 .build();
     }
 }

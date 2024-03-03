@@ -14,4 +14,7 @@ public class DatamuseDTO {
     public List<String> Synonyms;
     public List<String> Examples;
     public String Pos;
+    public String Category;
+    public String Pronunciation;
+    public String Word;
 }

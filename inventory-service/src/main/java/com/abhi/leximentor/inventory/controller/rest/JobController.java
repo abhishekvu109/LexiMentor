@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 @Slf4j
 @RestController
@@ -33,11 +33,12 @@ public class JobController {
 
     @PostMapping(value = UrlConstants.Job.JOB_CREATE, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> createJob(@RequestBody JobControllerDTO dto) {
-        long jobId = service.createJob();
+        String refId = service.createJob();
+        JobDTO jobDTO = service.getJobByRefId(refId);
         List<Long> listOfWords = new LinkedList<>();
         for (String word : dto.getWords())
-            listOfWords.add(loadLoggingService.loadWord(word, jobId));
-        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Job creation is in progress, JobId : " + jobId + "lisOfWords: {} " + jobId, listOfWords);
+            listOfWords.add(loadLoggingService.loadWord(word, jobDTO.getJobId()));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Job creation is in progress, JobId : " + jobDTO.getJobId());
     }
 
     @GetMapping(value = UrlConstants.Job.JOB_GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,15 +47,17 @@ public class JobController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, job);
     }
 
-    @PostMapping(value = UrlConstants.Job.JOB_EXECUTE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = UrlConstants.Job.JOB_EXECUTE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> executeJob(@PathVariable long jobId) {
-        List<String> words = loadLoggingService.getWordsByJobId(jobId);
+        Map<Long, String> words = loadLoggingService.getWordsByJobId(jobId);
+//        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+//            JobExecutor jobExecutor = new JobExecutor(20, wordService);
+//            jobExecutor.submitJobs(words);
+//        }, Executors.newFixedThreadPool(1));
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-            JobExecutor jobExecutor = new JobExecutor(20, wordService);
-            jobExecutor.submitJobs(words);
-        }, Executors.newFixedThreadPool(1)); // Use an executor with an appropriate thread pool size
-
-        // Return the response immediately
+            JobExecutor jobExecutor = new JobExecutor(20, wordService, loadLoggingService, service);
+            jobExecutor.submitJobs(words, jobId);
+        });
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED)
                 .successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Your Job is successfully started");
     }

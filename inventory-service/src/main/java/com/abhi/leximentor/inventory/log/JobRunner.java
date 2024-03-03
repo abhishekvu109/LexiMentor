@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -30,82 +32,73 @@ public class JobRunner implements Runnable {
     private String datamuse;
     private String taskId;
     private String word;
+    private Long wordId;
     private WordService wordService;
     private ObjectMapper objectMapper;
-
-
+    private LoadLoggingService loadLoggingService;
 
     @Override
     public void run() {
+        log.info("Worker name :{}  word:{}", Thread.currentThread().getName(), word);
         getResponse(word);
     }
 
     private CompletableFuture<NltkDTO> sendNlTkAsyncRequest(HttpClient httpClient, String url) {
         return CompletableFuture.supplyAsync(() -> {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .build();
-
             try {
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+                        .queryParam("word", word);
+                HttpRequest request = HttpRequest.newBuilder().uri(URI.create(builder.toUriString())).build();
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
                 NltkDTO nltkDTO = objectMapper.readValue(response.body(), NltkDTO.class);
+                log.info("NLTK service has returned response for {} - response : {}", word, nltkDTO);
                 return nltkDTO;
             } catch (Exception e) {
-                e.printStackTrace();
-                return new NltkDTO(); // or handle the error as needed
+                log.error("An error has occurred while fetching from NLTK {} exception {}", word, e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         });
     }
 
     private CompletableFuture<DatamuseDTO> sendDatamuseAsyncRequest(HttpClient httpClient, String url) {
         return CompletableFuture.supplyAsync(() -> {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .build();
-
             try {
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+                        .queryParam("word", word);
+                log.info("URI:{}", builder.toUriString());
+                HttpRequest request = HttpRequest.newBuilder().uri(URI.create(builder.toUriString())).build();
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
                 DatamuseDTO datamuseDTO = objectMapper.readValue(response.body(), DatamuseDTO.class);
+                log.info("Datamuse service has returned response for {} - response : {}", word, datamuseDTO);
                 return datamuseDTO;
             } catch (Exception e) {
-                e.printStackTrace();
-                return new DatamuseDTO(); // or handle the error as needed
+                log.error("An error has occurred while fetching from datamuse {} exception {}", word, e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         });
     }
 
 
     public void getResponse(String word) {
-        // Define the URLs
-
-        // Create HttpClient
         HttpClient httpClient = HttpClient.newHttpClient();
-
-        // Create CompletableFuture for each URL
-        CompletableFuture<NltkDTO> future1 = sendNlTkAsyncRequest(httpClient, nltk + word);
-        CompletableFuture<DatamuseDTO> future2 = sendDatamuseAsyncRequest(httpClient, datamuse + word);
-
-        // Combine the results when both requests are complete
-        CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(future1, future2);
-        // Handle the results
+        CompletableFuture<NltkDTO> future1 = sendNlTkAsyncRequest(httpClient, nltk);
+        CompletableFuture<DatamuseDTO> future2 = sendDatamuseAsyncRequest(httpClient, datamuse);
+//        CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(future1, future2);
+        CompletableFuture<Object> combinedFuture = CompletableFuture.anyOf(future1, future2);
         combinedFuture.thenAccept(ignored -> {
             NltkDTO nltkDTO = future1.join();
             DatamuseDTO datamuseDTO = future2.join();
-
-            // Process responses as needed
-//            System.out.println("Response from URL 1: " + nltkDTO);
-//            System.out.println("Response from URL 2: " + datamuse);
             WordDTO wordDTO = WordDTO.builder().build();
             buildWordDtoFromNltkResponse(wordDTO, word, nltkDTO);
             buildWordDtoFromDatamuseResponse(wordDTO, word, datamuseDTO);
             try {
                 wordDTO = wordService.add(wordDTO);
                 log.info("Word is saved in the database: {}", wordDTO);
+                loadLoggingService.updateStatus(wordId, 1);
             } catch (Exception ex) {
                 log.error(ex.getMessage());
             }
-
-        }).join(); // Wait for completion
+        }).join();
     }
 
     public void buildWordDtoFromNltkResponse(WordDTO wordDTO, String word, NltkDTO nltkDTO) {
@@ -124,24 +117,20 @@ public class JobRunner implements Runnable {
     }
 
     public void buildWordDtoFromDatamuseResponse(WordDTO wordDTO, String word, DatamuseDTO datamuseDTO) {
-        if (wordDTO == null)
-            wordDTO = WordDTO.builder().build();
+        if (wordDTO == null) wordDTO = WordDTO.builder().build();
         if (!CollectionUtils.isEmpty(datamuseDTO.getAntonyms())) {
             Collection<AntonymDTO> antonymDTOS = wordDTO.getAntonyms();
-            if (!CollectionUtils.isEmpty(antonymDTOS))
-                antonymDTOS = new LinkedList<>();
+            if (!CollectionUtils.isEmpty(antonymDTOS)) antonymDTOS = new LinkedList<>();
             antonymDTOS = datamuseDTO.getAntonyms().stream().map(dm -> AntonymDTO.builder().antonym(dm).word(word).source("DATAMUSE").build()).collect(Collectors.toList());
         }
         if (!CollectionUtils.isEmpty(datamuseDTO.getSynonyms())) {
             Collection<SynonymDTO> synonymDTOS = wordDTO.getSynonyms();
-            if (!CollectionUtils.isEmpty(synonymDTOS))
-                synonymDTOS = new LinkedList<>();
+            if (!CollectionUtils.isEmpty(synonymDTOS)) synonymDTOS = new LinkedList<>();
             synonymDTOS = datamuseDTO.getSynonyms().stream().map(dm -> SynonymDTO.builder().synonym(dm).word(word).source("DATAMUSE").build()).collect(Collectors.toList());
         }
         if (!CollectionUtils.isEmpty(datamuseDTO.getExamples())) {
             Collection<ExampleDTO> exampleDTOS = wordDTO.getExamples();
-            if (!CollectionUtils.isEmpty(exampleDTOS))
-                exampleDTOS = new LinkedList<>();
+            if (!CollectionUtils.isEmpty(exampleDTOS)) exampleDTOS = new LinkedList<>();
             exampleDTOS = datamuseDTO.getExamples().stream().map(dm -> ExampleDTO.builder().example(dm).wordKey(word).source("DATAMUSE").build()).collect(Collectors.toList());
         }
         wordDTO.setPos(wordDTO.getPos() + "|" + datamuseDTO.getPos());

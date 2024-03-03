@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WordServiceImpl implements WordService {
     private final WordRepository wordRepository;
-    private final ServiceImplUtil util;
+    private final ServiceImplUtil2 util;
 
 
     @Override

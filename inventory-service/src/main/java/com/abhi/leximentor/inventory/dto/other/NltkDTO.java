@@ -15,4 +15,6 @@ public class NltkDTO {
     public List<String> Examples;
     public String Definition;
     public String Pos;
+    public String Category;
+    public String Word;
 }

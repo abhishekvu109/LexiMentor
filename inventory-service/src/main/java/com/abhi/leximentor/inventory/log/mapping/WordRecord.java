@@ -14,7 +14,7 @@ public class WordRecord {
     private long id;
     private String refId;
     private String word;
-    private String status;
+    private int status;
     private LocalDateTime loadDate;
     private long jobId;
 }

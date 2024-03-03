@@ -15,5 +15,5 @@ public class JobDTO {
     private long jobId;
     private String refId;
     private LocalDateTime crtnDate;
-    private String status;
+    private int status;
 }

@@ -11,10 +11,10 @@ public class WordMapper implements RowMapper<WordRecord> {
         return WordRecord.builder()
                 .word(rs.getString("word"))
                 .id(rs.getLong("id"))
-                .refId(rs.getString("refId"))
-                .status(rs.getString("status"))
-                .loadDate(rs.getTimestamp("loadDate").toLocalDateTime())
-                .jobId(rs.getLong("jobId"))
+                .refId(rs.getString("ref_id"))
+                .status(rs.getInt("status"))
+                .loadDate(rs.getTimestamp("load_date").toLocalDateTime())
+                .jobId(rs.getLong("job_id"))
                 .build();
     }
 }
