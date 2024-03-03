@@ -11,4 +11,10 @@ public class UrlConstants {
         public static final String LANG_CREATE = "/api/inventory/language";
         public static final String LANG_GET = "/api/inventory/languages/{language}";
     }
+
+    public static class Job {
+        public static final String JOB_CREATE = "/api/jobs";
+        public static final String JOB_EXECUTE = "/api/jobs/{jobId}";
+        public static final String JOB_GET = "/api/jobs/{jobId}";
+    }
 }
