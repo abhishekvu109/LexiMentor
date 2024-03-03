@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@AllArgsConstructor
 @NoArgsConstructor
+
 public class KafkaConsumerWordServiceImpl {
 
     private WordService wordService;
