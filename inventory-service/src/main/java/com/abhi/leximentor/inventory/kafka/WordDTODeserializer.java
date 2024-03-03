@@ -2,15 +2,14 @@ package com.abhi.leximentor.inventory.kafka;
 
 import com.abhi.leximentor.inventory.dto.WordDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Deserializer;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@NoArgsConstructor
 public class WordDTODeserializer implements Deserializer<WordDTO> {
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public WordDTO deserialize(String topic, byte[] data) {
