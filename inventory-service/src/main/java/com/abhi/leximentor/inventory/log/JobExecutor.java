@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class JobExecutor {
         this.loadLoggingService = loadLoggingService;
         this.jobService = jobService;
         try {
-            Properties properties = PropertiesLoaderUtils.loadProperties(new ClassPathResource("application.properties"));
+            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
             this.nltk = properties.getProperty("nltk");
             this.datamuse = properties.getProperty("datamuse");
         } catch (IOException ex) {
