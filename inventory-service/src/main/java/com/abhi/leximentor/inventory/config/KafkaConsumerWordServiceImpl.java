@@ -14,11 +14,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@NoArgsConstructor
 
 public class KafkaConsumerWordServiceImpl {
 
-    private WordService wordService;
+    private final WordService wordService;
 
     @KafkaListener(topics = ApplicationConstants.KAFKA_TOPIC, groupId = ApplicationConstants.KAFKA_GROUP)
     public void consumeEvents(WordDTO wordDTO) {
