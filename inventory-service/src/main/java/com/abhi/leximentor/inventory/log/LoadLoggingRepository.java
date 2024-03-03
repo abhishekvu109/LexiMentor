@@ -2,6 +2,7 @@ package com.abhi.leximentor.inventory.log;
 
 import com.abhi.leximentor.inventory.log.mapping.WordMapper;
 import com.abhi.leximentor.inventory.log.mapping.WordRecord;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,10 +13,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LoadLoggingRepository {
-    @Autowired
-    @Qualifier(value = "jdbcTemplate1")
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public long addLog(WordRecord record) {
         String sql = "INSERT INTO word_record (refId,word,status,loadDate,jobId) values(?,?,?,?,?)";
