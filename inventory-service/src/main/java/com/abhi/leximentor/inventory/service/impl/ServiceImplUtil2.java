@@ -1,11 +1,8 @@
 package com.abhi.leximentor.inventory.service.impl;
 
-import com.abhi.leximentor.inventory.constants.ExceptionMessageConstants;
-import com.abhi.leximentor.inventory.constants.PartsOfSpeechConstants;
 import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.dto.*;
 import com.abhi.leximentor.inventory.entities.*;
-import com.abhi.leximentor.inventory.exceptions.entities.ServerException;
 import com.abhi.leximentor.inventory.repository.LanguageRepository;
 import com.abhi.leximentor.inventory.repository.WordRepository;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
@@ -13,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -127,7 +127,7 @@ public class ServiceImplUtil2 {
     }
 
     class WordMetadataUtil {
-        public WordMetadata buildWordEntity(WordDTO dto) {
+        private WordMetadata buildNewObject(WordDTO dto) {
             WordMetadata wordMetadata = WordMetadata.builder()
                     .key(UUID.randomUUID().toString())
                     .word(dto.getWord())
@@ -149,6 +149,38 @@ public class ServiceImplUtil2 {
             if (collectionUtil.isNotEmpty(dto.getExamples()))
                 wordMetadata.setExamples(dto.getExamples().stream().map(example -> new ServiceImplUtil2.ExampleUtil().buildExampleEntity(example, wordMetadata)).collect(Collectors.toList()));
             return wordMetadata;
+        }
+
+        public WordMetadata buildExistingObject(WordMetadata wordMetadata, WordDTO dto) {
+            List<Meaning> meanings = collectionUtil.isEmpty(wordMetadata.getMeanings()) ? new LinkedList<>() : wordMetadata.getMeanings();
+            List<Example> examples = collectionUtil.isEmpty(wordMetadata.getExamples()) ? new LinkedList<>() : wordMetadata.getExamples();
+            List<Synonym> synonyms = collectionUtil.isEmpty(wordMetadata.getSynonyms()) ? new LinkedList<>() : wordMetadata.getSynonyms();
+            List<Antonym> antonyms = collectionUtil.isEmpty(wordMetadata.getAntonyms()) ? new LinkedList<>() : wordMetadata.getAntonyms();
+            List<PartsOfSpeech> partsOfSpeeches = collectionUtil.isEmpty(wordMetadata.getPartsOfSpeeches()) ? new LinkedList<>() : wordMetadata.getPartsOfSpeeches();
+            if (collectionUtil.isNotEmpty(dto.getMeanings()))
+                meanings.addAll(dto.getMeanings().stream().map(m -> new ServiceImplUtil2.MeaningUtil().buildMeaningEntity(m, wordMetadata)).toList());
+            if (collectionUtil.isNotEmpty(dto.getExamples()))
+                examples.addAll(dto.getExamples().stream().map(ex -> new ServiceImplUtil2.ExampleUtil().buildExampleEntity(ex, wordMetadata)).toList());
+            if (collectionUtil.isNotEmpty(dto.getSynonyms()))
+                synonyms.addAll(dto.getSynonyms().stream().map(syn -> new ServiceImplUtil2.SynonymUtil().buildSynonymEntity(syn, wordMetadata)).toList());
+            if (collectionUtil.isNotEmpty(dto.getAntonyms()))
+                antonyms.addAll(dto.getAntonyms().stream().map(ant -> new ServiceImplUtil2.AntonymUtil().buildAntonymEntity(ant, wordMetadata)).toList());
+            if (collectionUtil.isNotEmpty(dto.getPartsOfSpeeches()))
+                partsOfSpeeches.addAll(dto.getPartsOfSpeeches().stream().map(pos -> new ServiceImplUtil2.PartsOfSpeechUtil().buildPartsOfSpeechEntity(pos, wordMetadata)).toList());
+            wordMetadata.setMeanings(meanings);
+            wordMetadata.setExamples(examples);
+            wordMetadata.setSynonyms(synonyms);
+            wordMetadata.setAntonyms(antonyms);
+            wordMetadata.setPartsOfSpeeches(partsOfSpeeches);
+            return wordMetadata;
+        }
+
+        public WordMetadata buildWordEntity(WordDTO dto) {
+            WordMetadata wordMetadata = wordRepository.findByWord(dto.getWord());
+            if (wordMetadata == null)
+                return buildNewObject(dto);
+            else
+                return buildExistingObject(wordMetadata, dto);
         }
 
         public WordDTO generateWordWrapper(WordMetadata wordMetadata) {

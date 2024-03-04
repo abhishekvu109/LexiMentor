@@ -28,6 +28,7 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
+    @Transactional
     public Collection<WordDTO> addAll(Collection<WordDTO> words) {
         Collection<WordMetadata> wordMetadataList = words.stream().map(word -> util.new WordMetadataUtil().buildWordEntity(word)).collect(Collectors.toList());
         wordMetadataList = wordRepository.saveAll(wordMetadataList);
