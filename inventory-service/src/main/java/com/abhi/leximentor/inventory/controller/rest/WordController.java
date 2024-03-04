@@ -29,7 +29,7 @@ public class WordController {
     @PostMapping(value = UrlConstants.WordMetaData.WORD_CREATE, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> addWord(@Valid @RequestBody Collection<WordDTO> dto) {
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-            Collection<WordDTO> responses = wordService.addAll(dto);
+            wordService.addAll(dto);
         });
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "You request has been submitted and is in process");
     }
