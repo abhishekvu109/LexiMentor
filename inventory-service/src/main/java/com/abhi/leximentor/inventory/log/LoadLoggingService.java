@@ -31,7 +31,7 @@ public class LoadLoggingService {
     }
 
     public Map<Long, String> getWordsByJobId(long jobId) {
-        return repository.getByJobId(jobId).stream()
+        return repository.getByJobId(jobId).stream().filter(wr -> wr.getStatus() == 0)
                 .collect(Collectors.toMap(
                         WordRecord::getId,
                         WordRecord::getWord
