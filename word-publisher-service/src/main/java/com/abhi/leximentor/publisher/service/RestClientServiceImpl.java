@@ -80,7 +80,6 @@ public class RestClientServiceImpl {
 
         // Combine the results when both requests are complete
         CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(future1, future2);
-
         // Handle the results
         combinedFuture.thenAccept(ignored -> {
             NltkDTO nltkDTO = future1.join();
