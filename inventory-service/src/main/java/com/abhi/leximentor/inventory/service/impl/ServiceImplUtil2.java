@@ -1,7 +1,7 @@
 package com.abhi.leximentor.inventory.service.impl;
 
 import com.abhi.leximentor.inventory.constants.ExceptionMessageConstants;
-import com.abhi.leximentor.inventory.constants.PartsOfSpeech;
+import com.abhi.leximentor.inventory.constants.PartsOfSpeechConstants;
 import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.dto.*;
 import com.abhi.leximentor.inventory.entities.*;
@@ -106,12 +106,31 @@ public class ServiceImplUtil2 {
         }
     }
 
+    class PartsOfSpeechUtil {
+        public PartsOfSpeech buildPartsOfSpeechEntity(PartsOfSpeechDTO dto, WordMetadata wordMetadata) {
+            return PartsOfSpeech.builder()
+                    .wordId(wordMetadata)
+                    .pos(dto.getPos())
+                    .key(dto.getRefId())
+                    .source(dto.getSource())
+                    .build();
+        }
+
+        public PartsOfSpeechDTO generatePartsOfSpeechWrapper(PartsOfSpeech partsOfSpeech) {
+            return PartsOfSpeechDTO.builder()
+                    .wordRefId(partsOfSpeech.getWordId().getKey())
+                    .word(partsOfSpeech.getWordId().getWord())
+                    .pos(partsOfSpeech.getPos())
+                    .source(partsOfSpeech.getSource())
+                    .build();
+        }
+    }
+
     class WordMetadataUtil {
         public WordMetadata buildWordEntity(WordDTO dto) {
             WordMetadata wordMetadata = WordMetadata.builder()
                     .key(UUID.randomUUID().toString())
                     .word(dto.getWord())
-//                    .pos(getPos(dto.getPos()))
                     .pos(dto.getPos())
                     .pronunciation(dto.getPronunciation())
                     .language(languageRepository.findByLanguage(dto.getLanguage()))
@@ -119,6 +138,8 @@ public class ServiceImplUtil2 {
                     .source(dto.getSource())
                     .category(dto.getCategory())
                     .build();
+            if (collectionUtil.isNotEmpty(dto.getPartsOfSpeeches()))
+                wordMetadata.setPartsOfSpeeches(dto.getPartsOfSpeeches().stream().map(pos -> new ServiceImplUtil2.PartsOfSpeechUtil().buildPartsOfSpeechEntity(pos, wordMetadata)).collect(Collectors.toList()));
             if (collectionUtil.isNotEmpty(dto.getSynonyms()))
                 wordMetadata.setSynonyms(dto.getSynonyms().stream().map(syn -> new ServiceImplUtil2.SynonymUtil().buildSynonymEntity(syn, wordMetadata)).collect(Collectors.toList()));
             if (collectionUtil.isNotEmpty(dto.getAntonyms()))
@@ -137,10 +158,10 @@ public class ServiceImplUtil2 {
                     .language(wordMetadata.getLanguage().getLanguage())
                     .crtnDate(wordMetadata.getCrtnDate().toLocalDate())
                     .lastUpdDate(wordMetadata.getLastUpdDate().toLocalDate())
-//                    .pos(wordMetadata.getPos().name())
                     .pos(wordMetadata.getPos())
                     .status(Status.getStatus(wordMetadata.getStatus()))
                     .pronunciation(wordMetadata.getPronunciation())
+                    .partsOfSpeeches(collectionUtil.isNotEmpty(wordMetadata.getPartsOfSpeeches()) ? wordMetadata.getPartsOfSpeeches().stream().map(pos -> new ServiceImplUtil2.PartsOfSpeechUtil().generatePartsOfSpeechWrapper(pos)).collect(Collectors.toList()) : null)
                     .meanings(collectionUtil.isNotEmpty(wordMetadata.getMeanings()) ? wordMetadata.getMeanings().stream().map(mean -> new ServiceImplUtil2.MeaningUtil().generateMeaningWrapper(mean)).collect(Collectors.toList()) : null)
                     .synonyms(collectionUtil.isNotEmpty(wordMetadata.getSynonyms()) ? wordMetadata.getSynonyms().stream().map(syn -> new ServiceImplUtil2.SynonymUtil().generateSynonymWrapper(syn)).collect(Collectors.toList()) : null)
                     .antonyms(collectionUtil.isNotEmpty(wordMetadata.getAntonyms()) ? wordMetadata.getAntonyms().stream().map(ant -> new ServiceImplUtil2.AntonymUtil().generateAntonymWrapper(ant)).collect(Collectors.toList()) : null)
@@ -151,22 +172,4 @@ public class ServiceImplUtil2 {
         }
     }
 
-    protected PartsOfSpeech getPos(String pos) {
-        if (pos.equalsIgnoreCase(PartsOfSpeech.ADJECTIVE.toString()))
-            return PartsOfSpeech.ADJECTIVE;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.ADVERB.toString()))
-            return PartsOfSpeech.ADVERB;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.VERB.toString()))
-            return PartsOfSpeech.VERB;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.CONJUNCTION.toString()))
-            return PartsOfSpeech.CONJUNCTION;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.INTERJECTION.toString()))
-            return PartsOfSpeech.INTERJECTION;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.PREPOSITION.toString()))
-            return PartsOfSpeech.PREPOSITION;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.NOUN.toString()))
-            return PartsOfSpeech.NOUN;
-        else
-            return PartsOfSpeech.PRONOUN;
-    }
 }

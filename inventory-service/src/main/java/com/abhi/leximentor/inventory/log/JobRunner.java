@@ -20,6 +20,7 @@ import java.net.http.HttpResponse;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -111,6 +112,11 @@ public class JobRunner implements Runnable {
             meaningDTOS.add(MeaningDTO.builder().meaning(nltkDTO.getDefinition()).word(word).source("NLTK").build());
             wordDTO.setMeanings(meaningDTOS);
         }
+        if (nltkDTO.getPos() != null) {
+            List<PartsOfSpeechDTO> partsOfSpeechDTOS = new LinkedList<>();
+            partsOfSpeechDTOS.add(PartsOfSpeechDTO.builder().pos(nltkDTO.getPos()).word(word).source("NLTK").build());
+            wordDTO.setPartsOfSpeeches(partsOfSpeechDTOS);
+        }
         wordDTO.setLanguage("en-us");
         wordDTO.setPos(nltkDTO.getPos());
         wordDTO.setSource("NLTK");
@@ -132,6 +138,13 @@ public class JobRunner implements Runnable {
             Collection<ExampleDTO> exampleDTOS = wordDTO.getExamples();
             if (!CollectionUtils.isEmpty(exampleDTOS)) exampleDTOS = new LinkedList<>();
             exampleDTOS = datamuseDTO.getExamples().stream().map(dm -> ExampleDTO.builder().example(dm).wordKey(word).source("DATAMUSE").build()).collect(Collectors.toList());
+        }
+        if (datamuseDTO.getPos() != null) {
+            Collection<PartsOfSpeechDTO> partsOfSpeechDTOS = wordDTO.getPartsOfSpeeches();
+            if (partsOfSpeechDTOS == null || partsOfSpeechDTOS.isEmpty())
+                partsOfSpeechDTOS = new LinkedList<>();
+            partsOfSpeechDTOS.add(PartsOfSpeechDTO.builder().pos(datamuseDTO.getPos()).word(word).source("DATAMUSE").build());
+            wordDTO.setPartsOfSpeeches(partsOfSpeechDTOS);
         }
         wordDTO.setPos(wordDTO.getPos() + "|" + datamuseDTO.getPos());
     }

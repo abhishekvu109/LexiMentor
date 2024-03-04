@@ -1,9 +1,8 @@
 package com.abhi.leximentor.inventory.service.impl;
 
 import com.abhi.leximentor.inventory.constants.ExceptionMessageConstants;
-import com.abhi.leximentor.inventory.constants.PartsOfSpeech;
+import com.abhi.leximentor.inventory.constants.PartsOfSpeechConstants;
 import com.abhi.leximentor.inventory.constants.Status;
-import com.abhi.leximentor.inventory.constants.WordLanguage;
 import com.abhi.leximentor.inventory.dto.*;
 import com.abhi.leximentor.inventory.entities.*;
 import com.abhi.leximentor.inventory.exceptions.entities.ServerException;
@@ -161,23 +160,23 @@ public class ServiceImplUtil {
         }
     }
 
-    protected PartsOfSpeech getPos(String pos) {
-        if (pos.equalsIgnoreCase(PartsOfSpeech.ADJECTIVE.toString()))
-            return PartsOfSpeech.ADJECTIVE;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.ADVERB.toString()))
-            return PartsOfSpeech.ADVERB;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.VERB.toString()))
-            return PartsOfSpeech.VERB;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.CONJUNCTION.toString()))
-            return PartsOfSpeech.CONJUNCTION;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.INTERJECTION.toString()))
-            return PartsOfSpeech.INTERJECTION;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.PREPOSITION.toString()))
-            return PartsOfSpeech.PREPOSITION;
-        else if (pos.equalsIgnoreCase(PartsOfSpeech.NOUN.toString()))
-            return PartsOfSpeech.NOUN;
+    protected PartsOfSpeechConstants getPos(String pos) {
+        if (pos.equalsIgnoreCase(PartsOfSpeechConstants.ADJECTIVE.toString()))
+            return PartsOfSpeechConstants.ADJECTIVE;
+        else if (pos.equalsIgnoreCase(PartsOfSpeechConstants.ADVERB.toString()))
+            return PartsOfSpeechConstants.ADVERB;
+        else if (pos.equalsIgnoreCase(PartsOfSpeechConstants.VERB.toString()))
+            return PartsOfSpeechConstants.VERB;
+        else if (pos.equalsIgnoreCase(PartsOfSpeechConstants.CONJUNCTION.toString()))
+            return PartsOfSpeechConstants.CONJUNCTION;
+        else if (pos.equalsIgnoreCase(PartsOfSpeechConstants.INTERJECTION.toString()))
+            return PartsOfSpeechConstants.INTERJECTION;
+        else if (pos.equalsIgnoreCase(PartsOfSpeechConstants.PREPOSITION.toString()))
+            return PartsOfSpeechConstants.PREPOSITION;
+        else if (pos.equalsIgnoreCase(PartsOfSpeechConstants.NOUN.toString()))
+            return PartsOfSpeechConstants.NOUN;
         else
-            return PartsOfSpeech.PRONOUN;
+            return PartsOfSpeechConstants.PRONOUN;
     }
 
 }

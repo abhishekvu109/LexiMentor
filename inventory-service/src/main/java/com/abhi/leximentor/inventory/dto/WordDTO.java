@@ -30,5 +30,6 @@ public class WordDTO {
     private Collection<SynonymDTO> synonyms;
     private Collection<AntonymDTO> antonyms;
     private Collection<ExampleDTO> examples;
+    private Collection<PartsOfSpeechDTO> partsOfSpeeches;
     private String category;
 }

@@ -1,7 +1,6 @@
 package com.abhi.leximentor.inventory.entities;
 
 
-import com.abhi.leximentor.inventory.constants.PartsOfSpeech;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -73,4 +72,7 @@ public class WordMetadata {
 
     @OneToMany(mappedBy = "wordId", cascade = CascadeType.ALL)
     private List<Example> examples;
+
+    @OneToMany(mappedBy = "wordId", cascade = CascadeType.ALL)
+    private List<PartsOfSpeech> partsOfSpeeches;
 }
