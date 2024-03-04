@@ -176,7 +176,7 @@ public class ServiceImplUtil2 {
         }
 
         public WordMetadata buildWordEntity(WordDTO dto) {
-            WordMetadata wordMetadata = wordRepository.findByWord(dto.getWord());
+            WordMetadata wordMetadata = wordRepository.findByWord(dto.getWord().toUpperCase());
             if (wordMetadata == null)
                 return buildNewObject(dto);
             else

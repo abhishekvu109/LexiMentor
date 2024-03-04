@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -29,7 +29,10 @@ public class WordController {
     @PostMapping(value = UrlConstants.WordMetaData.WORD_CREATE, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> addWord(@Valid @RequestBody Collection<WordDTO> dto) {
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-            Collection<WordDTO> responses = wordService.addAll(dto);
+            Map<String, WordDTO> wordDTOS = new HashMap<>();
+            for (WordDTO wordDTO : dto)
+                wordDTOS.putIfAbsent(wordDTO.getWord(), wordDTO);
+            Collection<WordDTO> responses = wordService.addAll(wordDTOS.values());
         });
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "You request has been submitted and is in process");
     }

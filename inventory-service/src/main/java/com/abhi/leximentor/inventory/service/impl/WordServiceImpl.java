@@ -5,6 +5,7 @@ import com.abhi.leximentor.inventory.entities.WordMetadata;
 import com.abhi.leximentor.inventory.repository.WordRepository;
 import com.abhi.leximentor.inventory.service.WordService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WordServiceImpl implements WordService {
@@ -32,6 +34,7 @@ public class WordServiceImpl implements WordService {
     public Collection<WordDTO> addAll(Collection<WordDTO> words) {
         Collection<WordMetadata> wordMetadataList = words.stream().map(word -> util.new WordMetadataUtil().buildWordEntity(word)).collect(Collectors.toList());
         wordMetadataList = wordRepository.saveAll(wordMetadataList);
+        log.info("Data persisted. Total data: {}", wordMetadataList.size());
         return wordMetadataList.stream().map(entity -> util.new WordMetadataUtil().generateWordWrapper(entity)).collect(Collectors.toList());
     }
 
