@@ -31,7 +31,7 @@ public class Example {
     @JoinColumn(name = "word_id")
     private WordMetadata wordId;
 
-    @Column(name = "example")
+    @Column(name = "example", length = 5000)
     private String example;
 
     @Column(name = "crtn_date")

@@ -32,7 +32,7 @@ public class Meaning {
     @JoinColumn(name = "word_id")
     private WordMetadata wordId;
 
-    @Column(name = "definition")
+    @Column(name = "definition",length = 5000)
     private String definition;
 
     @Column(name = "crtn_date")
