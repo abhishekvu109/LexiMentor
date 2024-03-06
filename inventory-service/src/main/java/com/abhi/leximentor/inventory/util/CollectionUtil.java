@@ -6,10 +6,11 @@ import java.util.Collection;
 
 @Component
 public class CollectionUtil {
-    public <T> boolean isEmpty(Collection<T> list) {
+    public static <T> boolean isEmpty(Collection<T> list) {
         return (list == null || list.isEmpty());
     }
-    public <T> boolean isNotEmpty(Collection<T> list) {
+
+    public static <T> boolean isNotEmpty(Collection<T> list) {
         return !isEmpty(list);
     }
 }

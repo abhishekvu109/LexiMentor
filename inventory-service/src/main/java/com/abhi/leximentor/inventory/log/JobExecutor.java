@@ -1,15 +1,12 @@
 package com.abhi.leximentor.inventory.log;
 
-import com.abhi.leximentor.inventory.service.WordService;
+import com.abhi.leximentor.inventory.service.inv.WordService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;

@@ -1,16 +1,15 @@
 package com.abhi.leximentor.inventory.log;
 
-import com.abhi.leximentor.inventory.dto.*;
+import com.abhi.leximentor.inventory.dto.inv.*;
 import com.abhi.leximentor.inventory.dto.other.DatamuseDTO;
 import com.abhi.leximentor.inventory.dto.other.NltkDTO;
-import com.abhi.leximentor.inventory.service.WordService;
+import com.abhi.leximentor.inventory.service.inv.WordService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -20,7 +19,6 @@ import java.net.http.HttpResponse;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
