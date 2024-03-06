@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class DrillChallengeDTO {
     private String refId;
+    private String drillType;
     private long drillId;
     private double drillScore;
     private boolean isPass;

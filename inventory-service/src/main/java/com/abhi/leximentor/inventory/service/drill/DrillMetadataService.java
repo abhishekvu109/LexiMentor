@@ -12,4 +12,7 @@ public interface DrillMetadataService {
     public DrillMetadataDTO createDrillBySource(int size, String source, boolean isNewWords);
 
     public DrillMetadataDTO getDrills();
+
+    public void deleteByRefId(String refId);
+    public DrillMetadataDTO getByRefId(String refId);
 }

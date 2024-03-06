@@ -1,12 +1,10 @@
 package com.abhi.leximentor.inventory.dto.drill;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Data
 @ToString
 @Builder
 @AllArgsConstructor

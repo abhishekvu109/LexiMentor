@@ -4,9 +4,7 @@ import com.abhi.leximentor.inventory.log.mapping.WordMapper;
 import com.abhi.leximentor.inventory.log.mapping.WordRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;

@@ -2,8 +2,9 @@ package com.abhi.leximentor.inventory.constants;
 
 public class UrlConstants {
     public static class Drill {
-        public static final String DRILL_CREATE_RANDOMLY = "/api/drill/";
+        public static final String DRILL_CREATE_RANDOMLY = "/api/drill";
         public static final String DRILL_CREATE_BY_SOURCE_RANDOMLY = "/api/drill/source/{sourceName}";
+        public static final String DRILL_CREATE_CHALLENGES = "/api/drill/challenges";
     }
 
     public static class Inventory {

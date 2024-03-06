@@ -1,9 +1,9 @@
 package com.abhi.leximentor.inventory.util;
 
-import java.util.Random;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.Random;
 
 @Component
 @Slf4j
@@ -15,16 +15,16 @@ public class ApplicationUtil {
         }
 
         // Generate the first 6 characters (A-Z or a-z)
-        String firstPart = generateRandomLetters(6);
+//        String firstPart = generateRandomLetters(6);
 
         // Generate the remaining characters (A-Z, a-z, 0-9)
-        String remainingPart = generateRandomAlphanumeric(length - 6);
+//        String remainingPart = generateRandomAlphanumeric(length - 6);
 
         // Concatenate the two parts
-        return firstPart + remainingPart;
+        return generateRandomAlphanumeric(length);
     }
 
-    private  String generateRandomLetters(int length) {
+    private String generateRandomLetters(int length) {
         Random random = new Random();
         StringBuilder letters = new StringBuilder();
 

@@ -46,6 +46,9 @@ public class DrillChallenge {
     @CreationTimestamp
     private LocalDateTime crtnDate;
 
-    @OneToMany(mappedBy = "challengeId")
+    @OneToMany(mappedBy = "challengeId", cascade = CascadeType.ALL)
     private List<DrillChallengeScores> drillChallengeScoresList;
+
+    @Column(name = "drill_type")
+    private String drillType;
 }

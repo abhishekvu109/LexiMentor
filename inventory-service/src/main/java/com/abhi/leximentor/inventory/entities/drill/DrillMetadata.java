@@ -41,9 +41,9 @@ public class DrillMetadata {
     @Column(name = "overall_score")
     private double overallScore;
 
-    @OneToMany(mappedBy = "drillId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "drillId", cascade = CascadeType.ALL)
     private List<DrillSet> drillSetList;
 
-    @OneToMany(mappedBy = "drillId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "drillId", cascade = CascadeType.ALL)
     private List<DrillChallenge> drillChallenges;
 }

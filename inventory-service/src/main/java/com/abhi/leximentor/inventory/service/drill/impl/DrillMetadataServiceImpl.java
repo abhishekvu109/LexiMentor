@@ -67,6 +67,20 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
 
     private DrillMetadataDTO getEntity(int size, List<WordMetadata> wordMetadataList) {
         DrillMetadata drillMetadata = DrillServiceUtil.DrillMetadataUtil.buildEntity(size, wordMetadataList, applicationUtil);
+        drillMetadata = drillMetadataRepository.save(drillMetadata);
+        return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+    }
+
+    @Override
+    public void deleteByRefId(String refId) {
+        DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(refId);
+        drillMetadataRepository.delete(drillMetadata);
+        log.info("The entity has been deleted: {}", drillMetadata.getName());
+    }
+
+    @Override
+    public DrillMetadataDTO getByRefId(String refId) {
+        DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(refId);
         return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
     }
 }
