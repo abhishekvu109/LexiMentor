@@ -3,6 +3,7 @@ package com.abhi.leximentor.inventory.controller.rest.drill;
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
 import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.constants.UrlConstants;
+import com.abhi.leximentor.inventory.dto.drill.DrillChallengeDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
@@ -56,6 +57,12 @@ public class DrillController {
     public ResponseEntity<RestApiResponse> getAllDrills() {
         List<DrillMetadataDTO> drillMetadataDTOList = drillMetadataService.getDrills();
         return CollectionUtil.isNotEmpty(drillMetadataDTOList) ? ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillMetadataDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve drills");
+    }
+
+    @GetMapping(value = UrlConstants.Drill.DRILL_GET_CHALLENGES_BY_DRILL_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> getAllChallengesByDrillRefId(@PathVariable String drillId) {
+        List<DrillChallengeDTO> drillChallengeDTOList = drillChallengeService.getChallengesByDrillRefId(drillId);
+        return CollectionUtil.isNotEmpty(drillChallengeDTOList) ? ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillChallengeDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve challenges");
     }
 
 }

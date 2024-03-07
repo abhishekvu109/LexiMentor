@@ -1,6 +1,7 @@
 package com.abhi.leximentor.inventory.service.drill.impl;
 
 import com.abhi.leximentor.inventory.constants.DrillTypes;
+import com.abhi.leximentor.inventory.dto.drill.DrillChallengeDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillMetadata;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -38,4 +40,9 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
         return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
     }
 
+    @Override
+    public List<DrillChallengeDTO> getChallengesByDrillRefId(String drillRefId) {
+        DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
+        return CollectionUtil.isNotEmpty(drillMetadata.getDrillChallenges()) ? drillMetadata.getDrillChallenges().stream().map(d -> DrillServiceUtil.DrillChallengeUtil.buildDTO(d, drillMetadata)).collect(Collectors.toList()) : null;
+    }
 }

@@ -1,14 +1,16 @@
+// pages/[id].js
 
+import { useRouter } from "next/router";
 
 import Script from "next/script";
 import React from "react";
 import Head from "next/head";
 
-const Drills = ({ data }) => {
+const Challenges = ({ data }) => {
   return (
     <>
       <Head>
-        <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></Script>
+        <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></Script>
       </Head>
       <div className="container mt-5">
         <button className="btn btn-primary mb-3">
@@ -66,4 +68,16 @@ const Drills = ({ data }) => {
   );
 };
 
-export default Drills;
+export default Challenges;
+export async function getServerSideProps() {
+  // Fetch data from your API endpoint
+  const res = await fetch("http://192.168.1.7:9191/api/drill"); // Replace with your API endpoint
+  const data = await res.json();
+
+  // Pass data to the component via props
+  return {
+    props: {
+      data,
+    },
+  };
+}
