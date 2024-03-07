@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -61,8 +62,9 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     }
 
     @Override
-    public DrillMetadataDTO getDrills() {
-        return null;
+    public List<DrillMetadataDTO> getDrills() {
+        List<DrillMetadata> drillMetadataList = drillMetadataRepository.findAll();
+        return drillMetadataList.stream().map(DrillServiceUtil.DrillMetadataUtil::buildDTO).toList();
     }
 
     private DrillMetadataDTO getEntity(int size, List<WordMetadata> wordMetadataList) {

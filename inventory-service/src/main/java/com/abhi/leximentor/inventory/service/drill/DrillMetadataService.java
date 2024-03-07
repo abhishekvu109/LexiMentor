@@ -2,6 +2,8 @@ package com.abhi.leximentor.inventory.service.drill;
 
 import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
 
+import java.util.List;
+
 public interface DrillMetadataService {
     public DrillMetadataDTO createDrillRandomly(int size);
 
@@ -11,7 +13,7 @@ public interface DrillMetadataService {
 
     public DrillMetadataDTO createDrillBySource(int size, String source, boolean isNewWords);
 
-    public DrillMetadataDTO getDrills();
+    public List<DrillMetadataDTO> getDrills();
 
     public void deleteByRefId(String refId);
     public DrillMetadataDTO getByRefId(String refId);
