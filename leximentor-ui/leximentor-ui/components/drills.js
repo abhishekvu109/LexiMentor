@@ -1,5 +1,3 @@
-
-
 import Script from "next/script";
 import React from "react";
 import Head from "next/head";
@@ -8,7 +6,7 @@ const Drills = ({ data }) => {
   return (
     <>
       <Head>
-        <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></Script>
+        <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></Script>
       </Head>
       <div className="container mt-5">
         <button className="btn btn-primary mb-3">
@@ -41,7 +39,12 @@ const Drills = ({ data }) => {
               <tr key={item.refId}>
                 <th scope="row">{index + 1}</th>
                 <td className="text-center">
-                  <input type="checkbox" />
+                  {/* <input type="checkbox" /> */}
+                  <a>
+                  <button className="btn btn-primary mb-3">
+                    Create meaning challenge
+                  </button>
+                  </a>
                 </td>
                 <td>{item.refId}</td>
                 <td>{item.name}</td>

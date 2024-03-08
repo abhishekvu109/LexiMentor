@@ -36,8 +36,8 @@ public class DrillServiceUtil {
 
         public static DrillMetadataDTO buildDTO(DrillMetadata drillMetadata) {
             DrillMetadataDTO drillMetadataDTO = DrillMetadataDTO.builder().refId(drillMetadata.getRefId()).name(drillMetadata.getName()).status(Status.getStatus(drillMetadata.getStatus())).crtnDate(drillMetadata.getCrtnDate()).overAllScore(drillMetadata.getOverallScore()).build();
-            drillMetadataDTO.setDrillSetDTOList(CollectionUtil.isNotEmpty(drillMetadata.getDrillSetList()) ? drillMetadata.getDrillSetList().stream().map(d -> DrillSetUtil.buildDTO(d, drillMetadata)).collect(Collectors.toList()) : null);
-            drillMetadataDTO.setDrillChallengeDTOList(CollectionUtil.isNotEmpty(drillMetadata.getDrillChallenges()) ? drillMetadata.getDrillChallenges().stream().map(d -> DrillChallengeUtil.buildDTO(d, drillMetadata)).collect(Collectors.toList()) : null);
+//            drillMetadataDTO.setDrillSetDTOList(CollectionUtil.isNotEmpty(drillMetadata.getDrillSetList()) ? drillMetadata.getDrillSetList().stream().map(d -> DrillSetUtil.buildDTO(d, drillMetadata)).collect(Collectors.toList()) : null);
+//            drillMetadataDTO.setDrillChallengeDTOList(CollectionUtil.isNotEmpty(drillMetadata.getDrillChallenges()) ? drillMetadata.getDrillChallenges().stream().map(d -> DrillChallengeUtil.buildDTO(d, drillMetadata)).collect(Collectors.toList()) : null);
             return drillMetadataDTO;
         }
     }
@@ -61,7 +61,7 @@ public class DrillServiceUtil {
 
         public static DrillChallengeDTO buildDTO(DrillChallenge entity, DrillMetadata drillMetadata) {
             DrillChallengeDTO drillChallengeDTO = DrillChallengeDTO.builder().refId(entity.getRefId()).drillType(entity.getDrillType()).drillId(drillMetadata.getId()).drillScore(entity.getDrillScore()).isPass(entity.isPass()).totalCorrect(entity.getTotalCorrect()).totalWrong(entity.getTotalWrong()).crtnDate(entity.getCrtnDate()).build();
-            drillChallengeDTO.setDrillChallengeScoresDTOList(CollectionUtil.isNotEmpty(entity.getDrillChallengeScoresList()) ? entity.getDrillChallengeScoresList().stream().map(DrillChallengeScoreUtil::buildDTO).collect(Collectors.toList()) : null);
+//            drillChallengeDTO.setDrillChallengeScoresDTOList(CollectionUtil.isNotEmpty(entity.getDrillChallengeScoresList()) ? entity.getDrillChallengeScoresList().stream().map(DrillChallengeScoreUtil::buildDTO).collect(Collectors.toList()) : null);
             return drillChallengeDTO;
         }
     }
