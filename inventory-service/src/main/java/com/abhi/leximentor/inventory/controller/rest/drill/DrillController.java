@@ -4,9 +4,13 @@ import com.abhi.leximentor.inventory.constants.ApplicationConstants;
 import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeDTO;
+import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
+import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
+import com.abhi.leximentor.inventory.repository.drill.DrillChallengeRepository;
+import com.abhi.leximentor.inventory.service.drill.DrillChallengeScoreService;
 import com.abhi.leximentor.inventory.service.drill.DrillChallengeService;
 import com.abhi.leximentor.inventory.service.drill.DrillMetadataService;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
@@ -26,6 +30,8 @@ import java.util.List;
 public class DrillController {
     private final DrillMetadataService drillMetadataService;
     private final DrillChallengeService drillChallengeService;
+    private final DrillChallengeRepository drillChallengeRepository;
+    private final DrillChallengeScoreService drillChallengeScoreService;
 
     @PostMapping(value = UrlConstants.Drill.DRILL_CREATE_RANDOMLY, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> newDrillRandomly(@RequestParam int limit, @RequestParam boolean isNewWords) {
@@ -63,6 +69,13 @@ public class DrillController {
     public ResponseEntity<RestApiResponse> getAllChallengesByDrillRefId(@PathVariable String drillId) {
         List<DrillChallengeDTO> drillChallengeDTOList = drillChallengeService.getChallengesByDrillRefId(drillId);
         return CollectionUtil.isNotEmpty(drillChallengeDTOList) ? ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillChallengeDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve challenges");
+    }
+
+    @GetMapping(value = UrlConstants.Drill.DRILL_CHALLENGE_SCORE_BY_CHALLENGE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> getAllChallengeScoresByChallengeId(@PathVariable String challengeId) {
+        DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(challengeId);
+        List<DrillChallengeScoresDTO> drillChallengeScoresDTOS = drillChallengeScoreService.getByDrillChallengeId(drillChallenge.getId());
+        return CollectionUtil.isNotEmpty(drillChallengeScoresDTOS) ? ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillChallengeScoresDTOS) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve challenge scores");
     }
 
 }

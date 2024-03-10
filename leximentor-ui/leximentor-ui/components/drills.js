@@ -1,6 +1,7 @@
 import Script from "next/script";
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 
 const Drills = ({ data }) => {
   return (
@@ -39,12 +40,11 @@ const Drills = ({ data }) => {
               <tr key={item.refId}>
                 <th scope="row">{index + 1}</th>
                 <td className="text-center">
-                  {/* <input type="checkbox" /> */}
-                  <a>
-                  <button className="btn btn-primary mb-3">
-                    Create meaning challenge
-                  </button>
-                  </a>
+                  <Link href={"/challenges/" + item.refId}>
+                    <button className="btn btn-primary mb-3">
+                      Create meaning challenge
+                    </button>
+                  </Link>
                 </td>
                 <td>{item.refId}</td>
                 <td>{item.name}</td>

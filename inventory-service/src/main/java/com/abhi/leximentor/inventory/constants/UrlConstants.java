@@ -6,6 +6,7 @@ public class UrlConstants {
         public static final String DRILL_CREATE_BY_SOURCE_RANDOMLY = "/api/drill/source/{sourceName}";
         public static final String DRILL_CREATE_CHALLENGES = "/api/drill/challenges";
         public static final String DRILL_GET_CHALLENGES_BY_DRILL_ID = "/api/drill/challenges/{drillId}";
+        public static final String DRILL_CHALLENGE_SCORE_BY_CHALLENGE_ID = "/api/drill/challenges/scores/{challengeId}";
     }
 
     public static class Inventory {
