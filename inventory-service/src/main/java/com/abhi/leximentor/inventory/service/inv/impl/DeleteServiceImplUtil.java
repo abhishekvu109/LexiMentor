@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ServiceImplUtil {
+public class DeleteServiceImplUtil {
     private final LanguageRepository languageRepository;
     private final WordMetadataRepository wordRepository;
     private final CollectionUtil collectionUtil;

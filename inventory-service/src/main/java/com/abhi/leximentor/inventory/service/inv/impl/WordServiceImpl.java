@@ -2,8 +2,10 @@ package com.abhi.leximentor.inventory.service.inv.impl;
 
 import com.abhi.leximentor.inventory.dto.inv.WordDTO;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
+import com.abhi.leximentor.inventory.repository.inv.LanguageRepository;
 import com.abhi.leximentor.inventory.repository.inv.WordMetadataRepository;
 import com.abhi.leximentor.inventory.service.inv.WordService;
+import com.abhi.leximentor.inventory.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,31 +13,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WordServiceImpl implements WordService {
+    private final InventoryServiceUtil util;
+    private final LanguageRepository languageRepository;
     private final WordMetadataRepository wordRepository;
-    private final ServiceImplUtil2 util;
-
+    private final CollectionUtil collectionUtil;
 
     @Override
     @Transactional
     public WordDTO add(WordDTO word) {
-        WordMetadata wordMetadata = util.new WordMetadataUtil().buildWordEntity(word);
+        WordMetadata wordMetadata = InventoryServiceUtil.WordMetadataUtil.buildEntity(word, wordRepository, languageRepository);
         wordMetadata = wordRepository.save(wordMetadata);
-        return util.new WordMetadataUtil().generateWordWrapper(wordMetadata);
+        return InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata);
     }
 
     @Override
     @Transactional
     public Collection<WordDTO> addAll(Collection<WordDTO> words) {
-        Collection<WordMetadata> wordMetadataList = words.stream().map(word -> util.new WordMetadataUtil().buildWordEntity(word)).collect(Collectors.toList());
+        Collection<WordMetadata> wordMetadataList = words.stream().map(d -> InventoryServiceUtil.WordMetadataUtil.buildEntity(d, wordRepository, languageRepository)).collect(Collectors.toList());
         wordMetadataList = wordRepository.saveAll(wordMetadataList);
         log.info("Data persisted. Total data: {}", wordMetadataList.size());
-        return wordMetadataList.stream().map(entity -> util.new WordMetadataUtil().generateWordWrapper(entity)).collect(Collectors.toList());
+        return wordMetadataList.stream().map(InventoryServiceUtil.WordMetadataUtil::buildDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -50,7 +54,12 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public WordDTO get(long wordId) {
-        return null;
+        Optional<WordMetadata> wordMetadata = wordRepository.findById(wordId);
+        if (wordMetadata.isEmpty()) {
+            log.error("Unable to fetch the word data");
+            throw new RuntimeException("Unable to fetch the word entity");
+        }
+        return InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata.get());
     }
 
     @Override

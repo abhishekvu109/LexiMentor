@@ -7,6 +7,7 @@ public class UrlConstants {
         public static final String DRILL_CREATE_CHALLENGES = "/api/drill/challenges";
         public static final String DRILL_GET_CHALLENGES_BY_DRILL_ID = "/api/drill/challenges/{drillId}";
         public static final String DRILL_CHALLENGE_SCORE_BY_CHALLENGE_ID = "/api/drill/challenges/scores/{challengeId}";
+        public static final String DRILL_CHALLENGE_SET_BY_SET_ID = "/api/drill/challenges/set/{setId}";
     }
 
     public static class Inventory {

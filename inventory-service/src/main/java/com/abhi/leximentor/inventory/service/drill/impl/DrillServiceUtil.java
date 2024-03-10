@@ -47,8 +47,8 @@ public class DrillServiceUtil {
             return DrillSet.builder().refId(UUID.randomUUID().toString()).drillId(drillMetadata).wordId(wordMetadata).build();
         }
 
-        public static DrillSetDTO buildDTO(DrillSet drillSet, DrillMetadata drillMetadata) {
-            return DrillSetDTO.builder().refId(drillSet.getRefId()).drillId(drillMetadata.getId()).crtnDate(drillSet.getCrtndate()).wordId(drillSet.getWordId().getId()).word(drillSet.getWordId().getWord()).build();
+        public static DrillSetDTO buildDTO(DrillSet drillSet) {
+            return DrillSetDTO.builder().refId(drillSet.getRefId()).drillId(drillSet.getDrillId().getId()).crtnDate(drillSet.getCrtndate()).wordId(drillSet.getWordId().getId()).word(drillSet.getWordId().getWord()).build();
         }
     }
 

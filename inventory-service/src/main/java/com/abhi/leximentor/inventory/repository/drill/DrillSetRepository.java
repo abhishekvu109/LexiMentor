@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DrillSetRepository extends JpaRepository<DrillSet, Long> {
+    public DrillSet findByRefId(String refId);
 }
