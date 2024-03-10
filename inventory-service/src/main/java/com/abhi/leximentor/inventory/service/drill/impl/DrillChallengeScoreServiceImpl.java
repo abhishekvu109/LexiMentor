@@ -42,10 +42,10 @@ public class DrillChallengeScoreServiceImpl implements DrillChallengeScoreServic
         scores = drillChallengeScoreRepository.save(scores);
         return DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(scores);
     }
-
+    
     @Override
-    public List<DrillChallengeScoresDTO> getByDrillChallengeId(long drillChallengeId) {
-        List<DrillChallengeScores> drillChallengeScores = drillChallengeScoreRepository.findByChallengeId(drillChallengeId);
+    public List<DrillChallengeScoresDTO> getByDrillChallengeId(DrillChallenge drillChallenge) {
+        List<DrillChallengeScores> drillChallengeScores = drillChallengeScoreRepository.findByChallengeId(drillChallenge);
         return drillChallengeScores.stream().map(DrillServiceUtil.DrillChallengeScoreUtil::buildDTO).collect(Collectors.toList());
     }
 }
