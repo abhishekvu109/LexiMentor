@@ -13,6 +13,7 @@ import com.abhi.leximentor.inventory.entities.drill.DrillSet;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
 import com.abhi.leximentor.inventory.util.ApplicationUtil;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
+import com.abhi.leximentor.inventory.util.KeyGeneratorUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class DrillServiceUtil {
 
     public static class DrillMetadataUtil {
         public static DrillMetadata buildEntity(int size, List<WordMetadata> wordMetadataList, ApplicationUtil applicationUtil) {
-            DrillMetadata drillMetadata = DrillMetadata.builder().name(applicationUtil.generateRandomString(size)).refId(UUID.randomUUID().getMostSignificantBits()).uuid(UUID.randomUUID().toString()).status(Status.ACTIVE).build();
+            DrillMetadata drillMetadata = DrillMetadata.builder().name(applicationUtil.generateRandomString(size)).refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).status(Status.ACTIVE).build();
             drillMetadata.setDrillSetList(wordMetadataList.stream().map(wordMetadata -> DrillSetUtil.buildEntity(wordMetadata, drillMetadata)).collect(Collectors.toList()));
             return drillMetadata;
         }
@@ -44,7 +45,7 @@ public class DrillServiceUtil {
 
     public static class DrillSetUtil {
         public static DrillSet buildEntity(WordMetadata wordMetadata, DrillMetadata drillMetadata) {
-            return DrillSet.builder().uuid(UUID.randomUUID().toString()).refId(UUID.randomUUID().getMostSignificantBits()).drillId(drillMetadata).wordId(wordMetadata).build();
+            return DrillSet.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).drillId(drillMetadata).wordId(wordMetadata).build();
         }
 
         public static DrillSetDTO buildDTO(DrillSet drillSet) {
@@ -54,7 +55,7 @@ public class DrillServiceUtil {
 
     public static class DrillChallengeUtil {
         public static DrillChallenge buildEntity(DrillMetadata drillMetadata, DrillTypes drillTypes) {
-            DrillChallenge drillChallenge = DrillChallenge.builder().uuid(UUID.randomUUID().toString()).drillType(drillTypes.name()).refId(UUID.randomUUID().getMostSignificantBits()).drillId(drillMetadata).drillScore(0).isPass(false).totalCorrect(0).totalWrong(0).build();
+            DrillChallenge drillChallenge = DrillChallenge.builder().uuid(KeyGeneratorUtil.uuid()).drillType(drillTypes.name()).refId(KeyGeneratorUtil.refId()).drillId(drillMetadata).drillScore(0).isPass(false).totalCorrect(0).totalWrong(0).build();
             drillChallenge.setDrillChallengeScoresList(CollectionUtil.isNotEmpty(drillMetadata.getDrillSetList()) ? drillMetadata.getDrillSetList().stream().map(d -> DrillChallengeScoreUtil.buildEntity(drillChallenge, d)).collect(Collectors.toList()) : null);
             return drillChallenge;
         }
@@ -68,7 +69,7 @@ public class DrillServiceUtil {
 
     public static class DrillChallengeScoreUtil {
         public static DrillChallengeScores buildEntity(DrillChallenge drillChallenge, DrillSet drillSet) {
-            return DrillChallengeScores.builder().uuid(UUID.randomUUID().toString()).refId(UUID.randomUUID().getMostSignificantBits()).challengeId(drillChallenge).drillSetId(drillSet).build();
+            return DrillChallengeScores.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).challengeId(drillChallenge).drillSetId(drillSet).build();
         }
 
         public static DrillChallengeScoresDTO buildDTO(DrillChallengeScores drillChallengeScores) {

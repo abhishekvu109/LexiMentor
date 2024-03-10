@@ -6,6 +6,7 @@ import com.abhi.leximentor.inventory.entities.inv.*;
 import com.abhi.leximentor.inventory.repository.inv.LanguageRepository;
 import com.abhi.leximentor.inventory.repository.inv.WordMetadataRepository;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
+import com.abhi.leximentor.inventory.util.KeyGeneratorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,7 @@ public class InventoryServiceUtil {
 
     static class SynonymUtil {
         public static Synonym buildEntity(SynonymDTO dto, WordMetadata wordMetadata) {
-            return Synonym.builder().wordId(wordMetadata).uuid(UUID.randomUUID().toString()).refId(UUID.randomUUID().getMostSignificantBits()).synonym(dto.getSynonym()).source(dto.getSource()).build();
-
+            return Synonym.builder().wordId(wordMetadata).uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).synonym(dto.getSynonym()).source(dto.getSource()).build();
         }
 
         public static SynonymDTO buildDTO(Synonym synonym) {
@@ -32,7 +32,7 @@ public class InventoryServiceUtil {
 
     static class AntonymUtil {
         public static Antonym buildEntity(AntonymDTO dto, WordMetadata wordMetadata) {
-            return Antonym.builder().wordId(wordMetadata).uuid(UUID.randomUUID().toString()).refId(UUID.randomUUID().getMostSignificantBits()).antonym(dto.getAntonym()).source(dto.getSource()).build();
+            return Antonym.builder().wordId(wordMetadata).uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).antonym(dto.getAntonym()).source(dto.getSource()).build();
         }
 
         public static AntonymDTO buildDTO(Antonym antonym) {
@@ -42,7 +42,7 @@ public class InventoryServiceUtil {
 
     static class MeaningUtil {
         public static Meaning buildEntity(MeaningDTO dto, WordMetadata wordMetadata) {
-            return Meaning.builder().wordId(wordMetadata).definition(dto.getMeaning()).refId(UUID.randomUUID().getMostSignificantBits()).source(dto.getSource()).uuid(UUID.randomUUID().toString()).build();
+            return Meaning.builder().wordId(wordMetadata).definition(dto.getMeaning()).refId(KeyGeneratorUtil.refId()).source(dto.getSource()).uuid(KeyGeneratorUtil.uuid()).build();
         }
 
         public static MeaningDTO buildDTO(Meaning meaning) {
@@ -52,7 +52,7 @@ public class InventoryServiceUtil {
 
     static class ExampleUtil {
         public static Example buildEntity(ExampleDTO dto, WordMetadata wordMetadata) {
-            return Example.builder().wordId(wordMetadata).refId(UUID.randomUUID().getMostSignificantBits()).example(dto.getExample()).uuid(UUID.randomUUID().toString()).source(dto.getSource()).build();
+            return Example.builder().wordId(wordMetadata).refId(KeyGeneratorUtil.refId()).example(dto.getExample()).uuid(KeyGeneratorUtil.uuid()).source(dto.getSource()).build();
         }
 
         public static ExampleDTO buildDTO(Example example) {
@@ -62,7 +62,7 @@ public class InventoryServiceUtil {
 
     static class PartsOfSpeechUtil {
         public static PartsOfSpeech buildEntity(PartsOfSpeechDTO dto, WordMetadata wordMetadata) {
-            return PartsOfSpeech.builder().wordId(wordMetadata).refId(UUID.randomUUID().getMostSignificantBits()).uuid(UUID.randomUUID().toString()).pos(dto.getPos()).source(dto.getSource()).build();
+            return PartsOfSpeech.builder().wordId(wordMetadata).refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).pos(dto.getPos()).source(dto.getSource()).build();
         }
 
         public static PartsOfSpeechDTO buildDTO(PartsOfSpeech partsOfSpeech) {
@@ -72,7 +72,7 @@ public class InventoryServiceUtil {
 
     static class WordMetadataUtil {
         private static WordMetadata buildNewObject(WordDTO dto, LanguageRepository languageRepository) {
-            WordMetadata wordMetadata = WordMetadata.builder().refId(UUID.randomUUID().getMostSignificantBits()).uuid(UUID.randomUUID().toString()).word(dto.getWord()).pos(dto.getPos()).pronunciation(dto.getPronunciation()).language(languageRepository.findByLanguage(dto.getLanguage())).status(Status.ACTIVE).source(dto.getSource()).category(dto.getCategory()).build();
+            WordMetadata wordMetadata = WordMetadata.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).word(dto.getWord()).pos(dto.getPos()).pronunciation(dto.getPronunciation()).language(languageRepository.findByLanguage(dto.getLanguage())).status(Status.ACTIVE).source(dto.getSource()).category(dto.getCategory()).build();
             if (CollectionUtil.isNotEmpty(dto.getPartsOfSpeeches()))
                 wordMetadata.setPartsOfSpeeches(dto.getPartsOfSpeeches().stream().map(pos -> new InventoryServiceUtil.PartsOfSpeechUtil().buildEntity(pos, wordMetadata)).collect(Collectors.toList()));
             if (CollectionUtil.isNotEmpty(dto.getSynonyms()))

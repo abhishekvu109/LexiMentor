@@ -5,6 +5,7 @@ import com.abhi.leximentor.inventory.dto.inv.LanguageDTO;
 import com.abhi.leximentor.inventory.entities.inv.Language;
 import com.abhi.leximentor.inventory.repository.inv.LanguageRepository;
 import com.abhi.leximentor.inventory.service.inv.LanguageService;
+import com.abhi.leximentor.inventory.util.KeyGeneratorUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public LanguageDTO add(LanguageDTO dto) {
-        Language language = Language.builder().uuid(UUID.randomUUID().toString()).refId(UUID.randomUUID().getMostSignificantBits()).language(dto.getLanguage()).status(Status.ACTIVE).build();
+        Language language = Language.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).language(dto.getLanguage()).status(Status.ACTIVE).build();
         language = languageRepository.save(language);
         return LanguageDTO.builder().refId(language.getRefId()).status(Status.getStatus(language.getStatus())).language(language.getLanguage()).build();
     }
