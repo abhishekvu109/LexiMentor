@@ -14,6 +14,6 @@ public class KeyGeneratorUtil {
         ByteBuffer buffer = ByteBuffer.wrap(new byte[16]);
         buffer.putLong(uuid.getMostSignificantBits());
         buffer.putLong(uuid.getLeastSignificantBits());
-        return buffer.getLong(0);
+        return Math.abs(buffer.getLong(0));
     }
 }
