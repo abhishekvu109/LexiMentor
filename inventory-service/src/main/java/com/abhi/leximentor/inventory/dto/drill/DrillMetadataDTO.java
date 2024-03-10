@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrillMetadataDTO {
-    private String refId;
+    private long refId;
     private String name;
     private String status;
     private LocalDateTime crtnDate;

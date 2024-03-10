@@ -36,10 +36,6 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
         return getEntity(size, wordMetadataList);
     }
 
-    private DrillSet buildDrillSetEntity(WordMetadata wordMetadata, DrillMetadata drillMetadata) {
-        return DrillSet.builder().refId(UUID.randomUUID().toString()).drillId(drillMetadata).wordId(wordMetadata).build();
-    }
-
     @Override
     public DrillMetadataDTO createDrillFromNewWords(int size) {
         if (size < 20) throw new IllegalArgumentException("The size of the drill should be at least 20");
@@ -74,14 +70,14 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     }
 
     @Override
-    public void deleteByRefId(String refId) {
+    public void deleteByRefId(long refId) {
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(refId);
         drillMetadataRepository.delete(drillMetadata);
         log.info("The entity has been deleted: {}", drillMetadata.getName());
     }
 
     @Override
-    public DrillMetadataDTO getByRefId(String refId) {
+    public DrillMetadataDTO getByRefId(long refId) {
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(refId);
         return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
     }

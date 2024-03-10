@@ -21,7 +21,10 @@ public class DrillSet {
     private long id;
 
     @Column(name = "ref_id", nullable = false, unique = true)
-    private String refId;
+    private long refId;
+
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
 
     @ManyToOne
     @JoinColumn(name = "drill_metadata_id")

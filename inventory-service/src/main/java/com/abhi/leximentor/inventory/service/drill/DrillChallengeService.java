@@ -10,5 +10,5 @@ import java.util.List;
 public interface DrillChallengeService {
     public DrillMetadataDTO addChallenges(DrillMetadataDTO drillMetadataDTO, DrillTypes drillTypes);
 
-    public List<DrillChallengeDTO> getChallengesByDrillRefId(String drillRefId);
+    public List<DrillChallengeDTO> getChallengesByDrillRefId(long drillRefId);
 }

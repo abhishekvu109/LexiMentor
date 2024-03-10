@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -45,7 +46,7 @@ public class DrillController {
     }
 
     @DeleteMapping(value = UrlConstants.Drill.DRILL_CREATE_RANDOMLY, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> deleteByRefId(@RequestParam String refId) {
+    public @ResponseBody ResponseEntity<RestApiResponse> deleteByRefId(@RequestParam long refId) {
         drillMetadataService.deleteByRefId(refId);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The data has been removed successfully.");
     }
@@ -57,7 +58,7 @@ public class DrillController {
     }
 
     @PostMapping(value = UrlConstants.Drill.DRILL_CREATE_CHALLENGES, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> addChallenges(@RequestParam String drillId, @RequestParam String drillType) {
+    public ResponseEntity<RestApiResponse> addChallenges(@RequestParam long drillId, @RequestParam String drillType) {
         DrillMetadataDTO drillMetadataDTO = drillMetadataService.getByRefId(drillId);
         drillMetadataDTO = drillChallengeService.addChallenges(drillMetadataDTO, DrillTypes.getType(drillType));
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillMetadataDTO);
@@ -70,13 +71,13 @@ public class DrillController {
     }
 
     @GetMapping(value = UrlConstants.Drill.DRILL_GET_CHALLENGES_BY_DRILL_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> getAllChallengesByDrillRefId(@PathVariable String drillId) {
+    public ResponseEntity<RestApiResponse> getAllChallengesByDrillRefId(@PathVariable long drillId) {
         List<DrillChallengeDTO> drillChallengeDTOList = drillChallengeService.getChallengesByDrillRefId(drillId);
         return CollectionUtil.isNotEmpty(drillChallengeDTOList) ? ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillChallengeDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve challenges");
     }
 
     @GetMapping(value = UrlConstants.Drill.DRILL_CHALLENGE_SCORE_BY_CHALLENGE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> getAllChallengeScoresByChallengeId(@PathVariable String challengeId) {
+    public ResponseEntity<RestApiResponse> getAllChallengeScoresByChallengeId(@PathVariable long challengeId) {
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(challengeId);
         List<DrillChallengeScoresDTO> drillChallengeScoresDTOS = drillChallengeScoreService.getByDrillChallengeId(drillChallenge);
         return CollectionUtil.isNotEmpty(drillChallengeScoresDTOS) ? ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillChallengeScoresDTOS) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve challenge scores");

@@ -23,8 +23,11 @@ public class Synonym {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @Column(name = "b_key")
-    private String key;
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Column(name = "ref_id")
+    private long refId;
 
     @ManyToOne
     @JoinColumn(name = "word_id", nullable = false)

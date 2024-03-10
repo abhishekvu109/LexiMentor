@@ -22,7 +22,10 @@ public class DrillMetadata {
     private long id;
 
     @Column(name = "ref_id", unique = true, nullable = false)
-    private String refId;
+    private long refId;
+
+    @Column(name = "uuid", unique = true, nullable = false)
+    private String uuid;
 
     @Column(name = "name")
     private String name;

@@ -22,7 +22,10 @@ public class DrillChallengeScores {
     private long id;
 
     @Column(name = "ref_id")
-    private String refId;
+    private long refId;
+
+    @Column(name = "uuid")
+    private String uuid;
 
     @ManyToOne
     @JoinColumn(name = "drill_challenge_id")

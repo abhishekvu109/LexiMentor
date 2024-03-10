@@ -26,8 +26,11 @@ public class WordMetadata {
     private long id;
 
 
-    @Column(name = "b_key")
-    private String key;
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Column(name = "ref_id")
+    private long refId;
 
     @Column(name = "word", nullable = false)
     private String word;

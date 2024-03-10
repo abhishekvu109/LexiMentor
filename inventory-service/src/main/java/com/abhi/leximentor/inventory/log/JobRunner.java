@@ -45,8 +45,7 @@ public class JobRunner implements Runnable {
     private CompletableFuture<NltkDTO> sendNlTkAsyncRequest(HttpClient httpClient, String url) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                        .queryParam("word", word);
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("word", word);
                 HttpRequest request = HttpRequest.newBuilder().uri(URI.create(builder.toUriString())).build();
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
                 NltkDTO nltkDTO = objectMapper.readValue(response.body(), NltkDTO.class);
@@ -62,8 +61,7 @@ public class JobRunner implements Runnable {
     private CompletableFuture<DatamuseDTO> sendDatamuseAsyncRequest(HttpClient httpClient, String url) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                        .queryParam("word", word);
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("word", word);
                 log.info("URI:{}", builder.toUriString());
                 HttpRequest request = HttpRequest.newBuilder().uri(URI.create(builder.toUriString())).build();
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -102,9 +100,9 @@ public class JobRunner implements Runnable {
 
     public void buildWordDtoFromNltkResponse(WordDTO wordDTO, String word, NltkDTO nltkDTO) {
         wordDTO.setWord(word);
-        wordDTO.setAntonyms(CollectionUtils.isEmpty(nltkDTO.getAntonyms()) ? null : nltkDTO.getAntonyms().stream().map(nltk -> AntonymDTO.builder().antonym(nltk).word(word).source("NLTK").build()).collect(Collectors.toList()));
-        wordDTO.setSynonyms(CollectionUtils.isEmpty(nltkDTO.getSynonyms()) ? null : nltkDTO.getSynonyms().stream().map(nltk -> SynonymDTO.builder().word(word).synonym(nltk).source("NLTK").build()).collect(Collectors.toList()));
-        wordDTO.setExamples(CollectionUtils.isEmpty(nltkDTO.getExamples()) ? null : nltkDTO.getExamples().stream().map(nltk -> ExampleDTO.builder().wordKey(word).example(nltk).source("NLTK").build()).collect(Collectors.toList()));
+        wordDTO.setAntonyms(CollectionUtils.isEmpty(nltkDTO.getAntonyms()) ? null : nltkDTO.getAntonyms().stream().map(nltk -> AntonymDTO.builder().wordRefId(wordDTO.getRefId()).antonym(nltk).word(word).source("NLTK").build()).collect(Collectors.toList()));
+        wordDTO.setSynonyms(CollectionUtils.isEmpty(nltkDTO.getSynonyms()) ? null : nltkDTO.getSynonyms().stream().map(nltk -> SynonymDTO.builder().wordRefId(wordDTO.getRefId()).word(word).synonym(nltk).source("NLTK").build()).collect(Collectors.toList()));
+        wordDTO.setExamples(CollectionUtils.isEmpty(nltkDTO.getExamples()) ? null : nltkDTO.getExamples().stream().map(nltk -> ExampleDTO.builder().wordRefId(wordDTO.getRefId()).example(nltk).source("NLTK").build()).collect(Collectors.toList()));
         if (nltkDTO.getDefinition() != null) {
             List<MeaningDTO> meaningDTOS = new LinkedList<>();
             meaningDTOS.add(MeaningDTO.builder().meaning(nltkDTO.getDefinition()).word(word).source("NLTK").build());
@@ -135,12 +133,11 @@ public class JobRunner implements Runnable {
         if (!CollectionUtils.isEmpty(datamuseDTO.getExamples())) {
             Collection<ExampleDTO> exampleDTOS = wordDTO.getExamples();
             if (!CollectionUtils.isEmpty(exampleDTOS)) exampleDTOS = new LinkedList<>();
-            exampleDTOS = datamuseDTO.getExamples().stream().map(dm -> ExampleDTO.builder().example(dm).wordKey(word).source("DATAMUSE").build()).collect(Collectors.toList());
+            exampleDTOS = datamuseDTO.getExamples().stream().map(dm -> ExampleDTO.builder().example(dm).word(word).source("DATAMUSE").build()).collect(Collectors.toList());
         }
         if (datamuseDTO.getPos() != null) {
             Collection<PartsOfSpeechDTO> partsOfSpeechDTOS = wordDTO.getPartsOfSpeeches();
-            if (partsOfSpeechDTOS == null || partsOfSpeechDTOS.isEmpty())
-                partsOfSpeechDTOS = new LinkedList<>();
+            if (partsOfSpeechDTOS == null || partsOfSpeechDTOS.isEmpty()) partsOfSpeechDTOS = new LinkedList<>();
             partsOfSpeechDTOS.add(PartsOfSpeechDTO.builder().pos(datamuseDTO.getPos()).word(word).source("DATAMUSE").build());
             wordDTO.setPartsOfSpeeches(partsOfSpeechDTOS);
         }

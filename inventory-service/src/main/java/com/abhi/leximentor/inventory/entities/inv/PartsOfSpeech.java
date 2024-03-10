@@ -20,8 +20,11 @@ public class PartsOfSpeech {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "b_key", unique = true)
-    private String key;
+    @Column(name = "uuid", unique = true)
+    private String uuid;
+
+    @Column(name = "ref_id")
+    private long refId;
 
     @ManyToOne
     @JoinColumn(name = "word_id")

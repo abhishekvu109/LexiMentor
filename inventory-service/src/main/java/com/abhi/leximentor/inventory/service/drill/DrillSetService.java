@@ -4,7 +4,7 @@ import com.abhi.leximentor.inventory.dto.drill.DrillSetDTO;
 import com.abhi.leximentor.inventory.dto.inv.WordDTO;
 
 public interface DrillSetService {
-    public DrillSetDTO getDrillSetByRefId(String refId);
+    public DrillSetDTO getDrillSetByRefId(long refId);
 
     public DrillSetDTO getDrillSetByDrillId(long drillId);
 

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface WordMetadataRepository extends JpaRepository<WordMetadata, Long> {
-    public WordMetadata findByKey(String bKey);
+    public WordMetadata findByRefId(long refId);
 
     @Query(value = QueryConstants.Inventory.WordMetadata.FIND_BY_WORD, nativeQuery = true)
     public WordMetadata findByWord(String word);

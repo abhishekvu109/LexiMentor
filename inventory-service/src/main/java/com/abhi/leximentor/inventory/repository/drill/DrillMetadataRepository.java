@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DrillMetadataRepository extends JpaRepository<DrillMetadata, Long> {
-    public DrillMetadata findByRefId(String refId);
+    public DrillMetadata findByRefId(long refId);
 }

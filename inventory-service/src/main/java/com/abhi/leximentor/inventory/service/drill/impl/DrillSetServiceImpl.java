@@ -18,7 +18,7 @@ public class DrillSetServiceImpl implements DrillSetService {
     private final DrillSetRepository drillSetRepository;
 
     @Override
-    public DrillSetDTO getDrillSetByRefId(String refId) {
+    public DrillSetDTO getDrillSetByRefId(long refId) {
         DrillSet drillSet = drillSetRepository.findByRefId(refId);
         return DrillServiceUtil.DrillSetUtil.buildDTO(drillSet);
     }

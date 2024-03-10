@@ -54,12 +54,8 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public WordDTO get(long wordId) {
-        Optional<WordMetadata> wordMetadata = wordRepository.findById(wordId);
-        if (wordMetadata.isEmpty()) {
-            log.error("Unable to fetch the word data");
-            throw new RuntimeException("Unable to fetch the word entity");
-        }
-        return InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata.get());
+        WordMetadata wordMetadata = wordRepository.findByRefId(wordId);
+        return InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata);
     }
 
     @Override

@@ -41,7 +41,7 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
     }
 
     @Override
-    public List<DrillChallengeDTO> getChallengesByDrillRefId(String drillRefId) {
+    public List<DrillChallengeDTO> getChallengesByDrillRefId(long drillRefId) {
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
         return CollectionUtil.isNotEmpty(drillMetadata.getDrillChallenges()) ? drillMetadata.getDrillChallenges().stream().map(d -> DrillServiceUtil.DrillChallengeUtil.buildDTO(d, drillMetadata)).collect(Collectors.toList()) : null;
     }

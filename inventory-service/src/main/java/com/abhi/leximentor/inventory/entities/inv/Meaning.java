@@ -22,8 +22,11 @@ public class Meaning {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "b_key")
-    private String key;
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Column(name = "ref_id")
+    private long refId;
 
     @Column(name = "source")
     private String source;
@@ -32,7 +35,7 @@ public class Meaning {
     @JoinColumn(name = "word_id")
     private WordMetadata wordId;
 
-    @Column(name = "definition",length = 5000)
+    @Column(name = "definition", length = 5000)
     private String definition;
 
     @Column(name = "crtn_date")

@@ -22,8 +22,11 @@ public class Language {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "b_key")
-    private String key;
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Column(name = "ref_id")
+    private long refId;
 
     @Column(name = "source")
     private String source;

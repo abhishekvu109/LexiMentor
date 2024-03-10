@@ -27,22 +27,13 @@ public class DrillChallengeScoreServiceImpl implements DrillChallengeScoreServic
 
     @Override
     public DrillChallengeScoresDTO createChallenge(DrillChallengeScoresDTO dto) {
-        Optional<DrillChallenge> drillChallenge = drillChallengeRepository.findById(dto.getDrillChallengeId());
-        Optional<DrillSet> drillSet = drillSetRepository.findById(dto.getDrillSetId());
-        if (drillChallenge.isEmpty()) {
-            log.error("Unable to find the drill challenge id");
-            throw new RuntimeException("Unable to find the drill challenge id");
-        }
-        if (drillSet.isEmpty()) {
-            log.error("Unable to find the drill set id");
-            throw new RuntimeException("Unable to find the drill set id");
-        }
-
-        DrillChallengeScores scores = DrillServiceUtil.DrillChallengeScoreUtil.buildEntity(drillChallenge.get(), drillSet.get());
+        DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(dto.getDrillChallengeRefId());
+        DrillSet drillSet = drillSetRepository.findByRefId(dto.getDrillSetRefId());
+        DrillChallengeScores scores = DrillServiceUtil.DrillChallengeScoreUtil.buildEntity(drillChallenge, drillSet);
         scores = drillChallengeScoreRepository.save(scores);
         return DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(scores);
     }
-    
+
     @Override
     public List<DrillChallengeScoresDTO> getByDrillChallengeId(DrillChallenge drillChallenge) {
         List<DrillChallengeScores> drillChallengeScores = drillChallengeScoreRepository.findByChallengeId(drillChallenge);
