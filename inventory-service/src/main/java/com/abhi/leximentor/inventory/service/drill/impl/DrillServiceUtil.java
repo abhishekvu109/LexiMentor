@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -49,7 +48,7 @@ public class DrillServiceUtil {
         }
 
         public static DrillSetDTO buildDTO(DrillSet drillSet) {
-            return DrillSetDTO.builder().refId(String.valueOf(drillSet.getRefId())).drillRefId(String.valueOf(drillSet.getDrillId().getRefId())).crtnDate(drillSet.getCrtndate()).wordId(drillSet.getWordId().getRefId()).word(drillSet.getWordId().getWord()).build();
+            return DrillSetDTO.builder().refId(String.valueOf(drillSet.getRefId())).drillRefId(String.valueOf(drillSet.getDrillId().getRefId())).crtnDate(drillSet.getCrtndate()).wordRefId(String.valueOf(drillSet.getWordId().getRefId())).word(drillSet.getWordId().getWord()).build();
         }
     }
 

@@ -13,6 +13,6 @@ public class DrillSetDTO {
     private String refId;
     private String drillRefId;
     private LocalDateTime crtnDate;
-    private long wordId;
+    private String wordRefId;
     private String word;
 }

@@ -42,12 +42,12 @@ const Challenges = ({ data }) => {
           <tbody>
             {data.data.map((item, index) => (
               <tr key={item.refId}>
-                <th scope="row">{index + 1}</th>
-                <Link href={"/drill_challenges/" + item.refId}>
+                <td scope="row">{index + 1}</td>
+                <td><Link href={"/drill_challenges/" + item.refId}>
                   <button className="btn btn-primary mb-3">
                     Open Challenge
                   </button>
-                </Link>
+                </Link></td>
                 <td>{item.refId}</td>
                 <td>{item.drillType}</td>
                 <td>{item.drillScore}</td>

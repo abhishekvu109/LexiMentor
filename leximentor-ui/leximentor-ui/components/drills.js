@@ -40,13 +40,13 @@ const Drills = ({ data }) => {
               <tr key={item.refId}>
                 <th scope="row">{index + 1}</th>
                 <td className="text-center">
-                  <Link href={"/challenges/" + BigInt(item.refId).toString()}>
+                  <Link href={"/challenges/" + item.refId}>
                     <button className="btn btn-primary mb-3">
                       Create meaning challenge
                     </button>
                   </Link>
                 </td>
-                <td>{JSON.parse(item.refId)}</td>
+                <td>{item.refId}</td>
                 <td>{item.name}</td>
                 <td>{item.status}</td>
                 <td>{item.overAllScore}</td>
