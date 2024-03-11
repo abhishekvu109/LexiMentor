@@ -37,8 +37,8 @@ public class WordController {
     }
 
     @GetMapping(value = UrlConstants.Inventory.WordMetaData.WORD_GET_BY_WORD_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getByWordId(@PathVariable long wordId) {
-        WordDTO dto = wordService.get(wordId);
+    public @ResponseBody ResponseEntity<RestApiResponse> getByWordRefId(@PathVariable String wordRefId) {
+        WordDTO dto = wordService.get(Long.parseLong(wordRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 
