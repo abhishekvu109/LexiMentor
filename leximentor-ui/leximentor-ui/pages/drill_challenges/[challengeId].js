@@ -1,99 +1,49 @@
+import Word_render from "@/components/word_renderer/word_render";
+import {useRouter} from 'next/router';
+import {useEffect, useState} from "react";
+
 const ListChallenges = ({}) => {
-  return (
-    <>
-      <div className="flex flex-row">
-        <div className="basis-2/4 bg-gray-200">
-          <div className="flex flex-row m-2">
-            <div className="basis-1/4 font-semibold">Word ID</div>
-            <div className="basis-3/4"><input className="w-full form-control" type="wordId"></input></div>
-          </div>
-          <div className="flex flex-row m-2">
-            <div className="basis-1/4 font-semibold">Word ID</div>
-            <div className="basis-3/4"><input className="w-full form-control" type="wordId"></input></div>
-          </div>
-          <div className="flex flex-row m-2">
-            <div className="basis-1/4 font-semibold">Word ID</div>
-            <div className="basis-3/4"><input className="w-full form-control" type="wordId"></input></div>
-          </div>
-          <div className="flex flex-row m-2">
-            <div className="basis-1/4 font-semibold">Word ID</div>
-            <div className="basis-3/4"><input className="w-full form-control" type="wordId"></input></div>
-          </div>
-          <div className="flex flex-row m-2">
-            <div className="basis-1/4 font-semibold">Word ID</div>
-            <div className="basis-3/4"><input className="w-full form-control" type="wordId"></input></div>
-          </div>
-          <div className="flex flex-row m-2">
-            <div className="basis-1/4 font-semibold">Word ID</div>
-            <div className="basis-3/4"><input className="w-full form-control" type="wordId"></input></div>
-          </div>
-          <div className="flex flex-row m-2">
-            <div className="basis-1/4 font-semibold">Word ID</div>
-            <div className="basis-3/4"><input className="w-full form-control" type="wordId"></input></div>
-          </div>
-          <div className="flex flex-row m-2">
-            <div className="basis-1/4 font-semibold">Word ID</div>
-            <div className="basis-3/4"><input className="w-full form-control" type="wordId"></input></div>
-          </div>
-          
-        </div>
-        <div className="basis-2/4 bg-green-400">02</div>
-      </div>
-      <div classNameName="flex flex-row">
-        <nav>
-          <ul className="pagination">
-            <li className="page-item disabled">
-              <a href="#" className="page-link" tabindex="-1">
-                Previous
-              </a>
-            </li>
-            <li className="page-item active">
-              <a href="#" className="page-link">
-                1
-              </a>
-            </li>
-            <li className="page-item">
-              <a href="#" className="page-link">
-                2
-              </a>
-            </li>
-            <li className="page-item">
-              <a href="#" className="page-link">
-                3
-              </a>
-            </li>
-            <li className="page-item">
-              <a href="#" className="page-link">
-                4
-              </a>
-            </li>
-            <li className="page-item">
-              <a href="#" className="page-link">
-                5
-              </a>
-            </li>
-            <li className="page-item">
-              <a href="#" className="page-link">
-                Next
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </>
-  );
+    // const router = useRouter();
+    // const wordRefId = router.query.challengeId;
+    // // 4113968317282955619
+    // return (<>
+    //     <Word_render value={wordRefId}></Word_render>
+    // </>);
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        // This runs after every render
+        console.log('Effect ran');
+
+        // You can perform side effects here
+
+        // Cleanup function (runs before the next effect and on unmount)
+        return () => {
+            console.log('Cleanup');
+        };
+    }, [count]); // Dependency array, effect will re-run if count changes
+
+    const increment = () => {
+        setCount(count + 1);
+    };
+
+    return (<div>
+        <h1>Count: {count}</h1>
+        <button onClick={increment}>Increment</button>
+    </div>);
+
 };
 
 export default ListChallenges;
 
-export async function getServerSideProps(context) {
-  const { challengeId } = context.params;
-  const res = await fetch(`http://192.168.1.7:9191/api/drill/challenges/${challengeId}`);
-  const data = await res.json();
-  // Pass data to the component via props
-  return {
-    props: {
-      data,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//     const {challengeId} = context.params;
+//     const res = await fetch(`http://192.168.1.7:9191/api/drill/challenges/${challengeId}`);
+//     const data = await res.json();
+//     // Pass data to the component via props
+//     return {
+//         props: {
+//             data,
+//         },
+//     };
+// }

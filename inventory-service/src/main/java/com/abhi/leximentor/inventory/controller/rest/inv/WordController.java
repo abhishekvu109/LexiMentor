@@ -25,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 public class WordController {
     private final WordService wordService;
 
-    @PostMapping(value = UrlConstants.Inventory.WordMetaData.WORD_CREATE, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(value = UrlConstants.Inventory.WordMetaData.WORD_ADD_WORDS, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> addWord(@Valid @RequestBody Collection<WordDTO> dto) {
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
             Map<String, WordDTO> wordDTOS = new HashMap<>();
@@ -36,7 +36,7 @@ public class WordController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "You request has been submitted and is in process");
     }
 
-    @GetMapping(value = UrlConstants.Inventory.WordMetaData.WORD_GET_BY_WORD_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = UrlConstants.Inventory.WordMetaData.WORD_GET_BY_WORD_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByWordRefId(@PathVariable String wordRefId) {
         WordDTO dto = wordService.get(Long.parseLong(wordRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);

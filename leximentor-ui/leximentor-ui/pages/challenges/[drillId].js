@@ -12,8 +12,9 @@ const Challenges = ({ data }) => {
   const { drillId } = router.query.drillId;
   return (
     <>
+      <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></Script>
       <Head>
-        <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></Script>
+
       </Head>
       <div className="container mt-5">
         <button className="btn btn-primary mb-3">Open meaning challenge</button>
