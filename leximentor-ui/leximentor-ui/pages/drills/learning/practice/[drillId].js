@@ -10,6 +10,7 @@ const LoadDrillSet = ({drillSetData, wordResponseResult}) => {
         const fetchWordData = async () => {
             try {
                 const wordRefId = drillSetData.data[currentIndex].wordRefId;
+                console.log(wordRefId);
                 const WORD_URL = `http://192.168.1.7:9191/api/inventory/words/${wordRefId}`;
                 const wordResponse = await fetch(WORD_URL);
                 console.log(wordResponse.json());
@@ -20,7 +21,8 @@ const LoadDrillSet = ({drillSetData, wordResponseResult}) => {
             }
         }
         // You can perform side effects here
-        fetchWordData();
+        if(currentIndex==0)
+            fetchWordData();
         // Cleanup function (runs before the next effect and on unmount)
         return () => {
             console.log('Cleanup');
