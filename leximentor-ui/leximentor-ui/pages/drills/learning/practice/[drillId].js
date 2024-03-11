@@ -1,14 +1,47 @@
-import Word_render from "@/components/word_renderer/word_render";
+import {useEffect, useState} from "react";
 
-const LoadDrillSet = () => {
+const LoadDrillSet = ({drillSetData}) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [wordData, setWordData] = useState(null);
+    useEffect(() => {
+        // This runs after every render
+        console.log('The current index is ' + currentIndex);
+        const fetchWordData = async () => {
+            try {
+                const wordRefId=drillSetData[0].data.
+                const WORD_URL = `http://192.168.1.7:9191/api/inventory/words/${wordRefId}`;
+                const wordResponse = await fetch(WORD_URL);
+                const wordResponseResult = wordResponse.json();
+                setWordData(wordResponseResult);
+            } catch (error) {
+                console.log('Error extracting the word data', error)
+            }
+        }
+        // You can perform side effects here
+
+        // Cleanup function (runs before the next effect and on unmount)
+        return () => {
+            console.log('Cleanup');
+        };
+    }, [currentIndex]); // Dependency array, effect will re-run if count changes
+
+    const prevWord = () => {
+        setCurrentIndex((currentIndex - 1 + drillSetData.length) % drillSetData.length);
+    };
+    const nextWord = () => {
+        setCurrentIndex((currentIndex + 1) % drillSetData.length);
+    };
     return (<>
         <div className="container mx-auto mt-5 bg-amber-50 border-1">
             <div className="flex flex-row ...">
                 <div className="basis-1/2 text-center m-2">
-                    <button className="btn btn-warning btn-outline-dark w-full font-semibold">Previous</button>
+                    <button onClick={prevWord}
+                            className="btn btn-warning btn-outline-dark w-full font-semibold">Previous
+                    </button>
                 </div>
                 <div className="basis-1/2 text-center m-2">
-                    <button className="btn btn-success btn-outline-dark w-full font-semibold">Next</button>
+                    <button onClick={nextWord} className="btn btn-success btn-outline-dark w-full font-semibold">Next
+                    </button>
                 </div>
             </div>
             <div className="flex flex-row">
@@ -195,15 +228,16 @@ const LoadDrillSet = () => {
 };
 
 export default LoadDrillSet;
-// export async function getServerSideProps(context) {
-//     // 4113968317282955619
-//     const {drillId} = context.params;
-//     const drillResponse = await fetch(`http://192.168.1.7:9191/api/drill/challenges/set/${drillId}`);
-//     const drillSetData = await drillResponse.json();
-//     // Pass data to the component via props
-//     return {
-//         props: {
-//             drillSetData,
-//         },
-//     };
-// }
+
+export async function getServerSideProps(context) {
+    // 4113968317282955619
+    const {drillId} = context.params;
+    const drillResponse = await fetch(`http://192.168.1.7:9191/api/drill/challenges/set/${drillId}`);
+    const drillSetData = await drillResponse.json();
+    const
+    return {
+        props: {
+            drillSetData,
+        },
+    };
+}
