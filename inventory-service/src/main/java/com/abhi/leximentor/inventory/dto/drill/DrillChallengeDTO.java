@@ -12,9 +12,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrillChallengeDTO {
-    private long refId;
+    private String refId;
     private String drillType;
-    private long drillRefId;
+    private String drillRefId;
     private double drillScore;
     private boolean isPass;
     private int totalCorrect;

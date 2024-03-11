@@ -9,8 +9,8 @@ import lombok.ToString;
 @Data
 @ToString
 public class MeaningDTO {
-    private long refId;
-    private long wordRefId;
+    private String refId;
+    private String wordRefId;
     private String word;
     private String meaning;
     private String source;

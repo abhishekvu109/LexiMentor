@@ -8,8 +8,8 @@ import lombok.ToString;
 @Data
 @ToString
 public class AntonymDTO {
-    private long refId;
-    private long wordRefId;
+    private String refId;
+    private String wordRefId;
     private String word;
     private String antonym;
     private String status;

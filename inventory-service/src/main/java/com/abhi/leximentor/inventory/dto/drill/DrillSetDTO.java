@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrillSetDTO {
-    private long refId;
-    private long drillRefId;
+    private String refId;
+    private String drillRefId;
     private LocalDateTime crtnDate;
     private long wordId;
     private String word;

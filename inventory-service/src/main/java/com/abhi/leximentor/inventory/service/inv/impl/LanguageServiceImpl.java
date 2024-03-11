@@ -23,12 +23,12 @@ public class LanguageServiceImpl implements LanguageService {
     public LanguageDTO add(LanguageDTO dto) {
         Language language = Language.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).language(dto.getLanguage()).status(Status.ACTIVE).build();
         language = languageRepository.save(language);
-        return LanguageDTO.builder().refId(language.getRefId()).status(Status.getStatus(language.getStatus())).language(language.getLanguage()).build();
+        return LanguageDTO.builder().refId(String.valueOf(language.getRefId())).status(Status.getStatus(language.getStatus())).language(language.getLanguage()).build();
     }
 
     @Override
     public LanguageDTO get(String language) {
         Language entityLang = languageRepository.findByLanguage(language);
-        return LanguageDTO.builder().refId(entityLang.getRefId()).status(Status.getStatus(entityLang.getStatus())).language(entityLang.getLanguage()).build();
+        return LanguageDTO.builder().refId(String.valueOf(entityLang.getRefId())).status(Status.getStatus(entityLang.getStatus())).language(entityLang.getLanguage()).build();
     }
 }

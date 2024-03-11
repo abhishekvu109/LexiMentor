@@ -31,7 +31,7 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
     @Override
     @Transactional
     public DrillMetadataDTO addChallenges(DrillMetadataDTO drillMetadataDTO, DrillTypes drillTypes) {
-        DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillMetadataDTO.getRefId());
+        DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(Long.parseLong(drillMetadataDTO.getRefId()));
         List<DrillChallenge> drillChallenges = drillMetadata.getDrillChallenges();
         if (CollectionUtil.isEmpty(drillMetadata.getDrillChallenges())) drillChallenges = new LinkedList<>();
         drillChallenges.add(DrillServiceUtil.DrillChallengeUtil.buildEntity(drillMetadata, drillTypes));

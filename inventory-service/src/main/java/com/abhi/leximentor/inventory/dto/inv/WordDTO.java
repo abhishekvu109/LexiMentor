@@ -14,7 +14,7 @@ import java.util.Collection;
 @ToString
 public class WordDTO {
 
-    private long refId;
+    private String refId;
     private String word;
     private String source;
     private String language;

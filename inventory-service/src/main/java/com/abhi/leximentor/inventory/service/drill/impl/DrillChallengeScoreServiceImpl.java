@@ -27,8 +27,8 @@ public class DrillChallengeScoreServiceImpl implements DrillChallengeScoreServic
 
     @Override
     public DrillChallengeScoresDTO createChallenge(DrillChallengeScoresDTO dto) {
-        DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(dto.getDrillChallengeRefId());
-        DrillSet drillSet = drillSetRepository.findByRefId(dto.getDrillSetRefId());
+        DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(dto.getDrillChallengeRefId()));
+        DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
         DrillChallengeScores scores = DrillServiceUtil.DrillChallengeScoreUtil.buildEntity(drillChallenge, drillSet);
         scores = drillChallengeScoreRepository.save(scores);
         return DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(scores);

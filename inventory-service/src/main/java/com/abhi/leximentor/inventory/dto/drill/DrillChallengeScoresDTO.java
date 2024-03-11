@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrillChallengeScoresDTO {
-    private long refId;
-    private long drillChallengeRefId;
-    private long drillSetRefId;
+    private String refId;
+    private String drillChallengeRefId;
+    private String drillSetRefId;
     private boolean isCorrect;
     private String response;
     private LocalDateTime crtnDate;
