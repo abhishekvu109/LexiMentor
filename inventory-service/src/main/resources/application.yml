@@ -2,7 +2,7 @@ spring:
   sql:
     init:
       mode: always
-      data-locations: schema.sql
+      data-locations: classpath:schema.sql
   jpa:
     hibernate:
       ddl-auto: update
