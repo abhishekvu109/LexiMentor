@@ -29,7 +29,7 @@ public class DrillServiceUtil {
 
     public static class DrillMetadataUtil {
         public static DrillMetadata buildEntity(int size, List<WordMetadata> wordMetadataList, ApplicationUtil applicationUtil) {
-            DrillMetadata drillMetadata = DrillMetadata.builder().name(applicationUtil.generateRandomString(size)).refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).status(Status.ACTIVE).build();
+            DrillMetadata drillMetadata = DrillMetadata.builder().name(applicationUtil.getDrillName()).refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).status(Status.ACTIVE).build();
             drillMetadata.setDrillSetList(wordMetadataList.stream().map(wordMetadata -> DrillSetUtil.buildEntity(wordMetadata, drillMetadata)).collect(Collectors.toList()));
             return drillMetadata;
         }

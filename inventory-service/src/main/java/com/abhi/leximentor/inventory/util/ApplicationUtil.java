@@ -3,6 +3,9 @@ package com.abhi.leximentor.inventory.util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Random;
 
 @Component
@@ -46,5 +49,11 @@ public class ApplicationUtil {
         }
 
         return alphanumeric.toString();
+    }
+
+    public String getDrillName() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE,dd-MMM-yyyy,HH:mm:ss", Locale.ENGLISH);
+        return localDateTime.format(formatter);
     }
 }

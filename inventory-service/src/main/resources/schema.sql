@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS job
 (
     job_id    int AUTO_INCREMENT PRIMARY KEY,
     ref_id    VARCHAR(200) NOT NULL,
-    crtn_date timestamp
+    crtn_date timestamp,
+    status int
 );
 
 CREATE TABLE IF NOT EXISTS word_record
