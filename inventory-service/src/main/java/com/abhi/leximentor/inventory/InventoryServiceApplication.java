@@ -11,13 +11,7 @@ import java.util.Locale;
 public class InventoryServiceApplication {
 
     public static void main(String[] args) {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE,dd-MMM-yyyy,HH:mm:ss", Locale.ENGLISH);
-        String formattedDateTime = localDateTime.format(formatter);
-
-        // Print the formatted date and time
-        System.out.println(formattedDateTime);
-//        SpringApplication.run(InventoryServiceApplication.class, args);
+        SpringApplication.run(InventoryServiceApplication.class, args);
     }
 
 }
