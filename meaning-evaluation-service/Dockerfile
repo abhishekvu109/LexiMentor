@@ -6,9 +6,9 @@ WORKDIR /app
 
 # Copy the current directory contents into the container at /app
 
-RUN apt install python3-dev
-# Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org flask nltk spacy requests llama-cpp-python
+RUN apt-get update && \
+    apt-get install -y python3-dev && \
+    pip install --trusted-host pypi.python.org flask nltk spacy requests llama-cpp-python
 
 # Make port 5600 available to the world outside this container
 EXPOSE 7700
