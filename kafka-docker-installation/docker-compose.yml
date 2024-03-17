@@ -59,8 +59,6 @@ services:
   meaning:
     image: meaning-evaluation-service-llm:latest
     container_name: meaning-evaluation-service-llm
-    volumes:
-      - /home/abhishek/models/llama:/app
     ports:
       - "7300:7300"
 #  word-publisher:
