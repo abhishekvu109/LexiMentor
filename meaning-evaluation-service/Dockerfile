@@ -4,7 +4,7 @@ FROM python:3.8-slim
 # Set the working directory in the container
 WORKDIR /app
 
-COPY meaning_llm.py /app
+COPY ./meaning_llm.py /app
 # Copy the current directory contents into the container at /app
 
 RUN apt-get update -y && \
@@ -14,7 +14,7 @@ RUN apt-get update -y && \
     pip install --trusted-host pypi.python.org flask nltk spacy requests llama-cpp-python
 
 # Make port 5600 available to the world outside this container
-EXPOSE 7700
+EXPOSE 7300
 
 # Define environment variable
 ENV NAME World
