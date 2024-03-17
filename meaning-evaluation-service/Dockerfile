@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 
 RUN apt-get update && \
+    apt-get install gcc-11 g++-11 &&\
     apt-get install -y python3-dev && \
     pip install --trusted-host pypi.python.org flask nltk spacy requests llama-cpp-python
 
