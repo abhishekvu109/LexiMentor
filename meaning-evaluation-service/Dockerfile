@@ -4,6 +4,7 @@ FROM python:3.8-slim
 # Set the working directory in the container
 WORKDIR /app
 
+COPY meaning_llm.py /app
 # Copy the current directory contents into the container at /app
 
 RUN apt-get update -y && \
