@@ -5,8 +5,8 @@ FROM python:3.8-slim
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY ./zephyr-7b-beta.Q4_0.gguf /app
 
+RUN apt install python3-dev
 # Install any needed packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org flask nltk spacy requests llama-cpp-python
 
@@ -17,4 +17,4 @@ EXPOSE 7700
 ENV NAME World
 
 # Run app.py when the container launches
-CMD ["python", "datamuse.py"]
+CMD ["python", "meaning_llm.py"]
