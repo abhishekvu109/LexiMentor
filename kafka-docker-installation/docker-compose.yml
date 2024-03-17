@@ -56,6 +56,11 @@ services:
     container_name: datamuse-word-service
     ports:
       - "7700:7700"
+  meaning:
+    image: meaning-evaluation-service-llm:latest
+    container_name: meaning-evaluation-service-llm
+    ports:
+      - "7300:7300"
 #  word-publisher:
 #    image: word-publisher-service:latest
 #    container_name: word-publisher-service
