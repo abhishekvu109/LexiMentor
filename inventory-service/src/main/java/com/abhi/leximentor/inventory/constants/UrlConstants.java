@@ -9,6 +9,7 @@ public class UrlConstants {
         public static final String DRILL_GET_CHALLENGE_SCORE_BY_CHALLENGE_ID = "/api/drill/challenges/scores/{challengeId}";
         public static final String DRILL_GET_DRILL_SET_BY_SET_ID = "/api/drill/challenges/sets/set/{setId}";
         public static final String DRILL_GET_DRILL_SETS_BY_DRILL_ID = "/api/drill/challenges/sets/{drillRefId}";
+        public static final String DRILL_EVALUATE_BY_DRILL_ID = "/api/drill/challenges/evaluate/meaning";
     }
 
     public static class Inventory {

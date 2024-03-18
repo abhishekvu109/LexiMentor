@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface DrillChallengeScoreRepository extends JpaRepository<DrillChallengeScores, Long> {
     public List<DrillChallengeScores> findByChallengeId(DrillChallenge challengeId);
+
+    public DrillChallengeScores findByRefId(long refId);
 }

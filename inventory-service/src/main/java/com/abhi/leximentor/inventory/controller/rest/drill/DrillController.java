@@ -3,19 +3,13 @@ package com.abhi.leximentor.inventory.controller.rest.drill;
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
 import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.constants.UrlConstants;
-import com.abhi.leximentor.inventory.dto.drill.DrillChallengeDTO;
-import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
-import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
-import com.abhi.leximentor.inventory.dto.drill.DrillSetDTO;
+import com.abhi.leximentor.inventory.dto.drill.*;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillMetadata;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
 import com.abhi.leximentor.inventory.repository.drill.DrillChallengeRepository;
-import com.abhi.leximentor.inventory.service.drill.DrillChallengeScoreService;
-import com.abhi.leximentor.inventory.service.drill.DrillChallengeService;
-import com.abhi.leximentor.inventory.service.drill.DrillMetadataService;
-import com.abhi.leximentor.inventory.service.drill.DrillSetService;
+import com.abhi.leximentor.inventory.service.drill.*;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RestController
@@ -36,6 +32,7 @@ public class DrillController {
     private final DrillChallengeRepository drillChallengeRepository;
     private final DrillChallengeScoreService drillChallengeScoreService;
     private final DrillSetService drillSetService;
+    private final DrillEvaluationService drillEvaluationService;
 
     @PostMapping(value = UrlConstants.Drill.DRILL_ADD, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> newDrillRandomly(@RequestParam int limit, @RequestParam boolean isNewWords) {
@@ -92,6 +89,14 @@ public class DrillController {
     public ResponseEntity<RestApiResponse> getDrillSetsByDrillId(@PathVariable String drillRefId) {
         List<DrillSetDTO> dto = drillSetService.getDrillSetsByDrillId(Long.parseLong(drillRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
+    }
+
+    @PostMapping(value = UrlConstants.Drill.DRILL_EVALUATE_BY_DRILL_ID, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> evaluateMeaning(@RequestBody List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, @RequestParam String evaluator) {
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+            List<DrillEvaluationDTO> drillEvaluationDTOS = drillEvaluationService.evaluateMeaning(drillChallengeScoresDTOS, evaluator);
+        });
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The job has been successfully submitted and the evaluation is progress.");
     }
 
 }

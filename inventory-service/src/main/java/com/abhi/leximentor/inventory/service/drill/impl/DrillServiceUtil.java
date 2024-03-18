@@ -2,14 +2,9 @@ package com.abhi.leximentor.inventory.service.drill.impl;
 
 import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.constants.Status;
-import com.abhi.leximentor.inventory.dto.drill.DrillChallengeDTO;
-import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
-import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
-import com.abhi.leximentor.inventory.dto.drill.DrillSetDTO;
-import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
-import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
-import com.abhi.leximentor.inventory.entities.drill.DrillMetadata;
-import com.abhi.leximentor.inventory.entities.drill.DrillSet;
+import com.abhi.leximentor.inventory.dto.drill.*;
+import com.abhi.leximentor.inventory.entities.drill.*;
+import com.abhi.leximentor.inventory.entities.inv.Evaluator;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
 import com.abhi.leximentor.inventory.util.ApplicationUtil;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
@@ -74,6 +69,16 @@ public class DrillServiceUtil {
 
         public static DrillChallengeScoresDTO buildDTO(DrillChallengeScores drillChallengeScores) {
             return DrillChallengeScoresDTO.builder().refId(String.valueOf(drillChallengeScores.getRefId())).drillChallengeRefId(String.valueOf(drillChallengeScores.getChallengeId().getRefId())).drillSetRefId(String.valueOf(drillChallengeScores.getDrillSetId().getRefId())).isCorrect(drillChallengeScores.isCorrect()).response(drillChallengeScores.getResponse()).crtnDate(drillChallengeScores.getCrtnDate()).description(drillChallengeScores.getDescription()).build();
+        }
+    }
+
+    public static class DrillEvaluationUtil {
+        public static DrillEvaluation buildEntity(DrillEvaluationDTO dto, Evaluator evaluator) {
+            return DrillEvaluation.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).evaluator(evaluator).confidence(dto.getConfidence()).reason(dto.getReason()).evaluationTime(dto.getEvaluationTime()).build();
+        }
+
+        public static DrillEvaluationDTO buildDTO(DrillEvaluation evaluation, DrillChallengeScoresDTO drillChallengeScoresDTO) {
+            return DrillEvaluationDTO.builder().refId(evaluation.getRefId()).drillChallengeScoresDTO(drillChallengeScoresDTO).evaluator(evaluation.getEvaluator().getName()).confidence(evaluation.getConfidence()).reason(evaluation.getReason()).evaluationTime(evaluation.getEvaluationTime()).build();
         }
     }
 }

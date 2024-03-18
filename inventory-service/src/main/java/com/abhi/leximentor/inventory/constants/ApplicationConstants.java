@@ -16,6 +16,13 @@ public class ApplicationConstants {
     public static final String REQUEST_FAILURE_DESCRIPTION = "FAILED";
 
 
+    public static class Prompt {
+        public static final String LLAMA_PROMPT = "Consider you are an evaluator of an exam. Your task is to judge if the student has answered correctly for the meaning of a word. As an input you will get the word itself, the parts of speech, the original meaning, and the meaning given my the student. Generate only a JSON like the  below {\"isCorrect\": true/false, \"confidence\": 0-100, \"explanation\": \"Something\"} isCorrect means your opinion if the answer is correct, confidence is your confidence in judging the answer, and explanation is why you feel the answer is correct or incorrect. Below is the drill- word: {word}. original meaning: {originalMeaning}. Student answer: {response}.";
+        public static final String WORD = "{word}";
+        public static final String ORIGINAL_MEANING = "{originalMeaning}";
+        public static final String RESPONSE = "{response}";
+    }
+
     public static class MediaType {
         public static final String APPLICATION_JSON = APPLICATION_JSON_VALUE;
         public static final String APPLICATION_XML = APPLICATION_XML_VALUE;

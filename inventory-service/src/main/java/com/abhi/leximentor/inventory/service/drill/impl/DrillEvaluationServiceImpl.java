@@ -1,0 +1,90 @@
+package com.abhi.leximentor.inventory.service.drill.impl;
+
+import com.abhi.leximentor.inventory.constants.ApplicationConstants;
+import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
+import com.abhi.leximentor.inventory.dto.drill.DrillEvaluationDTO;
+import com.abhi.leximentor.inventory.dto.other.LlamaModelDTO;
+import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
+import com.abhi.leximentor.inventory.entities.drill.DrillEvaluation;
+import com.abhi.leximentor.inventory.entities.drill.DrillSet;
+import com.abhi.leximentor.inventory.entities.inv.Evaluator;
+import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
+import com.abhi.leximentor.inventory.repository.drill.DrillChallengeScoreRepository;
+import com.abhi.leximentor.inventory.repository.drill.DrillEvaluationRepository;
+import com.abhi.leximentor.inventory.repository.drill.DrillSetRepository;
+import com.abhi.leximentor.inventory.repository.inv.EvaluatorRepository;
+import com.abhi.leximentor.inventory.service.drill.DrillEvaluationService;
+import com.abhi.leximentor.inventory.util.RestUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileUrlResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+import java.util.stream.Collectors;
+
+@Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Service
+public class DrillEvaluationServiceImpl implements DrillEvaluationService {
+
+    private final DrillEvaluationRepository drillEvaluationRepository;
+    private final EvaluatorRepository evaluatorRepository;
+    private final RestUtil restUtil;
+    private final DrillSetRepository drillSetRepository;
+    private final DrillChallengeScoreRepository drillChallengeScoreRepository;
+    private String url;
+
+    @Override
+    public DrillEvaluationDTO add(DrillEvaluationDTO dto) {
+        Evaluator evaluator = evaluatorRepository.findByName(dto.getEvaluator());
+        DrillEvaluation drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator);
+        drillEvaluation = drillEvaluationRepository.save(drillEvaluation);
+        return DrillServiceUtil.DrillEvaluationUtil.buildDTO(drillEvaluation, DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(drillEvaluation.getDrillChallengeScores()));
+    }
+
+    @Override
+    public List<DrillEvaluationDTO> addAll(List<DrillEvaluationDTO> dtos) {
+        return dtos.stream().map(this::add).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DrillEvaluationDTO> evaluateMeaning(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, String evaluator) {
+        List<DrillEvaluationDTO> drillEvaluationDTOS = new LinkedList<>();
+        List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
+        for (DrillChallengeScoresDTO dto : drillChallengeScoresDTOS) {
+            DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
+            WordMetadata wordMetadata = drillSet.getWordId();
+            String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
+            try {
+                Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
+                setUrl(properties.getProperty(evaluator));
+            } catch (IOException ex) {
+                log.error(ex.getMessage());
+            }
+            LlamaModelDTO request = LlamaModelDTO.builder().text(prompt).build();
+            LlamaModelDTO llamaModelDTO = restUtil.post(url, request, LlamaModelDTO.class);
+            DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+            scores.setCorrect(llamaModelDTO.isCorrect());
+            drillChallengeScores.add(scores);
+            drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason(llamaModelDTO.getExplanation()).confidence(llamaModelDTO.getConfidence()).evaluator(evaluator).build());
+        }
+        drillChallengeScoreRepository.saveAll(drillChallengeScores);
+        return this.addAll(drillEvaluationDTOS);
+    }
+
+    private String getPrompt(String word, String originalMeaning, String response) {
+        String prompt = ApplicationConstants.Prompt.LLAMA_PROMPT;
+        return prompt.replace(ApplicationConstants.Prompt.WORD, word).replace(ApplicationConstants.Prompt.ORIGINAL_MEANING, originalMeaning).replace(ApplicationConstants.Prompt.RESPONSE, response);
+    }
+
+    @Override
+    public void setUrl(String url) {
+        this.url = url;
+    }
+}
