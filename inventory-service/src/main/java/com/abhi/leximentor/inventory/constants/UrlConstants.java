@@ -23,6 +23,12 @@ public class UrlConstants {
             public static final String LANG_GET = "/api/inventory/languages/{language}";
         }
 
+        public static class Evaluator {
+            public static final String EVALUATOR_CREATE = "/api/evaluators/evaluator";
+            public static final String EVALUATOR_GET_BY_REF = "/api/evaluators/evaluator/id/{refId}";
+            public static final String EVALUATOR_GET_BY_NAME = "/api/evaluators/evaluator/name/{name}";
+        }
+
         public static class Job {
             public static final String JOB_CREATE = "/api/jobs";
             public static final String JOB_EXECUTE = "/api/jobs/{jobId}";
