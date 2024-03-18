@@ -16,7 +16,6 @@ import java.net.http.HttpClient;
 
 @Component
 @Slf4j
-@AllArgsConstructor
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RestUtil {
     private final ObjectMapper objectMapper;
