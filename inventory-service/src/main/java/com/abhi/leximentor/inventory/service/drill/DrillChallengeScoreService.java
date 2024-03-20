@@ -8,5 +8,7 @@ import java.util.List;
 public interface DrillChallengeScoreService {
     public DrillChallengeScoresDTO createChallenge(DrillChallengeScoresDTO dto);
 
+    public List<DrillChallengeScoresDTO> updateResponse(List<DrillChallengeScoresDTO> dtos);
+
     public List<DrillChallengeScoresDTO> getByDrillChallengeId(DrillChallenge drillChallenge);
 }

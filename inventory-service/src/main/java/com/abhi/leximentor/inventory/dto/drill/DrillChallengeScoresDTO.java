@@ -15,6 +15,7 @@ public class DrillChallengeScoresDTO {
     private String drillSetRefId;
     private boolean isCorrect;
     private String response;
+    private String question;
     private LocalDateTime crtnDate;
     private String description;
 }

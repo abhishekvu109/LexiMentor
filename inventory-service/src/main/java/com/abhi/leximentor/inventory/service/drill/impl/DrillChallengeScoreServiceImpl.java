@@ -1,5 +1,6 @@
 package com.abhi.leximentor.inventory.service.drill.impl;
 
+import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,5 +40,17 @@ public class DrillChallengeScoreServiceImpl implements DrillChallengeScoreServic
     public List<DrillChallengeScoresDTO> getByDrillChallengeId(DrillChallenge drillChallenge) {
         List<DrillChallengeScores> drillChallengeScores = drillChallengeScoreRepository.findByChallengeId(drillChallenge);
         return drillChallengeScores.stream().map(DrillServiceUtil.DrillChallengeScoreUtil::buildDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DrillChallengeScoresDTO> updateResponse(List<DrillChallengeScoresDTO> dtos) {
+        List<DrillChallengeScoresDTO> output = new LinkedList<>();
+        for (DrillChallengeScoresDTO dto : dtos) {
+            DrillChallengeScores drillChallengeScore = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+            drillChallengeScore.setResponse(dto.getResponse());
+            drillChallengeScore = drillChallengeScoreRepository.save(drillChallengeScore);
+            output.add(DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(drillChallengeScore));
+        }
+        return output;
     }
 }
