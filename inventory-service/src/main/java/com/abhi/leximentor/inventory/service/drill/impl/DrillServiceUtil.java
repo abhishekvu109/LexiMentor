@@ -62,7 +62,7 @@ public class DrillServiceUtil {
         }
 
         public static DrillChallengeScoresDTO buildDTO(DrillChallengeScores drillChallengeScores) {
-            return DrillChallengeScoresDTO.builder().refId(String.valueOf(drillChallengeScores.getRefId())).drillChallengeRefId(String.valueOf(drillChallengeScores.getChallengeId().getRefId())).drillSetRefId(String.valueOf(drillChallengeScores.getDrillSetId().getRefId())).isCorrect(drillChallengeScores.isCorrect()).response(drillChallengeScores.getResponse()).crtnDate(drillChallengeScores.getCrtnDate()).description(drillChallengeScores.getDescription()).build();
+            return DrillChallengeScoresDTO.builder().refId(String.valueOf(drillChallengeScores.getRefId())).drillChallengeRefId(String.valueOf(drillChallengeScores.getChallengeId().getRefId())).drillSetRefId(String.valueOf(drillChallengeScores.getDrillSetId().getRefId())).isCorrect(drillChallengeScores.isCorrect()).response(drillChallengeScores.getResponse()).crtnDate(drillChallengeScores.getCrtnDate()).question(drillChallengeScores.getQuestion()).description(drillChallengeScores.getDescription()).build();
         }
     }
 

@@ -5,11 +5,13 @@ import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.drill.*;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
+import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
 import com.abhi.leximentor.inventory.entities.drill.DrillMetadata;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
 import com.abhi.leximentor.inventory.repository.drill.DrillChallengeRepository;
 import com.abhi.leximentor.inventory.service.drill.*;
+import com.abhi.leximentor.inventory.service.drill.impl.DrillServiceUtil;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -91,8 +94,18 @@ public class DrillController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 
-    @PostMapping(value = UrlConstants.Drill.DRILL_EVALUATE_BY_DRILL_ID, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> evaluateMeaning(@RequestBody List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, @RequestParam String evaluator) {
+//    @PostMapping(value = UrlConstants.Drill.DRILL_EVALUATE_BY_DRILL_ID, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+//    public @ResponseBody ResponseEntity<RestApiResponse> evaluateMeaning(@RequestBody List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, @RequestParam String evaluator) {
+//        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+//            List<DrillEvaluationDTO> drillEvaluationDTOS = drillEvaluationService.evaluateMeaning(drillChallengeScoresDTOS, evaluator);
+//        });
+//        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The job has been successfully submitted and the evaluation is progress.");
+//    }
+
+    @PostMapping(value = UrlConstants.Drill.DRILL_EVALUATE_BY_DRILL_CHALLENGE_ID, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> evaluateChallenge(@PathVariable String challengeId, @RequestParam String evaluator) {
+        DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(challengeId));
+        List<DrillChallengeScoresDTO> drillChallengeScoresDTOS = drillChallengeScoreService.getByDrillChallengeId(drillChallenge);
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
             List<DrillEvaluationDTO> drillEvaluationDTOS = drillEvaluationService.evaluateMeaning(drillChallengeScoresDTOS, evaluator);
         });
