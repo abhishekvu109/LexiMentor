@@ -70,9 +70,9 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         DrillChallenge drillChallenge = null;
         for (DrillChallengeScoresDTO dto : drillChallengeScoresDTOS) {
             DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
-            log.info("Found the drillSet object for the refId:{},{}", dto.getDrillSetRefId(), drillSet);
+//            log.info("Found the drillSet object for the refId:{},{}", dto.getDrillSetRefId(), drillSet);
             WordMetadata wordMetadata = drillSet.getWordId();
-            log.info("Found the word object : {}", wordMetadata);
+//            log.info("Found the word object : {}", wordMetadata);
             String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
             log.info("Successfully formatted the prompt : {}", prompt);
             try {
