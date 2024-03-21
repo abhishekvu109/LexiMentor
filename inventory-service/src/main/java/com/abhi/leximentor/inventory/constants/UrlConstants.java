@@ -2,6 +2,18 @@ package com.abhi.leximentor.inventory.constants;
 
 public class UrlConstants {
     public static class Drill {
+        public static class DrillMetadata {
+        }
+
+        public static class DrillChallenge {
+        }
+
+        public static class DrillChallengeScores {
+        }
+
+        public static class DrillSet {
+        }
+
         public static final String DRILL_ADD = "/api/drill";
         public static final String DRILL_ADD_BY_SOURCE = "/api/drill/source/{sourceName}";
         public static final String DRILL_ASSIGN_CHALLENGES_TO_DRILLS = "/api/drill/challenges";
@@ -11,8 +23,8 @@ public class UrlConstants {
         public static final String DRILL_GET_DRILL_SETS_BY_DRILL_ID = "/api/drill/challenges/sets/{drillRefId}";
         public static final String DRILL_EVALUATE_BY_DRILL_ID = "/api/drill/challenges/evaluate/meaning";
 
-        public static class DrillChallengeScore{
-            public static final String SUBMIT_MEANING_RESPONSE="/api/drill/challenges/scores";
+        public static class DrillChallengeScore {
+            public static final String SUBMIT_MEANING_RESPONSE = "/api/drill/challenges/scores";
         }
     }
 
@@ -32,6 +44,7 @@ public class UrlConstants {
             public static final String EVALUATOR_CREATE = "/api/evaluators/evaluator";
             public static final String EVALUATOR_GET_BY_REF = "/api/evaluators/evaluator/id/{refId}";
             public static final String EVALUATOR_GET_BY_NAME = "/api/evaluators/evaluator/name/{name}";
+            public static final String EVALUATOR_GET_BY_DRILL_TYPE = "/api/evaluators/evaluator/type/drill/{drillType}";
         }
 
         public static class Job {

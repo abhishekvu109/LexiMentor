@@ -33,6 +33,12 @@ public class EvaluatorController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTO);
     }
 
+    @GetMapping(value = UrlConstants.Inventory.Evaluator.EVALUATOR_GET_BY_DRILL_TYPE, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getByDrillType(@PathVariable String drillType) {
+        List<EvaluatorDTO> evaluatorDTOS = evaluatorService.getByDrillType(drillType);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTOS);
+    }
+
 
     @GetMapping(value = UrlConstants.Inventory.Evaluator.EVALUATOR_GET_BY_REF, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByRefId(@PathVariable long refId) {

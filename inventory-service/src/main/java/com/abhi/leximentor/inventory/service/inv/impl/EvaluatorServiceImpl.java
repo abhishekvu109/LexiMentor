@@ -46,4 +46,10 @@ public class EvaluatorServiceImpl implements EvaluatorService {
         Evaluator evaluator = evaluatorRepository.findByRefId(refId);
         return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatus(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
     }
+
+    @Override
+    public List<EvaluatorDTO> getByDrillType(String drillType) {
+        List<Evaluator> evaluators = evaluatorRepository.findByDrillType(drillType);
+        return evaluators.stream().map(evaluator -> EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatus(evaluator.getStatus())).drillType(evaluator.getDrillType()).build()).collect(Collectors.toList());
+    }
 }

@@ -11,5 +11,7 @@ public interface EvaluatorService {
 
     public EvaluatorDTO getByName(String name);
 
+    public List<EvaluatorDTO> getByDrillType(String drillType);
+
     public EvaluatorDTO getByRefId(long refId);
 }
