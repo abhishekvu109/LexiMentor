@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -21,14 +19,14 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public LanguageDTO add(LanguageDTO dto) {
-        Language language = Language.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).language(dto.getLanguage()).status(Status.ACTIVE).build();
+        Language language = Language.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).language(dto.getLanguage()).status(Status.ApplicationStatus.ACTIVE).build();
         language = languageRepository.save(language);
-        return LanguageDTO.builder().refId(String.valueOf(language.getRefId())).status(Status.getStatus(language.getStatus())).language(language.getLanguage()).build();
+        return LanguageDTO.builder().refId(String.valueOf(language.getRefId())).status(Status.ApplicationStatus.getStatus(language.getStatus())).language(language.getLanguage()).build();
     }
 
     @Override
     public LanguageDTO get(String language) {
         Language entityLang = languageRepository.findByLanguage(language);
-        return LanguageDTO.builder().refId(String.valueOf(entityLang.getRefId())).status(Status.getStatus(entityLang.getStatus())).language(entityLang.getLanguage()).build();
+        return LanguageDTO.builder().refId(String.valueOf(entityLang.getRefId())).status(Status.ApplicationStatus.getStatus(entityLang.getStatus())).language(entityLang.getLanguage()).build();
     }
 }

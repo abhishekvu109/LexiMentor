@@ -23,17 +23,14 @@ import java.util.stream.Collectors;
 public class DrillServiceUtil {
 
     public static class DrillMetadataUtil {
-        public static DrillMetadata buildEntity(int size, List<WordMetadata> wordMetadataList, ApplicationUtil applicationUtil) {
-            DrillMetadata drillMetadata = DrillMetadata.builder().name(applicationUtil.getDrillName()).refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).status(Status.ACTIVE).build();
+        public static DrillMetadata buildEntity(List<WordMetadata> wordMetadataList, ApplicationUtil applicationUtil) {
+            DrillMetadata drillMetadata = DrillMetadata.builder().name(applicationUtil.getDrillName()).refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).status(Status.ApplicationStatus.ACTIVE).build();
             drillMetadata.setDrillSetList(wordMetadataList.stream().map(wordMetadata -> DrillSetUtil.buildEntity(wordMetadata, drillMetadata)).collect(Collectors.toList()));
             return drillMetadata;
         }
 
         public static DrillMetadataDTO buildDTO(DrillMetadata drillMetadata) {
-            DrillMetadataDTO drillMetadataDTO = DrillMetadataDTO.builder().refId(String.valueOf(drillMetadata.getRefId())).name(drillMetadata.getName()).status(Status.getStatus(drillMetadata.getStatus())).crtnDate(drillMetadata.getCrtnDate()).overAllScore(drillMetadata.getOverallScore()).build();
-//            drillMetadataDTO.setDrillSetDTOList(CollectionUtil.isNotEmpty(drillMetadata.getDrillSetList()) ? drillMetadata.getDrillSetList().stream().map(d -> DrillSetUtil.buildDTO(d, drillMetadata)).collect(Collectors.toList()) : null);
-//            drillMetadataDTO.setDrillChallengeDTOList(CollectionUtil.isNotEmpty(drillMetadata.getDrillChallenges()) ? drillMetadata.getDrillChallenges().stream().map(d -> DrillChallengeUtil.buildDTO(d, drillMetadata)).collect(Collectors.toList()) : null);
-            return drillMetadataDTO;
+            return DrillMetadataDTO.builder().refId(String.valueOf(drillMetadata.getRefId())).name(drillMetadata.getName()).status(Status.ApplicationStatus.getStatus(drillMetadata.getStatus())).crtnDate(drillMetadata.getCrtnDate()).overAllScore(drillMetadata.getOverallScore()).build();
         }
     }
 
@@ -49,16 +46,13 @@ public class DrillServiceUtil {
 
     public static class DrillChallengeUtil {
         public static DrillChallenge buildEntity(DrillMetadata drillMetadata, DrillTypes drillTypes) {
-            DrillChallenge drillChallenge = DrillChallenge.builder().uuid(KeyGeneratorUtil.uuid()).drillType(drillTypes.name()).refId(KeyGeneratorUtil.refId()).drillId(drillMetadata).drillScore(0).isPass(false).totalCorrect(0).totalWrong(0).build();
+            DrillChallenge drillChallenge = DrillChallenge.builder().status(Status.DrillChallenge.NOT_INITIATED).uuid(KeyGeneratorUtil.uuid()).drillType(drillTypes.name()).refId(KeyGeneratorUtil.refId()).drillId(drillMetadata).drillScore(0).isPass(false).totalCorrect(0).totalWrong(0).build();
             drillChallenge.setDrillChallengeScoresList(CollectionUtil.isNotEmpty(drillMetadata.getDrillSetList()) ? drillMetadata.getDrillSetList().stream().map(d -> DrillChallengeScoreUtil.buildEntity(drillChallenge, d)).collect(Collectors.toList()) : null);
             return drillChallenge;
         }
 
         public static DrillChallengeDTO buildDTO(DrillChallenge entity, DrillMetadata drillMetadata) {
-//            DrillChallengeDTO drillChallengeDTO = DrillChallengeDTO.builder().refId(String.valueOf(entity.getRefId())).drillType(entity.getDrillType()).drillRefId(String.valueOf(drillMetadata.getRefId())).drillScore(entity.getDrillScore()).isPass(entity.isPass()).totalCorrect(entity.getTotalCorrect()).totalWrong(entity.getTotalWrong()).crtnDate(entity.getCrtnDate()).build();
-//            drillChallengeDTO.setDrillChallengeScoresDTOList(CollectionUtil.isNotEmpty(entity.getDrillChallengeScoresList()) ? entity.getDrillChallengeScoresList().stream().map(DrillChallengeScoreUtil::buildDTO).collect(Collectors.toList()) : null);
-//            return drillChallengeDTO;
-            return DrillChallengeDTO.builder().refId(String.valueOf(entity.getRefId())).drillType(entity.getDrillType()).drillRefId(String.valueOf(drillMetadata.getRefId())).drillScore(entity.getDrillScore()).isPass(entity.isPass()).totalCorrect(entity.getTotalCorrect()).totalWrong(entity.getTotalWrong()).crtnDate(entity.getCrtnDate()).build();
+            return DrillChallengeDTO.builder().refId(String.valueOf(entity.getRefId())).drillType(entity.getDrillType()).status(Status.DrillChallenge.getStatus(entity.getStatus())).drillRefId(String.valueOf(drillMetadata.getRefId())).drillScore(entity.getDrillScore()).isPass(entity.isPass()).totalCorrect(entity.getTotalCorrect()).totalWrong(entity.getTotalWrong()).crtnDate(entity.getCrtnDate()).build();
         }
     }
 

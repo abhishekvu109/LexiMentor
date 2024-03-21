@@ -21,4 +21,5 @@ public class DrillChallengeDTO {
     private int totalWrong;
     private LocalDateTime crtnDate;
     private List<DrillChallengeScoresDTO> drillChallengeScoresDTOList;
+    private String status;
 }

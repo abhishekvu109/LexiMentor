@@ -13,14 +13,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class InventoryServiceUtil {
 
-    static class SynonymUtil {
+    public static class SynonymUtil {
         public static Synonym buildEntity(SynonymDTO dto, WordMetadata wordMetadata) {
             return Synonym.builder().wordId(wordMetadata).uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).synonym(dto.getSynonym()).source(dto.getSource()).build();
         }
@@ -30,7 +29,7 @@ public class InventoryServiceUtil {
         }
     }
 
-    static class AntonymUtil {
+    public static class AntonymUtil {
         public static Antonym buildEntity(AntonymDTO dto, WordMetadata wordMetadata) {
             return Antonym.builder().wordId(wordMetadata).uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).antonym(dto.getAntonym()).source(dto.getSource()).build();
         }
@@ -40,7 +39,7 @@ public class InventoryServiceUtil {
         }
     }
 
-    static class MeaningUtil {
+    public static class MeaningUtil {
         public static Meaning buildEntity(MeaningDTO dto, WordMetadata wordMetadata) {
             return Meaning.builder().wordId(wordMetadata).definition(dto.getMeaning()).refId(KeyGeneratorUtil.refId()).source(dto.getSource()).uuid(KeyGeneratorUtil.uuid()).build();
         }
@@ -50,7 +49,7 @@ public class InventoryServiceUtil {
         }
     }
 
-    static class ExampleUtil {
+    public static class ExampleUtil {
         public static Example buildEntity(ExampleDTO dto, WordMetadata wordMetadata) {
             return Example.builder().wordId(wordMetadata).refId(KeyGeneratorUtil.refId()).example(dto.getExample()).uuid(KeyGeneratorUtil.uuid()).source(dto.getSource()).build();
         }
@@ -60,7 +59,7 @@ public class InventoryServiceUtil {
         }
     }
 
-    static class PartsOfSpeechUtil {
+    public static class PartsOfSpeechUtil {
         public static PartsOfSpeech buildEntity(PartsOfSpeechDTO dto, WordMetadata wordMetadata) {
             return PartsOfSpeech.builder().wordId(wordMetadata).refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).pos(dto.getPos()).source(dto.getSource()).build();
         }
@@ -70,19 +69,19 @@ public class InventoryServiceUtil {
         }
     }
 
-    static class WordMetadataUtil {
+    public static class WordMetadataUtil {
         private static WordMetadata buildNewObject(WordDTO dto, LanguageRepository languageRepository) {
-            WordMetadata wordMetadata = WordMetadata.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).word(dto.getWord()).pos(dto.getPos()).pronunciation(dto.getPronunciation()).language(languageRepository.findByLanguage(dto.getLanguage())).status(Status.ACTIVE).source(dto.getSource()).category(dto.getCategory()).build();
+            WordMetadata wordMetadata = WordMetadata.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).word(dto.getWord()).pos(dto.getPos()).pronunciation(dto.getPronunciation()).language(languageRepository.findByLanguage(dto.getLanguage())).status(Status.ApplicationStatus.ACTIVE).source(dto.getSource()).category(dto.getCategory()).build();
             if (CollectionUtil.isNotEmpty(dto.getPartsOfSpeeches()))
-                wordMetadata.setPartsOfSpeeches(dto.getPartsOfSpeeches().stream().map(pos -> new InventoryServiceUtil.PartsOfSpeechUtil().buildEntity(pos, wordMetadata)).collect(Collectors.toList()));
+                wordMetadata.setPartsOfSpeeches(dto.getPartsOfSpeeches().stream().map(pos -> InventoryServiceUtil.PartsOfSpeechUtil.buildEntity(pos, wordMetadata)).collect(Collectors.toList()));
             if (CollectionUtil.isNotEmpty(dto.getSynonyms()))
-                wordMetadata.setSynonyms(dto.getSynonyms().stream().map(syn -> new InventoryServiceUtil.SynonymUtil().buildEntity(syn, wordMetadata)).collect(Collectors.toList()));
+                wordMetadata.setSynonyms(dto.getSynonyms().stream().map(syn -> InventoryServiceUtil.SynonymUtil.buildEntity(syn, wordMetadata)).collect(Collectors.toList()));
             if (CollectionUtil.isNotEmpty(dto.getAntonyms()))
-                wordMetadata.setAntonyms(dto.getAntonyms().stream().map(ant -> new InventoryServiceUtil.AntonymUtil().buildEntity(ant, wordMetadata)).collect(Collectors.toList()));
+                wordMetadata.setAntonyms(dto.getAntonyms().stream().map(ant -> InventoryServiceUtil.AntonymUtil.buildEntity(ant, wordMetadata)).collect(Collectors.toList()));
             if (CollectionUtil.isNotEmpty(dto.getMeanings()))
-                wordMetadata.setMeanings(dto.getMeanings().stream().map(mean -> new InventoryServiceUtil.MeaningUtil().buildEntity(mean, wordMetadata)).collect(Collectors.toList()));
+                wordMetadata.setMeanings(dto.getMeanings().stream().map(mean -> InventoryServiceUtil.MeaningUtil.buildEntity(mean, wordMetadata)).collect(Collectors.toList()));
             if (CollectionUtil.isNotEmpty(dto.getExamples()))
-                wordMetadata.setExamples(dto.getExamples().stream().map(example -> new InventoryServiceUtil.ExampleUtil().buildEntity(example, wordMetadata)).collect(Collectors.toList()));
+                wordMetadata.setExamples(dto.getExamples().stream().map(example -> InventoryServiceUtil.ExampleUtil.buildEntity(example, wordMetadata)).collect(Collectors.toList()));
             return wordMetadata;
         }
 
@@ -93,15 +92,15 @@ public class InventoryServiceUtil {
             List<Antonym> antonyms = CollectionUtil.isEmpty(wordMetadata.getAntonyms()) ? new LinkedList<>() : wordMetadata.getAntonyms();
             List<PartsOfSpeech> partsOfSpeeches = CollectionUtil.isEmpty(wordMetadata.getPartsOfSpeeches()) ? new LinkedList<>() : wordMetadata.getPartsOfSpeeches();
             if (CollectionUtil.isNotEmpty(dto.getMeanings()))
-                meanings.addAll(dto.getMeanings().stream().map(m -> new InventoryServiceUtil.MeaningUtil().buildEntity(m, wordMetadata)).toList());
+                meanings.addAll(dto.getMeanings().stream().map(m -> InventoryServiceUtil.MeaningUtil.buildEntity(m, wordMetadata)).toList());
             if (CollectionUtil.isNotEmpty(dto.getExamples()))
-                examples.addAll(dto.getExamples().stream().map(ex -> new InventoryServiceUtil.ExampleUtil().buildEntity(ex, wordMetadata)).toList());
+                examples.addAll(dto.getExamples().stream().map(ex -> InventoryServiceUtil.ExampleUtil.buildEntity(ex, wordMetadata)).toList());
             if (CollectionUtil.isNotEmpty(dto.getSynonyms()))
-                synonyms.addAll(dto.getSynonyms().stream().map(syn -> new InventoryServiceUtil.SynonymUtil().buildEntity(syn, wordMetadata)).toList());
+                synonyms.addAll(dto.getSynonyms().stream().map(syn -> InventoryServiceUtil.SynonymUtil.buildEntity(syn, wordMetadata)).toList());
             if (CollectionUtil.isNotEmpty(dto.getAntonyms()))
-                antonyms.addAll(dto.getAntonyms().stream().map(ant -> new InventoryServiceUtil.AntonymUtil().buildEntity(ant, wordMetadata)).toList());
+                antonyms.addAll(dto.getAntonyms().stream().map(ant -> InventoryServiceUtil.AntonymUtil.buildEntity(ant, wordMetadata)).toList());
             if (CollectionUtil.isNotEmpty(dto.getPartsOfSpeeches()))
-                partsOfSpeeches.addAll(dto.getPartsOfSpeeches().stream().map(pos -> new InventoryServiceUtil.PartsOfSpeechUtil().buildEntity(pos, wordMetadata)).toList());
+                partsOfSpeeches.addAll(dto.getPartsOfSpeeches().stream().map(pos -> InventoryServiceUtil.PartsOfSpeechUtil.buildEntity(pos, wordMetadata)).toList());
             wordMetadata.setMeanings(meanings);
             wordMetadata.setExamples(examples);
             wordMetadata.setSynonyms(synonyms);
@@ -117,7 +116,7 @@ public class InventoryServiceUtil {
         }
 
         public static WordDTO buildDTO(WordMetadata wordMetadata) {
-            return WordDTO.builder().refId(String.valueOf(wordMetadata.getRefId())).word(wordMetadata.getWord()).language(wordMetadata.getLanguage().getLanguage()).crtnDate(wordMetadata.getCrtnDate().toLocalDate()).lastUpdDate(wordMetadata.getLastUpdDate().toLocalDate()).pos(wordMetadata.getPos()).status(Status.getStatus(wordMetadata.getStatus())).pronunciation(wordMetadata.getPronunciation()).partsOfSpeeches(CollectionUtil.isNotEmpty(wordMetadata.getPartsOfSpeeches()) ? wordMetadata.getPartsOfSpeeches().stream().map(pos -> new InventoryServiceUtil.PartsOfSpeechUtil().buildDTO(pos)).collect(Collectors.toList()) : null).meanings(CollectionUtil.isNotEmpty(wordMetadata.getMeanings()) ? wordMetadata.getMeanings().stream().map(mean -> new InventoryServiceUtil.MeaningUtil().buildDTO(mean)).collect(Collectors.toList()) : null).synonyms(CollectionUtil.isNotEmpty(wordMetadata.getSynonyms()) ? wordMetadata.getSynonyms().stream().map(syn -> new InventoryServiceUtil.SynonymUtil().buildDTO(syn)).collect(Collectors.toList()) : null).antonyms(CollectionUtil.isNotEmpty(wordMetadata.getAntonyms()) ? wordMetadata.getAntonyms().stream().map(ant -> new InventoryServiceUtil.AntonymUtil().buildDTO(ant)).collect(Collectors.toList()) : null).examples(CollectionUtil.isNotEmpty(wordMetadata.getExamples()) ? wordMetadata.getExamples().stream().map(example -> new InventoryServiceUtil.ExampleUtil().buildDTO(example)).collect(Collectors.toList()) : null).category(wordMetadata.getCategory()).source(wordMetadata.getSource()).build();
+            return WordDTO.builder().refId(String.valueOf(wordMetadata.getRefId())).word(wordMetadata.getWord()).language(wordMetadata.getLanguage().getLanguage()).crtnDate(wordMetadata.getCrtnDate().toLocalDate()).lastUpdDate(wordMetadata.getLastUpdDate().toLocalDate()).pos(wordMetadata.getPos()).status(Status.ApplicationStatus.getStatus(wordMetadata.getStatus())).pronunciation(wordMetadata.getPronunciation()).partsOfSpeeches(CollectionUtil.isNotEmpty(wordMetadata.getPartsOfSpeeches()) ? wordMetadata.getPartsOfSpeeches().stream().map(PartsOfSpeechUtil::buildDTO).collect(Collectors.toList()) : null).meanings(CollectionUtil.isNotEmpty(wordMetadata.getMeanings()) ? wordMetadata.getMeanings().stream().map(MeaningUtil::buildDTO).collect(Collectors.toList()) : null).synonyms(CollectionUtil.isNotEmpty(wordMetadata.getSynonyms()) ? wordMetadata.getSynonyms().stream().map(SynonymUtil::buildDTO).collect(Collectors.toList()) : null).antonyms(CollectionUtil.isNotEmpty(wordMetadata.getAntonyms()) ? wordMetadata.getAntonyms().stream().map(AntonymUtil::buildDTO).collect(Collectors.toList()) : null).examples(CollectionUtil.isNotEmpty(wordMetadata.getExamples()) ? wordMetadata.getExamples().stream().map(ExampleUtil::buildDTO).collect(Collectors.toList()) : null).category(wordMetadata.getCategory()).source(wordMetadata.getSource()).build();
         }
     }
 

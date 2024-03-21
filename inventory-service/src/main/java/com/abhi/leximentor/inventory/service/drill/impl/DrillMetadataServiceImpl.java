@@ -64,7 +64,7 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     }
 
     private DrillMetadataDTO getEntity(int size, List<WordMetadata> wordMetadataList) {
-        DrillMetadata drillMetadata = DrillServiceUtil.DrillMetadataUtil.buildEntity(size, wordMetadataList, applicationUtil);
+        DrillMetadata drillMetadata = DrillServiceUtil.DrillMetadataUtil.buildEntity(wordMetadataList, applicationUtil);
         drillMetadata = drillMetadataRepository.save(drillMetadata);
         return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
     }

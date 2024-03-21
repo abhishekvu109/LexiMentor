@@ -24,9 +24,9 @@ public class EvaluatorServiceImpl implements EvaluatorService {
 
     @Override
     public EvaluatorDTO add(EvaluatorDTO dto) {
-        Evaluator evaluator = Evaluator.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).status(Status.ACTIVE).drillType(DrillTypes.getType(dto.getDrillType()).name()).name(dto.getName()).build();
+        Evaluator evaluator = Evaluator.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).status(Status.ApplicationStatus.ACTIVE).drillType(DrillTypes.getType(dto.getDrillType()).name()).name(dto.getName()).build();
         evaluator = evaluatorRepository.save(evaluator);
-        return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.getStatus(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
+        return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatus(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
     }
 
     @Override
@@ -37,13 +37,13 @@ public class EvaluatorServiceImpl implements EvaluatorService {
     @Override
     public EvaluatorDTO getByName(String name) {
         Evaluator evaluator = evaluatorRepository.findByName(name);
-        return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.getStatus(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
+        return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatus(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
 
     }
 
     @Override
     public EvaluatorDTO getByRefId(long refId) {
         Evaluator evaluator = evaluatorRepository.findByRefId(refId);
-        return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.getStatus(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
+        return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatus(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
     }
 }

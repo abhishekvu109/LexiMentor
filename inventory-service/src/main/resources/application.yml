@@ -14,7 +14,7 @@ spring:
   datasource:
     username: abhishek
     password: abhishek
-    url: jdbc:mysql://192.168.1.7:3306/abhishek
+    url: jdbc:mysql://192.168.1.5:3306/abhishek
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       idle-timeout: 60000

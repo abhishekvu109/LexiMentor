@@ -54,4 +54,7 @@ public class DrillChallenge {
 
     @Column(name = "drill_type")
     private String drillType;
+
+    @Column(name = "status")
+    private int status;
 }
