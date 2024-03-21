@@ -21,7 +21,7 @@ public class UrlConstants {
         public static final String DRILL_GET_CHALLENGE_SCORE_BY_CHALLENGE_ID = "/api/drill/challenges/scores/{challengeId}";
         public static final String DRILL_GET_DRILL_SET_BY_SET_ID = "/api/drill/challenges/sets/set/{setId}";
         public static final String DRILL_GET_DRILL_SETS_BY_DRILL_ID = "/api/drill/challenges/sets/{drillRefId}";
-        public static final String DRILL_EVALUATE_BY_DRILL_CHALLENGE_ID = "/api/drill/challenges/challenge/evaluate/{challengeId}";
+        public static final String DRILL_EVALUATE_BY_DRILL_CHALLENGE_ID = "/api/drill/challenges/challenge/evaluate";
 
         public static class DrillChallengeScore {
             public static final String SUBMIT_MEANING_RESPONSE = "/api/drill/challenges/scores";

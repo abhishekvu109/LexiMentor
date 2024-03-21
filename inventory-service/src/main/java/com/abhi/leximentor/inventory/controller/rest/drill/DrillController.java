@@ -103,7 +103,7 @@ public class DrillController {
 //    }
 
     @PostMapping(value = UrlConstants.Drill.DRILL_EVALUATE_BY_DRILL_CHALLENGE_ID, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> evaluateChallenge(@PathVariable String challengeId, @RequestParam String evaluator) {
+    public @ResponseBody ResponseEntity<RestApiResponse> evaluateChallenge(@RequestParam String challengeId, @RequestParam String evaluator) {
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(challengeId));
         List<DrillChallengeScoresDTO> drillChallengeScoresDTOS = drillChallengeScoreService.getByDrillChallengeId(drillChallenge);
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
