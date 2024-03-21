@@ -46,7 +46,9 @@ public class DrillChallengeScoreServiceImpl implements DrillChallengeScoreServic
     public List<DrillChallengeScoresDTO> updateResponse(List<DrillChallengeScoresDTO> dtos) {
         List<DrillChallengeScoresDTO> output = new LinkedList<>();
         for (DrillChallengeScoresDTO dto : dtos) {
-            DrillChallengeScores drillChallengeScore = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+            DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(dto.getDrillChallengeRefId()));
+            DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
+            DrillChallengeScores drillChallengeScore = drillChallengeScoreRepository.findByDrillSetIdAndChallengeId(drillSet, drillChallenge);
             drillChallengeScore.setResponse(dto.getResponse());
             drillChallengeScore = drillChallengeScoreRepository.save(drillChallengeScore);
             output.add(DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(drillChallengeScore));
