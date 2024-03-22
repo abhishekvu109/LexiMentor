@@ -17,12 +17,15 @@ import com.abhi.leximentor.inventory.repository.drill.DrillSetRepository;
 import com.abhi.leximentor.inventory.repository.inv.EvaluatorRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillEvaluationService;
 import com.abhi.leximentor.inventory.util.RestAdvancedUtil;
+import com.abhi.leximentor.inventory.util.RestClient;
 import com.abhi.leximentor.inventory.util.RestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     private final DrillEvaluationRepository drillEvaluationRepository;
     private final EvaluatorRepository evaluatorRepository;
     private final RestAdvancedUtil restUtil;
+    private final RestClient restClient;
     private final DrillSetRepository drillSetRepository;
     private final DrillChallengeScoreRepository drillChallengeScoreRepository;
     private final DrillChallengeRepository drillChallengeRepository;
@@ -84,7 +88,11 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
                 log.error(ex.getMessage());
             }
             LlamaModelDTO request = LlamaModelDTO.builder().text(prompt).build();
-            LlamaModelDTO llamaModelDTO = restUtil.post(url, request, LlamaModelDTO.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/json");
+            ResponseEntity<LlamaModelDTO> responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
+            LlamaModelDTO llamaModelDTO = responseEntity.getBody();
+//            LlamaModelDTO llamaModelDTO = restUtil.post(url, request, LlamaModelDTO.class);
             log.info("The evaluator service has returned a response : {}", llamaModelDTO);
             DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
             drillChallenge = (drillChallenge == null) ? scores.getChallengeId() : drillChallenge;
@@ -100,7 +108,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge.setTotalCorrect(totalCorrect);
         drillChallenge.setTotalCorrect(totalIncorrect);
         drillChallenge = drillChallengeRepository.save(drillChallenge);
-        log.info("Saved the results in the challenge entity:{}", drillChallenge);
+        log.info("Saved the results in the challenge entity");
         return this.addAll(drillEvaluationDTOS);
     }
 
