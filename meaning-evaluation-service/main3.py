@@ -1,7 +1,7 @@
 import openai
 
 # Set up your OpenAI API key
-openai.api_key = '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'
+openai.api_key = ''
 
 
 def compute_similarity(candidate_answer, correct_answer):
