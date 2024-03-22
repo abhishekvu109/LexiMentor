@@ -16,6 +16,7 @@ import com.abhi.leximentor.inventory.repository.drill.DrillEvaluationRepository;
 import com.abhi.leximentor.inventory.repository.drill.DrillSetRepository;
 import com.abhi.leximentor.inventory.repository.inv.EvaluatorRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillEvaluationService;
+import com.abhi.leximentor.inventory.util.RestAdvancedUtil;
 import com.abhi.leximentor.inventory.util.RestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
 
     private final DrillEvaluationRepository drillEvaluationRepository;
     private final EvaluatorRepository evaluatorRepository;
-    private final RestUtil restUtil;
+    private final RestAdvancedUtil restUtil;
     private final DrillSetRepository drillSetRepository;
     private final DrillChallengeScoreRepository drillChallengeScoreRepository;
     private final DrillChallengeRepository drillChallengeRepository;

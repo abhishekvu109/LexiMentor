@@ -1,8 +1,6 @@
 package com.abhi.leximentor.inventory.util;
 
-import com.abhi.leximentor.inventory.dto.other.NltkDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpClient;
 
 @Component
 @Slf4j
@@ -22,6 +20,7 @@ public class RestUtil {
 
     public <T> T post(String URL, Object requestBody, Class<T> responseType) {
         try {
+            log.info("The request is :{}", requestBody);
             HttpClient httpClient = HttpClient.newHttpClient();
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(URL);
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(builder.toUriString())).POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody))).build();
