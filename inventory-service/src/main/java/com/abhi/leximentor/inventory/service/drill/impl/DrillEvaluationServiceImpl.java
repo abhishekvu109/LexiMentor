@@ -16,6 +16,7 @@ import com.abhi.leximentor.inventory.repository.drill.DrillEvaluationRepository;
 import com.abhi.leximentor.inventory.repository.drill.DrillSetRepository;
 import com.abhi.leximentor.inventory.repository.inv.EvaluatorRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillEvaluationService;
+import com.abhi.leximentor.inventory.util.LLMPromptBuilder;
 import com.abhi.leximentor.inventory.util.RestAdvancedUtil;
 import com.abhi.leximentor.inventory.util.RestClient;
 import com.abhi.leximentor.inventory.util.RestUtil;
@@ -122,8 +123,9 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     }
 
     private String getPrompt(String word, String originalMeaning, String response) {
-        String prompt = ApplicationConstants.Prompt.LLAMA_PROMPT;
-        return prompt.replace(ApplicationConstants.Prompt.WORD, word).replace(ApplicationConstants.Prompt.ORIGINAL_MEANING, originalMeaning).replace(ApplicationConstants.Prompt.RESPONSE, response);
+        return LLMPromptBuilder.getPrompt(word, originalMeaning, response);
+//        String prompt = ApplicationConstants.Prompt.LLAMA_PROMPT;
+//        return prompt.replace(ApplicationConstants.Prompt.WORD, word).replace(ApplicationConstants.Prompt.ORIGINAL_MEANING, originalMeaning).replace(ApplicationConstants.Prompt.RESPONSE, response);
     }
 
     @Override
