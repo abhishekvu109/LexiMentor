@@ -90,7 +90,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
             } catch (IOException ex) {
                 log.error(ex.getMessage());
             }
-            LlamaModelDTO request = LlamaModelDTO.builder().text(prompt).build();
+            LlamaModelDTO request = LlamaModelDTO.builder().text(prompt).explanation("").confidence(0).build();
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
             ResponseEntity<LlamaModelDTO> responseEntity = null;
