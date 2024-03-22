@@ -86,6 +86,7 @@ def format(response_string):
         data = {
             "error": "No JSON substring found in the input string."
         }
+        print(jsonify(data))
         return jsonify(data)
 
 
