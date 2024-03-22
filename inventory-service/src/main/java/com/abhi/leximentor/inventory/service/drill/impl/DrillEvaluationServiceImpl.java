@@ -93,6 +93,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
             ResponseEntity<LlamaModelDTO> responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
             LlamaModelDTO llamaModelDTO = responseEntity.getBody();
 //            LlamaModelDTO llamaModelDTO = restUtil.post(url, request, LlamaModelDTO.class);
+            log.info("The evaluator service has returned a response : {}", responseEntity);
             log.info("The evaluator service has returned a response : {}", llamaModelDTO);
             DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
             drillChallenge = (drillChallenge == null) ? scores.getChallengeId() : drillChallenge;
