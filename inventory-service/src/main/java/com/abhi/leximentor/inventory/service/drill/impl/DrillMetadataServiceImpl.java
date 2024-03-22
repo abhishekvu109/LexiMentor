@@ -38,7 +38,7 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
 
     @Override
     public DrillMetadataDTO createDrillFromNewWords(int size) {
-        if (size < 20) throw new IllegalArgumentException("The size of the drill should be at least 20");
+//        if (size < 20) throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = wordMetadataRepository.findAllRandomlyNewWordsLimit(size);
         return getEntity(size, wordMetadataList);
     }
