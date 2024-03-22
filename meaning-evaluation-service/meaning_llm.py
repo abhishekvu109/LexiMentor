@@ -5,11 +5,14 @@ from flask import Flask, request, jsonify
 import requests
 import json
 import re
+import logging
 
 app = Flask(__name__)
 
 ggml_model_path = "https://huggingface.co/TheBloke/zephyr-7B-beta-GGUF/resolve/main/zephyr-7b-beta.Q4_0.gguf"
 filename = "zephyr-7b-beta.Q4_0.gguf"
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 def download_file(file_link, filename):
@@ -61,7 +64,10 @@ def main(text):
 @app.route('/evaluation/meaning/llm', methods=['POST'])
 def handle_post_request():
     data = request.json
+    logger.info(data)
     print(data["text"])
+    logger.info('Data is {}', data["text"])
+    logger.info(data["text"])
     response = main(data["text"])
     return format(response)
 
@@ -86,7 +92,7 @@ def format(response_string):
         data = {
             "error": "No JSON substring found in the input string."
         }
-        print(jsonify(data))
+        logging.info(jsonify(data))
         return jsonify(data)
 
 
