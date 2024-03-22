@@ -50,6 +50,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     private String url;
 
     @Override
+    @Transactional
     public DrillEvaluationDTO add(DrillEvaluationDTO dto) {
         Evaluator evaluator = evaluatorRepository.findByName(dto.getEvaluator());
         DrillEvaluation drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator);
@@ -58,6 +59,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     }
 
     @Override
+    @Transactional
     public List<DrillEvaluationDTO> addAll(List<DrillEvaluationDTO> dtos) {
         return dtos.stream().map(this::add).collect(Collectors.toList());
     }
@@ -90,7 +92,13 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
             LlamaModelDTO request = LlamaModelDTO.builder().text(prompt).build();
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
-            ResponseEntity<LlamaModelDTO> responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
+            ResponseEntity<LlamaModelDTO> responseEntity = null;
+            try {
+                responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
+            } catch (Exception ex) {
+                log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
+                log.error(ex.getMessage());
+            }
             LlamaModelDTO llamaModelDTO = responseEntity.getBody();
 //            LlamaModelDTO llamaModelDTO = restUtil.post(url, request, LlamaModelDTO.class);
             log.info("The evaluator service has returned a response : {}", responseEntity);
