@@ -73,6 +73,7 @@ def handle_post_request():
 
 
 def format(response_string):
+    logger.info('I am inside the format {}', response_string)
     match = re.search(r'{.*?}', response_string)
     if match:
         json_string = match.group()
