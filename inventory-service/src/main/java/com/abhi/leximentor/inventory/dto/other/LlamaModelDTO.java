@@ -12,5 +12,5 @@ public class LlamaModelDTO {
     private int confidence;
     private String explanation;
     private boolean isCorrect;
-    private boolean error;
+    private String error;
 }
