@@ -88,37 +88,14 @@ def format(response_string):
             "confidence": confidence,
             "explanation": explanation
         }
-        return json.dumps(data)
+        return jsonify(data)
     else:
         data = {
             "error": "No JSON substring found in the input string."
         }
-        return json.dumps(data)
+        return jsonify(data)
 
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=7300)
-#
-# if __name__ == '__main__':
-#     text = """
-#     Consider you are an evaluator of an exam. Your task is to judge if the student has answered correctly for the meaning of a word.
-#     As an input you will get the word itself, the parts of speech, the original meaning,and the meaning given my the student.
-#     Generate only a JSON like the below
-#     {
-#         "isCorrect": true/false,
-#         "confidence": 0-100,
-#         "explanation": "Something"
-#     }
-#
-#     isCorrect means your opinion if the answer is correct, confidence is your confidence in judging the answer, and explanation is why you feel the answer is correct or incorrect.
-#
-#     Below is the drill:
-#
-#     word: honest
-#     original meaning: Someone is moral, and someone uncorrupted.
-#
-#     Student answer: A person with high values, and never does anything wrong or lies.
-#     """
-#
-#     response = main(text)
-#     print(response)
+
