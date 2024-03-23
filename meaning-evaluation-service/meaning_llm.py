@@ -69,10 +69,10 @@ def handle_post_request():
     logger.info('Data is ' + data["text"])
     logger.info(data["text"])
     response = main(data["text"])
-    return format(response)
+    return format_data(response)
 
 
-def format(response_string):
+def format_data(response_string):
     logger.info('I am inside the format ' + response_string)
     match = re.search(r'{.*?}', response_string)
     if match:
@@ -84,25 +84,16 @@ def format(response_string):
         explanation = response_dict["explanation"]
 
         data = {
-            "isCorrect": is_correct,
-            "confidence": confidence,
-            "explanation": explanation
+            "isCorrect": bool(is_correct),
+            "confidence": int(confidence),
+            "explanation": str(explanation)
         }
-        obj = Wrapper()
-        obj.isCorrect = is_correct
-        obj.confidence = confidence
-        obj.explanation = explanation
-        obj.error = None
-        return jsonify(obj)
+
+        return jsonify(data)
     else:
         data = {
             "error": "No JSON substring found in the input string."
         }
-        obj = Wrapper()
-        obj.isCorrect = False
-        obj.confidence = 0
-        obj.explanation = 'Nothing'
-        obj.error = 'No JSON substring found in the input string.'
         return jsonify(data)
 
 
