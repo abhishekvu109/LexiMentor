@@ -69,7 +69,9 @@ def handle_post_request():
     logger.info('Data is ' + data["text"])
     logger.info(data["text"])
     response = main(data["text"])
-    return format_data(response)
+    json_object = json.loads(response)
+    return jsonify(json_object)
+    # return format_data(response)
 
 
 def format_data(response_string):
