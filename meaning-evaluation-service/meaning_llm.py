@@ -86,13 +86,15 @@ def format_data(response_string):
         data = {
             "isCorrect": bool(is_correct),
             "confidence": int(confidence),
-            "explanation": str(explanation)
+            "explanation": str(explanation),
+            "modelResponse": str(response_string)
         }
 
         return jsonify(data)
     else:
         data = {
-            "error": "No JSON substring found in the input string."
+            "error": "No JSON substring found in the input string.",
+            "modelResponse": str(response_string)
         }
         return jsonify(data)
 
