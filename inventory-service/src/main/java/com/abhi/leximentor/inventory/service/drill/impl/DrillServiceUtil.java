@@ -67,8 +67,8 @@ public class DrillServiceUtil {
     }
 
     public static class DrillEvaluationUtil {
-        public static DrillEvaluation buildEntity(DrillEvaluationDTO dto, Evaluator evaluator) {
-            return DrillEvaluation.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).evaluator(evaluator).confidence(dto.getConfidence()).reason(dto.getReason()).evaluationTime(dto.getEvaluationTime()).build();
+        public static DrillEvaluation buildEntity(DrillEvaluationDTO dto, Evaluator evaluator, DrillChallengeScores drillChallengeScores) {
+            return DrillEvaluation.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).evaluator(evaluator).confidence(dto.getConfidence()).reason(dto.getReason()).evaluationTime(dto.getEvaluationTime()).drillChallengeScores(drillChallengeScores).build();
         }
 
         public static DrillEvaluationDTO buildDTO(DrillEvaluation evaluation, DrillChallengeScoresDTO drillChallengeScoresDTO) {

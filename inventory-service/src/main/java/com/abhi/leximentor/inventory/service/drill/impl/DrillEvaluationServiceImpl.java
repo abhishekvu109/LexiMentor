@@ -55,7 +55,8 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     @Transactional
     public DrillEvaluationDTO add(DrillEvaluationDTO dto) {
         Evaluator evaluator = evaluatorRepository.findByName(dto.getEvaluator());
-        DrillEvaluation drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator);
+        DrillChallengeScores drillChallengeScores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getDrillChallengeScoresDTO().getRefId()));
+        DrillEvaluation drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, drillChallengeScores);
         drillEvaluation = drillEvaluationRepository.save(drillEvaluation);
         return DrillServiceUtil.DrillEvaluationUtil.buildDTO(drillEvaluation, DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(drillEvaluation.getDrillChallengeScores()));
     }
