@@ -88,14 +88,30 @@ def format(response_string):
             "confidence": confidence,
             "explanation": explanation
         }
-        return jsonify(data)
+        obj = Wrapper()
+        obj.isCorrect = is_correct
+        obj.confidence = confidence
+        obj.explanation = explanation
+        obj.error = None
+        return jsonify(obj)
     else:
         data = {
             "error": "No JSON substring found in the input string."
         }
+        obj = Wrapper()
+        obj.isCorrect = False
+        obj.confidence = 0
+        obj.explanation = 'Nothing'
+        obj.error = 'No JSON substring found in the input string.'
         return jsonify(data)
 
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=7300)
 
+
+class Wrapper:
+    isCorrect: bool
+    confidence: int
+    explanation: str
+    error: str
