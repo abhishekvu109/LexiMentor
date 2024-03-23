@@ -66,14 +66,14 @@ def handle_post_request():
     data = request.json
     logger.info(data)
     print(data["text"])
-    logger.info('Data is {}', data["text"])
+    logger.info('Data is ' + data["text"])
     logger.info(data["text"])
     response = main(data["text"])
     return format(response)
 
 
 def format(response_string):
-    logger.info('I am inside the format {}', response_string)
+    logger.info('I am inside the format ' + response_string)
     match = re.search(r'{.*?}', response_string)
     if match:
         json_string = match.group()
