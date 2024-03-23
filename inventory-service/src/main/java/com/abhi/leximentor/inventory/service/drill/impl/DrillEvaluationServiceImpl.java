@@ -45,6 +45,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     private final EvaluatorRepository evaluatorRepository;
     private final RestAdvancedUtil restUtil;
     private final RestClient restClient;
+    private final RestUtil restUtil2;
     private final DrillSetRepository drillSetRepository;
     private final DrillChallengeScoreRepository drillChallengeScoreRepository;
     private final DrillChallengeRepository drillChallengeRepository;
@@ -96,6 +97,8 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
             ResponseEntity<LlamaModelDTO> responseEntity = null;
             try {
                 responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
+                log.info("{}", restUtil2.post(url, request, LlamaModelDTO.class));
+                log.info("{}", restUtil.post(url, request, LlamaModelDTO.class));
             } catch (Exception ex) {
                 log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
                 log.error(ex.getMessage());
