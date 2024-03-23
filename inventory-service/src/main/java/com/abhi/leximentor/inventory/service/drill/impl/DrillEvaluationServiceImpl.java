@@ -84,6 +84,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
 //            log.info("Found the word object : {}", wordMetadata);
             String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
             log.info("Successfully formatted the prompt : {}", prompt);
+
             try {
                 Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
                 setUrl(properties.getProperty(evaluator));
@@ -97,14 +98,11 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
             ResponseEntity<LlamaModelDTO> responseEntity = null;
             try {
                 responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
-                log.info("{}", restUtil2.post(url, request, LlamaModelDTO.class));
-                log.info("{}", restUtil.post(url, request, LlamaModelDTO.class));
             } catch (Exception ex) {
                 log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
                 log.error(ex.getMessage());
             }
             LlamaModelDTO llamaModelDTO = responseEntity.getBody();
-//            LlamaModelDTO llamaModelDTO = restUtil.post(url, request, LlamaModelDTO.class);
             log.info("The evaluator service has returned a response : {}", responseEntity);
             log.info("The evaluator service has returned a response : {}", llamaModelDTO);
             DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
@@ -119,7 +117,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         log.info("Saved all the drill scores");
         drillChallenge.setDrillScore(totalCorrect);
         drillChallenge.setTotalCorrect(totalCorrect);
-        drillChallenge.setTotalCorrect(totalIncorrect);
+        drillChallenge.setTotalWrong(totalIncorrect);
         drillChallenge = drillChallengeRepository.save(drillChallenge);
         log.info("Saved the results in the challenge entity");
         return this.addAll(drillEvaluationDTOS);
@@ -127,8 +125,6 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
 
     private String getPrompt(String word, String originalMeaning, String response) {
         return LLMPromptBuilder.getPrompt(word, originalMeaning, response);
-//        String prompt = ApplicationConstants.Prompt.LLAMA_PROMPT;
-//        return prompt.replace(ApplicationConstants.Prompt.WORD, word).replace(ApplicationConstants.Prompt.ORIGINAL_MEANING, originalMeaning).replace(ApplicationConstants.Prompt.RESPONSE, response);
     }
 
     @Override

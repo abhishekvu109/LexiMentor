@@ -23,7 +23,8 @@ public class RestUtil {
             log.info("The request is :{}", requestBody);
             HttpClient httpClient = HttpClient.newHttpClient();
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(URL);
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(builder.toUriString())).POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody))).build();
+            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(URI.create(builder.toUriString())).POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody))).header("Content-Type", "application/json");
+            HttpRequest request = requestBuilder.build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             T responseObject = objectMapper.readValue(response.body(), responseType);
             log.info("Response received: {}", responseObject);

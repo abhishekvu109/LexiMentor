@@ -13,4 +13,5 @@ public class LlamaModelDTO {
     private String explanation;
     private boolean isCorrect;
     private String error;
+    private String modelResponse;
 }
