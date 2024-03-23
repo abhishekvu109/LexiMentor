@@ -88,13 +88,12 @@ def format(response_string):
             "confidence": confidence,
             "explanation": explanation
         }
-        return jsonify(data)
+        return json.dumps(data)
     else:
         data = {
             "error": "No JSON substring found in the input string."
         }
-        logging.info(jsonify(data))
-        return jsonify(data)
+        return json.dumps(data)
 
 
 if __name__ == '__main__':
