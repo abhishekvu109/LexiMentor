@@ -1,6 +1,7 @@
 package com.abhi.leximentor.inventory.service.drill.impl;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
+import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillEvaluationDTO;
 import com.abhi.leximentor.inventory.dto.other.LlamaModelDTO;
@@ -119,6 +120,9 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge.setDrillScore(totalCorrect);
         drillChallenge.setTotalCorrect(totalCorrect);
         drillChallenge.setTotalWrong(totalIncorrect);
+        drillChallenge.setStatus(Status.DrillChallenge.EVALUATED);
+        drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
+        drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
         drillChallenge = drillChallengeRepository.save(drillChallenge);
         log.info("Saved the results in the challenge entity");
         return this.addAll(drillEvaluationDTOS);

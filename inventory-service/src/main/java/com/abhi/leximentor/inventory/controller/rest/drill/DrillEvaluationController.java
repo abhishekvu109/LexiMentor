@@ -1,15 +1,18 @@
 package com.abhi.leximentor.inventory.controller.rest.drill;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
+import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillEvaluationDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
+import com.abhi.leximentor.inventory.exceptions.entities.ServerException;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
 import com.abhi.leximentor.inventory.repository.drill.DrillChallengeRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillChallengeScoreService;
 import com.abhi.leximentor.inventory.service.drill.DrillEvaluationService;
+import com.abhi.leximentor.inventory.service.drill.impl.DrillServiceUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ public class DrillEvaluationController {
     public @ResponseBody ResponseEntity<RestApiResponse> evaluateChallenge(@PathVariable String challengeId, @RequestParam String evaluator) {
         log.info("Received a request for the evaluation of the challenge {} using evaluator {}", challengeId, evaluator);
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(challengeId));
+        if (drillChallenge.getStatus() == Status.DrillChallenge.EVALUATED)
+            throw new ServerException().new ChallengeAlreadyEvaluated("The challenge is already evaluated.");
         log.info("Successfully fetched the drill challenge objects using the challenge id {},{}", challengeId, drillChallenge);
         List<DrillChallengeScoresDTO> drillChallengeScoresDTOS = drillChallengeScoreService.getByDrillChallengeId(drillChallenge);
         log.info("Successfully fetched the {} questions to evaluates from the challenge scores entity", drillChallengeScoresDTOS.size());

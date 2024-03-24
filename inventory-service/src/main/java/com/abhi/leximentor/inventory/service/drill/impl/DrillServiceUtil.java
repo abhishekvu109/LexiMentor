@@ -54,6 +54,15 @@ public class DrillServiceUtil {
         public static DrillChallengeDTO buildDTO(DrillChallenge entity, DrillMetadata drillMetadata) {
             return DrillChallengeDTO.builder().refId(String.valueOf(entity.getRefId())).drillType(entity.getDrillType()).status(Status.DrillChallenge.getStatus(entity.getStatus())).drillRefId(String.valueOf(drillMetadata.getRefId())).drillScore(entity.getDrillScore()).isPass(entity.isPass()).totalCorrect(entity.getTotalCorrect()).totalWrong(entity.getTotalWrong()).crtnDate(entity.getCrtnDate()).build();
         }
+
+        public static synchronized boolean isPass(double score) {
+            return score > 70;
+        }
+
+        public static synchronized double score(int totalCorrect, int totalIncorrect) {
+            int totalQuestions = totalCorrect + totalIncorrect;
+            return ((double) totalCorrect / totalQuestions) * 100.00;
+        }
     }
 
     public static class DrillChallengeScoreUtil {

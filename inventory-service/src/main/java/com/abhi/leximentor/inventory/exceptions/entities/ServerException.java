@@ -12,4 +12,10 @@ public class ServerException {
             super(message);
         }
     }
+
+    public class ChallengeAlreadyEvaluated extends RuntimeException {
+        public ChallengeAlreadyEvaluated(String message) {
+            super(message);
+        }
+    }
 }

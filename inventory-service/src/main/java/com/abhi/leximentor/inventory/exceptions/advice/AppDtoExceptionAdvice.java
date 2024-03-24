@@ -46,4 +46,9 @@ public class AppDtoExceptionAdvice {
     public ResponseEntity<RestApiResponse> invalidRequest(InvalidDTOException ex) {
         return ResponseEntityBuilder.getBuilder(HttpStatus.BAD_REQUEST).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, String.format("The request is invalid or some part of the input is incorrect. %s", ex.getMessage()));
     }
+
+    @ResponseStatus(HttpStatus.ALREADY_REPORTED)
+    public ResponseEntity<RestApiResponse> alreadyEvaluatedException(ServerException.ChallengeAlreadyEvaluated ex) {
+        return ResponseEntityBuilder.getBuilder(HttpStatus.ALREADY_REPORTED).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, String.format("The challenge is already evaluated. %s", ex.getMessage()));
+    }
 }
