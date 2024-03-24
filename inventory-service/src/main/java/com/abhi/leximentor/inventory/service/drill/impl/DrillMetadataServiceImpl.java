@@ -85,12 +85,12 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
         List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(drillChallengeScores);
         drillEvaluationRepository.deleteAll(drillEvaluations);
         log.info("Removed the drill evaluations");
-        drillChallengeScoreRepository.deleteAll(drillChallengeScores);
-        log.info("Removed all the drill challenge scores");
-        drillChallengeRepository.deleteAll(drillChallenges);
-        log.info("Removed all the drill challenges");
-        drillSetRepository.deleteAll(drillSetList);
-        log.info("Removed all the drill set");
+//        drillChallengeScoreRepository.deleteAll(drillChallengeScores);
+//        log.info("Removed all the drill challenge scores");
+//        drillChallengeRepository.deleteAll(drillChallenges);
+//        log.info("Removed all the drill challenges");
+//        drillSetRepository.deleteAll(drillSetList);
+//        log.info("Removed all the drill set");
         drillMetadataRepository.delete(drillMetadata);
         log.info("The entity has been deleted: {}", drillMetadata.getName());
     }
