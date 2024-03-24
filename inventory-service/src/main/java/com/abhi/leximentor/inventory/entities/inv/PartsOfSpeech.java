@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Data
-@ToString
+@ToString(exclude = {"wordId"})
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

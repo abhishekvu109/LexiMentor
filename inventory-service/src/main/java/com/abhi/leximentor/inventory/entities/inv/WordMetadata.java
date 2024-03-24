@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = {"language", "synonyms", "antonyms", "meanings", "examples", "partsOfSpeeches"})
 @Entity
 @Table(name = "inv_word_metadata")
 public class WordMetadata {

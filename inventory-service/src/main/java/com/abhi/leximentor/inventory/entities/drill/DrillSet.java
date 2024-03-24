@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+@ToString(exclude = {"drillId","wordId"})
 public class DrillSet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

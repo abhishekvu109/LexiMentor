@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"drillId", "drillChallengeScoresList"})
 @Entity
 @Table(name = "drill_challenge")
 public class DrillChallenge {

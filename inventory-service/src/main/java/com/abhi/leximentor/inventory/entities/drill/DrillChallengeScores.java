@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"challengeId","drillSetId"})
 @Entity
 @Table(name = "drill_challenge_score")
 public class DrillChallengeScores {

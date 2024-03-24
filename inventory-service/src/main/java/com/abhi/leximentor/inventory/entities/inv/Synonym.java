@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = {"wordId"})
 @Entity
 @Table(name = "inv_synonym")
 public class Synonym {

@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"drillSetList", "drillChallenges"})
 @Entity
 @Table(name = "drill_metadata")
 public class DrillMetadata {

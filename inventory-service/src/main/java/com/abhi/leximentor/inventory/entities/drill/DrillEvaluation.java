@@ -9,7 +9,7 @@ import lombok.*;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = {"evaluator", "drillChallengeScores"})
 @Entity
 @Table(name = "drill_evaluation")
 public class DrillEvaluation {
