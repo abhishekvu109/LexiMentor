@@ -48,7 +48,7 @@ public class DrillMetadataController {
     @GetMapping(value = UrlConstants.Drill.DrillMetadata.DRILL_METADATA_ADD, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getAllDrills() {
         List<DrillMetadataDTO> drillMetadataDTOList = drillMetadataService.getDrills();
-        return CollectionUtil.isNotEmpty(drillMetadataDTOList) ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillMetadataDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve drills");
+        return drillMetadataDTOList == null ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillMetadataDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve drills");
     }
 
 }
