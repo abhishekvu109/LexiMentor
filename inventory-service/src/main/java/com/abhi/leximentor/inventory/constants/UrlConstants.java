@@ -3,29 +3,32 @@ package com.abhi.leximentor.inventory.constants;
 public class UrlConstants {
     public static class Drill {
         public static class DrillMetadata {
+            public static final String DRILL_METADATA_ADD = "/api/drill/metadata";
+            public static final String DRILL_METADATA_ADD_BY_SOURCE = "/api/drill/metadata/source/{sourceName}";
+            public static final String DRILL_METADATA_DELETE_BY_REF_ID = "/api/drill/metadata/{drillRefId}";
+
         }
 
         public static class DrillChallenge {
+            //            Add challenges to the drill.
+            public static final String DRILL_CHALLENGE_ADD = "/api/drill/metadata/challenges/challenge";
+            public static final String DRILL_GET_CHALLENGES_BY_DRILL_ID = "/api/drill/metadata/challenges/{drillRefId}";
         }
 
         public static class DrillChallengeScores {
+            public static final String DRILL_GET_CHALLENGE_SCORES_BY_CHALLENGE_ID = "/api/drill/metadata/challenges/challenge/{challengeId}/scores";
+            public static final String DRILL_UPDATE_CHALLENGE_SCORES_BY_CHALLENGE_ID = "/api/drill/metadata/challenges/challenge/{challengeId}/scores";
         }
 
         public static class DrillSet {
+            public static final String DRILL_GET_DRILL_SET_BY_SET_ID = "/api/drill/metadata/sets/set/{drillSetRefId}";
+            public static final String DRILL_GET_DRILL_SETS_BY_DRILL_ID = "/api/drill/metadata/sets/{drillRefId}";
         }
 
-        public static final String DRILL_ADD = "/api/drill";
-        public static final String DRILL_ADD_BY_SOURCE = "/api/drill/source/{sourceName}";
-        public static final String DRILL_ASSIGN_CHALLENGES_TO_DRILLS = "/api/drill/challenges";
-        public static final String DRILL_GET_CHALLENGES_BY_DRILL_ID = "/api/drill/challenges/{drillId}";
-        public static final String DRILL_GET_CHALLENGE_SCORE_BY_CHALLENGE_ID = "/api/drill/challenges/scores/{challengeId}";
-        public static final String DRILL_GET_DRILL_SET_BY_SET_ID = "/api/drill/challenges/sets/set/{setId}";
-        public static final String DRILL_GET_DRILL_SETS_BY_DRILL_ID = "/api/drill/challenges/sets/{drillRefId}";
-        public static final String DRILL_EVALUATE_BY_DRILL_CHALLENGE_ID = "/api/drill/challenges/challenge/evaluate";
-
-        public static class DrillChallengeScore {
-            public static final String SUBMIT_MEANING_RESPONSE = "/api/drill/challenges/scores";
+        public static class DrillEvaluation {
+            public static final String DRILL_EVALUATE_BY_CHALLENGE_ID = "/api/drill/metadata/challenges/challenge/{challengeId}/evaluate";
         }
+
     }
 
     public static class Inventory {

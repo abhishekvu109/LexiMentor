@@ -1,10 +1,9 @@
 package com.abhi.leximentor.inventory.service.drill.impl;
 
 import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
-import com.abhi.leximentor.inventory.entities.drill.DrillMetadata;
-import com.abhi.leximentor.inventory.entities.drill.DrillSet;
+import com.abhi.leximentor.inventory.entities.drill.*;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
-import com.abhi.leximentor.inventory.repository.drill.DrillMetadataRepository;
+import com.abhi.leximentor.inventory.repository.drill.*;
 import com.abhi.leximentor.inventory.repository.inv.WordMetadataRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillMetadataService;
 import com.abhi.leximentor.inventory.util.ApplicationUtil;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,6 +27,10 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     private final WordMetadataRepository wordMetadataRepository;
     private final ApplicationUtil applicationUtil;
     private final DrillServiceUtil drillServiceUtil;
+    private final DrillChallengeRepository drillChallengeRepository;
+    private final DrillEvaluationRepository drillEvaluationRepository;
+    private final DrillChallengeScoreRepository drillChallengeScoreRepository;
+    private final DrillSetRepository drillSetRepository;
 
     @Override
     @Transactional
@@ -70,11 +74,27 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     }
 
     @Override
+    @Transactional
     public void deleteByRefId(long refId) {
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(refId);
+        List<DrillSet> drillSetList = drillMetadata.getDrillSetList();
+        List<DrillChallenge> drillChallenges = drillMetadata.getDrillChallenges();
+        List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
+        for (DrillChallenge drillChallenge : drillChallenges)
+            drillChallengeScores.addAll(drillChallenge.getDrillChallengeScoresList());
+        List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(drillChallengeScores);
+        drillEvaluationRepository.deleteAll(drillEvaluations);
+        log.info("Removed the drill evaluations");
+        drillChallengeScoreRepository.deleteAll(drillChallengeScores);
+        log.info("Removed all the drill challenge scores");
+        drillChallengeRepository.deleteAll(drillChallenges);
+        log.info("Removed all the drill challenges");
+        drillSetRepository.deleteAll(drillSetList);
+        log.info("Removed all the drill set");
         drillMetadataRepository.delete(drillMetadata);
         log.info("The entity has been deleted: {}", drillMetadata.getName());
     }
+
 
     @Override
     public DrillMetadataDTO getByRefId(long refId) {

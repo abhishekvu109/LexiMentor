@@ -16,5 +16,6 @@ public interface DrillMetadataService {
     public List<DrillMetadataDTO> getDrills();
 
     public void deleteByRefId(long refId);
+
     public DrillMetadataDTO getByRefId(long refId);
 }
