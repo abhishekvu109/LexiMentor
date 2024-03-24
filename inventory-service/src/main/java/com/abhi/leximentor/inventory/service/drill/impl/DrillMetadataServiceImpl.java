@@ -7,6 +7,7 @@ import com.abhi.leximentor.inventory.repository.drill.*;
 import com.abhi.leximentor.inventory.repository.inv.WordMetadataRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillMetadataService;
 import com.abhi.leximentor.inventory.util.ApplicationUtil;
+import com.abhi.leximentor.inventory.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,9 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     @Override
     public List<DrillMetadataDTO> getDrills() {
         List<DrillMetadata> drillMetadataList = drillMetadataRepository.findAll();
-        return drillMetadataList.stream().map(DrillServiceUtil.DrillMetadataUtil::buildDTO).toList();
+        if (CollectionUtil.isNotEmpty(drillMetadataList))
+            return drillMetadataList.stream().map(DrillServiceUtil.DrillMetadataUtil::buildDTO).toList();
+        return new LinkedList<DrillMetadataDTO>();
     }
 
     private DrillMetadataDTO getEntity(int size, List<WordMetadata> wordMetadataList) {
