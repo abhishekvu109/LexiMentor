@@ -5,6 +5,7 @@ import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillEvaluationDTO;
+import com.abhi.leximentor.inventory.dto.drill.DrillReportResponseDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.exceptions.entities.ServerException;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
@@ -45,5 +46,13 @@ public class DrillEvaluationController {
             List<DrillEvaluationDTO> drillEvaluationDTOS = drillEvaluationService.evaluateMeaning(drillChallengeScoresDTOS, evaluator);
         });
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The job has been successfully submitted and the evaluation is progress.");
+    }
+
+    @GetMapping(value = UrlConstants.Drill.DrillEvaluation.DRILL_GET_EVALUATION_RESULT_BY_CHALLENGE_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getEvaluationReport(@PathVariable String challengeId) {
+        log.info("Received a request to get the evaluation report for the challenge {}", challengeId);
+        DrillReportResponseDTO reportResponseDTO = drillEvaluationService.getEvaluationReport(Long.parseLong(challengeId));
+        log.info("Found the report for the challenge id {},{}", challengeId, reportResponseDTO);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, reportResponseDTO);
     }
 }

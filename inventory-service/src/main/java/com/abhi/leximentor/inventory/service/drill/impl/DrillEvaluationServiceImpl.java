@@ -4,6 +4,7 @@ import com.abhi.leximentor.inventory.constants.ApplicationConstants;
 import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillEvaluationDTO;
+import com.abhi.leximentor.inventory.dto.drill.DrillReportResponseDTO;
 import com.abhi.leximentor.inventory.dto.other.LlamaModelDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
@@ -135,5 +136,13 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     @Override
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public DrillReportResponseDTO getEvaluationReport(long challengeRefId) {
+        DrillChallenge challenge = drillChallengeRepository.findByRefId(challengeRefId);
+        List<DrillChallengeScoresDTO> drillChallengeScoresDTOS = challenge.getDrillChallengeScoresList().stream().map(DrillServiceUtil.DrillChallengeScoreUtil::buildDTO).toList();
+        List<DrillEvaluationDTO> drillEvaluationDTOS = drillEvaluationRepository.findByDrillChallengeScoresIn(challenge.getDrillChallengeScoresList()).stream().map(evaluation -> DrillServiceUtil.DrillEvaluationUtil.buildDTO(evaluation, DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(evaluation.getDrillChallengeScores()))).toList();
+        return DrillReportResponseDTO.builder().challengeRefId(String.valueOf(challenge.getRefId())).evaluator(drillEvaluationDTOS.get(0).getEvaluator()).drillType(challenge.getDrillType()).drillEvaluationDTOS(drillEvaluationDTOS).totalCorrect(challenge.getTotalCorrect()).totalIncorrect(challenge.getTotalCorrect()).score(challenge.getDrillScore()).isPassed(challenge.isPass()).build();
     }
 }

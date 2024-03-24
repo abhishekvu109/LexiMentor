@@ -67,7 +67,7 @@ public class DrillServiceUtil {
 
     public static class DrillChallengeScoreUtil {
         public static DrillChallengeScores buildEntity(DrillChallenge drillChallenge, DrillSet drillSet) {
-            return DrillChallengeScores.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).challengeId(drillChallenge).drillSetId(drillSet).build();
+            return DrillChallengeScores.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).challengeId(drillChallenge).drillSetId(drillSet).question(drillSet.getWordId().getWord()).build();
         }
 
         public static DrillChallengeScoresDTO buildDTO(DrillChallengeScores drillChallengeScores) {

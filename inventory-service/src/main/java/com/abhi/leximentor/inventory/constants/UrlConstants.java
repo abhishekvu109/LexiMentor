@@ -27,6 +27,7 @@ public class UrlConstants {
 
         public static class DrillEvaluation {
             public static final String DRILL_EVALUATE_BY_CHALLENGE_ID = "/api/drill/metadata/challenges/challenge/{challengeId}/evaluate";
+            public static final String DRILL_GET_EVALUATION_RESULT_BY_CHALLENGE_ID = "/api/drill/metadata/challenges/challenge/{challengeId}/report";
         }
 
     }
