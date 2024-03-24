@@ -20,9 +20,12 @@ public class Status {
             return switch (status) {
                 case NOT_INITIATED -> "Not Initiated";
                 case IN_PROGRESS -> "In Progress";
-                case COMPLETED -> "Completed";
-                default -> "Evaluated";
+                default -> "Completed";
             };
+        }
+
+        public static String getEvaluationStatus(int status) {
+            return (status == EVALUATED) ? "Evaluated" : "Not Evaluated";
         }
     }
 
