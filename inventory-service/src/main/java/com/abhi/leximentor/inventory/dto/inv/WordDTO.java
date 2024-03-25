@@ -26,6 +26,8 @@ public class WordDTO {
     private String pos;
     private String status;
     private String pronunciation;
+    private String mnemonic;
+    private String localMeaning;
     private Collection<MeaningDTO> meanings;
     private Collection<SynonymDTO> synonyms;
     private Collection<AntonymDTO> antonyms;

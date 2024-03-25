@@ -1,7 +1,7 @@
 package com.abhi.leximentor.inventory.service.inv.impl;
 
-import com.abhi.leximentor.inventory.dto.inv.WordDTO;
-import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
+import com.abhi.leximentor.inventory.dto.inv.*;
+import com.abhi.leximentor.inventory.entities.inv.*;
 import com.abhi.leximentor.inventory.repository.inv.LanguageRepository;
 import com.abhi.leximentor.inventory.repository.inv.WordMetadataRepository;
 import com.abhi.leximentor.inventory.service.inv.WordService;
@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -86,5 +85,40 @@ public class WordServiceImpl implements WordService {
     @Override
     public boolean removeAll(Collection<WordDTO> words) {
         return false;
+    }
+
+    @Override
+    public Set<String> getUniqueSourcesByWordRefId(long wordRefId) {
+        WordMetadata wordMetadata = wordRepository.findByRefId(wordRefId);
+        Set<String> sources = new HashSet<>();
+        sources.add(wordMetadata.getSource());
+        Set<String> synSources = wordMetadata.getSynonyms().stream().map(Synonym::getSource).collect(Collectors.toSet());
+        Set<String> antSources = wordMetadata.getAntonyms().stream().map(Antonym::getSource).collect(Collectors.toSet());
+        Set<String> meanSources = wordMetadata.getMeanings().stream().map(Meaning::getSource).collect(Collectors.toSet());
+        Set<String> posSources = wordMetadata.getPartsOfSpeeches().stream().map(PartsOfSpeech::getSource).collect(Collectors.toSet());
+        Set<String> exampleSources = wordMetadata.getExamples().stream().map(Example::getSource).collect(Collectors.toSet());
+        sources.addAll(synSources);
+        sources.addAll(antSources);
+        sources.addAll(meanSources);
+        sources.addAll(posSources);
+        sources.addAll(exampleSources);
+        return sources;
+    }
+
+    @Override
+    public WordDTO getWordByWordRefIdAndSource(String source, long wordRefId) {
+        WordMetadata wordMetadata = wordRepository.findByRefId(wordRefId);
+        WordDTO wordDTO = InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata);
+        List<SynonymDTO> synonyms = wordMetadata.getSynonyms().stream().filter(syn -> syn.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.SynonymUtil::buildDTO).toList();
+        List<AntonymDTO> antonyms = wordMetadata.getAntonyms().stream().filter(ant -> ant.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.AntonymUtil::buildDTO).toList();
+        List<MeaningDTO> meanings = wordMetadata.getMeanings().stream().filter(mean -> mean.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.MeaningUtil::buildDTO).toList();
+        List<PartsOfSpeechDTO> posS = wordMetadata.getPartsOfSpeeches().stream().filter(pos -> pos.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.PartsOfSpeechUtil::buildDTO).toList();
+        List<ExampleDTO> examples = wordMetadata.getExamples().stream().filter(ex -> ex.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.ExampleUtil::buildDTO).toList();
+        wordDTO.setSynonyms(synonyms);
+        wordDTO.setAntonyms(antonyms);
+        wordDTO.setMeanings(meanings);
+        wordDTO.setPartsOfSpeeches(posS);
+        wordDTO.setExamples(examples);
+        return wordDTO;
     }
 }

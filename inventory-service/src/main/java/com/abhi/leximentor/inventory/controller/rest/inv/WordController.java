@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -39,6 +40,18 @@ public class WordController {
     @GetMapping(value = UrlConstants.Inventory.WordMetaData.WORD_GET_BY_WORD_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByWordRefId(@PathVariable String wordRefId) {
         WordDTO dto = wordService.get(Long.parseLong(wordRefId));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
+    }
+
+    @GetMapping(value = UrlConstants.Inventory.WordMetaData.WORD_GET_SOURCES_BY_WORD_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getSourcesByWordRefId(@PathVariable String wordRefId) {
+        Set<String> dto = wordService.getUniqueSourcesByWordRefId(Long.parseLong(wordRefId));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
+    }
+
+    @GetMapping(value = UrlConstants.Inventory.WordMetaData.WORD_GET_BY_WORD_REF_ID_AND_SOURCES, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getWordByWordRefIdAndSource(@PathVariable String wordRefId, @PathVariable String source) {
+        WordDTO dto = wordService.getWordByWordRefIdAndSource(source, Long.parseLong(wordRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 

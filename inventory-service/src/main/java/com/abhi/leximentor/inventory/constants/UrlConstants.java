@@ -37,6 +37,8 @@ public class UrlConstants {
             public static final String WORD_ADD_WORDS = "/api/inventory/words";
             public static final String WORD_GET_BY_WORD = "/api/inventory/words/{word}";
             public static final String WORD_GET_BY_WORD_REF_ID = "/api/inventory/words/{wordRefId}";
+            public static final String WORD_GET_SOURCES_BY_WORD_REF_ID = "/api/inventory/words/{wordRefId}/sources";
+            public static final String WORD_GET_BY_WORD_REF_ID_AND_SOURCES = "/api/inventory/words/{wordRefId}/sources/{source}";
         }
 
         public static class Language {

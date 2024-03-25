@@ -3,6 +3,7 @@ package com.abhi.leximentor.inventory.service.inv;
 import com.abhi.leximentor.inventory.dto.inv.WordDTO;
 
 import java.util.Collection;
+import java.util.Set;
 
 public interface WordService {
     public WordDTO add(WordDTO word);
@@ -26,4 +27,8 @@ public interface WordService {
     public boolean remove(WordDTO word);
 
     public boolean removeAll(Collection<WordDTO> words);
+
+    public Set<String> getUniqueSourcesByWordRefId(long wordRefId);
+
+    public WordDTO getWordByWordRefIdAndSource(String source, long wordRefId);
 }

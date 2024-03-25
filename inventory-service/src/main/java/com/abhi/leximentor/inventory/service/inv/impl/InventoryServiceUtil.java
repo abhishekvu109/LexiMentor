@@ -71,7 +71,7 @@ public class InventoryServiceUtil {
 
     public static class WordMetadataUtil {
         private static WordMetadata buildNewObject(WordDTO dto, LanguageRepository languageRepository) {
-            WordMetadata wordMetadata = WordMetadata.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).word(dto.getWord()).pos(dto.getPos()).pronunciation(dto.getPronunciation()).language(languageRepository.findByLanguage(dto.getLanguage())).status(Status.ApplicationStatus.ACTIVE).source(dto.getSource()).category(dto.getCategory()).build();
+            WordMetadata wordMetadata = WordMetadata.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).word(dto.getWord()).pos(dto.getPos()).pronunciation(dto.getPronunciation()).language(languageRepository.findByLanguage(dto.getLanguage())).status(Status.ApplicationStatus.ACTIVE).source(dto.getSource()).category(dto.getCategory()).localMeaning(dto.getLocalMeaning()).mnemonic(dto.getMnemonic()).build();
             if (CollectionUtil.isNotEmpty(dto.getPartsOfSpeeches()))
                 wordMetadata.setPartsOfSpeeches(dto.getPartsOfSpeeches().stream().map(pos -> InventoryServiceUtil.PartsOfSpeechUtil.buildEntity(pos, wordMetadata)).collect(Collectors.toList()));
             if (CollectionUtil.isNotEmpty(dto.getSynonyms()))

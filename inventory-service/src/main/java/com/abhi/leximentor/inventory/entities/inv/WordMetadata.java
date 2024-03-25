@@ -64,6 +64,12 @@ public class WordMetadata {
     @Column(name = "status")
     private int status;
 
+    @Column(name = "mnemonic")
+    private String mnemonic;
+
+    @Column(name = "local_meaning")
+    private String localMeaning;
+
     @OneToMany(mappedBy = "wordId", cascade = CascadeType.ALL)
     private List<Synonym> synonyms;
 

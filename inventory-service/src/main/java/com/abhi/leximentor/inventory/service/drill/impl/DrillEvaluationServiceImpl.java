@@ -143,6 +143,6 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         DrillChallenge challenge = drillChallengeRepository.findByRefId(challengeRefId);
         List<DrillChallengeScoresDTO> drillChallengeScoresDTOS = challenge.getDrillChallengeScoresList().stream().map(DrillServiceUtil.DrillChallengeScoreUtil::buildDTO).toList();
         List<DrillEvaluationDTO> drillEvaluationDTOS = drillEvaluationRepository.findByDrillChallengeScoresIn(challenge.getDrillChallengeScoresList()).stream().map(evaluation -> DrillServiceUtil.DrillEvaluationUtil.buildDTO(evaluation, DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(evaluation.getDrillChallengeScores()))).toList();
-        return DrillReportResponseDTO.builder().challengeRefId(String.valueOf(challenge.getRefId())).evaluator(drillEvaluationDTOS.get(0).getEvaluator()).drillType(challenge.getDrillType()).drillEvaluationDTOS(drillEvaluationDTOS).totalCorrect(challenge.getTotalCorrect()).totalIncorrect(challenge.getTotalCorrect()).score(challenge.getDrillScore()).isPassed(challenge.isPass()).build();
+        return DrillReportResponseDTO.builder().challengeRefId(String.valueOf(challenge.getRefId())).evaluator(drillEvaluationDTOS.get(0).getEvaluator()).drillType(challenge.getDrillType()).drillEvaluationDTOS(drillEvaluationDTOS).totalCorrect(challenge.getTotalCorrect()).totalIncorrect(challenge.getTotalWrong()).score(challenge.getDrillScore()).isPassed(challenge.isPass()).build();
     }
 }
