@@ -108,11 +108,11 @@ public class InventoryServiceUtil {
                 antonyms.addAll(dto.getAntonyms().stream().map(ant -> InventoryServiceUtil.AntonymUtil.buildEntity(ant, wordMetadata)).toList());
             if (CollectionUtil.isNotEmpty(dto.getPartsOfSpeeches()))
                 partsOfSpeeches.addAll(dto.getPartsOfSpeeches().stream().map(pos -> InventoryServiceUtil.PartsOfSpeechUtil.buildEntity(pos, wordMetadata)).toList());
-//            wordMetadata.setMeanings(meanings);
-//            wordMetadata.setExamples(examples);
-//            wordMetadata.setSynonyms(synonyms);
-//            wordMetadata.setAntonyms(antonyms);
-//            wordMetadata.setPartsOfSpeeches(partsOfSpeeches);
+            wordMetadata.setMeanings(meanings);
+            wordMetadata.setExamples(examples);
+            wordMetadata.setSynonyms(synonyms);
+            wordMetadata.setAntonyms(antonyms);
+            wordMetadata.setPartsOfSpeeches(partsOfSpeeches);
             return wordMetadata;
         }
 
