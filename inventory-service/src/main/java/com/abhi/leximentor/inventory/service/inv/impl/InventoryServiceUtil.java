@@ -8,6 +8,7 @@ import com.abhi.leximentor.inventory.repository.inv.WordMetadataRepository;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
 import com.abhi.leximentor.inventory.util.KeyGeneratorUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -86,6 +87,12 @@ public class InventoryServiceUtil {
         }
 
         public static WordMetadata buildExistingObject(WordMetadata wordMetadata, WordDTO dto) {
+            if (StringUtils.isEmpty(wordMetadata.getPronunciation()))
+                wordMetadata.setPronunciation(dto.getPronunciation());
+            if (StringUtils.isEmpty(wordMetadata.getMnemonic())) wordMetadata.setMnemonic(dto.getMnemonic());
+            if (StringUtils.isEmpty(wordMetadata.getLocalMeaning()))
+                wordMetadata.setLocalMeaning(dto.getLocalMeaning());
+            if (StringUtils.isEmpty(wordMetadata.getCategory())) wordMetadata.setCategory(dto.getCategory());
             List<Meaning> meanings = CollectionUtil.isEmpty(wordMetadata.getMeanings()) ? new LinkedList<>() : wordMetadata.getMeanings();
             List<Example> examples = CollectionUtil.isEmpty(wordMetadata.getExamples()) ? new LinkedList<>() : wordMetadata.getExamples();
             List<Synonym> synonyms = CollectionUtil.isEmpty(wordMetadata.getSynonyms()) ? new LinkedList<>() : wordMetadata.getSynonyms();
@@ -101,11 +108,11 @@ public class InventoryServiceUtil {
                 antonyms.addAll(dto.getAntonyms().stream().map(ant -> InventoryServiceUtil.AntonymUtil.buildEntity(ant, wordMetadata)).toList());
             if (CollectionUtil.isNotEmpty(dto.getPartsOfSpeeches()))
                 partsOfSpeeches.addAll(dto.getPartsOfSpeeches().stream().map(pos -> InventoryServiceUtil.PartsOfSpeechUtil.buildEntity(pos, wordMetadata)).toList());
-            wordMetadata.setMeanings(meanings);
-            wordMetadata.setExamples(examples);
-            wordMetadata.setSynonyms(synonyms);
-            wordMetadata.setAntonyms(antonyms);
-            wordMetadata.setPartsOfSpeeches(partsOfSpeeches);
+//            wordMetadata.setMeanings(meanings);
+//            wordMetadata.setExamples(examples);
+//            wordMetadata.setSynonyms(synonyms);
+//            wordMetadata.setAntonyms(antonyms);
+//            wordMetadata.setPartsOfSpeeches(partsOfSpeeches);
             return wordMetadata;
         }
 
