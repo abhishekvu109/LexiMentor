@@ -109,11 +109,11 @@ public class WordServiceImpl implements WordService {
     public WordDTO getWordByWordRefIdAndSource(String source, long wordRefId) {
         WordMetadata wordMetadata = wordRepository.findByRefId(wordRefId);
         WordDTO wordDTO = InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata);
-        List<SynonymDTO> synonyms = wordMetadata.getSynonyms().stream().filter(syn -> syn.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.SynonymUtil::buildDTO).toList();
-        List<AntonymDTO> antonyms = wordMetadata.getAntonyms().stream().filter(ant -> ant.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.AntonymUtil::buildDTO).toList();
-        List<MeaningDTO> meanings = wordMetadata.getMeanings().stream().filter(mean -> mean.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.MeaningUtil::buildDTO).toList();
-        List<PartsOfSpeechDTO> posS = wordMetadata.getPartsOfSpeeches().stream().filter(pos -> pos.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.PartsOfSpeechUtil::buildDTO).toList();
-        List<ExampleDTO> examples = wordMetadata.getExamples().stream().filter(ex -> ex.getSource().equals(source)).toList().stream().map(InventoryServiceUtil.ExampleUtil::buildDTO).toList();
+        List<SynonymDTO> synonyms = wordMetadata.getSynonyms().stream().filter(syn -> syn.getSource().equalsIgnoreCase(source)).toList().stream().map(InventoryServiceUtil.SynonymUtil::buildDTO).toList();
+        List<AntonymDTO> antonyms = wordMetadata.getAntonyms().stream().filter(ant -> ant.getSource().equalsIgnoreCase(source)).toList().stream().map(InventoryServiceUtil.AntonymUtil::buildDTO).toList();
+        List<MeaningDTO> meanings = wordMetadata.getMeanings().stream().filter(mean -> mean.getSource().equalsIgnoreCase(source)).toList().stream().map(InventoryServiceUtil.MeaningUtil::buildDTO).toList();
+        List<PartsOfSpeechDTO> posS = wordMetadata.getPartsOfSpeeches().stream().filter(pos -> pos.getSource().equalsIgnoreCase(source)).toList().stream().map(InventoryServiceUtil.PartsOfSpeechUtil::buildDTO).toList();
+        List<ExampleDTO> examples = wordMetadata.getExamples().stream().filter(ex -> ex.getSource().equalsIgnoreCase(source)).toList().stream().map(InventoryServiceUtil.ExampleUtil::buildDTO).toList();
         wordDTO.setSynonyms(synonyms);
         wordDTO.setAntonyms(antonyms);
         wordDTO.setMeanings(meanings);
