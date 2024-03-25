@@ -39,4 +39,13 @@ public class DrillSetController {
         log.info("Successfully fetched all the drill set list from the drill-ref-id {} of size {}", drillRefId, dto.size());
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
+
+    @GetMapping(value = UrlConstants.Drill.DrillSet.DRILL_GET_WORDS_BY_DRILL_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> getWordsByDrillId(@PathVariable String drillRefId) {
+        log.info("Received a request to fetch the list of words in the drills from the drill metadata id {}", drillRefId);
+        List<DrillSetDTO> dto = drillSetService.getDrillSetsByDrillId(Long.parseLong(drillRefId));
+        List<String> words = dto.stream().map(DrillSetDTO::getWord).toList();
+        log.info("Successfully fetched all the word list from the drill-ref-id {} of size {}", drillRefId, words.size());
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, words);
+    }
 }

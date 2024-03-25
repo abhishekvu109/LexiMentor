@@ -23,6 +23,7 @@ public class UrlConstants {
         public static class DrillSet {
             public static final String DRILL_GET_DRILL_SET_BY_SET_ID = "/api/drill/metadata/sets/set/{drillSetRefId}";
             public static final String DRILL_GET_DRILL_SETS_BY_DRILL_ID = "/api/drill/metadata/sets/{drillRefId}";
+            public static final String DRILL_GET_WORDS_BY_DRILL_ID = "/api/drill/metadata/sets/words/{drillRefId}";
         }
 
         public static class DrillEvaluation {
