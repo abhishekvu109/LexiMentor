@@ -61,6 +61,17 @@ services:
     container_name: meaning-evaluation-service-llm
     ports:
       - "7300:7300"
+  ui:
+    image: leximentor-ui-serice:latest
+    container_name: leximentor-ui-service
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - inventory
 #  word-publisher:
 #    image: word-publisher-service:latest
 #    container_name: word-publisher-service
