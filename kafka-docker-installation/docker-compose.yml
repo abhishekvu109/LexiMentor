@@ -62,7 +62,7 @@ services:
     ports:
       - "7300:7300"
   ui:
-    image: leximentor-ui-serice:latest
+    image: leximentor-ui-service:latest
     container_name: leximentor-ui-service
     ports:
       - "3000:3000"
