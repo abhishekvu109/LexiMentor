@@ -72,11 +72,11 @@ services:
       - NODE_ENV=production
     depends_on:
       - inventory
-#  word-publisher:
-#    image: word-publisher-service:latest
-#    container_name: word-publisher-service
-#    ports:
-#      - "9393:9393"
+  speech:
+    image: speech-from-text-service:latest
+    container_name: speech-from-text-service
+    ports:
+      - "8300:8300"
 
 volumes:
   mysql-data:
