@@ -2,13 +2,10 @@
 FROM python:3.9-slim
 
 # Set the working directory in the container
-WORKDIR /app
+# WORKDIR /app
 
 # Copy the requirements file into the container at /app
-COPY requirements.txt .
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir Flask==2.0.1 gTTS==2.2.3
 
 # Copy the current directory contents into the container at /app
 COPY . .
