@@ -13,6 +13,7 @@ public class UrlConstants {
             //            Add challenges to the drill.
             public static final String DRILL_CHALLENGE_ADD = "/api/drill/metadata/challenges/challenge";
             public static final String DRILL_GET_CHALLENGES_BY_DRILL_ID = "/api/drill/metadata/challenges/{drillRefId}";
+            public static final String DRILL_DELETE_CHALLENGES_BY_DRILL_ID = "/api/drill/metadata/challenges/{drillRefId}";
         }
 
         public static class DrillChallengeScores {

@@ -45,4 +45,10 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
         return CollectionUtil.isNotEmpty(drillMetadata.getDrillChallenges()) ? drillMetadata.getDrillChallenges().stream().map(d -> DrillServiceUtil.DrillChallengeUtil.buildDTO(d, drillMetadata)).collect(Collectors.toList()) : new LinkedList<>();
     }
+
+    @Override
+    public void deleteChallenge(long drillRefId) {
+        DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(drillRefId);
+        drillChallengeRepository.delete(drillChallenge);
+    }
 }

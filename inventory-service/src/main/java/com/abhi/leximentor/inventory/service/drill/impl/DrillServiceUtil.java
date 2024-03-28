@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,7 +48,7 @@ public class DrillServiceUtil {
     public static class DrillChallengeUtil {
         public static DrillChallenge buildEntity(DrillMetadata drillMetadata, DrillTypes drillTypes) {
             DrillChallenge drillChallenge = DrillChallenge.builder().status(Status.DrillChallenge.NOT_INITIATED).uuid(KeyGeneratorUtil.uuid()).drillType(drillTypes.name()).refId(KeyGeneratorUtil.refId()).drillId(drillMetadata).drillScore(0).isPass(false).totalCorrect(0).totalWrong(0).build();
-            drillChallenge.setDrillChallengeScoresList(CollectionUtil.isNotEmpty(drillMetadata.getDrillSetList()) ? drillMetadata.getDrillSetList().stream().map(d -> DrillChallengeScoreUtil.buildEntity(drillChallenge, d)).collect(Collectors.toList()) : null);
+            drillChallenge.setDrillChallengeScoresList(CollectionUtil.isNotEmpty(drillMetadata.getDrillSetList()) ? drillMetadata.getDrillSetList().stream().map(d -> DrillChallengeScoreUtil.buildEntity(drillChallenge, d, drillTypes)).collect(Collectors.toList()) : null);
             return drillChallenge;
         }
 
@@ -66,13 +67,15 @@ public class DrillServiceUtil {
     }
 
     public static class DrillChallengeScoreUtil {
-        public static DrillChallengeScores buildEntity(DrillChallenge drillChallenge, DrillSet drillSet) {
-            return DrillChallengeScores.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).challengeId(drillChallenge).drillSetId(drillSet).question(drillSet.getWordId().getWord()).build();
+        public static DrillChallengeScores buildEntity(DrillChallenge drillChallenge, DrillSet drillSet, DrillTypes drillTypes) {
+            String question = (Objects.requireNonNull(drillTypes) == DrillTypes.GUESS_WORD) ? drillSet.getWordId().getMeanings().get(0).getDefinition() : drillSet.getWordId().getWord();
+            return DrillChallengeScores.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).challengeId(drillChallenge).drillSetId(drillSet).question(question).build();
         }
 
         public static DrillChallengeScoresDTO buildDTO(DrillChallengeScores drillChallengeScores) {
             return DrillChallengeScoresDTO.builder().refId(String.valueOf(drillChallengeScores.getRefId())).drillChallengeRefId(String.valueOf(drillChallengeScores.getChallengeId().getRefId())).drillSetRefId(String.valueOf(drillChallengeScores.getDrillSetId().getRefId())).isCorrect(drillChallengeScores.isCorrect()).response(drillChallengeScores.getResponse()).crtnDate(drillChallengeScores.getCrtnDate()).question(drillChallengeScores.getQuestion()).description(drillChallengeScores.getDescription()).build();
         }
+
     }
 
     public static class DrillEvaluationUtil {

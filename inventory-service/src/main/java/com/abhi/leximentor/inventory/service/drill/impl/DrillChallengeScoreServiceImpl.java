@@ -1,5 +1,6 @@
 package com.abhi.leximentor.inventory.service.drill.impl;
 
+import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
@@ -31,7 +32,8 @@ public class DrillChallengeScoreServiceImpl implements DrillChallengeScoreServic
     public DrillChallengeScoresDTO createChallenge(DrillChallengeScoresDTO dto) {
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(dto.getDrillChallengeRefId()));
         DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
-        DrillChallengeScores scores = DrillServiceUtil.DrillChallengeScoreUtil.buildEntity(drillChallenge, drillSet);
+        DrillTypes drillTypes = DrillTypes.getType(drillChallenge.getDrillType());
+        DrillChallengeScores scores = DrillServiceUtil.DrillChallengeScoreUtil.buildEntity(drillChallenge, drillSet, drillTypes);
         scores = drillChallengeScoreRepository.save(scores);
         return DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(scores);
     }
