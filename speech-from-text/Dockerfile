@@ -5,7 +5,9 @@ FROM python:3.9-slim
 # WORKDIR /app
 
 # Copy the requirements file into the container at /app
-RUN pip install --no-cache-dir Flask==2.0.1 gTTS==2.2.3
+RUN pip install --no-cache-dir Flask==2.0.1 gTTS==2.2.3 flask_cors
+
+RUN pip install --upgrade flask werkzeug
 
 # Copy the current directory contents into the container at /app
 COPY . .
