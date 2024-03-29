@@ -11,4 +11,6 @@ public interface DrillSetService {
     public DrillSetDTO getDrillSetByDrillSetId(long drillSetId);
 
     public List<DrillSetDTO> getDrillSetsByDrillId(long drillRefId);
+
+    public List<WordDTO> getWordDataFromDrillId(long drillRefId);
 }

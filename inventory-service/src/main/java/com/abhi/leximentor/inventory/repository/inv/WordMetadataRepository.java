@@ -13,6 +13,8 @@ public interface WordMetadataRepository extends JpaRepository<WordMetadata, Long
     @Query(value = QueryConstants.Inventory.WordMetadata.FIND_BY_WORD, nativeQuery = true)
     public WordMetadata findByWord(String word);
 
+    public List<WordMetadata> findByRefIdIn(List<Long> refIds);
+
     @Query(value = QueryConstants.Inventory.WordMetadata.GET_WORD_RANDOMLY_IN_LIMIT, nativeQuery = true)
     public List<WordMetadata> findAllRandomlyInLimit(int limit);
 
