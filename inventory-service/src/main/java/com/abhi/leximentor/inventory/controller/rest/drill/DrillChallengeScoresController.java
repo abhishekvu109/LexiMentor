@@ -26,7 +26,7 @@ public class DrillChallengeScoresController {
     private final DrillChallengeRepository drillChallengeRepository;
 
     @PutMapping(value = UrlConstants.Drill.DrillChallengeScores.DRILL_UPDATE_CHALLENGE_SCORES_BY_CHALLENGE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> submitMeaningResponse(@PathVariable String challengeId, @RequestBody List<DrillChallengeScoresDTO> request) {
+    public @ResponseBody ResponseEntity<RestApiResponse> submitResponse(@PathVariable String challengeId, @RequestBody List<DrillChallengeScoresDTO> request) {
         log.info("Received a request to update the user response for questions : {}", request);
         List<DrillChallengeScoresDTO> response = drillChallengeScoreService.updateResponse(request);
         log.info("Successfully updated the user responses {}", response.size());

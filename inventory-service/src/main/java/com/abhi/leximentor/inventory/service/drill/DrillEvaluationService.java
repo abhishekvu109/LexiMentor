@@ -11,6 +11,8 @@ public interface DrillEvaluationService {
 
     public List<DrillEvaluationDTO> addAll(List<DrillEvaluationDTO> dtos);
 
+    public List<DrillEvaluationDTO> evaluate(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, String evaluator,long challengeRefId);
+
     public List<DrillEvaluationDTO> evaluateMeaning(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, String evaluator);
 
     public void setUrl(String url);

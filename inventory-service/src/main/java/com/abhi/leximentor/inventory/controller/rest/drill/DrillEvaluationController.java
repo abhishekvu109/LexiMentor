@@ -43,7 +43,7 @@ public class DrillEvaluationController {
         List<DrillChallengeScoresDTO> drillChallengeScoresDTOS = drillChallengeScoreService.getByDrillChallengeId(drillChallenge);
         log.info("Successfully fetched the {} questions to evaluates from the challenge scores entity", drillChallengeScoresDTOS.size());
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-            List<DrillEvaluationDTO> drillEvaluationDTOS = drillEvaluationService.evaluateMeaning(drillChallengeScoresDTOS, evaluator);
+            List<DrillEvaluationDTO> drillEvaluationDTOS = drillEvaluationService.evaluate(drillChallengeScoresDTOS, evaluator, Long.parseLong(challengeId));
         });
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The job has been successfully submitted and the evaluation is progress.");
     }

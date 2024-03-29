@@ -51,4 +51,9 @@ public class AppDtoExceptionAdvice {
     public ResponseEntity<RestApiResponse> alreadyEvaluatedException(ServerException.ChallengeAlreadyEvaluated ex) {
         return ResponseEntityBuilder.getBuilder(HttpStatus.ALREADY_REPORTED).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, String.format("The challenge is already evaluated. %s", ex.getMessage()));
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<RestApiResponse> internalErrorException(ServerException.InternalError ex) {
+        return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, String.format("Some unexpected event has caused failure. %s", ex.getMessage()));
+    }
 }

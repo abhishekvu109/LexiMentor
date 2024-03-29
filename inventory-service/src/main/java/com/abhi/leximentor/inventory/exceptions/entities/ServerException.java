@@ -18,4 +18,12 @@ public class ServerException {
             super(message);
         }
     }
+
+    public class InternalError extends RuntimeException {
+        public InternalError(String message) {
+            super(message);
+        }
+    }
+
+
 }

@@ -57,4 +57,7 @@ public class DrillChallenge {
 
     @Column(name = "status")
     private int status;
+
+    @Column(name = "evaluation_status")
+    private int evaluationStatus;
 }

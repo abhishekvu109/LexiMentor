@@ -25,7 +25,11 @@ public class Status {
         }
 
         public static String getEvaluationStatus(int status) {
-            return (status == EVALUATED) ? "Evaluated" : "Not Evaluated";
+            return switch (status) {
+                case NOT_INITIATED -> "Not Evaluated";
+                case IN_PROGRESS -> "In Progress";
+                default -> "Evaluated";
+            };
         }
     }
 
