@@ -10,6 +10,8 @@ import java.util.List;
 public interface EvaluatorRepository extends JpaRepository<Evaluator, Long> {
     public Evaluator findByName(String name);
 
+    public Evaluator findByNameAndDrillType(String name, String drillType);
+
     public Evaluator findByRefId(long refId);
 
     public List<Evaluator> findByDrillType(String drillType);
