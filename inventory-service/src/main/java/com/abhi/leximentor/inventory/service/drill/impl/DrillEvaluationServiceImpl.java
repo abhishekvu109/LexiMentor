@@ -255,16 +255,17 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     @Transactional
     public List<DrillEvaluationDTO> evaluate(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, String evaluator, long challengeRefId) {
         DrillChallenge challenge = drillChallengeRepository.findByRefId(challengeRefId);
-        DrillTypes drillType = DrillTypes.getType(challenge.getDrillType());
         challenge.setEvaluationStatus(Status.DrillChallenge.IN_PROGRESS);
         drillChallengeRepository.save(challenge);
         try {
-            return switch (drillType) {
-                case IDENTIFY_WORD -> evaluateIdentify(drillChallengeScoresDTOS, challenge);
-                case GUESS_WORD -> evaluateGuess(drillChallengeScoresDTOS, challenge);
-                case LEARN_POS -> evaluatePOS(drillChallengeScoresDTOS, challenge);
-                default -> evaluateMeaning(drillChallengeScoresDTOS, evaluator);
-            };
+            String drillType = challenge.getDrillType();
+            if (drillType.equals(DrillTypes.IDENTIFY_WORD.name()))
+                return evaluateIdentify(drillChallengeScoresDTOS, challenge);
+            else if (drillType.equals(DrillTypes.GUESS_WORD.name()))
+                return evaluateGuess(drillChallengeScoresDTOS, challenge);
+            else if (drillType.equals(DrillTypes.LEARN_POS.name()))
+                return evaluatePOS(drillChallengeScoresDTOS, challenge);
+            else return evaluateMeaning(drillChallengeScoresDTOS, evaluator);
         } catch (Exception ex) {
             challenge.setEvaluationStatus(Status.DrillChallenge.NOT_INITIATED);
             drillChallengeRepository.save(challenge);
