@@ -61,7 +61,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     @Transactional
     public DrillEvaluationDTO add(DrillEvaluationDTO dto) {
         DrillChallengeScores drillChallengeScores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getDrillChallengeScoresDTO().getRefId()));
-        Evaluator evaluator = evaluatorRepository.findByNameAndDrillType(dto.getEvaluator(),drillChallengeScores.getChallengeId().getDrillType());
+        Evaluator evaluator = evaluatorRepository.findByNameAndDrillType(dto.getEvaluator(), drillChallengeScores.getChallengeId().getDrillType());
         DrillEvaluation drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, drillChallengeScores);
         drillEvaluation = drillEvaluationRepository.save(drillEvaluation);
         return DrillServiceUtil.DrillEvaluationUtil.buildDTO(drillEvaluation, DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(drillEvaluation.getDrillChallengeScores()));
@@ -258,14 +258,18 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         challenge.setEvaluationStatus(Status.DrillChallenge.IN_PROGRESS);
         drillChallengeRepository.save(challenge);
         try {
+            List<DrillEvaluationDTO> drillEvaluationDTOS = null;
             String drillType = challenge.getDrillType();
             if (drillType.equals(DrillTypes.IDENTIFY_WORD.name()))
-                return evaluateIdentify(drillChallengeScoresDTOS, challenge);
+                drillEvaluationDTOS = evaluateIdentify(drillChallengeScoresDTOS, challenge);
             else if (drillType.equals(DrillTypes.GUESS_WORD.name()))
-                return evaluateGuess(drillChallengeScoresDTOS, challenge);
+                drillEvaluationDTOS = evaluateGuess(drillChallengeScoresDTOS, challenge);
             else if (drillType.equals(DrillTypes.LEARN_POS.name()))
-                return evaluatePOS(drillChallengeScoresDTOS, challenge);
-            else return evaluateMeaning(drillChallengeScoresDTOS, evaluator);
+                drillEvaluationDTOS = evaluatePOS(drillChallengeScoresDTOS, challenge);
+            else drillEvaluationDTOS = evaluateMeaning(drillChallengeScoresDTOS, evaluator);
+            challenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
+            drillChallengeRepository.save(challenge);
+            return drillEvaluationDTOS;
         } catch (Exception ex) {
             challenge.setEvaluationStatus(Status.DrillChallenge.NOT_INITIATED);
             drillChallengeRepository.save(challenge);
