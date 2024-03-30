@@ -1,20 +1,29 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Script from "next/script";
 import {API_BASE_URL} from "@/constants";
 import {fetchData} from "@/dataService";
 
-const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
+const LoadPosDrillChallenge = ({drillSetData, challengeId, drillSetWordData, wordToOptions}) => {
     const [formData, setFormData] = useState(drillSetData.data.map(item => ({
         drillSetRefId: item.refId, drillChallengeRefId: challengeId, response: '',
     })));
-
     const [notificationVisible, setNotificationVisible] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState("");
     const [notificationSuccess, setNotificationSuccess] = useState(false);
-
+    console.log('Hello:::' + JSON.stringify(wordToOptions));
     const NotificationClose = () => {
         setNotificationVisible(false);
     };
+
+    const GetWordData = (wordRefId) => {
+        return drillSetWordData.data.find(item => item.refId === wordRefId);
+    };
+
+    const GetOptions = (wordRefId) => {
+        return wordToOptions.find(item => item.wordRefId === wordRefId);
+    };
+
+
     const ShowNotification = ({isVisible, message, isSuccess}) => {
         if (isVisible) {
             if (!isSuccess) {
@@ -72,10 +81,10 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
         }
     };
 
-    const handleChange = (index, name, value) => {
+    const handleChange = (index, value) => {
         setFormData(prevFormData => {
             const updatedFormData = [...prevFormData];
-            updatedFormData[index] = {...updatedFormData[index], [name]: value};
+            updatedFormData[index] = {...updatedFormData[index], response: value};
             return updatedFormData;
         });
     };
@@ -117,7 +126,7 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
         <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></Script>
 
         <div className="alert alert-dark w-full font-bold text-center" role="alert">
-            Practice words and their meanings.
+            Guess the word from the meaning.
         </div>
         {notificationVisible ? (<ShowNotification isVisible={notificationVisible} isSuccess={notificationSuccess}
                                                   message={notificationMessage}/>) : (
@@ -128,27 +137,34 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
                 <table className="table-auto w-full" cellPadding="10" cellSpacing="10">
                     <tbody>
                     {drillSetData.data.map((item, index) => (<>
-                        <tr className="bg-blue-300 border-2 border-blue-600" key={index}>
+                        <tr className="bg-blue-300 border-2 border-blue-600" key={`word-${index}`}>
                             <td>
                                 <label className="font-semibold mr-3 my-2">Word:</label>
                                 <label>{item.word}</label>
                             </td>
                         </tr>
-                        <tr className="bg-gray-100 border-2 border-gray-600" key={`${item.refId}-response`}>
+                        <tr className="bg-yellow-100 border-2 border-yellow-600" key={`meaning-${index}`}>
                             <td>
-                                <input
-                                    type="text"
-                                    name="refId"
-                                    value={item.refId}
-                                    onChange={(e) => handleChange(index, e.target.name, e.target.value)}
-                                    className="hidden"
-                                />
-                                <textarea
-                                    className="form-control"
-                                    name="response"
-                                    value={item.response}
-                                    onChange={(e) => handleChange(index, e.target.name, e.target.value)}
-                                />
+                                <label className="font-semibold mr-3 my-2">Meaning:</label>
+                                <label>{GetWordData(item.wordRefId).meanings[0].meaning}</label>
+                            </td>
+                        </tr>
+                        <tr className="bg-gray-100 border-2 border-gray-600" key={`option-${index}`}>
+                            <td>
+                                {GetOptions(item.wordRefId).options.map((itemObj, i) => (<>
+                                    <input
+                                        key={`${item.wordRefId}-word-${i}`}
+                                        type="radio"
+                                        radioGroup={item.word}
+                                        id={`${item.wordRefId}-id-${i}`}
+                                        name={item.word}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        value={itemObj}
+                                        onChange={(e) => handleChange(index, e.target.value)}
+                                    />
+                                    <label key={`${item.word}-${i}`} htmlFor={`${item.wordRefId}-id-${i}`}
+                                           className="mx-2 text-sm font-medium text-gray-900 dark:text-gray-300">{itemObj}</label>
+                                </>))}
                             </td>
                         </tr>
                     </>))}
@@ -170,8 +186,61 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
     </>);
 };
 
-export default LoadMeaningDrillChallenge;
+export default LoadPosDrillChallenge;
 
+function generateRandomNumberInRange(min, max, excludedNumbers = []) {
+    const adjustedMax = max - excludedNumbers.length;
+    let randomNumber;
+    do {
+        randomNumber = Math.floor(Math.random() * (adjustedMax - min + 1)) + min;
+        // Adjust the random number if it matches any excluded number
+        for (const excludedNumber of excludedNumbers) {
+            if (randomNumber >= excludedNumber) {
+                randomNumber++;
+            }
+        }
+    } while (excludedNumbers.includes(randomNumber));
+
+    return randomNumber;
+};
+
+function shuffleArray(array) {
+    // Create a copy of the original array to avoid modifying the original array
+    const shuffledArray = [...array];
+
+    // Start from the last element and iterate backwards
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+        // Generate a random index between 0 and i (inclusive)
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+
+        // Swap the elements at randomIndex and i
+        [shuffledArray[i], shuffledArray[randomIndex]] = [shuffledArray[randomIndex], shuffledArray[i]];
+    }
+
+    return shuffledArray;
+};
+
+function populateWordToOptions(drillSetData, drillSetWordData) {
+    const newWordToOptions = [];
+    for (let i = 0; i < drillSetData.data.length; i++) {
+        let wordRefId = drillSetWordData.data[i].refId;
+        let options = [];
+        options.push(drillSetWordData.data[i].word);
+        while (options.length != 4) {
+            let min = 0;
+            let max = drillSetData.data.length - 1;
+            let excludedNumbers = [i];
+            let randomIndex = generateRandomNumberInRange(min, max, excludedNumbers);
+            const exists = options.some(item => item === drillSetWordData.data[randomIndex].word);
+            if (!exists) {
+                options.push(drillSetWordData.data[randomIndex].word);
+            }
+        }
+        options = shuffleArray(options);
+        newWordToOptions.push({'wordRefId': wordRefId, 'options': options});
+    }
+    return newWordToOptions;
+}
 
 export async function getServerSideProps(context) {
     const {params} = context;
@@ -180,9 +249,11 @@ export async function getServerSideProps(context) {
     const drillId = params.drillId;
     const challengeId = drillId[1];
     const drillSetData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/${drillId[0]}`)
+    const drillSetWordData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/words/data/${drillId[0]}`)
+    const wordToOptions = populateWordToOptions(drillSetData, drillSetWordData);
     return {
         props: {
-            drillSetData, challengeId
+            drillSetData, challengeId, drillSetWordData, wordToOptions
         },
     };
 

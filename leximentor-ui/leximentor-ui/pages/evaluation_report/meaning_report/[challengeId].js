@@ -61,7 +61,7 @@ const EvaluationReport = ({evaluationReportData, challengeId}) => {
         </div>
         {(evaluationReportData.data != null && evaluationReportData.data.drillEvaluationDTOS != null && evaluationReportData.data.drillEvaluationDTOS.length > 0) ? (evaluationReportData.data.drillEvaluationDTOS.map((item, index) => (<>
             <div
-                className={(index % 2 == 0) ? "flex flex-row my-2 m-16 bg-orange-50 border-1" : "flex flex-row my-2 m-16 bg-green-50 border-1"}>
+                className={(item.drillChallengeScoresDTO.correct != true) ? "flex flex-row my-2 m-16 bg-red-100 border-1" : "flex flex-row my-2 m-16 bg-green-100 border-1"}>
                 <div className="grid grid-cols-12 gap-2 m-2 w-full">
                     <div className="col-span-1"><p
                         className="text-sm font-medium text-gray-900 dark:text-white">Question</p>

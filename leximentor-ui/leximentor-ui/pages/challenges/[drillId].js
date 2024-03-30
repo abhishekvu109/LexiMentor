@@ -1,16 +1,16 @@
 // pages/[id].js
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import {API_BASE_URL} from "@/constants";
-import {fetchData, postData} from "@/dataService";
+import {deleteData, fetchData, postData} from "@/dataService";
 
 const Challenges = ({data, drillId}) => {
-
+    console.log(data);
     const [challengeData, setChallengeData] = useState(data);
     const [drillRefId, setDrillRefId] = useState(drillId);
     const [isEvaluatorVisible, setIsEvaluatorVisible] = useState(false);
-    const [meaningData, setMeaningData] = useState({drillId: drillId, drillType: 'MEANING'});
+    const [challengeRequestData, setChallengeRequestData] = useState({drillId: drillId, drillType: ''});
     const [evaluationData, setEvaluationData] = useState({challengeId: "", evaluator: ""});
     const handleChange = (e) => {
         // Update form data state when input fields change
@@ -19,35 +19,39 @@ const Challenges = ({data, drillId}) => {
     const handleEvaluatorModel = (isOpen) => {
         setIsEvaluatorVisible(isOpen);
     };
-    const createMeaning = async (e) => {
-        e.preventDefault();
-        const queryString = new URLSearchParams(meaningData).toString();
+
+    const getDrillTypeLink = (drillType) => {
+        if (drillType == 'LEARN_MEANING') return '/drills/challenges/meaning/'; else if (drillType == 'LEARN_POS') return '/drills/challenges/pos/'; else if (drillType == 'IDENTIFY_WORD') return '/drills/challenges/identify_word/'; else if (drillType == 'GUESS_WORD') return '/drills/challenges/guess_word/'; else return '/drills/challenges/meaning/';
+    };
+
+    const handleChallengeRequestData = async (drillName) => {
+        setChallengeRequestData((prevState) => {
+            return {...prevState, drillType: drillName};
+        });
+    };
+
+    useEffect(() => {
+        // This code block will execute after the state has been updated
+        if (challengeRequestData.drillType != null && challengeRequestData.drillType.length > 0) {
+            createChallenge();
+        }
+    }, [challengeRequestData]); // Add challengeRequestData as a dependency
+
+
+    const createChallenge = async () => {
+        const queryString = new URLSearchParams(challengeRequestData).toString();
         const URL = `${API_BASE_URL}/drill/metadata/challenges/challenge?${queryString}`;
-        const saveMeaningData = await postData(URL);
+        const saveChallengeSavedData = await postData(URL);
+        await LoadTable();
+    };
+    const deleteChallenge = async (drillRefId) => {
+        const URL = `${API_BASE_URL}/drill/metadata/challenges/${drillRefId}`;
+        const saveChallengeSavedData = await deleteData(URL);
         await LoadTable();
     };
 
     const Evaluate = async (e) => {
         e.preventDefault();
-        // try {
-        //     const queryString = new URLSearchParams(evaluationData).toString();
-        //     const response = await fetch(`${API_BASE_URL}/drill/metadata/challenges/challenge/${evaluationData.challengeId}/evaluate?${queryString}`, {
-        //         method: 'POST', headers: {
-        //             'Content-Type': 'application/json',
-        //         }
-        //     });
-        //     if (!response.ok) {
-        //         throw new Error('Network response was not ok');
-        //     }
-        //
-        //     // Handle successful response
-        //     const data = await response.json();
-        //     console.log('Response data:', data);
-        //     handleEvaluatorModel(false);
-        // } catch (error) {
-        //     console.error('Error:', error);
-        // }
-        // console.log(evaluationData);
         const queryString = new URLSearchParams(evaluationData).toString();
         const URL = `${API_BASE_URL}/drill/metadata/challenges/challenge/${evaluationData.challengeId}/evaluate?${queryString}`;
         const evaluateFormData = await postData(URL);
@@ -136,7 +140,11 @@ const Challenges = ({data, drillId}) => {
         <h2 className="text-4xl  m-2 font-extrabold dark:text-white text-center">
             List of challenges for the drill</h2>
         <div className="container mt-5">
-            <button type="button" data-modal-target="create-new-drill-modal-form" onClick={createMeaning}
+            <button type="button" data-modal-target="create-new-drill-modal-form"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        handleChallengeRequestData('MEANING')
+                    }}
                     data-model-toggle="create-new-drill-modal-form"
                     className="px-6 py-3.5 m-2 text-base font-medium text-white inline-flex items-center bg-violet-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
@@ -146,7 +154,10 @@ const Challenges = ({data, drillId}) => {
                 </svg>
                 Meaning
             </button>
-            <button type="button"
+            <button type="button" onClick={(e) => {
+                e.preventDefault();
+                handleChallengeRequestData('POS')
+            }}
                     className="px-6 py-3.5 m-2 text-base font-medium text-white inline-flex items-center bg-red-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -165,7 +176,10 @@ const Challenges = ({data, drillId}) => {
                 Spell Jumble
             </button>
 
-            <button type="button"
+            <button type="button" onClick={(e) => {
+                e.preventDefault();
+                handleChallengeRequestData('IDENTIFY')
+            }}
                     className="px-6 py-3.5 m-2 text-base font-medium text-white inline-flex items-center bg-yellow-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -175,7 +189,10 @@ const Challenges = ({data, drillId}) => {
                 Spell it from pronunciation.
             </button>
 
-            <button type="button"
+            <button type="button" onClick={(e) => {
+                e.preventDefault();
+                handleChallengeRequestData('GUESS')
+            }}
                     className="px-6 py-3.5 m-2 text-base font-medium text-white inline-flex items-center bg-orange-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -237,6 +254,9 @@ const Challenges = ({data, drillId}) => {
                             Evaluation status
                         </th>
                         <th scope="col" className="px-6 py-3 text-center">
+                            Delete
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-center">
                             Try
                         </th>
                         <th scope="col" className="px-6 py-3 text-center">
@@ -252,15 +272,15 @@ const Challenges = ({data, drillId}) => {
                         <tr key={item.refId}>
                             <td scope="row"
                                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">{index + 1}</td>
-                            <td className="px-6 py-4 text-center">{item.refId}</td>
-                            <td className="px-6 py-4 text-center">{item.drillType}</td>
+                            <td className="px-6 py-4 text-center text-xs">{item.refId}</td>
+                            <td className="px-6 py-4 text-center text-xs font-sans text-blue-700 text-decoration-underline">{item.drillType}</td>
                             <td className="px-6 py-4 text-center"><span
                                 className="inline-flex items-center justify-center w-7 h-7 ms-2 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
                                 {item.drillScore}
                                 </span>
                             </td>
                             <td className="px-6 py-4 text-center">
-                                <label>{(item.evaluationStatus != 'Evaluated') ? (<>NA</>) : (<>{item.isPass == true ? (<>
+                                <label>{(item.evaluationStatus != 'Evaluated') ? (<>NA</>) : (<>{item.drillScore > 70 ? (<>
                                 <span
                                     className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">Passed</span>
                                 </>) : (<><span
@@ -268,12 +288,17 @@ const Challenges = ({data, drillId}) => {
                             </td>
                             <td className="px-6 py-4 text-center">{item.totalCorrect}</td>
                             <td className="px-6 py-4 text-center">{item.totalWrong}</td>
-                            <td className="px-6 py-4 text-center">{item.status}</td>
-                            <td className="px-6 py-4 text-center">{item.evaluationStatus}</td>
+                            <td className="px-6 py-4 text-center text-xs">{item.status}</td>
+                            <td className="px-6 py-4 text-center text-xs">{item.evaluationStatus}</td>
+                            <td className="px-6 py-4 text-center">
+                                <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                      onClick={() => deleteChallenge(item.refId)}
+                                      href="#">Delete</Link>
+                            </td>
                             <td className="px-6 py-4 text-center">
                                 {(item.status != 'Completed') ? (<Link
                                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                    href={"/drills/challenges/meaning/" + drillRefId + "/" + item.refId}>
+                                    href={(getDrillTypeLink(item.drillType)) + drillRefId + "/" + item.refId}>
                                     Try
                                 </Link>) : (<Link
                                     className="font-medium text-gray-300 dark:text-blue-500 hover:underline" href="#">
@@ -281,7 +306,7 @@ const Challenges = ({data, drillId}) => {
                                 </Link>)}
                             </td>
                             <td className="px-6 py-4 text-center">
-                                {(item.evaluationStatus == 'Evaluated' || item.status== 'Not Initiated') ? (<Link
+                                {(item.evaluationStatus == 'Evaluated' || item.status == 'Not Initiated') ? (<Link
                                     className="font-medium text-gray-300 dark:text-blue-500 hover:underline"
                                     href="#">
                                     Evaluate

@@ -1,9 +1,10 @@
-import {useState} from "react";
+import {useState} from 'react';
+import axios from 'axios';
 import Script from "next/script";
-import {API_BASE_URL} from "@/constants";
+import {API_BASE_URL, API_TEXT_TO_SPEECH} from "@/constants";
 import {fetchData} from "@/dataService";
 
-const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
+const LoadIdentifyWordDrillChallenge = ({drillSetData, challengeId}) => {
     const [formData, setFormData] = useState(drillSetData.data.map(item => ({
         drillSetRefId: item.refId, drillChallengeRefId: challengeId, response: '',
     })));
@@ -113,45 +114,54 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
         }
     };
 
+    const handleConvertToSpeech = async (text) => {
+        try {
+            const response = await axios.post(API_TEXT_TO_SPEECH, {text}, {responseType: 'arraybuffer'});
+            const audioUrl = URL.createObjectURL(new Blob([response.data]));
+            const audio = new Audio(audioUrl);
+            audio.play();
+        } catch (error) {
+            console.error('Error converting text to speech:', error);
+        }
+    };
+
     return (<>
         <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></Script>
 
         <div className="alert alert-dark w-full font-bold text-center" role="alert">
-            Practice words and their meanings.
+            Identify the right word from the Speech.
         </div>
-        {notificationVisible ? (<ShowNotification isVisible={notificationVisible} isSuccess={notificationSuccess}
-                                                  message={notificationMessage}/>) : (
-            <ShowNotification isVisible={false} isSuccess={notificationSuccess}
-                              message={notificationMessage}/>)}
+    {notificationVisible ? (<ShowNotification isVisible={notificationVisible} isSuccess={notificationSuccess}
+                                              message={notificationMessage}/>) : (
+        <ShowNotification isVisible={false} isSuccess={notificationSuccess}
+                          message={notificationMessage}/>)}
         <form className="p-4 md:p-5" onSubmit={handleSubmit}>
             <div className="container border-1">
                 <table className="table-auto w-full" cellPadding="10" cellSpacing="10">
                     <tbody>
                     {drillSetData.data.map((item, index) => (<>
-                        <tr className="bg-blue-300 border-2 border-blue-600" key={index}>
-                            <td>
-                                <label className="font-semibold mr-3 my-2">Word:</label>
-                                <label>{item.word}</label>
-                            </td>
-                        </tr>
-                        <tr className="bg-gray-100 border-2 border-gray-600" key={`${item.refId}-response`}>
-                            <td>
-                                <input
-                                    type="text"
-                                    name="refId"
-                                    value={item.refId}
-                                    onChange={(e) => handleChange(index, e.target.name, e.target.value)}
-                                    className="hidden"
-                                />
+                            <tr className="bg-blue-300 border-2 border-blue-600" key={index}>
+                                <td>
+                                    <label className="font-semibold mr-3 my-2">Word:</label>
+                                    <button type="button" className=" text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200
+                                hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4
+                                focus:outline-none focus:ring-lime-200 dark:focus
+                        :ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                            onClick={() => handleConvertToSpeech(item.word)}>Click to listen
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr className="bg-gray-100 border-2 border-gray-600" key={`${item.refId}-response`}>
+                                <td>
                                 <textarea
                                     className="form-control"
                                     name="response"
                                     value={item.response}
                                     onChange={(e) => handleChange(index, e.target.name, e.target.value)}
                                 />
-                            </td>
-                        </tr>
-                    </>))}
+                                </td>
+                            </tr>
+                        </>))}
                     </tbody>
                 </table>
                 <div className="flex flex-row my-4">
@@ -168,10 +178,9 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
             </div>
         </form>
     </>);
-};
+}
 
-export default LoadMeaningDrillChallenge;
-
+export default LoadIdentifyWordDrillChallenge;
 
 export async function getServerSideProps(context) {
     const {params} = context;
@@ -187,3 +196,26 @@ export async function getServerSideProps(context) {
     };
 
 }
+
+
+// export default function Home() {
+//     const [text, setText] = useState('');
+//
+//     const handleConvertToSpeech = async () => {
+//         try {
+//             const response = await axios.post('http://192.168.1.5:8300/text-to-speech', { text }, { responseType: 'arraybuffer' });
+//             const audioUrl = URL.createObjectURL(new Blob([response.data]));
+//             const audio = new Audio(audioUrl);
+//             audio.play();
+//         } catch (error) {
+//             console.error('Error converting text to speech:', error);
+//         }
+//     };
+//
+//     return (
+//         <div>
+//             <textarea value={text} onChange={(e) => setText(e.target.value)} />
+//             <button onClick={handleConvertToSpeech}>Convert to Speech</button>
+//         </div>
+//     );
+// }

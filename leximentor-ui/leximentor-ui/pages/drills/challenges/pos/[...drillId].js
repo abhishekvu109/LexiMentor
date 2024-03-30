@@ -3,7 +3,7 @@ import Script from "next/script";
 import {API_BASE_URL} from "@/constants";
 import {fetchData} from "@/dataService";
 
-const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
+const LoadPosDrillChallenge = ({drillSetData, challengeId, drillSetWordData}) => {
     const [formData, setFormData] = useState(drillSetData.data.map(item => ({
         drillSetRefId: item.refId, drillChallengeRefId: challengeId, response: '',
     })));
@@ -14,6 +14,10 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
 
     const NotificationClose = () => {
         setNotificationVisible(false);
+    };
+
+    const GetWordData = (wordRefId) => {
+        return drillSetWordData.data.find(item => item.refId === wordRefId);
     };
     const ShowNotification = ({isVisible, message, isSuccess}) => {
         if (isVisible) {
@@ -117,7 +121,7 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
         <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></Script>
 
         <div className="alert alert-dark w-full font-bold text-center" role="alert">
-            Practice words and their meanings.
+            Practice Parts of Speech.
         </div>
         {notificationVisible ? (<ShowNotification isVisible={notificationVisible} isSuccess={notificationSuccess}
                                                   message={notificationMessage}/>) : (
@@ -132,6 +136,12 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
                             <td>
                                 <label className="font-semibold mr-3 my-2">Word:</label>
                                 <label>{item.word}</label>
+                            </td>
+                        </tr>
+                        <tr className="bg-yellow-100 border-2 border-yellow-600" key={index}>
+                            <td>
+                                <label className="font-semibold mr-3 my-2">Meaning:</label>
+                                <label>{GetWordData(item.wordRefId).meanings[0].meaning}</label>
                             </td>
                         </tr>
                         <tr className="bg-gray-100 border-2 border-gray-600" key={`${item.refId}-response`}>
@@ -149,6 +159,16 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
                                     value={item.response}
                                     onChange={(e) => handleChange(index, e.target.name, e.target.value)}
                                 />
+                                {/*<input*/}
+                                {/*    type="radio"*/}
+                                {/*    radioGroup="posGroup"*/}
+                                {/*    id={`response_${index}_1`}*/}
+                                {/*    name={`response_${index}`}*/}
+                                {/*    value="Option 1"*/}
+                                {/*    checked={item.response === 'Option 1'}*/}
+                                {/*    onChange={() => handleChange(index, 'Option 1')}*/}
+                                {/*/>*/}
+                                {/*<label htmlFor={`response_${index}_1`}>Option 1</label>*/}
                             </td>
                         </tr>
                     </>))}
@@ -170,7 +190,7 @@ const LoadMeaningDrillChallenge = ({drillSetData, challengeId}) => {
     </>);
 };
 
-export default LoadMeaningDrillChallenge;
+export default LoadPosDrillChallenge;
 
 
 export async function getServerSideProps(context) {
@@ -180,9 +200,10 @@ export async function getServerSideProps(context) {
     const drillId = params.drillId;
     const challengeId = drillId[1];
     const drillSetData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/${drillId[0]}`)
+    const drillSetWordData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/words/data/${drillId[0]}`)
     return {
         props: {
-            drillSetData, challengeId
+            drillSetData, challengeId, drillSetWordData
         },
     };
 
