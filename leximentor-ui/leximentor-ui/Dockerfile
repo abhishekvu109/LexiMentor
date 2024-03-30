@@ -6,12 +6,12 @@ FROM node:alpine
 
 # Copy package.json and package-lock.json to the working directory
 #COPY package*.json /app
+COPY . /
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the application code
-COPY . .
 
 # Build the Next.js application
 RUN npm run build
