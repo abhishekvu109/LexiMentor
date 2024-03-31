@@ -1,0 +1,1430 @@
+[
+    {
+        "word": "laity",
+        "source": "ChatGPT",
+        "pronunciation": "LEY-i-tee",
+        "mnemonic": "Remember that 'laity' sounds like 'lay-ity', and lay people are those who are not part of the clergy or professional religious leadership.",
+        "localMeaning": "लेयता: धर्मसंस्थान के पादरी या पेशेवर धार्मिक नेतृत्व का हिस्सा नहीं होने वाले लोग।",
+        "meanings": [
+            {
+                "meaning": "the people of a religious faith as distinguished from its clergy",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "congregation",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "laypeople",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "parishioners",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "believers",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "faithful",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "clergy",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "ecclesiastics",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "ministers",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The laity actively participates in the church community.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The sermon was directed towards the laity rather than the clergy.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The conference addressed issues relevant to both clergy and laity.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Religion"
+    },
+    {
+        "word": "mincing",
+        "source": "ChatGPT",
+        "pronunciation": "MIN-sing",
+        "mnemonic": "Imagine someone delicately chopping onions into tiny pieces, as if they're being very careful not to hurt the onions' feelings - that's 'mincing'.",
+        "localMeaning": "कुशलतापूर्वक छोटा करना।",
+        "meanings": [
+            {
+                "meaning": "affectedly dainty or refined",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "dainty",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "delicate",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "precise",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "elegant",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "fussy",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "rough",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "crude",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "bold",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "She spoke in a mincing, affected voice that annoyed everyone.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "He walked with mincing steps, careful not to disturb anything in the room.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Her mincing gestures made her seem overly prim and proper.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Behavior"
+    },
+    {
+        "word": "ingenious",
+        "source": "ChatGPT",
+        "pronunciation": "in-JEEN-yuhs",
+        "mnemonic": "Think of someone who is a genius, they often come up with ingenious solutions to problems.",
+        "localMeaning": "साहसी: एक स्थिति के लिए बड़ा होना।",
+        "meanings": [
+            {
+                "meaning": "clever, original, and inventive",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "clever",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "resourceful",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "innovative",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "creative",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "brilliant",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "unimaginative",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "unoriginal",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "dull",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The ingenious design of the new product impressed everyone in the company.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "She came up with an ingenious solution to the problem that nobody else had thought of.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The author's writing style is truly ingenious; each plot twist is unexpected and brilliant.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Intellectual"
+    },
+    {
+        "word": "offensive",
+        "source": "ChatGPT",
+        "pronunciation": "uh-FEN-siv",
+        "mnemonic": "Think of 'offensive' as something that 'offends' someone, or causes them to be upset or angry.",
+        "localMeaning": "आक्रामक: हमले के लिए या हमले में।",
+        "meanings": [
+            {
+                "meaning": "causing someone to feel hurt, angry, or upset",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "aggressive; attacking",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "insulting",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "abusive",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "disrespectful",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "provocative",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "aggressive",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "defensive",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "nonaggressive",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "nonoffensive",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "His offensive remarks caused a lot of tension in the meeting.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The movie contained offensive language and scenes that some viewers found disturbing.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The team's offensive strategy was to aggressively attack the opponent's weak points.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Emotion/Behavior"
+    },
+    {
+        "word": "galvanize",
+        "source": "ChatGPT",
+        "pronunciation": "GAL-vuh-nyz",
+        "mnemonic": "Imagine someone being shocked or electrified, like a metal being galvanized to prevent rust.",
+        "localMeaning": "उत्तेजित करना: किसी को कार्रवाई के लिए प्रेरित करना।",
+        "meanings": [
+            {
+                "meaning": "shock or excite (someone), typically into taking action",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "coat (iron or steel) with a protective layer of zinc",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "motivate",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "inspire",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "energize",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "stimulate",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "encourage",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "discourage",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "demotivate",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "calm",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The passionate speech by the leader galvanized the crowd to take action.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The threat of losing their jobs galvanized the workers into organizing a strike.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The shocking news galvanized the community into coming together to support those affected.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "verb",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Action/Reaction"
+    },
+    {
+        "word": "iconoclastic",
+        "source": "ChatGPT",
+        "pronunciation": "ahy-kon-uh-klas-tik",
+        "mnemonic": "Break down the word: 'icono' sounds like 'I can't', and 'clastic' sounds like 'classic'. So, someone who's iconoclastic doesn't follow the classic or traditional icons or norms.",
+        "localMeaning": "मूर्तिभंजक: स्वीकृति किए जाने वाले आदर्शों या निर्धारित संस्कृति का खंडन करने वाला।",
+        "meanings": [
+            {
+                "meaning": "characterized by attacking or ignoring cherished beliefs and long-held traditions, etc., as being based on error, superstition, or lack of creativity",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "heretical",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "unconventional",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "nonconformist",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "rebellious",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "radical",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "orthodox",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "traditional",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "conservative",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The artist's iconoclastic works challenged societal norms and traditions.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Her iconoclastic views on politics often stirred up controversy.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The iconoclastic nature of his writing made him a controversial figure in literary circles.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Attitude/Behavior"
+    },
+    {
+        "word": "daunt",
+        "source": "ChatGPT",
+        "pronunciation": "dawnt",
+        "mnemonic": "Think of 'daunt' as the opposite of 'taunt'. When you taunt someone, you try to intimidate or tease them, but when something daunts you, it makes you feel intimidated or discouraged.",
+        "localMeaning": "भयभीत करना: किसी को डरा देना।",
+        "meanings": [
+            {
+                "meaning": "make (someone) feel intimidated or apprehensive",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "intimidate",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "discourage",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "dismay",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "frighten",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "daunting",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "encourage",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "embolden",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "reassure",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The sheer scale of the project daunted even the most experienced engineers.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Despite his initial daunt, he eventually summoned the courage to face the challenge head-on.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The intimidating atmosphere of the courtroom daunted the young lawyer.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "verb",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Emotion/Behavior"
+    },
+    {
+        "word": "endue",
+        "source": "ChatGPT",
+        "pronunciation": "en-DOO",
+        "mnemonic": "Think of 'endue' as 'endow' - when you endow someone with something, you give them a gift or quality. 'Endue' is just another form of that word.",
+        "localMeaning": "प्रदान करना: किसी को कुछ प्रदान करना।",
+        "meanings": [
+            {
+                "meaning": "provide with a quality or ability",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "endow",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "bestow",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "grant",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "infuse",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "invest",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "deprive",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "strip",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "take",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "Her parents endeavored to endue her with a strong sense of independence.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The scholarship will endue him with the financial support needed to pursue his education.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The mentorship program aims to endue young entrepreneurs with the skills and knowledge to succeed in business.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "verb",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Action/State"
+    },
+    {
+        "word": "episodic",
+        "source": "ChatGPT",
+        "pronunciation": "ep-uh-SOD-ik",
+        "mnemonic": "Think of 'episodic' as something that happens in episodes, like a TV series.",
+        "localMeaning": "अवकलन: कुछ का अवकलन।",
+        "meanings": [
+            {
+                "meaning": "occurring in episodes",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "intermittent",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "periodic",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "sporadic",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "occasional",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "irregular",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "continuous",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "constant",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "regular",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The patient's symptoms were episodic, occurring periodically but not continuously.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The novel is structured as a series of episodic vignettes rather than a linear narrative.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "His career was marked by episodic success, with periods of high achievement followed by long stretches of stagnation.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Time/Sequence"
+    },
+    {
+        "word": "retribution",
+        "source": "ChatGPT",
+        "pronunciation": "ret-ri-byoo-shuhn",
+        "mnemonic": "Think of 'retribution' as a form of 'retribution' or payback for something wrong done.",
+        "localMeaning": "प्रतिशोध: किसी के खिलाफ किया गया आपराधिक कार्रवाई का परिणाम।",
+        "meanings": [
+            {
+                "meaning": "punishment inflicted on someone as vengeance for a wrong or criminal act",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "revenge",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "retaliation",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "payback",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "reprisal",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "vengeance",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "forgiveness",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "pardon",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "leniency",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The villain met a grisly retribution for his crimes in the end.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The retribution inflicted by the authorities served as a warning to others.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Many saw the act of revenge as a form of retribution for past wrongs.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Justice/Law"
+    },
+    {
+        "word": "invincible",
+        "source": "ChatGPT",
+        "pronunciation": "in-VIN-suh-buhl",
+        "mnemonic": "Think of 'invincible' as 'in-vincible' - something you cannot 'vin' (win) against.",
+        "localMeaning": "अजेय: जिसको हराया नहीं जा सकता।",
+        "meanings": [
+            {
+                "meaning": "too powerful to be defeated or overcome",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "unbeatable",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "unconquerable",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "undefeatable",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "invulnerable",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "unassailable",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "vulnerable",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "beatable",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "defeatable",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The army seemed invincible, crushing all opposition with ease.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Despite facing numerous challenges, her determination remained invincible.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Their bond was invincible, enduring even the toughest of times.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Strength/Power"
+    },
+    {
+        "word": "abash",
+        "source": "ChatGPT",
+        "pronunciation": "uh-BASH",
+        "mnemonic": "Think of 'abash' as being 'a bash' - imagine someone being embarrassed or feeling awkward at a party or social gathering.",
+        "localMeaning": "शर्मिंदा करना: किसी को असमर्थ करना।",
+        "meanings": [
+            {
+                "meaning": "cause to feel embarrassed, disconcerted, or ashamed",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "embarrass",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "disconcert",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "shame",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "humiliate",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "mortify",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "embolden",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "reassure",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "encourage",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "Her unexpected question abashed him, and he stumbled over his words.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "He was abashed by the attention and praise he received for his performance.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "She didn't let her mistakes abash her; instead, she used them as learning opportunities.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "verb",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Emotion/Behavior"
+    },
+    {
+        "word": "entitlement",
+        "source": "ChatGPT",
+        "pronunciation": "en-tahyt-l-muhnt",
+        "mnemonic": "Think of 'entitlement' as someone feeling entitled to something - like they believe they have the right to it just because of who they are.",
+        "localMeaning": "अधिकार: किसी को किसी चीज़ का हक मानना।",
+        "meanings": [
+            {
+                "meaning": "the fact of having a right to something",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "the belief that one is inherently deserving of privileges or special treatment",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "privilege",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "claim",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "right",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "immunity",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "authority",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "disenfranchisement",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "disqualification",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "deprivation",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The entitlement to free speech is enshrined in the constitution.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Her entitlement mentality made it difficult for her to accept criticism or feedback.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "He felt a sense of entitlement to the promotion, even though he hadn't put in the necessary work.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Social/Justice"
+    },
+    {
+        "word": "buoyant",
+        "source": "ChatGPT",
+        "pronunciation": "BOY-uhnt",
+        "mnemonic": "Think of 'buoyant' as something that floats on water, like a buoy. So, metaphorically, it's something that keeps you afloat or optimistic.",
+        "localMeaning": "तरंगमय: ऊपर उठाने वाला या ऊपर उठाने की योजना।",
+        "meanings": [
+            {
+                "meaning": "able to stay afloat or rise to the top of a liquid or gas",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "cheerful and optimistic",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "uplifting",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "lighthearted",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "positive",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "hopeful",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "optimistic",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "depressed",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "heavy",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "sinking",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "Her buoyant personality lifted the spirits of everyone around her.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The buoyant raft kept them afloat even in rough waters.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Despite facing setbacks, his buoyant optimism never wavered.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Emotion/State"
+    },
+    {
+        "word": "mammoth",
+        "source": "ChatGPT",
+        "pronunciation": "MAM-uhth",
+        "mnemonic": "Think of 'mammoth' as something massive, like a mammoth-sized elephant. It's just huge!",
+        "localMeaning": "मेघवाला: बड़े आकार का।",
+        "meanings": [
+            {
+                "meaning": "extremely large",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "gigantic",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "colossal",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "enormous",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "immense",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "monstrous",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "tiny",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "small",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "minuscule",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The project required a mammoth amount of work to complete.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The mammoth skyscraper towered over the city skyline.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "It was a mammoth task, but they managed to finish it ahead of schedule.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Size/Scale"
+    },
+    {
+        "word": "uxorial",
+        "source": "ChatGPT",
+        "pronunciation": "uhk-SAWR-ee-uhl",
+        "mnemonic": "Think of 'uxorial' as 'uxor' (Latin for 'wife') + 'ial' (related to). So, it's something related to a wife or pertaining to marriage.",
+        "localMeaning": "पतिव्रता: पति के प्रति वफादारी।",
+        "meanings": [
+            {
+                "meaning": "of, relating to, or characteristic of a wife",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "wifely",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "conjugal",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "marital",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "spousal",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "matrimonial",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "husbandly",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "nonmarital",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "unwed",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "Her uxorial devotion to her husband was evident in everything she did.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The uxorial duties of the time often restricted women to household tasks.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "He appreciated her uxorial support during his difficult times.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Relationship/Family"
+    },
+    {
+        "word": "gall",
+        "source": "ChatGPT",
+        "pronunciation": "gawl",
+        "mnemonic": "Think of 'gall' as 'galling' - something that's irritating or annoying.",
+        "localMeaning": "जलन: कड़वाहट।",
+        "meanings": [
+            {
+                "meaning": "bitterness of spirit; rancor",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "bold, impudent behavior",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "irritation",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "annoyance",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "resentment",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "displeasure",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "outrage",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "pleasure",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "delight",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "contentment",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "His gall at being passed over for promotion was evident in his bitter remarks.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The unfair treatment left a sense of gall in her mouth.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Their gall in asking for special treatment was met with firm refusal.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Emotion/Behavior"
+    },
+    {
+        "word": "doddering",
+        "source": "ChatGPT",
+        "pronunciation": "DOD-er-ing",
+        "mnemonic": "Think of 'doddering' as someone who's 'dodging' around and tottering, like they can barely keep their balance.",
+        "localMeaning": "लंगड़ाहट: बेहुदगी या अस्थिरता।",
+        "meanings": [
+            {
+                "meaning": "in a state of trembling or tottering, as from old age; tottering",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "senile",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "feeble",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "unsteady",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "shaky",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "frail",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "steadfast",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "stable",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "strong",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The doddering old man struggled to climb the stairs.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Her doddering gait betrayed her advancing age.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The doddering economy showed signs of collapse under the strain.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "State/Health"
+    },
+    {
+        "word": "resurgent",
+        "source": "ChatGPT",
+        "pronunciation": "ri-SUR-juhnt",
+        "mnemonic": "Think of 'resurgent' as something that's 're-surge' - it's making a comeback or experiencing a revival.",
+        "localMeaning": "पुनर्जीवित: फिर से जीवित होना।",
+        "meanings": [
+            {
+                "meaning": "undergoing or tending to produce resurgence",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "reviving",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "renewed",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "reawakened",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "rejuvenated",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "reborn",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "declining",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "waning",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "weakening",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The resurgent interest in traditional crafts has led to a revival of artisanal skills.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The country experienced a resurgent economy after implementing new fiscal policies.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The resurgent team shocked everyone with their sudden surge in performance.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "State/Trend"
+    },
+    {
+        "word": "grill",
+        "source": "ChatGPT",
+        "pronunciation": "gril",
+        "mnemonic": "Think of 'grill' as 'grilling' someone with questions, like in an interrogation. It's intense!",
+        "localMeaning": "सुलझाना: चिंता का सामना करना।",
+        "meanings": [
+            {
+                "meaning": "subject (someone) to intense questioning or interrogation",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "cook (food) using a grill",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "interrogate",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "question",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "examine",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "probe",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "cross-examine",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "reassure",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "comfort",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "soothe",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The detective grilled the suspect until he confessed to the crime.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "She felt like she was being grilled by the interview panel.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The journalist grilled the politician on his controversial statements.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "verb",
+                "source": "ChatGPT"
+            },
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Action/Process"
+    }
+]
