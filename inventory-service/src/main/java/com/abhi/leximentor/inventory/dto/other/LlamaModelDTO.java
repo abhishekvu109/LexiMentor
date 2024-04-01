@@ -14,4 +14,8 @@ public class LlamaModelDTO {
     private boolean isCorrect;
     private String error;
     private String modelResponse;
+
+    public static LlamaModelDTO getDefaultInstance() {
+        return LlamaModelDTO.builder().confidence(0).isCorrect(false).explanation("EVALUATION_FAILED").build();
+    }
 }
