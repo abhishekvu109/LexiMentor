@@ -69,6 +69,8 @@ def handle_post_request():
     logger.info('Data is ' + data["text"])
     logger.info(data["text"])
     response = main(data["text"])
+    logger.info("The LLAMA has returned the following response : ")
+    logger.info(response)
     json_object = json.loads(response)
     return jsonify(json_object)
     # return format_data(response)
