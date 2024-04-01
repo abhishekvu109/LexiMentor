@@ -28,6 +28,7 @@ import com.abhi.leximentor.inventory.util.RestClient;
 import com.abhi.leximentor.inventory.util.RestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -74,7 +75,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
 
     @Override
     @Transactional
-    public List<DrillEvaluationDTO> evaluateMeaning(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, String evaluator) {
+    public List<DrillEvaluationDTO> evaluateMeaning(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, String evaluator) throws Exception {
         log.info("Initiated the meaning evaluation. The evaluator is: {}", evaluator);
         List<DrillEvaluationDTO> drillEvaluationDTOS = new LinkedList<>();
         List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
@@ -84,38 +85,13 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         int totalIncorrect = 0;
         DrillChallenge drillChallenge = null;
         for (DrillChallengeScoresDTO dto : drillChallengeScoresDTOS) {
-            int RETRY_COUNT = LLAMA_RETRY_COUNT;
             DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
             WordMetadata wordMetadata = drillSet.getWordId();
             String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
             log.info("Successfully formatted the prompt : {}", prompt);
-
-            try {
-                Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
-                setUrl(properties.getProperty(evaluator));
-                log.info("Successfully found the evaluator address: {}", properties.getProperty(evaluator));
-            } catch (IOException ex) {
-                log.error(ex.getMessage());
-            }
-            LlamaModelDTO request = LlamaModelDTO.builder().text(prompt).explanation("").confidence(0).build();
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Content-Type", "application/json");
-            ResponseEntity<LlamaModelDTO> responseEntity = null;
-            LlamaModelDTO llamaModelDTO = null;
-            while (RETRY_COUNT > 0) {
-                try {
-                    responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
-                    llamaModelDTO = responseEntity.getBody();
-                    break;
-                } catch (Exception ex) {
-                    llamaModelDTO = LlamaModelDTO.getDefaultInstance();
-                    log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
-                    log.error(ex.getMessage());
-                    log.info("Attempting retry : {}", (LLAMA_RETRY_COUNT - RETRY_COUNT) + 1);
-                    RETRY_COUNT--;
-                }
-            }
-            log.info("The evaluator service has returned a response : {}", responseEntity);
+            loadModelServiceName(evaluator);
+            LlamaModelDTO llamaModelDTO = StringUtils.isNotEmpty(dto.getResponse()) ? getLlmResponse(prompt, evaluator) : LlamaModelDTO.builder().isCorrect(false).explanation("Response was empty").confidence(100).build();
+            llamaModelDTO = llamaModelDTO == null ? LlamaModelDTO.getDefaultInstance() : llamaModelDTO;
             log.info("The evaluator service has returned a response : {}", llamaModelDTO);
             DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
             drillChallenge = (drillChallenge == null) ? scores.getChallengeId() : drillChallenge;
@@ -136,6 +112,39 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge = drillChallengeRepository.save(drillChallenge);
         log.info("Saved the results in the challenge entity");
         return this.addAll(drillEvaluationDTOS);
+    }
+
+    private void loadModelServiceName(String evaluator) {
+        try {
+            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
+            log.info("Successfully found the evaluator address: {}", properties.getProperty(evaluator));
+            setUrl(properties.getProperty(evaluator));
+        } catch (IOException ex) {
+            log.error(ex.getMessage());
+        }
+    }
+
+    private LlamaModelDTO getLlmResponse(String prompt, String evaluator) {
+        int RETRY_COUNT = LLAMA_RETRY_COUNT;
+        LlamaModelDTO request = LlamaModelDTO.builder().text(prompt).explanation("").confidence(0).build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        ResponseEntity<LlamaModelDTO> responseEntity = null;
+        LlamaModelDTO llamaModelDTO = null;
+        while (RETRY_COUNT > 0) {
+            try {
+                responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
+                llamaModelDTO = responseEntity.getBody();
+                log.info("The evaluator service has returned a response : {}", responseEntity);
+                break;
+            } catch (Exception ex) {
+                log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
+                log.error(ex.getMessage());
+                log.info("Attempting retry : {}", (LLAMA_RETRY_COUNT - RETRY_COUNT) + 1);
+                RETRY_COUNT--;
+            }
+        }
+        return llamaModelDTO;
     }
 
     private String getPrompt(String word, String originalMeaning, String response) {
