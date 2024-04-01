@@ -79,7 +79,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         List<DrillEvaluationDTO> drillEvaluationDTOS = new LinkedList<>();
         List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
         int totalWords = drillChallengeScoresDTOS.size();
-        Integer RETRY_COUNT = LLAMA_RETRY_COUNT;
+        int RETRY_COUNT = LLAMA_RETRY_COUNT;
         log.info("Total words to evaluate:{}", totalWords);
         int totalCorrect = 0;
         int totalIncorrect = 0;
@@ -112,7 +112,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
                     log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
                     log.error(ex.getMessage());
                     log.info("Attempting retry : {}", (LLAMA_RETRY_COUNT - RETRY_COUNT) + 1);
-                    RETRY_COUNT = -1;
+                    RETRY_COUNT--;
                 }
             }
             log.info("The evaluator service has returned a response : {}", responseEntity);
