@@ -6,6 +6,7 @@ import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillEvaluationDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillReportResponseDTO;
+import com.abhi.leximentor.inventory.dto.inv.WordDTO;
 import com.abhi.leximentor.inventory.dto.other.LlamaModelDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
@@ -36,10 +37,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -101,13 +100,15 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
             ResponseEntity<LlamaModelDTO> responseEntity = null;
+            LlamaModelDTO llamaModelDTO =null;
             try {
                 responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
+                llamaModelDTO=responseEntity.getBody();
             } catch (Exception ex) {
+                llamaModelDTO=LlamaModelDTO.getDefaultInstance();
                 log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
                 log.error(ex.getMessage());
             }
-            LlamaModelDTO llamaModelDTO = responseEntity.getBody();
             log.info("The evaluator service has returned a response : {}", responseEntity);
             log.info("The evaluator service has returned a response : {}", llamaModelDTO);
             DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
@@ -255,8 +256,10 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     @Transactional
     public List<DrillEvaluationDTO> evaluate(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, String evaluator, long challengeRefId) {
         DrillChallenge challenge = drillChallengeRepository.findByRefId(challengeRefId);
-        challenge.setEvaluationStatus(Status.DrillChallenge.IN_PROGRESS);
-        drillChallengeRepository.save(challenge);
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+            challenge.setEvaluationStatus(Status.DrillChallenge.IN_PROGRESS);
+            drillChallengeRepository.save(challenge);
+        });
         try {
             List<DrillEvaluationDTO> drillEvaluationDTOS = null;
             String drillType = challenge.getDrillType();
