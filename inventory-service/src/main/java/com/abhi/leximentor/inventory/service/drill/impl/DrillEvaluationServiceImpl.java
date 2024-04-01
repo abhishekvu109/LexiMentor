@@ -79,12 +79,12 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         List<DrillEvaluationDTO> drillEvaluationDTOS = new LinkedList<>();
         List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
         int totalWords = drillChallengeScoresDTOS.size();
-        int RETRY_COUNT = LLAMA_RETRY_COUNT;
         log.info("Total words to evaluate:{}", totalWords);
         int totalCorrect = 0;
         int totalIncorrect = 0;
         DrillChallenge drillChallenge = null;
         for (DrillChallengeScoresDTO dto : drillChallengeScoresDTOS) {
+            int RETRY_COUNT = LLAMA_RETRY_COUNT;
             DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
             WordMetadata wordMetadata = drillSet.getWordId();
             String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
