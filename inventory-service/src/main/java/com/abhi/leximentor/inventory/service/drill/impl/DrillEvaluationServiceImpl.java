@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class DrillEvaluationServiceImpl implements DrillEvaluationService {
-
+    public static final Integer LLAMA_RETRY_COUNT = 3;
     private final DrillEvaluationRepository drillEvaluationRepository;
     private final EvaluatorRepository evaluatorRepository;
     private final RestAdvancedUtil restUtil;
@@ -79,6 +79,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         List<DrillEvaluationDTO> drillEvaluationDTOS = new LinkedList<>();
         List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
         int totalWords = drillChallengeScoresDTOS.size();
+        Integer RETRY_COUNT = LLAMA_RETRY_COUNT;
         log.info("Total words to evaluate:{}", totalWords);
         int totalCorrect = 0;
         int totalIncorrect = 0;
@@ -100,14 +101,19 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
             ResponseEntity<LlamaModelDTO> responseEntity = null;
-            LlamaModelDTO llamaModelDTO =null;
-            try {
-                responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
-                llamaModelDTO=responseEntity.getBody();
-            } catch (Exception ex) {
-                llamaModelDTO=LlamaModelDTO.getDefaultInstance();
-                log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
-                log.error(ex.getMessage());
+            LlamaModelDTO llamaModelDTO = null;
+            while (RETRY_COUNT > 0) {
+                try {
+                    responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
+                    llamaModelDTO = responseEntity.getBody();
+                    break;
+                } catch (Exception ex) {
+                    llamaModelDTO = LlamaModelDTO.getDefaultInstance();
+                    log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
+                    log.error(ex.getMessage());
+                    log.info("Attempting retry : {}", (LLAMA_RETRY_COUNT - RETRY_COUNT) + 1);
+                    RETRY_COUNT = -1;
+                }
             }
             log.info("The evaluator service has returned a response : {}", responseEntity);
             log.info("The evaluator service has returned a response : {}", llamaModelDTO);
