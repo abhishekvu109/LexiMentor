@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "inv_content")
+@Table(name = "synapster_inv_content")
 public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
