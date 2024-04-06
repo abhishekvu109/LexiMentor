@@ -19,5 +19,7 @@ spring:
     hikari:
       idle-timeout: 60000
       maximum-pool-size: 50
+  application:
+    name: synapster-learning-service
 server:
   port: 9292
