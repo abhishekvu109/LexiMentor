@@ -46,6 +46,13 @@ services:
       - "9191:9191"
     depends_on:
       - mysql
+  synapster:
+    image: synapster-learning-service:latest
+    container_name: synapster-learning-service
+    ports:
+      - "9292:9292"
+    depends_on:
+      - mysql
   nltk:
     image: nltk-word-service:latest
     container_name: nltk-word-service
