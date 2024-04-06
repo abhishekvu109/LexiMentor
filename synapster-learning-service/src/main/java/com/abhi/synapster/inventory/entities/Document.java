@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "inv_document")
+@Table(name = "synapster_inv_document")
 public class Document {
 
     @Id

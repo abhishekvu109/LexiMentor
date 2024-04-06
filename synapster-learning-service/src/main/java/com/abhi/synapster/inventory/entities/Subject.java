@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "inv_subject")
+@Table(name = "synapster_inv_subject")
 public class Subject {
 
     @Id
