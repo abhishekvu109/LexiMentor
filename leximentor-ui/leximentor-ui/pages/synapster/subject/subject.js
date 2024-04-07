@@ -10,8 +10,10 @@ const Subject = () => {
     const handleSubjectCreate = async (e) => {
         e.preventDefault();
         console.log(JSON.stringify(subjectFormData));
+        const subjectArray = [];
+        subjectArray.push(subjectFormData);
         const URL = `${API_SYNAPSTER_BASE_URL}/synapster/subjects/subject`;
-        const response = await postData(URL, subjectFormData);
+        const response = await postData(URL, subjectArray);
         console.log(response);
     };
 

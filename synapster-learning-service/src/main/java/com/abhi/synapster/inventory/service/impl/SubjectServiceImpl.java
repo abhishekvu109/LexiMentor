@@ -22,13 +22,21 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public SubjectDTO add(SubjectDTO subjectDTO) {
+        log.info("Inside the Subject service");
         Subject subject = ServiceUtil.SubjectUtil.buildEntity(subjectDTO);
+        log.info("Service util has initialized the subject entity. {}", subject);
+        subject = subjectRepository.save(subject);
+        log.info("Successfully persisted the subject data. {}", subject);
         return ServiceUtil.SubjectUtil.buildDTO(subject);
     }
 
     @Override
     public List<SubjectDTO> addAll(List<SubjectDTO> subjectDTO) {
+        log.info("Inside the Subject service");
         List<Subject> subjects = subjectDTO.stream().map(ServiceUtil.SubjectUtil::buildEntity).toList();
+        log.info("Service util has initialized the subject entity. {}", subjects);
+        subjects = subjectRepository.saveAll(subjects);
+        log.info("Successfully persisted the subject data. {}", subjects);
         return subjects.stream().map(ServiceUtil.SubjectUtil::buildDTO).toList();
     }
 

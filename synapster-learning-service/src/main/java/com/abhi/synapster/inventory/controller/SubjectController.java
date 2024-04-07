@@ -25,10 +25,14 @@ public class SubjectController {
 
     @PostMapping(value = UrlConstants.Subject.SUBJECT_ADD, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody List<SubjectDTO> subjectDTOS) {
-        List<SubjectDTO> list = subjectService.addAll(subjectDTOS);
-        if (CollectionUtils.isEmpty(list))
+        log.info("Received a request to create a new subject: {}", subjectDTOS);
+        List<SubjectDTO> response = subjectService.addAll(subjectDTOS);
+        if (CollectionUtils.isEmpty(response)) {
+            log.error("The subjects could not be created due to failure.");
             return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Something wrong has happened. Please try again.");
-        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, list);
+        }
+        log.info("Received a response: {}", response);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
     @PutMapping(value = UrlConstants.Subject.SUBJECT_UPDATE, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
