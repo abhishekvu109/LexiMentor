@@ -49,7 +49,7 @@ public class Subject {
     @Column(name = "category")
     private String category;
 
-    @OneToMany(mappedBy = "topic",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subject",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Topic> topicList;
 
 
