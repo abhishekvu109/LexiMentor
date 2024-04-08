@@ -85,21 +85,33 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         int totalIncorrect = 0;
         DrillChallenge drillChallenge = null;
         for (DrillChallengeScoresDTO dto : drillChallengeScoresDTOS) {
-            DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
-            WordMetadata wordMetadata = drillSet.getWordId();
-            String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
-            log.info("Successfully formatted the prompt : {}", prompt);
-            loadModelServiceName(evaluator);
-            LlamaModelDTO llamaModelDTO = StringUtils.isNotEmpty(dto.getResponse()) ? getLlmResponse(prompt, evaluator) : LlamaModelDTO.builder().isCorrect(false).explanation("Response was empty").confidence(100).build();
-            llamaModelDTO = llamaModelDTO == null ? LlamaModelDTO.getDefaultInstance() : llamaModelDTO;
-            log.info("The evaluator service has returned a response : {}", llamaModelDTO);
-            DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
-            drillChallenge = (drillChallenge == null) ? scores.getChallengeId() : drillChallenge;
-            scores.setCorrect(llamaModelDTO.isCorrect());
-            totalCorrect += llamaModelDTO.isCorrect() ? 1 : 0;
-            totalIncorrect += llamaModelDTO.isCorrect() ? 0 : 1;
-            drillChallengeScores.add(scores);
-            drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason(llamaModelDTO.getExplanation()).confidence(llamaModelDTO.getConfidence()).evaluator(evaluator).build());
+            if (StringUtils.isNotEmpty(dto.getResponse())) {
+                DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
+                WordMetadata wordMetadata = drillSet.getWordId();
+                String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
+                log.info("Successfully formatted the prompt : {}", prompt);
+                loadModelServiceName(evaluator);
+                LlamaModelDTO llamaModelDTO = StringUtils.isNotEmpty(dto.getResponse()) ? getLlmResponse(prompt, evaluator) : LlamaModelDTO.builder().isCorrect(false).explanation("Response was empty").confidence(100).build();
+                llamaModelDTO = llamaModelDTO == null ? LlamaModelDTO.getDefaultInstance() : llamaModelDTO;
+                log.info("The evaluator service has returned a response : {}", llamaModelDTO);
+                DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+                drillChallenge = (drillChallenge == null) ? scores.getChallengeId() : drillChallenge;
+                scores.setCorrect(llamaModelDTO.isCorrect());
+                totalCorrect += llamaModelDTO.isCorrect() ? 1 : 0;
+                totalIncorrect += llamaModelDTO.isCorrect() ? 0 : 1;
+                drillChallengeScores.add(scores);
+                drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason(llamaModelDTO.getExplanation()).confidence(llamaModelDTO.getConfidence()).evaluator(evaluator).build());
+            } else {
+                log.info("The user has not put a response.");
+                DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+                drillChallenge = (drillChallenge == null) ? scores.getChallengeId() : drillChallenge;
+                scores.setCorrect(false);
+                totalCorrect += 0;
+                totalIncorrect += 1;
+                drillChallengeScores.add(scores);
+                drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason("Response was empty").confidence(100).evaluator(evaluator).build());
+            }
+
         }
         drillChallengeScoreRepository.saveAll(drillChallengeScores);
         log.info("Saved all the drill scores");
