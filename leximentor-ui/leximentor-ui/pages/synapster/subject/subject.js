@@ -1,11 +1,17 @@
 import {useState} from "react";
 import {postData} from "@/dataService";
 import {API_BASE_URL, API_SYNAPSTER_BASE_URL} from "@/constants";
+import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 const Subject = () => {
     const [subjectFormData, setSubjectFormData] = useState({name: "", status: "", description: "", category: ""});
+    const [showModal, setShowModal] = useState(false);
+
     const handleChange = (e) => {
         setSubjectFormData({...subjectFormData, [e.target.name]: e.target.value});
+    };
+    const handleShowModal=(newValue)=>{
+        setShowModal(newValue);
     };
     const handleSubjectCreate = async (e) => {
         e.preventDefault();
@@ -13,11 +19,23 @@ const Subject = () => {
         const subjectArray = [];
         subjectArray.push(subjectFormData);
         const URL = `${API_SYNAPSTER_BASE_URL}/synapster/subjects/subject`;
-        const response = await postData(URL, subjectArray);
-        console.log(response);
+        try {
+            const response = await postData(URL, subjectArray);
+            setShowModal(true);
+        } catch (error) {
+            setShowModal(false);
+        }
+        // const response = await postData(URL, subjectArray);
+        // if (response.meta.status === 0) {
+        //     return (<ModalDialog notificationType="success" message="Subject has been created" isShow="true"/>);
+        // } else {
+        //     return (<ModalDialog notificationType="failed" message="Subject creation has been failed." isShow="true"/>);
+        // }
     };
 
     return (<>
+        {(showModal)?<ModalDialog notificationType="success" message="Subject has been created" isShow="true" showModals={handleShowModal}/>:(<></>)}
+        {/*(showModal)?<ModalDialog notificationType="success" message="Subject has been created" isShow="true" showModals={handleShowModal}/>:(<></>);*/}
         <div className="container mx-auto my-10 px-4  py-4 border-1">
             <form onSubmit={handleSubjectCreate}>
                 <div className="grid gap-6 mb-6 md:grid-cols-2">

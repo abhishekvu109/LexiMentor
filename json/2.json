@@ -1,0 +1,726 @@
+[
+    {
+        "word": "drone",
+        "source": "ChatGPT",
+        "pronunciation": "drohn",
+        "mnemonic": "Think of a drone flying lazily in the sky, emitting a continuous buzzing sound, just like this word means a continuous, monotonous sound.",
+        "localMeaning": "ड्रोन - ध्वनि या शब्द जो लगातार और मोनोटोनस होता है।",
+        "meanings": [
+            {
+                "meaning": "a continuous low humming sound",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "a remote-controlled pilotless aircraft or missile",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "buzz",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "hum",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "whir",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "drudge",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "monotone",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "silence",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "activity",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "excitement",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The drone of the airplane engine put me to sleep.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "He could hear the constant drone of traffic from the highway.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The worker drones away at his desk all day long.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Sound"
+    },
+    {
+        "word": "pyromaniac",
+        "source": "ChatGPT",
+        "pronunciation": "py-roh-mey-nee-ak",
+        "mnemonic": "Think of a person who is 'pyro' (fire) + 'maniac' (obsessively interested or crazy about). A pyromaniac is someone who is crazily obsessed with fire.",
+        "localMeaning": "पायरोमैनियाक - वह व्यक्ति जो आग में दीवाना है।",
+        "meanings": [
+            {
+                "meaning": "a person who has an obsessive desire to set things on fire",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "firebug",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "arsonist",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "pyrophile",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "incendiary",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "fire-raiser",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "firefighter",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "fireman",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "fire warden",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The building was set ablaze by a pyromaniac.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The authorities are on the lookout for the pyromaniac responsible for the recent string of arson attacks.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "His fascination with fire marked him out as a potential pyromaniac.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Behavior"
+    },
+    {
+        "word": "pith",
+        "source": "ChatGPT",
+        "pronunciation": "pith",
+        "mnemonic": "Think of the 'pith' of a fruit, which is the essential, core part of it. Similarly, the word 'pith' refers to the essential or central part of something.",
+        "localMeaning": "मज्जा - किसी चीज का महत्वपूर्ण या केंद्रीय हिस्सा।",
+        "meanings": [
+            {
+                "meaning": "the essential or central part",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "the soft or spongy tissue in the stems of plants",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "core",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "essence",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "heart",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "kernel",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "center",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "periphery",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "exterior",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "surface",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The pith of his argument was that we needed to act quickly.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "Remove the pith from the stem before cooking.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The pith of the matter is that we need better communication.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Botany"
+    },
+    {
+        "word": "spearhead",
+        "source": "ChatGPT",
+        "pronunciation": "speer-hed",
+        "mnemonic": "Visualize a spear with a sharp head leading the charge in a battle. Similarly, 'spearhead' means to lead or initiate an attack or movement.",
+        "localMeaning": "शिंदी - किसी योजना या कार्य का प्रमुख नेता।",
+        "meanings": [
+            {
+                "meaning": "to lead or initiate an attack or movement",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "the sharp-pointed head of a spear",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "lead",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "initiate",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "pioneer",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "front",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "head",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "follow",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "trail",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "lag",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "She spearheaded the campaign for better public transportation.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The general spearheaded the attack on the enemy stronghold.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The new technology is spearheading a revolution in the industry.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "verb",
+                "source": "ChatGPT"
+            },
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Warfare"
+    },
+    {
+        "word": "turgid",
+        "source": "ChatGPT",
+        "pronunciation": "tur-jid",
+        "mnemonic": "Think of 'turgid' as 'turgid with fluid'. It's like something that's swollen or bloated with fluid. Similarly, the word means swollen or excessively embellished in style or language.",
+        "localMeaning": "सूजा हुआ - अत्यधिक सजावट या भाषा में आभूषित।",
+        "meanings": [
+            {
+                "meaning": "swollen or excessively embellished in style or language",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "bloated or congested",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "inflated",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "pompous",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "bombastic",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "grandiloquent",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "overblown",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "concise",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "simple",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "plain",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "His writing style was criticized for being overly turgid.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The turgid prose of the novel made it difficult to read.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "She found his speech turgid and uninteresting.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Language"
+    },
+    {
+        "word": "uninhibited",
+        "source": "ChatGPT",
+        "pronunciation": "uhn-in-hib-i-tid",
+        "mnemonic": "Think of someone who is 'uninhibited' as someone who is not inhibited or held back by social norms or conventions. They are free to express themselves fully.",
+        "localMeaning": "निःसंकोच - जो सामाजिक मानदंडों या रिवाज़ों से नहीं बाधित होता है।",
+        "meanings": [
+            {
+                "meaning": "not restrained or inhibited",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "unrestrained",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "free",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "uncontrolled",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "unbridled",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "spontaneous",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "inhibited",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "restrained",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "controlled",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "She felt uninhibited on the dance floor, moving freely to the music.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The artist's work was praised for its uninhibited expression of emotion.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The children played with uninhibited joy in the park.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Behavior"
+    },
+    {
+        "word": "expound",
+        "source": "ChatGPT",
+        "pronunciation": "ik-spound",
+        "mnemonic": "Think of 'ex' as 'out' and 'pound' as 'to beat'. So 'expound' means to 'beat out' or explain something thoroughly and systematically.",
+        "localMeaning": "विवेचन करना - किसी विषय को बड़े और विस्तृत रूप से समझाना।",
+        "meanings": [
+            {
+                "meaning": "to explain or discuss in detail",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "elaborate",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "clarify",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "explicate",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "interpret",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "delineate",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "summarize",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "simplify",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "confuse",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The professor expounded on the theory of relativity for hours.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The politician expounded her views on the economy during the debate.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "He expounded his ideas about education in his latest book.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "verb",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Education"
+    },
+    {
+        "word": "tenacity",
+        "source": "ChatGPT",
+        "pronunciation": "tuh-nas-i-tee",
+        "mnemonic": "Think of 'tenacity' as 'ten'acity. It's like having the persistence of ten individuals combined into one. Tenacity means having a firm hold on something, being persistent and determined.",
+        "localMeaning": "दृढ़ता - किसी चीज़ को मजबूती से पकड़ना, सहिष्णुता और दृढ़ता।",
+        "meanings": [
+            {
+                "meaning": "the quality of being persistent and determined",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "persistence",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "determination",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "steadfastness",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "resilience",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "perseverance",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "weakness",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "fragility",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "faintheartedness",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "Her tenacity in pursuing her goals led to her eventual success.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The team showed great tenacity in the face of adversity.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "His tenacity in negotiations ensured a favorable outcome for the company.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "noun",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Personality"
+    },
+    {
+        "word": "willowy",
+        "source": "ChatGPT",
+        "pronunciation": "wil-oh-ee",
+        "mnemonic": "Think of a willow tree, which has long, slender branches that sway gracefully in the wind. Similarly, 'willowy' describes someone who is tall, slender, and graceful.",
+        "localMeaning": "लचकीला - लंबा, पतला और आकर्षक।",
+        "meanings": [
+            {
+                "meaning": "gracefully tall and slender",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "graceful",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "slender",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "lithe",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "svelte",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "graceful",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "stout",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "stocky",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "bulky",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "She moved with the willowy grace of a dancer.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "The model had a willowy figure that made her perfect for the runway.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "His willowy frame allowed him to slip through the crowd unnoticed.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Appearance"
+    },
+    {
+        "word": "impalpable",
+        "source": "ChatGPT",
+        "pronunciation": "im-pal-puh-buhl",
+        "mnemonic": "Think of 'impalpable' as 'im' (not) + 'palpable' (able to be touched or felt). So 'impalpable' means not able to be touched or felt, intangible.",
+        "localMeaning": "अस्पृश्य - जो स्पर्श या अनुभूति किया जा सकता है।",
+        "meanings": [
+            {
+                "meaning": "unable to be felt by touch",
+                "source": "ChatGPT"
+            },
+            {
+                "meaning": "not easily comprehended",
+                "source": "ChatGPT"
+            }
+        ],
+        "synonyms": [
+            {
+                "synonym": "intangible",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "ethereal",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "imperceptible",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "insubstantial",
+                "source": "ChatGPT"
+            },
+            {
+                "synonym": "unperceivable",
+                "source": "ChatGPT"
+            }
+        ],
+        "antonyms": [
+            {
+                "antonym": "tangible",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "palpable",
+                "source": "ChatGPT"
+            },
+            {
+                "antonym": "perceptible",
+                "source": "ChatGPT"
+            }
+        ],
+        "examples": [
+            {
+                "example": "The concept of time is impalpable; we can't physically touch it.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "There was an impalpable sense of tension in the air.",
+                "source": "ChatGPT"
+            },
+            {
+                "example": "His argument was based on impalpable assumptions.",
+                "source": "ChatGPT"
+            }
+        ],
+        "partsOfSpeeches": [
+            {
+                "pos": "adjective",
+                "source": "ChatGPT"
+            }
+        ],
+        "category": "Abstract"
+    }
+]
