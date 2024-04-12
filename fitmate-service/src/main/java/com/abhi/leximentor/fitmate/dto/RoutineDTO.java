@@ -19,5 +19,5 @@ public class RoutineDTO {
     private int measurement;
     private LocalDateTime crtnDate;
     private LocalDateTime lastUpdDate;
-    private ExcerciseDTO excerciseDTO;
+    private ExerciseDTO excerciseDTO;
 }

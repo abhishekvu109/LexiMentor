@@ -16,8 +16,8 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(name = "fitmate_excercise")
-public class Excercise {
+@Table(name = "fitmate_exercise")
+public class Exercise {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

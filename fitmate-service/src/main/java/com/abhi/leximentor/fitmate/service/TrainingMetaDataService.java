@@ -14,7 +14,7 @@ public interface TrainingMetaDataService {
 
     TrainingMetadataDTO getByName(String name);
 
-    void update(TrainingMetadataDTO trainingMetadataDTO);
+    TrainingMetadataDTO update(TrainingMetadataDTO trainingMetadataDTO);
 
     void delete(TrainingMetadataDTO trainingMetadataDTO);
 

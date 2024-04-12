@@ -13,7 +13,7 @@ public interface BodyPartService {
 
     BodyPartsDTO getByName(String name);
 
-    void update(BodyPartsDTO bodyPartsDTO);
+    BodyPartsDTO update(BodyPartsDTO bodyPartsDTO);
 
     void delete(BodyPartsDTO bodyPartsDTO);
 

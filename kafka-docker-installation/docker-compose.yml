@@ -53,6 +53,13 @@ services:
       - "9292:9292"
     depends_on:
       - mysql
+  fitmate:
+    image: fitmate-service:latest
+    container_name: fitmate-service
+    ports:
+      - "9393:9393"
+    depends_on:
+      - mysql
   nltk:
     image: nltk-word-service:latest
     container_name: nltk-word-service
