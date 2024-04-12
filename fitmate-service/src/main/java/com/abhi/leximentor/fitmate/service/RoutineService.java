@@ -12,9 +12,8 @@ public interface RoutineService {
 
     List<RoutineDTO> getAllByRefId(List<Long> refIds);
 
-    RoutineDTO getByName(String name);
 
-    void update(RoutineDTO routineDTO);
+    RoutineDTO update(RoutineDTO routineDTO);
 
     void delete(RoutineDTO routineDTO);
 

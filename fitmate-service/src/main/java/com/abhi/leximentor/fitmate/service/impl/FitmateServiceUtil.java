@@ -3,11 +3,11 @@ package com.abhi.leximentor.fitmate.service.impl;
 
 import com.abhi.leximentor.fitmate.constants.Status;
 import com.abhi.leximentor.fitmate.dto.BodyPartsDTO;
-import com.abhi.leximentor.fitmate.dto.ExcerciseDTO;
+import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
 import com.abhi.leximentor.fitmate.dto.TrainingMetadataDTO;
 import com.abhi.leximentor.fitmate.entities.BodyParts;
-import com.abhi.leximentor.fitmate.entities.Excercise;
+import com.abhi.leximentor.fitmate.entities.Exercise;
 import com.abhi.leximentor.fitmate.entities.Routine;
 import com.abhi.leximentor.fitmate.entities.TrainingMetadata;
 import com.abhi.leximentor.fitmate.util.KeyGeneratorUtil;
@@ -29,12 +29,12 @@ public class FitmateServiceUtil {
     }
 
     public static class ExcerciseUtil {
-        public static Excercise buildEntity(ExcerciseDTO dto, TrainingMetadata trainingMetadata, BodyParts bodyParts, List<BodyParts> secondaryBodyParts) {
-            return Excercise.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).name(dto.getName()).description(dto.getDescription()).unit(dto.getUnit()).status(Status.ApplicationStatus.getStatus(dto.getStatus())).trainingMetadata(trainingMetadata).targetBodyPart(bodyParts).secondaryBodyParts(secondaryBodyParts).build();
+        public static Exercise buildEntity(ExerciseDTO dto, TrainingMetadata trainingMetadata, BodyParts bodyParts, List<BodyParts> secondaryBodyParts) {
+            return Exercise.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).name(dto.getName()).description(dto.getDescription()).unit(dto.getUnit()).status(Status.ApplicationStatus.getStatus(dto.getStatus())).trainingMetadata(trainingMetadata).targetBodyPart(bodyParts).secondaryBodyParts(secondaryBodyParts).build();
         }
 
-        public static ExcerciseDTO buildDto(Excercise entity) {
-            return ExcerciseDTO.builder().refId(String.valueOf(entity.getRefId())).name(entity.getName()).description(entity.getDescription()).unit(entity.getUnit()).status(Status.ApplicationStatus.getStatusStr(entity.getStatus())).crtnDate(entity.getCrtnDate()).lastUpdDate(entity.getLastUpdDate()).trainingMetadata(TrainingMetadataUtil.buildDto(entity.getTrainingMetadata())).targetBodyPart(BodyPartsUtil.buildDto(entity.getTargetBodyPart())).secondaryBodyParts(CollectionUtils.isNotEmpty(entity.getSecondaryBodyParts()) ? entity.getSecondaryBodyParts().stream().map(BodyParts::getName).toList() : null).build();
+        public static ExerciseDTO buildDto(Exercise entity) {
+            return ExerciseDTO.builder().refId(String.valueOf(entity.getRefId())).name(entity.getName()).description(entity.getDescription()).unit(entity.getUnit()).status(Status.ApplicationStatus.getStatusStr(entity.getStatus())).crtnDate(entity.getCrtnDate()).lastUpdDate(entity.getLastUpdDate()).trainingMetadata(TrainingMetadataUtil.buildDto(entity.getTrainingMetadata())).targetBodyPart(BodyPartsUtil.buildDto(entity.getTargetBodyPart())).secondaryBodyParts(CollectionUtils.isNotEmpty(entity.getSecondaryBodyParts()) ? entity.getSecondaryBodyParts().stream().map(BodyParts::getName).toList() : null).build();
         }
     }
 
@@ -50,7 +50,7 @@ public class FitmateServiceUtil {
 
 
     public static class RoutineUtil {
-        public static Routine buildEntity(RoutineDTO dto, Excercise excercise) {
+        public static Routine buildEntity(RoutineDTO dto, Exercise excercise) {
             return Routine.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).description(dto.getDescription()).isCompleted(dto.isCompleted()).completionUnit(dto.getCompletionUnit()).measurement(dto.getMeasurement()).excercise(excercise).build();
         }
 

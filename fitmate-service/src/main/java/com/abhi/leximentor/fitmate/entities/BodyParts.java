@@ -12,6 +12,7 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 @Entity
+
 @Table(name = "fitmate_body_parts")
 public class BodyParts {
     @Id
@@ -32,9 +33,9 @@ public class BodyParts {
     @Column(name = "status")
     private int status;
 
-    @ManyToMany(mappedBy = "secondaryBodyParts",fetch = FetchType.LAZY)
-    private List<Excercise> excercises;
+    @ManyToMany(mappedBy = "secondaryBodyParts", fetch = FetchType.LAZY)
+    private List<Exercise> excercises;
 
     @OneToOne(mappedBy = "targetBodyPart")
-    private Excercise excercise;
+    private Exercise excercise;
 }

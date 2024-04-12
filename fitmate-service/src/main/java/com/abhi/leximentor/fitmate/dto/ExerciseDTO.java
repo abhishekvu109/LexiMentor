@@ -1,7 +1,5 @@
 package com.abhi.leximentor.fitmate.dto;
 
-import com.abhi.leximentor.fitmate.entities.BodyParts;
-import com.abhi.leximentor.fitmate.entities.TrainingMetadata;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +12,7 @@ import java.util.List;
 @Data
 @ToString
 @EqualsAndHashCode
-public class ExcerciseDTO {
+public class ExerciseDTO {
     private String refId;
     private String name;
     private String description;

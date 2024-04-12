@@ -1,21 +1,21 @@
 package com.abhi.leximentor.fitmate.service;
 
-import com.abhi.leximentor.fitmate.dto.ExcerciseDTO;
+import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
 
 import java.util.List;
 
 public interface ExerciseService {
-    List<ExcerciseDTO> addAll(List<ExcerciseDTO> excerciseDTOS);
+    List<ExerciseDTO> addAll(List<ExerciseDTO> excerciseDTOS);
 
-    ExcerciseDTO getByRefId(long refId);
+    ExerciseDTO getByRefId(long refId);
 
-    List<ExcerciseDTO> getAllByRefId(List<Long> refIds);
+    List<ExerciseDTO> getAllByRefId(List<Long> refIds);
 
-    ExcerciseDTO getByName(String name);
+    ExerciseDTO getByName(String name);
 
-    void update(ExcerciseDTO excerciseDTO);
+    ExerciseDTO update(ExerciseDTO excerciseDTO);
 
-    void delete(ExcerciseDTO excerciseDTO);
+    void delete(ExerciseDTO excerciseDTO);
 
-    void deleteAll(List<ExcerciseDTO> excerciseDTOS);
+    void deleteAll(List<ExerciseDTO> excerciseDTOS);
 }

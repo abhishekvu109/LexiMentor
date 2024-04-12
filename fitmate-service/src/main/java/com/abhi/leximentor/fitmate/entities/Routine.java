@@ -51,5 +51,5 @@ public class Routine {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "excercise_id")
-    private Excercise excercise;
+    private Exercise excercise;
 }

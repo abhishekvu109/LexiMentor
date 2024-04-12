@@ -48,5 +48,5 @@ public class TrainingMetadata {
     private LocalDateTime lastUpdDate;
 
     @OneToMany(mappedBy = "trainingMetadata", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Excercise> excercises;
+    private List<Exercise> excercises;
 }
