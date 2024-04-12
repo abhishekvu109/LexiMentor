@@ -234,7 +234,7 @@ export async function getServerSideProps(context) {
 
     // Accessing the array of values
     const drillId = params.drillId;
-    const drillrefId=drillId[0];
+    const drillRefId=drillId[0];
     const challengeId = drillId[1];
     const drillSetData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/${drillId[0]}`)
     const drillSetWordData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/words/data/${drillId[0]}`)
