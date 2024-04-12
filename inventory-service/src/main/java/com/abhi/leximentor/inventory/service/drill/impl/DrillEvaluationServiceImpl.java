@@ -122,7 +122,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
         drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
         drillChallenge = drillChallengeRepository.save(drillChallenge);
-        log.info("Saved the results in the challenge entity");
+        log.info("Saved the results in the challenge entity. {}", drillChallenge);
         return this.addAll(drillEvaluationDTOS);
     }
 
