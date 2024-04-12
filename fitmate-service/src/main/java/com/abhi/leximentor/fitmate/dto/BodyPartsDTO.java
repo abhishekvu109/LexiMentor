@@ -12,5 +12,7 @@ import lombok.ToString;
 public class BodyPartsDTO {
     private String refId;
     private String name;
+    private String primaryName;
+    private String description;
     private String status;
 }

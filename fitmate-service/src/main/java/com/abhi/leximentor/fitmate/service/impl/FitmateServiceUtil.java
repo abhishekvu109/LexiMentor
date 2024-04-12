@@ -40,11 +40,11 @@ public class FitmateServiceUtil {
 
     public static class BodyPartsUtil {
         public static BodyParts buildEntity(BodyPartsDTO dto) {
-            return BodyParts.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).name(dto.getName()).status(Status.ApplicationStatus.getStatus(dto.getStatus())).build();
+            return BodyParts.builder().refId(KeyGeneratorUtil.refId()).primaryName(dto.getPrimaryName()).description(dto.getDescription()).uuid(KeyGeneratorUtil.uuid()).name(dto.getName()).status(Status.ApplicationStatus.getStatus(dto.getStatus())).build();
         }
 
         public static BodyPartsDTO buildDto(BodyParts entity) {
-            return BodyPartsDTO.builder().refId(String.valueOf(entity.getRefId())).name(entity.getName()).status(Status.ApplicationStatus.getStatusStr(entity.getStatus())).build();
+            return BodyPartsDTO.builder().refId(String.valueOf(entity.getRefId())).primaryName(entity.getPrimaryName()).description(entity.getDescription()).name(entity.getName()).status(Status.ApplicationStatus.getStatusStr(entity.getStatus())).build();
         }
     }
 

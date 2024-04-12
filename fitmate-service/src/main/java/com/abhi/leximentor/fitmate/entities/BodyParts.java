@@ -30,6 +30,12 @@ public class BodyParts {
     @Column(name = "name", unique = true)
     private String name;
 
+    @Column(name = "primary_name")
+    private String primaryName;
+
+    @Column(name = "description", length = 50)
+    private String description;
+
     @Column(name = "status")
     private int status;
 
