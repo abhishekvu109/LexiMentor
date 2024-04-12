@@ -50,6 +50,19 @@ public class BodyPartsController {
         }
     }
 
+    @GetMapping(value = UrlConstants.BodyPartsUrl.BODY_PARTS_GET_ALL, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getByRefId() {
+        try {
+            List<BodyPartsDTO> response = bodyPartService.getAll();
+            if (response != null) {
+                return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+            }
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+        } catch (Exception ex) {
+            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
+        }
+    }
+
     @PostMapping(value = UrlConstants.BodyPartsUrl.BODY_PARTS_GET_BY_NAME, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByName(@RequestParam String name) {
         try {
