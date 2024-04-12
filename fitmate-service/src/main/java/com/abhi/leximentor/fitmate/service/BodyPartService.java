@@ -10,6 +10,7 @@ public interface BodyPartService {
     BodyPartsDTO getByRefId(long refId);
 
     List<BodyPartsDTO> getAllByRefId(List<Long> refIds);
+    List<BodyPartsDTO> getAll();
 
     BodyPartsDTO getByName(String name);
 

@@ -3,6 +3,7 @@ package com.abhi.leximentor.fitmate.constants;
 public class UrlConstants {
     public static class BodyPartsUrl {
         public static final String BODY_PARTS_ADD = "/api/fitmate/bodyparts/bodypart";
+        public static final String BODY_PARTS_GET_ALL = "/api/fitmate/bodyparts";
         public static final String BODY_PARTS_UPDATE = "/api/fitmate/bodyparts/bodypart";
         public static final String BODY_PARTS_DELETE = "/api/fitmate/bodyparts/bodypart";
         public static final String BODY_PARTS_GET_BY_NAME = "/api/fitmate/bodyparts/bodypart";

@@ -30,6 +30,12 @@ public class BodyPartsServiceImpl implements BodyPartService {
     }
 
     @Override
+    public List<BodyPartsDTO> getAll() {
+        List<BodyParts> bodyParts = bodyPartsRepository.findAll();
+        return bodyParts.stream().map(FitmateServiceUtil.BodyPartsUtil::buildDto).toList();
+    }
+
+    @Override
     public BodyPartsDTO getByRefId(long refId) throws ServerException.EntityObjectNotFound {
         BodyParts bodyParts = bodyPartsRepository.findByRefId(refId);
         if (bodyParts == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
