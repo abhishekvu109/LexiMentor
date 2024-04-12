@@ -26,13 +26,19 @@ public class BodyPartsController {
 
     @PostMapping(value = UrlConstants.BodyPartsUrl.BODY_PARTS_ADD, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody List<BodyPartsDTO> request) {
+        log.info("Received a request to add a body part : {}", request);
         try {
             List<BodyPartsDTO> response = bodyPartService.addAll(request);
             if (CollectionUtils.isNotEmpty(response)) {
+                log.info("Received a response : {}", response);
                 return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+            } else {
+                log.error("The service has returned empty response");
+                return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
             }
-            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
         } catch (Exception ex) {
+            log.error("Some exception has occurred: {}", ex.getMessage());
+            ex.getCause();
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
         }
     }

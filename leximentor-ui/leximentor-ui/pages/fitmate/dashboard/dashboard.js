@@ -1,14 +1,21 @@
 import {API_BASE_URL, API_FITMATE_BASE_URL} from "@/constants";
-import {fetchData, postData} from "@/dataService";
+import {fetchData, postData, postDataAsJson} from "@/dataService";
 import Link from "next/link";
 import {useState} from "react";
 import {data} from "autoprefixer";
+import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 
 const FitmateDashboard = ({bodyParts}) => {
 
     const [newBodyPartDialog, setNewBodyPartDialog] = useState(false);
     const [bodyPartFormData, setBodyPartFormData] = useState({name: "", primaryName: "", description: ""});
+    const [notificationModal, setNotificationModal] = useState(false);
+
+    const handleNotificationModal = (newValue) => {
+        setNotificationModal(newValue);
+    };
+
     const handleNewBodyPartDialog = (show) => {
         setNewBodyPartDialog(show);
     }
@@ -33,10 +40,13 @@ const FitmateDashboard = ({bodyParts}) => {
         const dataInAnArray = [];
         dataInAnArray.push(bodyPartFormData);
         console.log(JSON.stringify(dataInAnArray));
-        // const queryString = new URLSearchParams(dataInAnArray).toString();
-        // const URL = `${API_FITMATE_BASE_URL}/fitmate/bodyparts/bodypart`;
-        // const createBodyPartResponse = await postData(URL, dataInAnArray);
-        // handleNewBodyPartDialog(false);
+        try {
+            const URL = `${API_FITMATE_BASE_URL}/fitmate/bodyparts/bodypart`;
+            const createBodyPartResponse = await postData(URL, dataInAnArray);
+            setNotificationModal(true);
+        } catch (error) {
+            setNotificationModal(false);
+        }
     };
 
     const getRandomColor = (() => {
@@ -74,6 +84,9 @@ const FitmateDashboard = ({bodyParts}) => {
 
 
     return (<>
+        {(notificationModal) ?
+            <ModalDialog notificationType="success" message="New Body Part has been created." isShow="true"
+                         showModals={handleNotificationModal}/> : (<></>)}
         <div className="container mx-auto my-4 px-4 border-1">
             <div className="flex flex-row p-2">
                 <div>

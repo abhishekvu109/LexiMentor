@@ -35,6 +35,26 @@ export const postData = async (URL, formData = {}) => {
     }
 };
 
+export const postDataAsJson = async (URL, formData = {}) => {
+    try {
+        const response = await fetch(URL, {
+            method: 'POST', headers: {
+                'Content-Type': 'application/json',
+            }, body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log('Response data:', data);
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
 export const updateData = async (URL, formData = {}) => {
     try {
         const response = await fetch(URL, {

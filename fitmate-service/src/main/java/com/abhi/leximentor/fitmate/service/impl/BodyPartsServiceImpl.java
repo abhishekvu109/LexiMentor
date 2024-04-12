@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,9 +24,13 @@ public class BodyPartsServiceImpl implements BodyPartService {
     private final BodyPartsRepository bodyPartsRepository;
 
     @Override
+    @Transactional
     public List<BodyPartsDTO> addAll(List<BodyPartsDTO> bodyPartsDTOS) {
+        log.info("Received a request to add all the body parts");
         List<BodyParts> entities = bodyPartsDTOS.stream().map(FitmateServiceUtil.BodyPartsUtil::buildEntity).toList();
+        log.info("The util has converted the entities: {}",entities.size());
         entities = bodyPartsRepository.saveAll(entities);
+        log.info("The entities have been saved : {}",entities);
         return entities.stream().map(FitmateServiceUtil.BodyPartsUtil::buildDto).toList();
     }
 
