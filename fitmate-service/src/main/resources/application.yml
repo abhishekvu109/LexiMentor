@@ -19,7 +19,9 @@ spring:
     hikari:
       idle-timeout: 60000
       maximum-pool-size: 50
-  application:
-    name: synapster-learning-service
+#  kafka:
+#    consumer:
+#      bootstrap-servers: 192.168.1.7:9092
+#      group-id: word-group-1
 server:
-  port: 9292
+  port: 9393

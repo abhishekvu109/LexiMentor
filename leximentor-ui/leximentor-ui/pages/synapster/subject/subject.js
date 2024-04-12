@@ -2,6 +2,7 @@ import {useState} from "react";
 import {postData} from "@/dataService";
 import {API_BASE_URL, API_SYNAPSTER_BASE_URL} from "@/constants";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
+import Link from "next/link";
 
 const Subject = () => {
     const [subjectFormData, setSubjectFormData] = useState({name: "", status: "", description: "", category: ""});
@@ -10,7 +11,7 @@ const Subject = () => {
     const handleChange = (e) => {
         setSubjectFormData({...subjectFormData, [e.target.name]: e.target.value});
     };
-    const handleShowModal=(newValue)=>{
+    const handleShowModal = (newValue) => {
         setShowModal(newValue);
     };
     const handleSubjectCreate = async (e) => {
@@ -34,8 +35,29 @@ const Subject = () => {
     };
 
     return (<>
-        {(showModal)?<ModalDialog notificationType="success" message="Subject has been created" isShow="true" showModals={handleShowModal}/>:(<></>)}
+        {(showModal) ? <ModalDialog notificationType="success" message="Subject has been created" isShow="true"
+                                    showModals={handleShowModal}/> : (<></>)}
         {/*(showModal)?<ModalDialog notificationType="success" message="Subject has been created" isShow="true" showModals={handleShowModal}/>:(<></>);*/}
+
+        <div className="container mx-auto my-4 px-3 py-3 border-1 border-gray-300">
+            <div className="flex flex-row ...">
+                <div>
+                    <Link href="/dashboard/dashboard">
+                        <button type="button"
+                                className="px-3 py-2 mr-3 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg className="w-3 h-3 text-white me-2" aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="currentColor" viewBox="0 0 20 16">
+                                <path fill-rule="evenodd"
+                                      d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
+                                      clip-rule="evenodd"/>
+                            </svg>
+                            Dashboard
+                        </button>
+                    </Link>
+                </div>
+            </div>
+        </div>
         <div className="container mx-auto my-10 px-4  py-4 border-1">
             <form onSubmit={handleSubjectCreate}>
                 <div className="grid gap-6 mb-6 md:grid-cols-2">
