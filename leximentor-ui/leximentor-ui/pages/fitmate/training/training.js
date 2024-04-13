@@ -203,7 +203,9 @@ const FitmateTraining = ({trainings}) => {
             <div className="grid grid-cols-4 gap-4 p-2 mx-auto">
                 {(trainingData.data != null && trainingData.data.length > 0) ? (trainingData.data.map((item, index) => (<>
                     <div key={item.refId}>
-                        <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
+                        <Link href={`/fitmate/body_parts/${item.refId}`}>
+                            <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
+                        </Link>
                     </div>
                 </>))) : (<>
                     <p className="font-normal text-center text-gray-700 dark:text-gray-400 font-sans text-sm">No body
