@@ -15,6 +15,7 @@ public class UrlConstants {
         public static final String EXERCISE_UPDATE = "/api/fitmate/exercises/exercise";
         public static final String EXERCISE_DELETE = "/api/fitmate/exercises/exercise";
         public static final String EXERCISE_GET = "/api/fitmate/exercises/exercise";
+        public static final String EXERCISE_GET_BY_BODY_PART_REF_ID = "/api/fitmate/exercises/exercise/{bodyPartRefId}";
         public static final String EXERCISE_GET_REF_ID = "/api/fitmate/exercises/exercise/{exerciseRefId}";
     }
 

@@ -64,7 +64,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public ExerciseDTO getByName(String name) {
-        Exercise exercise = exerciseRepository.findByName(name);
+        Exercise exercise = exerciseRepository.findByName(name.toUpperCase());
         if (exercise == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
         return FitmateServiceUtil.ExcerciseUtil.buildDto(exercise);
     }
@@ -81,6 +81,14 @@ public class ExerciseServiceImpl implements ExerciseService {
         if (targetBodyPart == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
         exercise.setTargetBodyPart(targetBodyPart);
         return FitmateServiceUtil.ExcerciseUtil.buildDto(exerciseRepository.save(exercise));
+    }
+
+    @Override
+    public List<ExerciseDTO> getByBodyPartRefId(long bodyPartRefId) throws ServerException.EntityObjectNotFound {
+        BodyParts bodyParts = bodyPartsRepository.findByRefId(bodyPartRefId);
+        if (bodyParts == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
+        List<Exercise> exercises = exerciseRepository.findByTargetBodyPart(bodyParts);
+        return exercises.stream().map(FitmateServiceUtil.ExcerciseUtil::buildDto).toList();
     }
 
     @Override
