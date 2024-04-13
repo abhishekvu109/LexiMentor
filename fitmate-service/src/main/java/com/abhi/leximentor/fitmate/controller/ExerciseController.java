@@ -54,7 +54,7 @@ public class ExerciseController {
     }
 
     @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getByTargetBodyPart(@RequestParam String name, @RequestParam String bodyPartRefId, @RequestParam String trainingMetadataRefId) {
+    public @ResponseBody ResponseEntity<RestApiResponse> getByTargetBodyPart(@RequestParam(required = false) String name, @RequestParam(required = false) String bodyPartRefId, @RequestParam(required = false) String trainingMetadataRefId) {
         try {
             List<ExerciseDTO> response = new LinkedList<>();
             if (StringUtils.isNotEmpty(bodyPartRefId) && StringUtils.isNotEmpty(trainingMetadataRefId)) {
@@ -66,8 +66,9 @@ public class ExerciseController {
                 response = exerciseService.getByBodyPartRefId(Long.parseLong(bodyPartRefId));
             } else if (StringUtils.isNotEmpty(trainingMetadataRefId)) {
                 response = exerciseService.getAllByTrainingMetadataRefId(Long.parseLong(trainingMetadataRefId));
+            }else {
+                response=exerciseService.getAll();
             }
-
 
             if (CollectionUtils.isNotEmpty(response)) {
                 return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);

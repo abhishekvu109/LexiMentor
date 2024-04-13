@@ -119,10 +119,15 @@ public class ExerciseServiceImpl implements ExerciseService {
         TrainingMetadata trainingMetadata = trainingMetadataRepository.findByRefId(trainingMetadatRefId);
         if (trainingMetadata == null)
             throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-        BodyParts bodyParts=bodyPartsRepository.findByRefId(targetBodyPartRefId);
-        if(bodyParts==null)
-            throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-        List<Exercise> exercises=exerciseRepository.findByTrainingMetadataAndTargetBodyPart(trainingMetadata,bodyParts);
+        BodyParts bodyParts = bodyPartsRepository.findByRefId(targetBodyPartRefId);
+        if (bodyParts == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
+        List<Exercise> exercises = exerciseRepository.findByTrainingMetadataAndTargetBodyPart(trainingMetadata, bodyParts);
+        return exercises.stream().map(FitmateServiceUtil.ExcerciseUtil::buildDto).toList();
+    }
+
+    @Override
+    public List<ExerciseDTO> getAll() {
+        List<Exercise> exercises = exerciseRepository.findAll();
         return exercises.stream().map(FitmateServiceUtil.ExcerciseUtil::buildDto).toList();
     }
 }
