@@ -54,7 +54,7 @@ public class Exercise {
     @JoinColumn(name = "training_metatdata_id")
     private TrainingMetadata trainingMetadata;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "target_body_part")
     private BodyParts targetBodyPart;
 

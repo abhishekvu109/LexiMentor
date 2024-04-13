@@ -42,6 +42,6 @@ public class BodyParts {
     @ManyToMany(mappedBy = "secondaryBodyParts", fetch = FetchType.LAZY)
     private List<Exercise> excercises;
 
-    @OneToOne(mappedBy = "targetBodyPart")
-    private Exercise excercise;
+    @OneToMany(mappedBy = "targetBodyPart")
+    private List<Exercise> excercise;
 }

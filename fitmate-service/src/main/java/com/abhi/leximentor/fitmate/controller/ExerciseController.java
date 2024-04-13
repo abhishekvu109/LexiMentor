@@ -51,6 +51,19 @@ public class ExerciseController {
         }
     }
 
+    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET_BY_BODY_PART_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getByTargetBodyPart(@PathVariable String bodyPartRefId) {
+        try {
+            List<ExerciseDTO> response = exerciseService.getByBodyPartRefId(Long.parseLong(bodyPartRefId));
+            if (response != null) {
+                return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+            }
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+        } catch (Exception ex) {
+            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
+        }
+    }
+
     @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByName(@RequestParam String name) {
         try {

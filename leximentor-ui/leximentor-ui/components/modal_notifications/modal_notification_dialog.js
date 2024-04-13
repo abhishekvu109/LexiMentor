@@ -36,7 +36,7 @@ const ModalDialog = ({notificationType, message, isShow, showModals}) => {
                         <span className="sr-only">Close modal</span>
                     </button>
                     <div className="p-4 md:p-5 text-center">
-                        <svg className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true"
+                        <svg className="mx-auto mb-4 text-green-500 w-12 h-12 dark:text-green-200" aria-hidden="true"
                              xmlns="http://www.w3.org/2000/svg" fill="none"
                              viewBox="0 0 24 24">
                             <path stroke="currentColor"
@@ -86,7 +86,7 @@ const ModalDialog = ({notificationType, message, isShow, showModals}) => {
                         <span className="sr-only">Close modal</span>
                     </button>
                     <div className="p-4 md:p-5 text-center">
-                        <svg className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true"
+                        <svg className="mx-auto mb-4 text-red-500 w-12 h-12 dark:text-red-200" aria-hidden="true"
                              xmlns="http://www.w3.org/2000/svg"
                              fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor"

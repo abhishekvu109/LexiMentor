@@ -9,6 +9,8 @@ public interface ExerciseService {
 
     ExerciseDTO getByRefId(long refId);
 
+    List<ExerciseDTO> getByBodyPartRefId(long bodyPartRefId);
+
     List<ExerciseDTO> getAllByRefId(List<Long> refIds);
 
     ExerciseDTO getByName(String name);

@@ -6,7 +6,7 @@ import {data} from "autoprefixer";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 
-const FitmateDashboard = ({bodyParts}) => {
+const FitmateExerciseDashboard = ({bodyParts}) => {
     console.log(bodyParts);
     const [newBodyPartDialog, setNewBodyPartDialog] = useState(false);
     const [bodyPartFormData, setBodyPartFormData] = useState({
@@ -192,17 +192,19 @@ const FitmateDashboard = ({bodyParts}) => {
                         <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
                     </div>
                 </>))) : (<>
-                    <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">No body parts have been found in the database.</p>
+                    <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">No body parts have
+                        been found in the database.</p>
                 </>)}
             </div>
         </div>
     </>);
 };
 
-export default FitmateDashboard;
+export default FitmateExerciseDashboard;
 
 export async function getServerSideProps(context) {
-    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/bodyparts`);
+    const {bodyPartRefId} = context.params;
+    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise/${bodyPartRefId}`);
     return {
         props: {
             bodyParts
