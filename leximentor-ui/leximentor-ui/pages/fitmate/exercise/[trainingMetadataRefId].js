@@ -7,7 +7,7 @@ import ModalDialog from "@/components/modal_notifications/modal_notification_dia
 
 
 const FitmateExerciseDashboard = ({exercises}) => {
-    console.log(exercises);
+    // console.log(exercises);
     const [newBodyPartDialog, setNewBodyPartDialog] = useState(false);
     const [bodyPartFormData, setBodyPartFormData] = useState({
         name: "", primaryName: "", status: "Active", description: ""
@@ -257,7 +257,7 @@ export default FitmateExerciseDashboard;
 
 export async function getServerSideProps(context) {
     const {trainingMetadataRefId} = context.params;
-    const exercises = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?name=""&bodyPartRefId=""&trainingMetadataRefId=${trainingMetadataRefId}`);
+    const exercises = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}`);
     return {
         props: {
             exercises
