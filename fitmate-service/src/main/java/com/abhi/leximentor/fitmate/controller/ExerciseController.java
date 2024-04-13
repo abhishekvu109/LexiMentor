@@ -66,17 +66,14 @@ public class ExerciseController {
                 response = exerciseService.getByBodyPartRefId(Long.parseLong(bodyPartRefId));
             } else if (StringUtils.isNotEmpty(trainingMetadataRefId)) {
                 response = exerciseService.getAllByTrainingMetadataRefId(Long.parseLong(trainingMetadataRefId));
-            }else {
-                response=exerciseService.getAll();
+            } else {
+                response = exerciseService.getAll();
             }
-
-            if (CollectionUtils.isNotEmpty(response)) {
-                return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
-            }
+            return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+        } catch (Exception ex) {
+//            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
             return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
 
-        } catch (Exception ex) {
-            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
         }
     }
 
