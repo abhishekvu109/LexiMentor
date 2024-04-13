@@ -75,7 +75,6 @@ public class ExerciseController {
             }
             return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
 
-
         } catch (Exception ex) {
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
         }
