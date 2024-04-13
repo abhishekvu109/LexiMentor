@@ -12,6 +12,8 @@ public interface ExerciseService {
     List<ExerciseDTO> getByBodyPartRefId(long bodyPartRefId);
 
     List<ExerciseDTO> getAllByRefId(List<Long> refIds);
+    List<ExerciseDTO> getAllByTrainingMetadataRefId(long trainingMetadatRefId);
+    List<ExerciseDTO> getAllByTrainingMetadataRefIdAndTragetBodyPartRefId(long trainingMetadatRefId,long targetBodyPartRefId);
 
     ExerciseDTO getByName(String name);
 

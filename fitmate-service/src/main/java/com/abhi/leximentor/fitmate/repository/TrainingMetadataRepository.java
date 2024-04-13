@@ -13,4 +13,5 @@ public interface TrainingMetadataRepository extends JpaRepository<TrainingMetada
     TrainingMetadata findByName(String name);
 
     List<TrainingMetadata> findByRefIdIn(List<Long> refIds);
+
 }
