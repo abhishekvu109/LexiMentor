@@ -51,8 +51,8 @@ public class ExerciseController {
         }
     }
 
-    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET_BY_BODY_PART_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getByTargetBodyPart(@PathVariable String bodyPartRefId) {
+    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getByTargetBodyPart(@RequestParam String bodyPartRefId) {
         try {
             List<ExerciseDTO> response = exerciseService.getByBodyPartRefId(Long.parseLong(bodyPartRefId));
             if (response != null) {

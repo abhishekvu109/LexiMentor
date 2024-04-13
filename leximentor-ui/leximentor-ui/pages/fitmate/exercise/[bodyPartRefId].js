@@ -6,8 +6,8 @@ import {data} from "autoprefixer";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 
-const FitmateExerciseDashboard = ({bodyParts}) => {
-    console.log(bodyParts);
+const FitmateExerciseDashboard = ({exercises}) => {
+    console.log(exercises);
     const [newBodyPartDialog, setNewBodyPartDialog] = useState(false);
     const [bodyPartFormData, setBodyPartFormData] = useState({
         name: "", primaryName: "", status: "Active", description: ""
@@ -186,16 +186,7 @@ const FitmateExerciseDashboard = ({bodyParts}) => {
             </form>
         </div>
         <div className="container mx-auto my-4 p-2 border-1">
-            <div className="grid grid-cols-4 gap-4 p-2 mx-auto">
-                {(bodyParts.data != null && bodyParts.data.length > 0) ? (bodyParts.data.map((item, index) => (<>
-                    <div key={item.refId}>
-                        <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
-                    </div>
-                </>))) : (<>
-                    <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">No body parts have
-                        been found in the database.</p>
-                </>)}
-            </div>
+
         </div>
     </>);
 };
@@ -204,10 +195,10 @@ export default FitmateExerciseDashboard;
 
 export async function getServerSideProps(context) {
     const {bodyPartRefId} = context.params;
-    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise/${bodyPartRefId}`);
+    const exercises = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise/${bodyPartRefId}`);
     return {
         props: {
-            bodyParts
+            exercises
         },
     };
 }
