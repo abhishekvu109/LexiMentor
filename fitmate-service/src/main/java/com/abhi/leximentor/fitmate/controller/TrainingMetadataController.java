@@ -64,7 +64,7 @@ public class TrainingMetadataController {
         }
     }
 
-    @GetMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_GET_ALL, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getAll() {
         try {
             List<TrainingMetadataDTO> response = trainingMetaDataService.getAll();
