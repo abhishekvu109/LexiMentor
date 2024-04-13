@@ -12,11 +12,13 @@ import com.abhi.leximentor.fitmate.service.ExerciseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -46,6 +48,33 @@ public class ExerciseController {
                 return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
             }
             return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+        } catch (Exception ex) {
+            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
+        }
+    }
+
+    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getByTargetBodyPart(@RequestParam String name, @RequestParam String bodyPartRefId, @RequestParam String trainingMetadataRefId) {
+        try {
+            List<ExerciseDTO> response = new LinkedList<>();
+            if (StringUtils.isNotEmpty(bodyPartRefId) && StringUtils.isNotEmpty(trainingMetadataRefId)) {
+                response = exerciseService.getAllByTrainingMetadataRefIdAndTragetBodyPartRefId(Long.parseLong(trainingMetadataRefId), Long.parseLong(bodyPartRefId));
+            } else if (StringUtils.isNotEmpty(name)) {
+                ExerciseDTO responseDTO = exerciseService.getByName(name);
+                if (responseDTO != null) response.add(responseDTO);
+            } else if (StringUtils.isNotEmpty(bodyPartRefId)) {
+                response = exerciseService.getByBodyPartRefId(Long.parseLong(bodyPartRefId));
+            } else if (StringUtils.isNotEmpty(trainingMetadataRefId)) {
+                response = exerciseService.getAllByTrainingMetadataRefId(Long.parseLong(trainingMetadataRefId));
+            }
+
+
+            if (CollectionUtils.isNotEmpty(response)) {
+                return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+            }
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+
+
         } catch (Exception ex) {
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
         }

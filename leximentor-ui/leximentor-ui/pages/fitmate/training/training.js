@@ -6,11 +6,12 @@ import {data} from "autoprefixer";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 
-const FitmateTraining = ({bodyParts}) => {
-    console.log(bodyParts);
+const FitmateTraining = ({trainings}) => {
+    console.log(trainings);
+    const [trainingData, setTrainingData] = useState(trainings);
     const [newBodyPartDialog, setNewBodyPartDialog] = useState(false);
     const [bodyPartFormData, setBodyPartFormData] = useState({
-        name: "", primaryName: "", status: "Active", description: ""
+        name: "", status: "", description: ""
     });
     const [notificationModal, setNotificationModal] = useState(false);
 
@@ -43,9 +44,12 @@ const FitmateTraining = ({bodyParts}) => {
         dataInAnArray.push(bodyPartFormData);
         console.log(JSON.stringify(dataInAnArray));
         try {
-            const URL = `${API_FITMATE_BASE_URL}/fitmate/bodyparts/bodypart`;
-            const createBodyPartResponse = await postData(URL, dataInAnArray);
+            const URL = `${API_FITMATE_BASE_URL}/fitmate/trainings/training`;
+            const createExerciseResponse = await postData(URL, dataInAnArray);
             setNotificationModal(true);
+            const FETCH_URL=`${API_FITMATE_BASE_URL}/fitmate/trainings`;
+            const newTrainingData= await fetchData(FETCH_URL);
+            setTrainingData(newTrainingData);
         } catch (error) {
             setNotificationModal(false);
         }
@@ -76,7 +80,7 @@ const FitmateTraining = ({bodyParts}) => {
         const randomColor = getRandomColor();
 
         return (<a href="#"
-                   className={`block max-w-sm p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${randomColor}`}>
+                   className={`h-full block max-w-sm p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${randomColor}`}>
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{header}</h5>
             <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">{message}</p>
         </a>);
@@ -157,14 +161,14 @@ const FitmateTraining = ({bodyParts}) => {
                                placeholder="Please write the description."/>
                     </div>
                     <div className="col-span-2 sm:col-span-1">
-                        <label htmlFor="primaryName"
-                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Primary
-                            Name</label>
-                        <input type="text" name="primaryName"
-                               value={bodyPartFormData.primaryName}
-                               onChange={handleNewBodyPartFormChange}
-                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                               placeholder="Please mention the primary name"/>
+                        <label htmlFor="status"
+                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                        <select id="status" name="status" onChange={handleNewBodyPartFormChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Choose a status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
                     </div>
                     <div className="col-span-2 sm:col-span-1">
 
@@ -178,7 +182,17 @@ const FitmateTraining = ({bodyParts}) => {
                                       d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                       clip-rule="evenodd"></path>
                             </svg>
-                            Create
+                            Create Training
+                        </button>
+                        <button type="reset"
+                                className="m-2 text-white inline-flex items-center bg-gray-400 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-l rounded-r text-xs px-1.5 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg className="me-1 -ms-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                      clip-rule="evenodd"></path>
+                            </svg>
+                            Reset Form
                         </button>
                     </div>
                 </div>
@@ -187,14 +201,14 @@ const FitmateTraining = ({bodyParts}) => {
         </div>
         <div className="container mx-auto my-4 p-2 border-1">
             <div className="grid grid-cols-4 gap-4 p-2 mx-auto">
-                {(bodyParts.data != null && bodyParts.data.length > 0) ? (bodyParts.data.map((item, index) => (<>
+                {(trainingData.data != null && trainingData.data.length > 0) ? (trainingData.data.map((item, index) => (<>
                     <div key={item.refId}>
-                        <Link href={`/fitmate/exercise/${item.refId}`}>
-                            <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
-                        </Link>
+                        <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
                     </div>
                 </>))) : (<>
-                    <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">No body parts have been found in the database.</p>
+                    <p className="font-normal text-center text-gray-700 dark:text-gray-400 font-sans text-sm">No body
+                        parts
+                        have been found in the database.</p>
                 </>)}
             </div>
         </div>
@@ -204,10 +218,10 @@ const FitmateTraining = ({bodyParts}) => {
 export default FitmateTraining;
 
 export async function getServerSideProps(context) {
-    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/bodyparts`);
+    const trainings = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/trainings`);
     return {
         props: {
-            bodyParts
+            trainings
         },
     };
 }
