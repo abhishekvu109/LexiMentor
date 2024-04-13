@@ -8,6 +8,8 @@ public interface TrainingMetaDataService {
 
     List<TrainingMetadataDTO> addAll(List<TrainingMetadataDTO> trainingMetadataDTOS);
 
+    List<TrainingMetadataDTO> getAll();
+
     TrainingMetadataDTO getByRefId(long refId);
 
     List<TrainingMetadataDTO> getAllByRefId(List<Long> refIds);

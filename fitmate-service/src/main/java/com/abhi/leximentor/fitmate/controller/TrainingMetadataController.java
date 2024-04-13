@@ -64,6 +64,19 @@ public class TrainingMetadataController {
         }
     }
 
+    @GetMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getAll() {
+        try {
+            List<TrainingMetadataDTO> response = trainingMetaDataService.getAll();
+            if (response != null) {
+                return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+            }
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+        } catch (Exception ex) {
+            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
+        }
+    }
+
     @PutMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_UPDATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> update(@RequestBody TrainingMetadataDTO request) {
         try {
