@@ -47,8 +47,8 @@ const FitmateTraining = ({trainings}) => {
             const URL = `${API_FITMATE_BASE_URL}/fitmate/trainings/training`;
             const createExerciseResponse = await postData(URL, dataInAnArray);
             setNotificationModal(true);
-            const FETCH_URL=`${API_FITMATE_BASE_URL}/fitmate/trainings`;
-            const newTrainingData= await fetchData(FETCH_URL);
+            const FETCH_URL = `${API_FITMATE_BASE_URL}/fitmate/trainings`;
+            const newTrainingData = await fetchData(FETCH_URL);
             setTrainingData(newTrainingData);
         } catch (error) {
             setNotificationModal(false);
@@ -79,11 +79,11 @@ const FitmateTraining = ({trainings}) => {
     const RandomGradientCard = ({header, message}) => {
         const randomColor = getRandomColor();
 
-        return (<a href="#"
-                   className={`h-full block max-w-sm p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${randomColor}`}>
+        return (<div
+            className={`h-full block max-w-sm p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${randomColor}`}>
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{header}</h5>
             <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">{message}</p>
-        </a>);
+        </div>);
     };
 
 
@@ -203,7 +203,7 @@ const FitmateTraining = ({trainings}) => {
             <div className="grid grid-cols-4 gap-4 p-2 mx-auto">
                 {(trainingData.data != null && trainingData.data.length > 0) ? (trainingData.data.map((item, index) => (<>
                     <div key={item.refId}>
-                        <Link href={`/fitmate/body_parts/${item.refId}`}>
+                        <Link href={`/fitmate/exercise/${item.refId}`}>
                             <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
                         </Link>
                     </div>

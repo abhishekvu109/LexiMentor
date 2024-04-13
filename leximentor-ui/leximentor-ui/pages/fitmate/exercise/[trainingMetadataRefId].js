@@ -256,8 +256,8 @@ const FitmateExerciseDashboard = ({exercises}) => {
 export default FitmateExerciseDashboard;
 
 export async function getServerSideProps(context) {
-    const {bodyPartRefId} = context.params;
-    const exercises = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise/targetBodyPart/${bodyPartRefId}`);
+    const {trainingMetadataRefId} = context.params;
+    const exercises = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?name=""&bodyPartRefId=""&trainingMetadataRefId=${trainingMetadataRefId}`);
     return {
         props: {
             exercises
