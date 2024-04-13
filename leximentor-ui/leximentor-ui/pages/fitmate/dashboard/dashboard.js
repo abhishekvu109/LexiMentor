@@ -189,7 +189,9 @@ const FitmateDashboard = ({bodyParts}) => {
             <div className="grid grid-cols-4 gap-4 p-2 mx-auto">
                 {(bodyParts.data != null && bodyParts.data.length > 0) ? (bodyParts.data.map((item, index) => (<>
                     <div key={item.refId}>
-                        <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
+                        <Link href={`/fitmate/exercise/${item.refId}`}>
+                            <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
+                        </Link>
                     </div>
                 </>))) : (<>
                     <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">No body parts have been found in the database.</p>
