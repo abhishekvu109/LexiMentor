@@ -79,32 +79,7 @@ public class ExerciseController {
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
         }
     }
-
-    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET_BY_BODY_PART_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getByTargetBodyPart(@PathVariable String bodyPartRefId) {
-        try {
-            List<ExerciseDTO> response = exerciseService.getByBodyPartRefId(Long.parseLong(bodyPartRefId));
-            if (response != null) {
-                return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
-            }
-            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
-        } catch (Exception ex) {
-            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
-        }
-    }
-
-    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getByName(@RequestParam String name) {
-        try {
-            ExerciseDTO response = exerciseService.getByName(name);
-            if (response != null) {
-                return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
-            }
-            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
-        } catch (Exception ex) {
-            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
-        }
-    }
+    
 
     @PutMapping(value = UrlConstants.ExerciseUrl.EXERCISE_UPDATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> update(@RequestBody ExerciseDTO request) {
