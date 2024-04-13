@@ -6,8 +6,8 @@ import {data} from "autoprefixer";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 
-const FitmateExerciseDashboard = ({exercises}) => {
-    console.log(exercises);
+const FitmateTraining = ({bodyParts}) => {
+    console.log(bodyParts);
     const [newBodyPartDialog, setNewBodyPartDialog] = useState(false);
     const [bodyPartFormData, setBodyPartFormData] = useState({
         name: "", primaryName: "", status: "Active", description: ""
@@ -186,81 +186,28 @@ const FitmateExerciseDashboard = ({exercises}) => {
             </form>
         </div>
         <div className="container mx-auto my-4 p-2 border-1">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Serial
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Ref ID
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Name
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Description
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Unit
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Status
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Training
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Other body parts
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {exercises.data != null && exercises.data.length > 0 ? (exercises.data.map((item, index) => (
-                    <tr key={item.refId}>
-                        <td scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">{index + 1}</td>
-                        <td className="px-6 py-4 text-center text-xs">{item.refId}</td>
-                        <td className="px-6 py-4 text-center text-xs font-sans text-blue-700 text-decoration-underline">{item.name}</td>
-                        <td className="px-6 py-4 text-center text-xs font-sans text-blue-700 text-decoration-underline">{item.description}</td>
-                        <td className="px-6 py-4 text-center text-xs font-sans text-blue-700 text-decoration-underline">{item.unit}</td>
-                        <td className="px-6 py-4 text-center">{item.status}</td>
-                        <td className="px-6 py-4 text-center">{item.trainingMetadata.name}</td>
-                        <td className="px-6 py-4 text-center text-xs">{item.targetBodyPart.name}</td>
-                        <td className="px-6 py-4 text-center text-xs">--</td>
-                    </tr>))) : (<tr>
-                    <td scope="col" className="px-6 py-4 text-center">
-                    </td>
-                    <td scope="col" className="px-6 py-4 text-center">
-                    </td>
-                    <td scope="col" className="px-6 py-4 text-center">
-                    </td>
-                    <td scope="col" className="px-6 py-4 text-center">
-                    </td>
-                    <td scope="col" className="px-6 py-4 text-center">
-                        <h6 className="text-lg font-bold dark:text-white">No data found</h6>
-                    </td>
-                    <td scope="col" className="px-6 py-4 text-center">
-                    </td>
-                    <td scope="col" className="px-6 py-4 text-center">
-                    </td>
-                    <td scope="col" className="px-6 py-4 text-center">
-                    </td>
-                </tr>)}
-                </tbody>
-            </table>
+            <div className="grid grid-cols-4 gap-4 p-2 mx-auto">
+                {(bodyParts.data != null && bodyParts.data.length > 0) ? (bodyParts.data.map((item, index) => (<>
+                    <div key={item.refId}>
+                        <Link href={`/fitmate/exercise/${item.refId}`}>
+                            <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
+                        </Link>
+                    </div>
+                </>))) : (<>
+                    <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">No body parts have been found in the database.</p>
+                </>)}
+            </div>
         </div>
     </>);
 };
 
-export default FitmateExerciseDashboard;
+export default FitmateTraining;
 
 export async function getServerSideProps(context) {
-    const {bodyPartRefId} = context.params;
-    const exercises = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise/targetBodyPart/${bodyPartRefId}`);
+    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/bodyparts`);
     return {
         props: {
-            exercises
+            bodyParts
         },
     };
 }

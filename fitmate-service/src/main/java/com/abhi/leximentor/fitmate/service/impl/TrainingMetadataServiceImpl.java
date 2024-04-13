@@ -83,4 +83,10 @@ public class TrainingMetadataServiceImpl implements TrainingMetaDataService {
         List<TrainingMetadata> entities = trainingMetadataRepository.findByRefIdIn(refIds);
         trainingMetadataRepository.deleteAll(entities);
     }
+
+    @Override
+    public List<TrainingMetadataDTO> getAll() {
+        List<TrainingMetadata> trainingMetadataList = trainingMetadataRepository.findAll();
+        return trainingMetadataList.stream().map(FitmateServiceUtil.TrainingMetadataUtil::buildDto).toList();
+    }
 }
