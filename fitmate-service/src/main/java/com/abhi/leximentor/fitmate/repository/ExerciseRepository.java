@@ -22,5 +22,5 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     List<Exercise> findByTargetBodyPart(BodyParts bodyParts);
 
     List<Exercise> findByTrainingMetadata(TrainingMetadata trainingMetadata);
-    List<Exercise> findByTrainingMetadataAAndTargetBodyPart(TrainingMetadata trainingMetadata,BodyParts bodyParts);
+    List<Exercise> findByTrainingMetadataAndTargetBodyPart(TrainingMetadata trainingMetadata,BodyParts bodyParts);
 }

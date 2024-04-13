@@ -79,7 +79,7 @@ public class ExerciseController {
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
         }
     }
-    
+
 
     @PutMapping(value = UrlConstants.ExerciseUrl.EXERCISE_UPDATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> update(@RequestBody ExerciseDTO request) {
