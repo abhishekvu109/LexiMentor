@@ -22,6 +22,7 @@ public class UrlConstants {
     public static class TrainingMetadataUrl {
         public static final String TRAINING_METADATA_ADD = "/api/fitmate/trainings/training";
         public static final String TRAINING_METADATA_GET = "/api/fitmate/trainings/training";
+        public static final String TRAINING_METADATA_GET_ALL = "/api/fitmate/trainings";
         public static final String TRAINING_METADATA_UPDATE = "/api/fitmate/trainings/training";
         public static final String TRAINING_METADATA_DELETE = "/api/fitmate/trainings/training";
         public static final String TRAINING_METADATA_GET_REF_ID = "/api/fitmate/trainings/training/{trainingRefId}";
