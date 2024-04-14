@@ -5,6 +5,8 @@ import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
 import java.util.List;
 
 public interface ExerciseService {
+
+
     List<ExerciseDTO> addAll(List<ExerciseDTO> excerciseDTOS);
 
     ExerciseDTO getByRefId(long refId);

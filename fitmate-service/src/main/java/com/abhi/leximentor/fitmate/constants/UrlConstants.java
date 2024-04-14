@@ -12,6 +12,7 @@ public class UrlConstants {
 
     public static class ExerciseUrl {
         public static final String EXERCISE_ADD = "/api/fitmate/exercises/exercise";
+        public static final String EXERCISE_ADD_ALL = "/api/fitmate/exercises";
         public static final String EXERCISE_UPDATE = "/api/fitmate/exercises/exercise";
         public static final String EXERCISE_DELETE = "/api/fitmate/exercises/exercise";
         public static final String EXERCISE_GET = "/api/fitmate/exercises/exercise";
