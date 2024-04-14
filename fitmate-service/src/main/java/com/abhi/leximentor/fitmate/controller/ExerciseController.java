@@ -128,7 +128,9 @@ public class ExerciseController {
     @DeleteMapping(value = UrlConstants.ExerciseUrl.EXERCISE_DELETE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> delete(@RequestBody List<ExerciseDTO> request) {
         try {
+            log.info("Received a request to delete the exercise data : {}",request);
             exerciseService.deleteAll(request);
+            log.info("The data has been removed.");
             return ResponseEntityBuilder.getBuilder(HttpStatus.NO_CONTENT).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Deleted successfully");
         } catch (Exception ex) {
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);

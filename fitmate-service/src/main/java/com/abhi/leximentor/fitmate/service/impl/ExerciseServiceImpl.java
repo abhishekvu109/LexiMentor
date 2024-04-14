@@ -101,7 +101,9 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Override
     public void deleteAll(List<ExerciseDTO> exerciseDTOS) {
         List<Long> exerciseRefIds = exerciseDTOS.stream().map(dto -> Long.parseLong(dto.getRefId())).toList();
+        log.info("Converted all the list of exercise IDs: {}", exerciseRefIds);
         List<Exercise> exercises = exerciseRepository.findByRefIdIn(exerciseRefIds);
+        log.info("Fetched all the exercise data from the database: {}", exercises);
         exerciseRepository.deleteAll(exercises);
     }
 
