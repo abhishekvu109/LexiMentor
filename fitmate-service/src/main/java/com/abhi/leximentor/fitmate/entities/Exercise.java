@@ -36,7 +36,7 @@ public class Exercise {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "unit", unique = true)
+    @Column(name = "unit")
     private String unit;
 
     @Column(name = "status")
@@ -50,15 +50,15 @@ public class Exercise {
     @Column(name = "last_upd_date")
     private LocalDateTime lastUpdDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "training_metatdata_id")
     private TrainingMetadata trainingMetadata;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "target_body_part")
     private BodyParts targetBodyPart;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(name = "fitmate_excercise_to_body_parts", joinColumns = {@JoinColumn(name = "excercise_id")}, inverseJoinColumns = {@JoinColumn(name = "body_part_id")})
     private List<BodyParts> secondaryBodyParts;
 

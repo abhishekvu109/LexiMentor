@@ -1,5 +1,5 @@
 import {API_BASE_URL, API_FITMATE_BASE_URL} from "@/constants";
-import {fetchData, postData, postDataAsJson} from "@/dataService";
+import {deleteData, deleteDataByBody, fetchData, postData, postDataAsJson} from "@/dataService";
 import Link from "next/link";
 import {useState} from "react";
 import {data} from "autoprefixer";
@@ -8,6 +8,7 @@ import ModalDialog from "@/components/modal_notifications/modal_notification_dia
 
 const FitmateDashboard = ({bodyParts}) => {
     console.log(bodyParts);
+    const [bodyPartsData, setBodyPartsData] = useState(bodyParts);
     const [newBodyPartDialog, setNewBodyPartDialog] = useState(false);
     const [bodyPartFormData, setBodyPartFormData] = useState({
         name: "", primaryName: "", status: "Active", description: ""
@@ -16,6 +17,15 @@ const FitmateDashboard = ({bodyParts}) => {
 
     const handleNotificationModal = (newValue) => {
         setNotificationModal(newValue);
+    };
+
+    const LoadBodyPartsData = async () => {
+        try {
+            const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/bodyparts`);
+            setBodyPartsData(bodyParts);
+        } catch (error) {
+            console.log("Unable to load the body parts")
+        }
     };
 
     const handleNewBodyPartDialog = (show) => {
@@ -46,6 +56,7 @@ const FitmateDashboard = ({bodyParts}) => {
             const URL = `${API_FITMATE_BASE_URL}/fitmate/bodyparts/bodypart`;
             const createBodyPartResponse = await postData(URL, dataInAnArray);
             setNotificationModal(true);
+            await LoadBodyPartsData();
         } catch (error) {
             setNotificationModal(false);
         }
@@ -72,14 +83,45 @@ const FitmateDashboard = ({bodyParts}) => {
         };
     })();
 
-    const RandomGradientCard = ({header, message}) => {
+    // const RandomGradientCard = ({header, message}) => {
+    //     const randomColor = getRandomColor();
+    //
+    //     return (<div
+    //                className={`block max-w-sm p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${randomColor}`}>
+    //         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{header}</h5>
+    //         <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">{message}</p>
+    //     </div>);
+    // };
+    const DeleteBodyPart = async (refId) => {
+        try {
+            const data = [{refId: refId, name: "", description: "", status: "active", primaryName: ""}];
+            console.log("data to be delete: " + JSON.stringify(data));
+            const deleteResponse = await deleteDataByBody(`${API_FITMATE_BASE_URL}/fitmate/bodyparts/bodypart`, data);
+            await LoadBodyPartsData();
+        } catch (error) {
+            console.log('Unable to delete')
+        }
+    };
+    const RandomGradientCard = ({header, message, refId}) => {
         const randomColor = getRandomColor();
 
-        return (<div
-                   className={`block max-w-sm p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${randomColor}`}>
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{header}</h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">{message}</p>
-        </div>);
+        return (
+            <div
+                className={`relative block max-w-sm p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${randomColor}`}>
+                {/* Cross button */}
+                <button onClick={() => DeleteBodyPart(refId)}
+                        className="absolute top-2 right-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 focus:outline-none">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+
+                {/* Card content */}
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{header}</h5>
+                <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">{message}</p>
+            </div>
+        );
     };
 
 
@@ -105,7 +147,7 @@ const FitmateDashboard = ({bodyParts}) => {
                     </Link>
                 </div>
                 <div>
-                    <Link href="#">
+                    <Link href="/fitmate/training/training">
                         <button type="button"
                                 className="px-3 py-2 mr-3 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
@@ -120,7 +162,7 @@ const FitmateDashboard = ({bodyParts}) => {
                     </Link>
                 </div>
                 <div>
-                    <Link href="#" onClick={() => handleNewBodyPartDialog(true)}>
+                    <Link href="#" onClick={LoadBodyPartsData}>
                         <button type="button"
                                 className="px-3 py-2 mr-3 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
@@ -128,9 +170,9 @@ const FitmateDashboard = ({bodyParts}) => {
                                  viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                       stroke-width="2"
-                                      d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                      d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"/>
                             </svg>
-                            Body Part
+                            Reload
                         </button>
                     </Link>
                 </div>
@@ -148,7 +190,7 @@ const FitmateDashboard = ({bodyParts}) => {
                                placeholder="Please enter the name."/>
                     </div>
                     <div className="col-span-2 sm:col-span-1">
-                        <label htmlFor="description"
+                    <label htmlFor="description"
                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
                         <input type="text" name="description"
                                value={bodyPartFormData.description}
@@ -187,14 +229,17 @@ const FitmateDashboard = ({bodyParts}) => {
         </div>
         <div className="container mx-auto my-4 p-2 border-1">
             <div className="grid grid-cols-4 gap-4 p-2 mx-auto">
-                {(bodyParts.data != null && bodyParts.data.length > 0) ? (bodyParts.data.map((item, index) => (<>
+                {(bodyPartsData.data != null && bodyPartsData.data.length > 0) ? (bodyPartsData.data.map((item, index) => (<>
                     <div key={item.refId}>
-                        <Link href={`/fitmate/exercise/${item.refId}`}>
-                            <RandomGradientCard header={item.name} message={item.description}></RandomGradientCard>
-                        </Link>
+                        {/*<Link href={`/fitmate/exercise/${item.refId}`}>*/}
+                        {/*    <RandomGradientCard header={item.name} message={item.description} refId={item.refId}></RandomGradientCard>*/}
+                        {/*</Link>*/}
+                        <RandomGradientCard header={item.name} message={item.description}
+                                            refId={item.refId}></RandomGradientCard>
                     </div>
                 </>))) : (<>
-                    <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">No body parts have been found in the database.</p>
+                    <p className="font-normal text-gray-700 dark:text-gray-400 font-sans text-sm">No body parts have
+                        been found in the database.</p>
                 </>)}
             </div>
         </div>
