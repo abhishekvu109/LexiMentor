@@ -4,11 +4,15 @@ package com.abhi.leximentor.fitmate.controller;
 import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
 import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.constants.UrlConstants;
+import com.abhi.leximentor.fitmate.dto.BodyPartsDTO;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
+import com.abhi.leximentor.fitmate.dto.TrainingMetadataDTO;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
+import com.abhi.leximentor.fitmate.service.BodyPartService;
 import com.abhi.leximentor.fitmate.service.ExerciseService;
+import com.abhi.leximentor.fitmate.service.TrainingMetaDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -26,11 +30,41 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ExerciseController {
     private final ExerciseService exerciseService;
+    private final TrainingMetaDataService trainingMetaDataService;
+    private final BodyPartService bodyPartService;
 
-    @PostMapping(value = UrlConstants.ExerciseUrl.EXERCISE_ADD, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody List<ExerciseDTO> request) {
+    @PostMapping(value = UrlConstants.ExerciseUrl.EXERCISE_ADD_ALL, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> addAll(@RequestBody List<ExerciseDTO> request) {
         try {
             List<ExerciseDTO> response = exerciseService.addAll(request);
+            if (CollectionUtils.isNotEmpty(response)) {
+                return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+            }
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+        } catch (Exception ex) {
+            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
+        }
+    }
+
+    @PostMapping(value = UrlConstants.ExerciseUrl.EXERCISE_ADD, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody ExerciseDTO request,@RequestParam(required = true) String trainingMetadataRefId,@RequestParam(required = true) String targetBodyPartName) {
+        try {
+            log.info("Received a request to create a single exercise. Training ID:{},Target body part:{}",trainingMetadataRefId,targetBodyPartName);
+            TrainingMetadataDTO trainingMetadataDTO=trainingMetaDataService.getByRefId(Long.parseLong(trainingMetadataRefId));
+            if(trainingMetadataDTO==null){
+                log.error("The training metadata object doesn't exist in our database.");
+                return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+            }
+            BodyPartsDTO targetBodyPartDTO=bodyPartService.getByName(targetBodyPartName);
+            if(targetBodyPartDTO==null){
+                log.error("The target body part doesn't exist in our database.");
+                return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+            }
+            request.setTrainingMetadata(trainingMetadataDTO);
+            request.setTargetBodyPart(targetBodyPartDTO);
+            List<ExerciseDTO> requests=new LinkedList<>();
+            requests.add(request);
+            List<ExerciseDTO> response = exerciseService.addAll(requests);
             if (CollectionUtils.isNotEmpty(response)) {
                 return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
             }

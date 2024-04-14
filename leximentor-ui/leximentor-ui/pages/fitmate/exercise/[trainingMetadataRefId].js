@@ -6,11 +6,12 @@ import {data} from "autoprefixer";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 
-const FitmateExerciseDashboard = ({exercises}) => {
-    // console.log(exercises);
+const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId}) => {
     const [newBodyPartDialog, setNewBodyPartDialog] = useState(false);
-    const [bodyPartFormData, setBodyPartFormData] = useState({
-        name: "", primaryName: "", status: "Active", description: ""
+    const [bodyPartsData, setBodyPartsData] = useState(bodyParts);
+    const [exerciseData, setExerciseData] = useState(exercises);
+    const [exerciseDataForm, setExerciseDataForm] = useState({
+        name: "", description: "", status: "Active", unit: "", targetBodyPart: ""
     });
     const [notificationModal, setNotificationModal] = useState(false);
 
@@ -31,21 +32,30 @@ const FitmateExerciseDashboard = ({exercises}) => {
         e.preventDefault();
         const fieldName = e.target.name;
         const fieldValue = e.target.value;
-        setBodyPartFormData((prevState) => ({
+        setExerciseDataForm((prevState) => ({
             ...prevState, [fieldName]: fieldValue
         }));
     };
 
+    const LoadExerciseData = async () => {
+        try {
+            const getExerciseData = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}`);
+            setExerciseData(getExerciseData);
+        } catch (error) {
+            console.log('Some error occurred while loading the exercise data.')
+        }
+    };
 
-    const SubmitNewBodyPart = async (e) => {
+    const SubmitNewExercise = async (e) => {
         e.preventDefault();
         const dataInAnArray = [];
-        dataInAnArray.push(bodyPartFormData);
+        dataInAnArray.push(exerciseDataForm);
         console.log(JSON.stringify(dataInAnArray));
         try {
-            const URL = `${API_FITMATE_BASE_URL}/fitmate/bodyparts/bodypart`;
-            const createBodyPartResponse = await postData(URL, dataInAnArray);
+            const URL = `${API_FITMATE_BASE_URL}/fitmate/exercises/exercise`;
+            const submitNewExerciseResponse = await postData(URL, dataInAnArray);
             setNotificationModal(true);
+            await LoadExerciseData();
         } catch (error) {
             setNotificationModal(false);
         }
@@ -134,16 +144,31 @@ const FitmateExerciseDashboard = ({exercises}) => {
                         </button>
                     </Link>
                 </div>
+                <div>
+                    <Link href="#" onClick={LoadExerciseData}>
+                        <button type="button"
+                                className="px-3 py-2 mr-3 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                 viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"/>
+                            </svg>
+                            Reload
+                        </button>
+                    </Link>
+                </div>
             </div>
         </div>
         <div className="container mx-auto my-4 p-2 border-1">
-            <form method="POST" className="p-4 md:p-5" onSubmit={SubmitNewBodyPart}>
+            <form method="POST" className="p-4 md:p-5" onSubmit={SubmitNewExercise}>
                 <div className="grid grid-cols-4 gap-4 p-2 mx-auto">
                     <div className="col-span-2 sm:col-span-1">
                         <label htmlFor="name"
                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                         <input type="text" name="name"
-                               value={bodyPartFormData.name} onChange={handleNewBodyPartFormChange}
+                               value={exerciseDataForm.name} onChange={handleNewBodyPartFormChange}
                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                placeholder="Please enter the name."/>
                     </div>
@@ -151,27 +176,41 @@ const FitmateExerciseDashboard = ({exercises}) => {
                         <label htmlFor="description"
                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
                         <input type="text" name="description"
-                               value={bodyPartFormData.description}
+                               value={exerciseDataForm.description}
                                onChange={handleNewBodyPartFormChange}
                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                placeholder="Please write the description."/>
                     </div>
                     <div className="col-span-2 sm:col-span-1">
-                        <label htmlFor="primaryName"
-                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Primary
-                            Name</label>
-                        <input type="text" name="primaryName"
-                               value={bodyPartFormData.primaryName}
-                               onChange={handleNewBodyPartFormChange}
-                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                               placeholder="Please mention the primary name"/>
+                        <label htmlFor="unit"
+                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unit</label>
+                        <select id="unit" name="unit" onChange={handleNewBodyPartFormChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Choose a unit</option>
+                            <option value="time">Time</option>
+                            <option value="reps">Reps</option>
+                        </select>
+                    </div>
+                    <div className="col-span-2 sm:col-span-1">
+                        <label htmlFor="targetBodyPart"
+                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Target Body
+                            Part</label>
+                        <select id="targetBodyPart" name="targetBodyPart" onChange={handleNewBodyPartFormChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Target Body Part</option>
+                            {(bodyPartsData.data != null && bodyPartsData.data.length > 0) ? (bodyPartsData.data.map((item, index) => (<>
+                                <option key={item.refId} value={item.name}>{item.name}</option>
+                            </>))) : (<></>)}
+                        </select>
                     </div>
                     <div className="col-span-2 sm:col-span-1">
 
                     </div>
-                    <div className="col-span-2 sm:col-span-1">
+                </div>
+                <div className="flex flex-row">
+                    <div>
                         <button type="submit"
-                                className=" text-white inline-flex items-center bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-l rounded-r text-xs px-1.5 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                className="ml-2 text-white inline-flex items-center bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-l rounded-r text-xs px-1.5 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             <svg className="me-1 -ms-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -216,7 +255,7 @@ const FitmateExerciseDashboard = ({exercises}) => {
                 </tr>
                 </thead>
                 <tbody>
-                {exercises.data != null && exercises.data.length > 0 ? (exercises.data.map((item, index) => (
+                {exerciseData.data != null && exerciseData.data.length > 0 ? (exerciseData.data.map((item, index) => (
                     <tr key={item.refId}>
                         <td scope="row"
                             className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">{index + 1}</td>
@@ -258,9 +297,10 @@ export default FitmateExerciseDashboard;
 export async function getServerSideProps(context) {
     const {trainingMetadataRefId} = context.params;
     const exercises = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}`);
+    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/bodyparts`);
     return {
         props: {
-            exercises
+            exercises, bodyParts, trainingMetadataRefId
         },
     };
 }
