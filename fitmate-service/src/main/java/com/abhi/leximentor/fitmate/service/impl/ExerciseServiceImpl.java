@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     private final BodyPartsRepository bodyPartsRepository;
 
     @Override
+    @Transactional
     public List<ExerciseDTO> addAll(List<ExerciseDTO> exerciseDTOS) throws ServerException.EntityObjectNotFound {
         List<Exercise> exercises = new LinkedList<>();
         for (ExerciseDTO exerciseDTO : exerciseDTOS) {
@@ -70,6 +72,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
+    @Transactional
     public ExerciseDTO update(ExerciseDTO exerciseDTO) throws ServerException.EntityObjectNotFound {
         Exercise exercise = exerciseRepository.findByRefId(Long.parseLong(exerciseDTO.getRefId()));
         if (exercise == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
@@ -92,6 +95,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
+    @Transactional
     public void delete(ExerciseDTO exerciseDTO) throws ServerException.EntityObjectNotFound {
         Exercise exercise = exerciseRepository.findByRefId(Long.parseLong(exerciseDTO.getRefId()));
         if (exercise == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
@@ -99,6 +103,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
+    @Transactional
     public void deleteAll(List<ExerciseDTO> exerciseDTOS) {
         List<Long> exerciseRefIds = exerciseDTOS.stream().map(dto -> Long.parseLong(dto.getRefId())).toList();
         log.info("Converted all the list of exercise IDs: {}", exerciseRefIds);
