@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = {"trainingMetadata","targetBodyPart","secondaryBodyParts"})
 @Entity
 @Table(name = "fitmate_exercise")
 public class Exercise {

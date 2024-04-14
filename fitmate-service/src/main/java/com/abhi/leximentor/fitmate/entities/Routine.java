@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = {"excercise"})
 @Entity
 @Table(name = "fitmate_routine")
 public class Routine {
