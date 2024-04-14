@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = {"excercises","excercise"})
 @Entity
 
 @Table(name = "fitmate_body_parts")
