@@ -90,3 +90,22 @@ export const deleteData = async (URL) => {
         console.error('Error:', error);
     }
 };
+
+export const deleteDataByBody = async (URL, formData) => {
+    try {
+        console.log("Data before deletion: " + JSON.stringify(formData));
+        const response = await fetch(URL, {
+            method: 'DELETE', headers: {
+                'Content-Type': 'application/json',
+            }, body: JSON.stringify(formData),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log('Response data:', data);
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};

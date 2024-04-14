@@ -1,5 +1,5 @@
 import {API_BASE_URL, API_FITMATE_BASE_URL} from "@/constants";
-import {fetchData, postData, postDataAsJson} from "@/dataService";
+import {deleteDataByBody, fetchData, postData, postDataAsJson} from "@/dataService";
 import Link from "next/link";
 import {useState} from "react";
 import {data} from "autoprefixer";
@@ -11,7 +11,7 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
     const [bodyPartsData, setBodyPartsData] = useState(bodyParts);
     const [exerciseData, setExerciseData] = useState(exercises);
     const [exerciseDataForm, setExerciseDataForm] = useState({
-        name: "", description: "", status: "Active", unit: "", targetBodyPart: ""
+        name: "", description: "", status: "Active", unit: "", targetBodyPartName: ""
     });
     const [notificationModal, setNotificationModal] = useState(false);
 
@@ -46,14 +46,21 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
         }
     };
 
+    const DeleteSelectedExercise=async (refId)=>{
+        try{
+            const formData=[{refId:refId}];
+            const response=await deleteDataByBody(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise`,formData);
+            await LoadExerciseData();
+        }catch(error){
+            console.log('Unable to delete');
+        }
+    }
+
     const SubmitNewExercise = async (e) => {
         e.preventDefault();
-        const dataInAnArray = [];
-        dataInAnArray.push(exerciseDataForm);
-        console.log(JSON.stringify(dataInAnArray));
         try {
-            const URL = `${API_FITMATE_BASE_URL}/fitmate/exercises/exercise`;
-            const submitNewExerciseResponse = await postData(URL, dataInAnArray);
+            const URL = `${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}&targetBodyPartName=${exerciseDataForm.targetBodyPartName}`;
+            const submitNewExerciseResponse = await postData(URL, exerciseDataForm);
             setNotificationModal(true);
             await LoadExerciseData();
         } catch (error) {
@@ -115,7 +122,7 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
                     </Link>
                 </div>
                 <div>
-                    <Link href="#">
+                    <Link href="/fitmate/training/training">
                         <button type="button"
                                 className="px-3 py-2 mr-3 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
@@ -126,21 +133,6 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
                                       d="M5 12h14M5 12l4-4m-4 4 4 4"/>
                             </svg>
                             Go back
-                        </button>
-                    </Link>
-                </div>
-                <div>
-                    <Link href="#" onClick={() => handleNewBodyPartDialog(true)}>
-                        <button type="button"
-                                className="px-3 py-2 mr-3 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                 viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                            </svg>
-                            Body Part
                         </button>
                     </Link>
                 </div>
@@ -195,7 +187,7 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
                         <label htmlFor="targetBodyPart"
                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Target Body
                             Part</label>
-                        <select id="targetBodyPart" name="targetBodyPart" onChange={handleNewBodyPartFormChange}
+                        <select id="targetBodyPartName" name="targetBodyPartName" onChange={handleNewBodyPartFormChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option selected>Target Body Part</option>
                             {(bodyPartsData.data != null && bodyPartsData.data.length > 0) ? (bodyPartsData.data.map((item, index) => (<>
@@ -228,29 +220,35 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" className="px-6 py-3 text-center">
+                    <th scope="col" className="px-6 py-3 text-center w-1/12">
                         Serial
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center">
+                    <th scope="col" className="px-6 py-3 text-center w-1/12">
                         Ref ID
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center">
+                    <th scope="col" className="px-6 py-3 text-center w-2/12">
                         Name
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Description
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-center">
+                    {/*<th scope="col" className="px-6 py-3 text-center w-5/12">*/}
+                    {/*    Description*/}
+                    {/*</th>*/}
+                    <th scope="col" className="px-6 py-3 text-center w-1/12">
                         Unit
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center">
+                    <th scope="col" className="px-6 py-3 text-center w-1/12">
                         Status
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center">
+                    <th scope="col" className="px-6 py-3 text-center w-2/12">
                         Training
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                        Other body parts
+                    <th scope="col" className="px-6 py-3 text-center w-1/12">
+                        Target body parts
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-center w-1/12">
+                        Delete
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-center w-1/12">
+                        Update
                     </th>
                 </tr>
                 </thead>
@@ -259,14 +257,34 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
                     <tr key={item.refId}>
                         <td scope="row"
                             className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">{index + 1}</td>
-                        <td className="px-6 py-4 text-center text-xs">{item.refId}</td>
-                        <td className="px-6 py-4 text-center text-xs font-sans text-blue-700 text-decoration-underline">{item.name}</td>
-                        <td className="px-6 py-4 text-center text-xs font-sans text-blue-700 text-decoration-underline">{item.description}</td>
-                        <td className="px-6 py-4 text-center text-xs font-sans text-blue-700 text-decoration-underline">{item.unit}</td>
-                        <td className="px-6 py-4 text-center">{item.status}</td>
-                        <td className="px-6 py-4 text-center">{item.trainingMetadata.name}</td>
-                        <td className="px-6 py-4 text-center text-xs">{item.targetBodyPart.name}</td>
-                        <td className="px-6 py-4 text-center text-xs">--</td>
+                        <td className="px-6 py-4 text-center text-xs font-sans text-blue-700 text-decoration-underline">{item.refId}</td>
+                        <td className="px-6 py-4 text-center text-xs font-sans">
+                            <a href="#"
+                               className="bg-blue-100 hover:bg-blue-200 text-blue-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center">{new String(item.name).toUpperCase()}</a>
+                        </td>
+                        {/*<td className="px-6 py-4 text-center text-xs font-sans text-blue-700 text-decoration-underline">{item.description}</td>*/}
+                        <td className="px-6 py-4 text-center text-xs font-sans">
+                            <span
+                                className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{new String(item.unit).toUpperCase()}</span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                            <span
+                                className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">{new String(item.status).toUpperCase()}</span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                            <span
+                                className="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-purple-400 border border-purple-400">{item.trainingMetadata.name}</span>
+                        </td>
+                        <td className="px-6 py-4 text-center text-xs">
+                            <span
+                                className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">{item.targetBodyPart.name}</span>
+                        </td>
+                        <td className="px-6 py-4 text-center text-xs text-blue-700 text-decoration-underline font-sans">
+                            <Link href="#" onClick={()=>DeleteSelectedExercise(item.refId)}>Delete</Link>
+                        </td>
+                        <td className="px-6 py-4 text-center text-xs text-blue-700 text-decoration-underline font-sans">
+                            <Link href="#">Update</Link>
+                        </td>
                     </tr>))) : (<tr>
                     <td scope="col" className="px-6 py-4 text-center">
                     </td>
@@ -274,10 +292,14 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
                     </td>
                     <td scope="col" className="px-6 py-4 text-center">
                     </td>
+                    {/*<td scope="col" className="px-6 py-4 text-center">*/}
+                    {/*</td>*/}
+                    <td scope="col" className="px-6 py-4 text-center">
+                        <h6 className="text-lg font-bold dark:text-white">No data found</h6>
+                    </td>
                     <td scope="col" className="px-6 py-4 text-center">
                     </td>
                     <td scope="col" className="px-6 py-4 text-center">
-                        <h6 className="text-lg font-bold dark:text-white">No data found</h6>
                     </td>
                     <td scope="col" className="px-6 py-4 text-center">
                     </td>
