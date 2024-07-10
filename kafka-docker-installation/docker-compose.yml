@@ -91,6 +91,12 @@ services:
     container_name: speech-from-text-service
     ports:
       - "8300:8300"
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    tty: true
+    ports:
+      - "11434:11434"
 
 volumes:
   mysql-data:
