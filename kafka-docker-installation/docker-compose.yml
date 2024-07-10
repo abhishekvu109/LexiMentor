@@ -95,6 +95,7 @@ services:
     image: ollama/ollama
     container_name: ollama
     tty: true
+    command: ollama run llama3
     ports:
       - "11434:11434"
 
