@@ -31,8 +31,3 @@ spec:
     - protocol: TCP
       port: 5000
       targetPort: 5000
-
----
-
-kubectl create secret docker-registry my-registry-secret \
---docker-server=localhost:5000
