@@ -1,8 +1,8 @@
-# Use the openjdk:17 base image
-FROM openjdk:17
+# Use an appropriate openjdk:17 base image with Alpine Linux
+FROM openjdk:17-alpine
 
-# Update package list and install dnsutils
-RUN apt-get update && apt-get install -y dnsutils
+# Update package list and install bind-tools
+RUN apk update && apk add bind-tools
 
 # Expose the application port
 EXPOSE 9191
@@ -14,4 +14,4 @@ COPY application.properties /
 ADD target/inventory-service.jar inventory-service.jar
 
 # Set the entrypoint for the container
-ENTRYPOINT ["java","-jar","inventory-service.jar"]
+ENTRYPOINT ["java", "-jar", "inventory-service.jar"]
