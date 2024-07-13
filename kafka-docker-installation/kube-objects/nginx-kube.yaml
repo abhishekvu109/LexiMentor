@@ -32,5 +32,10 @@ spec:
   selector:
     app: nginx-app
   ports:
-    - port: 80
-    - port: 443
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+    - protocol: TCP
+      port: 443
+      targetPort: 443
+  type: NodePort # or NodePort, ClusterIP, etc. depending on your needs
