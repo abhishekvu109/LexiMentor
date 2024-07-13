@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: word-inventory-app
-          image: localhost.local:5000/inventory-service:latest
+          image: localhost:5000/inventory-service:latest
           env:
             - name: SERVICE_PORT
               valueFrom:
