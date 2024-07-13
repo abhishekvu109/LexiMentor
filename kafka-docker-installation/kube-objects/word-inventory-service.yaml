@@ -46,8 +46,8 @@ spec:
             - name: MYSQL_PORT
               valueFrom:
                 configMapKeyRef:
-                  key: word-inventory-config
-                  name: auth-config
+                  key: MYSQL_PORT
+                  name: word-inventory-config
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
