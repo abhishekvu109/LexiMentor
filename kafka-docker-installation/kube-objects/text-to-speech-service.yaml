@@ -2,23 +2,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: meaning-evaluation-deployment-k8s
+  name: text-to-speech-deployment-k8s
 spec:
   selector:
     matchLabels:
-      app: meaning-evaluation-app
+      app: text-to-speech-app
   replicas: 1
   template:
     metadata:
       labels:
-        app: meaning-evaluation-app
+        app: text-to-speech-app
     spec:
       containers:
-        - name: meaning-evaluation-app
-          image: localhost:5000/meaning-evaluation-service
+        - name: text-to-speech-app
+          image: localhost:5000/text-to-speech-service
           imagePullPolicy: Always
           ports:
-            - containerPort: 7300
+            - containerPort: 8300
 ---
 
 # Adding the service
@@ -26,9 +26,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: meaning-evaluation-service-k8s
+  name: text-to-speech-service-k8s
 spec:
   selector:
-    app: meaning-evaluation-app
+    app: text-to-speech-app
   ports:
-    - port: 7300
+    - port: 8300
