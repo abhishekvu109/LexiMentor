@@ -65,9 +65,9 @@ spec:
                   name: word-inventory-config
           imagePullPolicy: Always
           ports:
-            - containerPort: 7070
-#      imagePullSecrets:
-#        - name: myregistrykey
+            - containerPort: 9191
+      imagePullSecrets:
+        - name: my-registry-secret
 
 ---
 
