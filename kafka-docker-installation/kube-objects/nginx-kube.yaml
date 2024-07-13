@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nginx-app
-          image: localhost:5000/nginx-service
+          image: localhost:5000/nginx-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
