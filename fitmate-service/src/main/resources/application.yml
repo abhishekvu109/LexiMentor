@@ -12,9 +12,9 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
   datasource:
-    username: abhishek
-    password: abhishek
-    url: jdbc:mysql://192.168.1.6:3306/abhishek
+    username: ${MYSQL_USER:abhishek}
+    password: ${MYSQL_PASSWORD:abhishek}
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:abhishek}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       idle-timeout: 60000
@@ -24,4 +24,4 @@ spring:
 #      bootstrap-servers: 192.168.1.7:9092
 #      group-id: word-group-1
 server:
-  port: 9393
+  port: ${SERVICE_PORT:9393}
