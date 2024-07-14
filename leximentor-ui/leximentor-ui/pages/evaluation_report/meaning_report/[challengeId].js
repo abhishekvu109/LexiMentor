@@ -1,4 +1,4 @@
-import {API_BASE_URL} from "@/constants";
+import {API_BASE_URL, API_LEXIMENTOR_BASE_URL} from "@/constants";
 import Link from "next/link";
 
 const EvaluationReport = ({evaluationReportData, challengeId}) => {
@@ -103,7 +103,7 @@ export default EvaluationReport;
 
 export async function getServerSideProps(context) {
     const {challengeId} = context.params;
-    const res = await fetch(`${API_BASE_URL}/drill/metadata/challenges/challenge/${challengeId}/report`); // Replace with your API endpoint
+    const res = await fetch(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/challenge/${challengeId}/report`); // Replace with your API endpoint
     const evaluationReportData = await res.json();
     // Pass data to the component via props
     return {

@@ -1,6 +1,6 @@
 import {useState} from "react";
 import Script from "next/script";
-import {API_BASE_URL} from "@/constants";
+import {API_BASE_URL, API_LEXIMENTOR_BASE_URL} from "@/constants";
 import {fetchData} from "@/dataService";
 import Link from "next/link";
 
@@ -236,8 +236,8 @@ export async function getServerSideProps(context) {
     const drillId = params.drillId;
     const drillRefId=drillId[0];
     const challengeId = drillId[1];
-    const drillSetData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/${drillId[0]}`)
-    const drillSetWordData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/words/data/${drillId[0]}`)
+    const drillSetData = await fetchData(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/sets/${drillId[0]}`)
+    const drillSetWordData = await fetchData(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/sets/words/data/${drillId[0]}`)
     return {
         props: {
             drillSetData, challengeId, drillSetWordData,drillRefId

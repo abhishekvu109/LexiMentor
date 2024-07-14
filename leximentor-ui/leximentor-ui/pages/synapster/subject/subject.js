@@ -19,7 +19,7 @@ const Subject = () => {
         console.log(JSON.stringify(subjectFormData));
         const subjectArray = [];
         subjectArray.push(subjectFormData);
-        const URL = `${API_SYNAPSTER_BASE_URL}/synapster/subjects/subject`;
+        const URL = `${API_SYNAPSTER_BASE_URL}/subjects/subject`;
         try {
             const response = await postData(URL, subjectArray);
             setShowModal(true);

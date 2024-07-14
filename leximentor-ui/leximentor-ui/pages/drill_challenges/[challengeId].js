@@ -35,15 +35,3 @@ const ListChallenges = ({}) => {
 };
 
 export default ListChallenges;
-
-// export async function getServerSideProps(context) {
-//     const {challengeId} = context.params;
-//     const res = await fetch(`http://192.168.1.7:9191/api/drill/challenges/${challengeId}`);
-//     const data = await res.json();
-//     // Pass data to the component via props
-//     return {
-//         props: {
-//             data,
-//         },
-//     };
-// }

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {API_BASE_URL} from "@/constants";
+import {API_BASE_URL, API_LEXIMENTOR_BASE_URL} from "@/constants";
 import Link from "next/link";
 import {fetchData} from "@/dataService";
 import Head from "next/head";
@@ -21,8 +21,8 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
         console.log(source);
     };
     const fetchWordData = async (wordId) => {
-        setWordData(await fetchData(`${API_BASE_URL}/inventory/words/${wordId}/sources/${source}`));
-        setSources(await fetchData(`${API_BASE_URL}/inventory/words/${wordId}/sources`));
+        setWordData(await fetchData(`${API_LEXIMENTOR_BASE_URL}/inventory/words/${wordId}/sources/${source}`));
+        setSources(await fetchData(`${API_LEXIMENTOR_BASE_URL}/inventory/words/${wordId}/sources`));
     };
 
     useEffect(() => {
@@ -223,9 +223,9 @@ export default LoadDrillSet;
 
 export async function getServerSideProps(context) {
     const {drillId} = context.params;
-    const drillSetData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/${drillId}`);
-    const sourcesData = await fetchData(`${API_BASE_URL}/inventory/words/${drillSetData.data[0].wordRefId}/sources`);
-    const wordMetadata = await fetchData(`${API_BASE_URL}/inventory/words/${drillSetData.data[0].wordRefId}/sources/${sourcesData.data[0]}`);
+    const drillSetData = await fetchData(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/sets/${drillId}`);
+    const sourcesData = await fetchData(`${API_LEXIMENTOR_BASE_URL}/inventory/words/${drillSetData.data[0].wordRefId}/sources`);
+    const wordMetadata = await fetchData(`${API_LEXIMENTOR_BASE_URL}/inventory/words/${drillSetData.data[0].wordRefId}/sources/${sourcesData.data[0]}`);
     return {
         props: {
             drillSetData, drillId, wordMetadata, sourcesData

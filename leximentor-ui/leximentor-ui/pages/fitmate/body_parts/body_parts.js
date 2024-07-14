@@ -21,7 +21,7 @@ const FitmateDashboard = ({bodyParts}) => {
 
     const LoadBodyPartsData = async () => {
         try {
-            const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/bodyparts`);
+            const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/bodyparts`);
             setBodyPartsData(bodyParts);
         } catch (error) {
             console.log("Unable to load the body parts")
@@ -53,7 +53,7 @@ const FitmateDashboard = ({bodyParts}) => {
         dataInAnArray.push(bodyPartFormData);
         console.log(JSON.stringify(dataInAnArray));
         try {
-            const URL = `${API_FITMATE_BASE_URL}/fitmate/bodyparts/bodypart`;
+            const URL = `${API_FITMATE_BASE_URL}/bodyparts/bodypart`;
             const createBodyPartResponse = await postData(URL, dataInAnArray);
             setNotificationModal(true);
             await LoadBodyPartsData();
@@ -96,7 +96,7 @@ const FitmateDashboard = ({bodyParts}) => {
         try {
             const data = [{refId: refId, name: "", description: "", status: "active", primaryName: ""}];
             console.log("data to be delete: " + JSON.stringify(data));
-            const deleteResponse = await deleteDataByBody(`${API_FITMATE_BASE_URL}/fitmate/bodyparts/bodypart`, data);
+            const deleteResponse = await deleteDataByBody(`${API_FITMATE_BASE_URL}/bodyparts/bodypart`, data);
             await LoadBodyPartsData();
         } catch (error) {
             console.log('Unable to delete')
@@ -249,7 +249,7 @@ const FitmateDashboard = ({bodyParts}) => {
 export default FitmateDashboard;
 
 export async function getServerSideProps(context) {
-    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/bodyparts`);
+    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/bodyparts`);
     return {
         props: {
             bodyParts

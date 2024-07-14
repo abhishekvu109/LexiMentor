@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
-import {API_BASE_URL} from "@/constants";
+import {API_BASE_URL, API_LEXIMENTOR_BASE_URL} from "@/constants";
 import {deleteData, fetchData, postData} from "@/dataService";
 
 const Challenges = ({data, drillId}) => {
@@ -40,12 +40,12 @@ const Challenges = ({data, drillId}) => {
 
     const createChallenge = async () => {
         const queryString = new URLSearchParams(challengeRequestData).toString();
-        const URL = `${API_BASE_URL}/drill/metadata/challenges/challenge?${queryString}`;
+        const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/challenge?${queryString}`;
         const saveChallengeSavedData = await postData(URL);
         await LoadTable();
     };
     const deleteChallenge = async (drillRefId) => {
-        const URL = `${API_BASE_URL}/drill/metadata/challenges/${drillRefId}`;
+        const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/${drillRefId}`;
         const saveChallengeSavedData = await deleteData(URL);
         await LoadTable();
     };
@@ -53,13 +53,13 @@ const Challenges = ({data, drillId}) => {
     const Evaluate = async (e) => {
         e.preventDefault();
         const queryString = new URLSearchParams(evaluationData).toString();
-        const URL = `${API_BASE_URL}/drill/metadata/challenges/challenge/${evaluationData.challengeId}/evaluate?${queryString}`;
+        const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/challenge/${evaluationData.challengeId}/evaluate?${queryString}`;
         const evaluateFormData = await postData(URL);
         handleEvaluatorModel(false);
     };
 
     const LoadTable = async () => {
-        const URL = `${API_BASE_URL}/drill/metadata/challenges/${drillRefId}`;
+        const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/${drillRefId}`;
         const challengeDataFromDb = await fetchData(URL)
         setChallengeData(challengeDataFromDb);
     };
@@ -362,7 +362,7 @@ export default Challenges;
 
 export async function getServerSideProps(context) {
     const {drillId} = context.params;
-    const data = await fetchData(`${API_BASE_URL}/drill/metadata/challenges/${drillId}`);
+    const data = await fetchData(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/${drillId}`);
     return {
         props: {
             data, drillId
