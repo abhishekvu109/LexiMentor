@@ -1,5 +1,5 @@
-# Use the openjdk:17 base image
-FROM openjdk:17
+# Use a Debian-based OpenJDK 17 image
+FROM openjdk:17-slim
 
 # Update package list and install dnsutils
 RUN apt-get update && apt-get install -y dnsutils
@@ -14,4 +14,5 @@ COPY application.properties /
 ADD target/inventory-service.jar inventory-service.jar
 
 # Set the entrypoint for the container
-ENTRYPOINT ["java","-jar","inventory-service.jar"]
+ENTRYPOINT ["java", "-jar", "inventory-service.jar"]
+
