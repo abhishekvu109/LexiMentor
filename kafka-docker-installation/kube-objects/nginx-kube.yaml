@@ -18,8 +18,7 @@ spec:
           image: localhost:5000/nginx-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
-            - containerPort: 443
+            - containerPort: 6060
 ---
 
 # Adding the service
@@ -32,12 +31,5 @@ spec:
   selector:
     app: nginx-app
   ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 80
-    - name: https
-      protocol: TCP
-      port: 443
-      targetPort: 443
+    - port: 6060
   type: NodePort # or NodePort, ClusterIP, etc. depending on your needs
