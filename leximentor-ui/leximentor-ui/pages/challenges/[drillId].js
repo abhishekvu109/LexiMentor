@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
-import {API_BASE_URL, API_LEXIMENTOR_BASE_URL} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL} from "@/constants";
 import {deleteData, fetchData, postData} from "@/dataService";
 
 const Challenges = ({data, drillId}) => {

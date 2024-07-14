@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import Script from "next/script";
 import Head from "next/head";
-import {API_BASE_URL, API_LEXIMENTOR_BASE_URL} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL} from "@/constants";
 
 const Drills = dynamic(() => import("../../components/drills"), {ssr: false});
 

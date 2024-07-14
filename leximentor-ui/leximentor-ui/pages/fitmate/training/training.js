@@ -1,8 +1,7 @@
-import {API_BASE_URL, API_FITMATE_BASE_URL} from "@/constants";
-import {fetchData, postData, postDataAsJson} from "@/dataService";
+import {API_FITMATE_BASE_URL} from "@/constants";
+import {fetchData, postData} from "@/dataService";
 import Link from "next/link";
 import {useState} from "react";
-import {data} from "autoprefixer";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 

@@ -1,6 +1,6 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Script from "next/script";
-import {API_BASE_URL, API_LEXIMENTOR_BASE_URL} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL} from "@/constants";
 import {fetchData} from "@/dataService";
 
 const LoadPosDrillChallenge = ({drillSetData, challengeId, drillSetWordData, wordToOptions}) => {

@@ -1,5 +1,3 @@
-import Word_render from "@/components/word_renderer/word_render";
-import {useRouter} from 'next/router';
 import {useEffect, useState} from "react";
 
 const ListChallenges = ({}) => {

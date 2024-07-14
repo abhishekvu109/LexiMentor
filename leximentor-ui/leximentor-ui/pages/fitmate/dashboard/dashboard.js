@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {fetchData} from "@/dataService";
 import {API_FITMATE_BASE_URL} from "@/constants";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 const FitmateDashboard = ({trainings, bodyParts}) => {
     const [bodyPartsData, setBodyPartsData] = useState(bodyParts);

@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import axios from 'axios';
 import Script from "next/script";
-import {API_BASE_URL, API_LEXIMENTOR_BASE_URL, API_TEXT_TO_SPEECH} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL, API_TEXT_TO_SPEECH} from "@/constants";
 import {fetchData} from "@/dataService";
 
 const LoadIdentifyWordDrillChallenge = ({drillSetData, challengeId}) => {

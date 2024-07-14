@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {postData} from "@/dataService";
-import {API_BASE_URL, API_SYNAPSTER_BASE_URL} from "@/constants";
+import {API_SYNAPSTER_BASE_URL} from "@/constants";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 import Link from "next/link";
 

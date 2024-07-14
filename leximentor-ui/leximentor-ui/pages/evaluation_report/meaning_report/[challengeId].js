@@ -1,4 +1,4 @@
-import {API_BASE_URL, API_LEXIMENTOR_BASE_URL} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL} from "@/constants";
 import Link from "next/link";
 
 const EvaluationReport = ({evaluationReportData, challengeId}) => {
