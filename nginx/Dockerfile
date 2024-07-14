@@ -9,7 +9,7 @@ COPY ./backend-not-found.html /var/www/html/backend-not-found.html
 COPY ./includes/ /etc/nginx/includes/
 
 # Expose ports 80 and 443
-EXPOSE 80 443
+EXPOSE 6060
 
 # Start NGINX
 CMD ["nginx", "-g", "daemon off;"]
