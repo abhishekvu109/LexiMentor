@@ -32,4 +32,6 @@ spec:
     app: nginx-app
   ports:
     - port: 6060
+      targetPort: 6060
+      nodePort: 31371
   type: NodePort # or NodePort, ClusterIP, etc. depending on your needs
