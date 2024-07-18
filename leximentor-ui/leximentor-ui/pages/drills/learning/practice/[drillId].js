@@ -202,13 +202,13 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
                     {/*        </>))}*/}
                     {/*    </div>*/}
                     {/*</>) : (<></>)}*/}
-                    {(wordData.data != null && wordData.data.category) ? (<>
-                        <div className="col-span-1"><p
-                            className="text-sm font-medium text-gray-900 dark:text-white">Category</p></div>
-                        <div className="col-span-11"><span
-                            className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{wordData.data.category}</span>
-                        </div>
-                    </>) : (<></>)}
+                    {/*{(wordData.data != null && wordData.data.category) ? (<>*/}
+                    {/*    <div className="col-span-1"><p*/}
+                    {/*        className="text-sm font-medium text-gray-900 dark:text-white">Category</p></div>*/}
+                    {/*    <div className="col-span-11"><span*/}
+                    {/*        className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{wordData.data.category}</span>*/}
+                    {/*    </div>*/}
+                    {/*</>) : (<></>)}*/}
                 </div>
             </div>
         </div>
