@@ -25,13 +25,13 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
         setSources(await fetchData(`${API_LEXIMENTOR_BASE_URL}/inventory/words/${wordId}/sources`));
     };
 
-    useEffect(() => {
-        fetchWordData(drillMetadata.data[currentIndex].wordRefId);
-    }, [source]);
-
-    useEffect(() => {
-        fetchWordData(drillMetadata.data[currentIndex].wordRefId);
-    }, [currentIndex]);
+    // useEffect(() => {
+    //     fetchWordData(drillMetadata.data[currentIndex].wordRefId);
+    // }, [source]);
+    //
+    // useEffect(() => {
+    //     fetchWordData(drillMetadata.data[currentIndex].wordRefId);
+    // }, [currentIndex]);
 
     const prevWord = () => {
         setCurrentIndex((currentIndex - 1 + size) % size);
