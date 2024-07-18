@@ -67,13 +67,13 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
                             data-bs-toggle="dropdown">Sources
                     </button>
                     <div className="dropdown-menu">
-                        {(sources.data != null && sources.data.length > 0) ? sources.data.map((item, index) => (<>
-                            <a href="#" onClick={() => handleSourceDropdown(item)} className="dropdown-item"
-                               key={index}>{item}</a>
-                            <div className="dropdown-divider"></div>
-                        </>)) : (<>
-                            <a href="#" className="dropdown-item">No source found</a>
-                        </>)};
+                        {/*{(sources.data != null && sources.data.length > 0) ? sources.data.map((item, index) => (<>*/}
+                        {/*    <a href="#" onClick={() => handleSourceDropdown(item)} className="dropdown-item"*/}
+                        {/*       key={index}>{item}</a>*/}
+                        {/*    <div className="dropdown-divider"></div>*/}
+                        {/*</>)) : (<>*/}
+                        {/*    <a href="#" className="dropdown-item">No source found</a>*/}
+                        {/*</>)};*/}
                     </div>
                 </div>
                 <div className="basis-1/12">
