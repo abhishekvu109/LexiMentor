@@ -67,13 +67,13 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
                             data-bs-toggle="dropdown">Sources
                     </button>
                     <div className="dropdown-menu">
-                        {/*{(sources.data != null && sources.data.length > 0) ? sources.data.map((item, index) => (<>*/}
-                        {/*    <a href="#" onClick={() => handleSourceDropdown(item)} className="dropdown-item"*/}
-                        {/*       key={index}>{item}</a>*/}
-                        {/*    <div className="dropdown-divider"></div>*/}
-                        {/*</>)) : (<>*/}
-                        {/*    <a href="#" className="dropdown-item">No source found</a>*/}
-                        {/*</>)};*/}
+                        {(sources.data != null && sources.data.length > 0) ? sources.data.map((item, index) => (<>
+                            <a href="#" onClick={() => handleSourceDropdown(item)} className="dropdown-item"
+                               key={index}>{item}</a>
+                            <div className="dropdown-divider"></div>
+                        </>)) : (<>
+                            <a href="#" className="dropdown-item">No source found</a>
+                        </>)};
                     </div>
                 </div>
                 <div className="basis-1/12">
@@ -95,7 +95,7 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
             </div>
             <div
                 className={(currentIndex % 2 == 0) ? "flex flex-row my-2 bg-green-200 border-1" : "flex flex-row my-2 bg-cyan-200 border-1"}>
-            <div className="grid grid-cols-12 gap-2 m-2 w-full">
+                <div className="grid grid-cols-12 gap-2 m-2 w-full">
 
                     <div className="col-span-1"><p
                         className="text-sm font-medium text-gray-900 dark:text-white">Drill Id</p>
@@ -152,63 +152,63 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
                             className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{wordData.data.localMeaning}</span>
                         </div>
                     </>) : (<></>)}
-                    {/*{(wordData.data != null && wordData.data.partsOfSpeeches.length > 0) ? (<>*/}
-                    {/*    <div className="col-span-1"><p*/}
-                    {/*        className="text-sm font-medium text-gray-900 dark:text-white">POS</p></div>*/}
-                    {/*    <div className="col-span-11">*/}
-                    {/*        {wordData.data.partsOfSpeeches.map((item, index) => (<>*/}
-                    {/*            <span*/}
-                    {/*                className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.pos}</span>*/}
-                    {/*        </>))}*/}
-                    {/*    </div>*/}
-                    {/*</>) : (<></>)}*/}
-                    {/*{(wordData.data != null && wordData.data.meanings.length > 0) ? (<>*/}
-                    {/*    <div className="col-span-1"><p*/}
-                    {/*        className="text-sm font-medium text-gray-900 dark:text-white">Meanings</p></div>*/}
-                    {/*    <div className="col-span-11">*/}
-                    {/*        {wordData.data.meanings.map((item, index) => (<>*/}
-                    {/*            <span*/}
-                    {/*                className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.meaning}</span>*/}
-                    {/*        </>))}*/}
-                    {/*    </div>*/}
-                    {/*</>) : (<></>)}*/}
-                    {/*{(wordData.data != null && wordData.data.synonyms.length > 0) ? (<>*/}
-                    {/*    <div className="col-span-1"><p*/}
-                    {/*        className="text-sm font-medium text-gray-900 dark:text-white">Synonyms</p></div>*/}
-                    {/*    <div className="col-span-11">*/}
-                    {/*        {wordData.data.synonyms.map((item, index) => (<>*/}
-                    {/*            <span*/}
-                    {/*                className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.synonym}</span>*/}
-                    {/*        </>))}*/}
-                    {/*    </div>*/}
-                    {/*</>) : (<></>)}*/}
-                    {/*{(wordData.data != null && wordData.data.antonyms.length > 0) ? (<>*/}
-                    {/*    <div className="col-span-1"><p*/}
-                    {/*        className="text-sm font-medium text-gray-900 dark:text-white">Antonyms</p></div>*/}
-                    {/*    <div className="col-span-11">*/}
-                    {/*        {wordData.data.antonyms.map((item, index) => (<>*/}
-                    {/*            <span*/}
-                    {/*                className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.antonym}</span>*/}
-                    {/*        </>))}*/}
-                    {/*    </div>*/}
-                    {/*</>) : (<></>)}*/}
-                    {/*{(wordData.data != null && wordData.data.examples.length > 0) ? (<>*/}
-                    {/*    <div className="col-span-1"><p*/}
-                    {/*        className="text-sm font-medium text-gray-900 dark:text-white">Examples</p></div>*/}
-                    {/*    <div className="col-span-11">*/}
-                    {/*        {wordData.data.examples.map((item, index) => (<>*/}
-                    {/*            <span*/}
-                    {/*                className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.example}</span>*/}
-                    {/*        </>))}*/}
-                    {/*    </div>*/}
-                    {/*</>) : (<></>)}*/}
-                    {/*{(wordData.data != null && wordData.data.category) ? (<>*/}
-                    {/*    <div className="col-span-1"><p*/}
-                    {/*        className="text-sm font-medium text-gray-900 dark:text-white">Category</p></div>*/}
-                    {/*    <div className="col-span-11"><span*/}
-                    {/*        className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{wordData.data.category}</span>*/}
-                    {/*    </div>*/}
-                    {/*</>) : (<></>)}*/}
+                    {(wordData.data != null && wordData.data.partsOfSpeeches.length > 0) ? (<>
+                        <div className="col-span-1"><p
+                            className="text-sm font-medium text-gray-900 dark:text-white">POS</p></div>
+                        <div className="col-span-11">
+                            {wordData.data.partsOfSpeeches.map((item, index) => (<>
+                                <span
+                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.pos}</span>
+                            </>))}
+                        </div>
+                    </>) : (<></>)}
+                    {(wordData.data != null && wordData.data.meanings.length > 0) ? (<>
+                        <div className="col-span-1"><p
+                            className="text-sm font-medium text-gray-900 dark:text-white">Meanings</p></div>
+                        <div className="col-span-11">
+                            {wordData.data.meanings.map((item, index) => (<>
+                                <span
+                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.meaning}</span>
+                            </>))}
+                        </div>
+                    </>) : (<></>)}
+                    {(wordData.data != null && wordData.data.synonyms.length > 0) ? (<>
+                        <div className="col-span-1"><p
+                            className="text-sm font-medium text-gray-900 dark:text-white">Synonyms</p></div>
+                        <div className="col-span-11">
+                            {wordData.data.synonyms.map((item, index) => (<>
+                                <span
+                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.synonym}</span>
+                            </>))}
+                        </div>
+                    </>) : (<></>)}
+                    {(wordData.data != null && wordData.data.antonyms.length > 0) ? (<>
+                        <div className="col-span-1"><p
+                            className="text-sm font-medium text-gray-900 dark:text-white">Antonyms</p></div>
+                        <div className="col-span-11">
+                            {wordData.data.antonyms.map((item, index) => (<>
+                                <span
+                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.antonym}</span>
+                            </>))}
+                        </div>
+                    </>) : (<></>)}
+                    {(wordData.data != null && wordData.data.examples.length > 0) ? (<>
+                        <div className="col-span-1"><p
+                            className="text-sm font-medium text-gray-900 dark:text-white">Examples</p></div>
+                        <div className="col-span-11">
+                            {wordData.data.examples.map((item, index) => (<>
+                                <span
+                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{item.example}</span>
+                            </>))}
+                        </div>
+                    </>) : (<></>)}
+                    {(wordData.data != null && wordData.data.category) ? (<>
+                        <div className="col-span-1"><p
+                            className="text-sm font-medium text-gray-900 dark:text-white">Category</p></div>
+                        <div className="col-span-11"><span
+                            className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">{wordData.data.category}</span>
+                        </div>
+                    </>) : (<></>)}
                 </div>
             </div>
         </div>
