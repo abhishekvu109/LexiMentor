@@ -25,17 +25,17 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
         setSources(sourcesDataResponse);
     };
 
-    useEffect(() => {
-        fetchWordData(drillMetadata.data[currentIndex].wordRefId, source);
-    }, [currentIndex, source, drillMetadata]);
-
-    const prevWord = () => {
-        setCurrentIndex((currentIndex - 1 + size) % size);
-    };
-
-    const nextWord = () => {
-        setCurrentIndex((currentIndex + 1) % size);
-    };
+    // useEffect(() => {
+    //     fetchWordData(drillMetadata.data[currentIndex].wordRefId, source);
+    // }, [currentIndex, source, drillMetadata]);
+    //
+    // const prevWord = () => {
+    //     setCurrentIndex((currentIndex - 1 + size) % size);
+    // };
+    //
+    // const nextWord = () => {
+    //     setCurrentIndex((currentIndex + 1) % size);
+    // };
 
     return (<>
             <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></Script>
