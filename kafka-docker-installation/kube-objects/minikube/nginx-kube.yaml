@@ -1,0 +1,37 @@
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: nginx-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+        - name: nginx-app
+          image: localhost:5000/nginx-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 6060
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-k8s
+spec:
+  selector:
+    app: nginx-app
+  ports:
+    - port: 6060
+      targetPort: 6060
+      nodePort: 31371
+  type: NodePort # or NodePort, ClusterIP, etc. depending on your needs
