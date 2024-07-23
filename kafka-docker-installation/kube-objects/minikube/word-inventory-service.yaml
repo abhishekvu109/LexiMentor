@@ -67,8 +67,6 @@ items:
               imagePullPolicy: Always
               ports:
                 - containerPort: 9191
-          imagePullSecrets:
-            - name: my-registry-secret
 
   - # Adding the service
 
