@@ -32,7 +32,7 @@ items:
         spec:
           containers:
             - name: word-inventory-app
-              image: $(minikube ip):5000/inventory-service:latest
+              image: 192.168.49.2:5000/inventory-service:latest
               env:
                 - name: SERVICE_PORT
                   valueFrom:
