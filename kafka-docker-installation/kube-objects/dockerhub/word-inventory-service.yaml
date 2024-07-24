@@ -1,0 +1,84 @@
+#Apply the environment dependency
+apiVersion: v1
+kind: ConfigMap # Resource type
+metadata:
+  name: word-inventory-config
+  labels:
+    app: word-inventory-app
+data:
+  SERVICE_PORT: "9191"
+  MYSQL_HOST: "mysql-service-k8s.default.svc.cluster.local"
+  MYSQL_PORT: "3306"
+  SERVICE_NAME: "word-inventory-service-k8s.default.svc.cluster.local"
+
+
+---
+
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: word-inventory-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: word-inventory-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: word-inventory-app
+    spec:
+      containers:
+        - name: word-inventory-app
+          image: abhishekofficial109/inventory-service:latest
+          env:
+            - name: SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: word-inventory-config
+                  key: SERVICE_PORT
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: word-inventory-config
+                  key: MYSQL_HOST
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_PORT
+                  name: word-inventory-config
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: mysql-user-secret
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: mysql-user-secret
+            - name: SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: SERVICE_NAME
+                  name: word-inventory-config
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9191
+      imagePullSecrets:
+        - name: my-registry-secret
+
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: word-inventory-service-k8s
+spec:
+  selector:
+    app: word-inventory-app
+  ports:
+    - port: 9191

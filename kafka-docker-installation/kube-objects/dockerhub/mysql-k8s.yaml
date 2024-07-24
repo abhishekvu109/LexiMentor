@@ -1,0 +1,127 @@
+# The root password of the MySQL database.
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: mysql-root-secret
+    type: kubernetes.io/basic-auth
+    stringData:
+      password: "root"
+
+  - # The user username and password of the MySQL database
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: mysql-user-secret
+    type: kubernetes.io/basic-auth
+    stringData:
+      username: "abhishek"
+      password: "abhishek"
+
+  - # The other configs of the database; such as database name
+    kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: mysql-db-config
+      labels:
+        app: mysql-db
+    data:
+      MYSQL_DATABASE: "abhishek"
+
+  - # Applying the persistent volume for the MySQL database
+
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: mysql-pv-config
+      labels:
+        type: local
+        app: mysql-db
+    spec:
+      storageClassName: microk8s-hostpath
+      capacity:
+        storage: 5Gi
+      accessModes:
+        - ReadWriteMany
+      hostPath:
+        path: "/opt/mysql/data"
+
+  - # Applying the Persistent Volume claims for the MySQL Database
+
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: mysql-pvc-config
+      labels:
+        app: mysql-db
+    spec:
+      storageClassName: microk8s-hostpath
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 5Gi
+
+
+  - # Applying the MySQL Deployment
+
+    apiVersion: apps/v1
+    kind: Deployment # Resource type
+    metadata:
+      name: mysql-deployment-config
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: mysql-db
+      template:
+        metadata:
+          labels:
+            app: mysql-db
+        spec:
+          containers:
+            - image: mysql:latest # Pull the new MySQL image
+              name: mysql-db # Name of the container
+              env:
+                - name: MYSQL_ROOT_PASSWORD # MySQL Root password environment data
+                  valueFrom:
+                    secretKeyRef:
+                      name: mysql-root-secret # Read from the secret
+                      key: password # Key in the secret files
+                - name: MYSQL_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mysql-user-secret # Read it from the secret
+                      key: password
+                - name: MYSQL_DATABASE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: mysql-db-config
+                      key: MYSQL_DATABASE
+                - name: MYSQL_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: mysql-user-secret
+                      key: username
+              ports:
+                - containerPort: 3306 # Container port
+              volumeMounts:
+                - name: mysqldb # the persistent volume to maintain the consistency. This is the most important part in storage strategy
+                  mountPath: /var/lib/mysql
+          volumes:
+            - name: mysqldb
+              persistentVolumeClaim:
+                claimName: mysql-pvc-config
+
+  - # Applying the service for the container. The type is of ClusterIP because we want the DB to be accessed only through the REST API endpoint
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: mysql-service-k8s
+    spec:
+      selector:
+        app: mysql-db
+      ports:
+        - port: 3306
