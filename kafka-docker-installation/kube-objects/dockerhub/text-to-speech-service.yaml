@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: text-to-speech-app
-          image: localhost:5000/text-to-speech-service:latest
+          image: abhishekofficial109/text-to-speech-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8300

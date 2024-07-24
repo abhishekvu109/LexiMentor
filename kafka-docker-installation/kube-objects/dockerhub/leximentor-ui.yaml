@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ui-app
-          image: localhost:5000/ui-service:latest
+          image: abhishekofficial109/ui-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3000

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: meaning-evaluation-app
-          image: localhost:5000/meaning-evaluation-service
+          image: abhishekofficial109/meaning-evaluation-service
           imagePullPolicy: Always
           ports:
             - containerPort: 7300

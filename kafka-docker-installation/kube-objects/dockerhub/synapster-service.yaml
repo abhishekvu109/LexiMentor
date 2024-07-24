@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: synapster-app
-          image: localhost:5000/synapster-service:latest
+          image: abhishekofficial109/synapster-service:latest
           env:
             - name: SERVICE_PORT
               valueFrom:
