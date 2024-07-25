@@ -1,4 +1,20 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ollama-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: /mnt/data
+
+---
+
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: ollama-pvc
@@ -8,6 +24,8 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  storageClassName: standard
+
 
 ---
 
