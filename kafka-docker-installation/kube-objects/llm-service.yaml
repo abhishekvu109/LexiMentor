@@ -1,10 +1,25 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama-service-config
+data:
+  LLAMA_HOST: "192.168.1.6"
+  LLAMA_PORT: "11434"
+
+---
+
+apiVersion: v1
 kind: Service
 metadata:
-  name: llm-service
+  name: llm-service-k8s
 spec:
-  type: ExternalName
-  externalName: 192.168.1.6
+  selector:
+    app: llm-app
+  ports:
+    - port: 6565
+      targetPort: 6565
+      nodePort: 31434
+  type: NodePort
 
 ---
 
@@ -16,19 +31,25 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ollama-service-app
+      app: llm-app
   template:
     metadata:
       labels:
-        app: ollama-service-app
+        app: llm-app
     spec:
       containers:
-        - name: ollama-service-app
-          image: localhost:5000/ll-service:latest
+        - name: llm-service-app
+          image: localhost:5000/llm-service:latest
           env:
             - name: LLAMA_HOST
-              value: "llm-service"
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-service-config
+                  key: LLAMA_HOST
             - name: LLAMA_PORT
-              value: "11434"
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-service-config
+                  key: LLAMA_PORT
           ports:
             - containerPort: 6565
