@@ -1,14 +1,12 @@
 package com.abhi.leximentor.ai.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 @EqualsAndHashCode
 @ToString
-@Builder
 @Data
+@AllArgsConstructor
+@Builder
 public class PromptDTO {
     private String prompt;
 }
