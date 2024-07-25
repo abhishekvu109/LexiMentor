@@ -11,7 +11,9 @@ spec:
   storageClassName: standard
   hostPath:
     path: /mnt/data
+
 ---
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -23,7 +25,10 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: standard
+
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,13 +45,6 @@ spec:
       labels:
         app: ollama
     spec:
-      initContainers:
-        - name: ollama-init
-          image: ollama/ollama:latest
-          command: ["ollama", "run", "llama3"]
-          volumeMounts:
-            - name: ollama-volume
-              mountPath: /root/.ollama
       containers:
         - name: ollama
           image: ollama/ollama:latest
@@ -59,7 +57,9 @@ spec:
         - name: ollama-volume
           persistentVolumeClaim:
             claimName: ollama-pvc
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
