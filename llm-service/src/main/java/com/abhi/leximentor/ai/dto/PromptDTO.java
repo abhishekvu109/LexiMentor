@@ -5,8 +5,8 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class PromptDTO {
     private String prompt;
 }
