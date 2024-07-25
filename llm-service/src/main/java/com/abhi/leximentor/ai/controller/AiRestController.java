@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -20,7 +19,8 @@ public class AiRestController {
     private final ChatService chatService;
 
     @PostMapping(value = UrlConstants.GeneratePromptResponseUrl.GENERATE_PROMPT_URL, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = MediaType.TEXT_PLAIN_VALUE)
-    public @ResponseBody String generate(@RequestBody PromptDTO prompt) {
+    public String generate(@RequestBody PromptDTO prompt) {
+        log.info("Request body {}", prompt);
         return chatService.getPromptResult(prompt.getPrompt());
     }
 }
