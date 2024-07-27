@@ -125,4 +125,4 @@ items:
         app: mysql-db
       ports:
         - port: 3306
-        - nodePort: 32727
+          nodePort: 32727
