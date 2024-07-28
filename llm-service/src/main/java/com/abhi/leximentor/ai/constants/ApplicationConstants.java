@@ -18,4 +18,9 @@ public class ApplicationConstants {
         public static final String APPLICATION_JSON = APPLICATION_JSON_VALUE;
         public static final String APPLICATION_XML = APPLICATION_XML_VALUE;
     }
+
+    public static class AiServices {
+        public static final String LLAMA = "llama-llm-based-evaluator";
+        public static final String OLLAMA = "ollama-llm-based-evaluator";
+    }
 }
