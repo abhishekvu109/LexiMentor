@@ -1,5 +1,6 @@
 package com.abhi.leximentor.inventory.service.drill.impl;
 
+import com.abhi.leximentor.inventory.constants.ApplicationConstants;
 import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
 import com.abhi.leximentor.inventory.entities.drill.*;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
@@ -36,14 +37,14 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     @Override
     @Transactional
     public DrillMetadataDTO createDrillRandomly(int size) {
-        if (size < 20) throw new IllegalArgumentException("The size of the drill should be at least 20");
+        if (size < ApplicationConstants.MIN_DRILL_SIZE) throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = wordMetadataRepository.findAllRandomlyInLimit(size);
         return getEntity(size, wordMetadataList);
     }
 
     @Override
     public DrillMetadataDTO createDrillFromNewWords(int size) {
-//        if (size < 20) throw new IllegalArgumentException("The size of the drill should be at least 20");
+        if (size < ApplicationConstants.MIN_DRILL_SIZE) throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = wordMetadataRepository.findAllRandomlyNewWordsLimit(size);
         return getEntity(size, wordMetadataList);
     }
