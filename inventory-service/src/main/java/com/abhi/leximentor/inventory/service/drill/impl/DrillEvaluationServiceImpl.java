@@ -142,7 +142,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         MeaningEvaluatorFactory meaningEvaluatorFactory = null;
         if (evaluator.equalsIgnoreCase("llama-llm-based-evaluator"))
             meaningEvaluatorFactory = new LlamaMeaningEvaluator(restClient);
-        else meaningEvaluatorFactory = new OllamaMeaningEvaluator(restTemplate);
+        else meaningEvaluatorFactory = new OllamaMeaningEvaluator(restClient);
         return meaningEvaluatorFactory.response(prompt, LLM_RETRY_COUNT);
     }
 
