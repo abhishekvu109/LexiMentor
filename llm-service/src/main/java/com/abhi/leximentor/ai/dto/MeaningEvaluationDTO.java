@@ -12,6 +12,7 @@ import lombok.*;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MeaningEvaluationDTO {
+    @JsonProperty("text")
     private String prompt;
     @JsonProperty("confidence")
     private int confidence;
