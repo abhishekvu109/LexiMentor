@@ -30,6 +30,7 @@ public class OllamaLlmChatService {
 
     public MeaningEvaluationDTO evaluate(String prompt) {
         String ollamaResponse = getPromptResult(prompt);
+        log.info(ollamaResponse);
         return parseJsonString(extractJsonString(ollamaResponse));
     }
 

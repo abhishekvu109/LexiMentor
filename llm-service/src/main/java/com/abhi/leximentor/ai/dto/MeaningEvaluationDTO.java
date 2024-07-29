@@ -1,5 +1,7 @@
 package com.abhi.leximentor.ai.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @EqualsAndHashCode
@@ -8,10 +10,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MeaningEvaluationDTO {
-    private String text;
+    private String prompt;
+    @JsonProperty("confidence")
     private int confidence;
+    @JsonProperty("explanation")
     private String explanation;
+    @JsonProperty("isCorrect")
     private boolean isCorrect;
     private String error;
     private String modelResponse;

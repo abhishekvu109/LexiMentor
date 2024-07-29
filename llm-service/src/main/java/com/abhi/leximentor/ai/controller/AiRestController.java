@@ -28,7 +28,7 @@ public class AiRestController {
     @PostMapping(value = UrlConstants.EvaluateMeaningPrompts.GENERATE_PROMPT_URL, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> evaluateMeaning(@RequestBody MeaningEvaluationDTO dto, @PathVariable String modelName) {
         log.info("Received a request to evaluate the meaning using model- {}, prompt- {}", modelName, dto);
-        MeaningEvaluationDTO meaningEvaluationDTO = chatService.evaluate(dto.getText());
+        MeaningEvaluationDTO meaningEvaluationDTO = chatService.evaluate(dto.getPrompt());
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, meaningEvaluationDTO);
     }
 }
