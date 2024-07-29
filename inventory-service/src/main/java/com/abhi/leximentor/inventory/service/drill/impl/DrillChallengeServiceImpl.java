@@ -4,10 +4,10 @@ import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
-import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
+import com.abhi.leximentor.inventory.entities.drill.DrillEvaluation;
 import com.abhi.leximentor.inventory.entities.drill.DrillMetadata;
 import com.abhi.leximentor.inventory.repository.drill.DrillChallengeRepository;
-import com.abhi.leximentor.inventory.repository.drill.DrillChallengeScoreRepository;
+import com.abhi.leximentor.inventory.repository.drill.DrillEvaluationRepository;
 import com.abhi.leximentor.inventory.repository.drill.DrillMetadataRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillChallengeService;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
@@ -29,7 +29,7 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
 
     private final DrillChallengeRepository drillChallengeRepository;
     private final DrillMetadataRepository drillMetadataRepository;
-    private final DrillChallengeScoreRepository drillChallengeScoreRepository;
+    private final DrillEvaluationRepository drillEvaluationRepository;
 
     @Override
     @Transactional
@@ -52,8 +52,8 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
     @Override
     public void deleteChallenge(long drillRefId) {
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(drillRefId);
-        List<DrillChallengeScores> drillChallengeScores = drillChallengeScoreRepository.findByChallengeId(drillChallenge);
-        drillChallengeScoreRepository.deleteAll(drillChallengeScores);
+        List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(drillChallenge.getDrillChallengeScoresList());
+        drillEvaluationRepository.deleteAll(drillEvaluations);
         drillChallengeRepository.delete(drillChallenge);
     }
 }
