@@ -37,7 +37,8 @@ public class OllamaLlmChatService {
     }
 
     private String extractJsonString(String input) {
-        Pattern pattern = Pattern.compile("\\{.*?\\}");
+        // Pattern to match the JSON object including nested braces and newlines
+        Pattern pattern = Pattern.compile("\\{(?:[^{}]|\\{[^{}]*\\})*\\}", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(input);
         if (matcher.find()) {
             return matcher.group();
