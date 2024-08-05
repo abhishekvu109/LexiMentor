@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OllamaLlmChatService {
 
-    private final OllamaChatModel ollamaChatModel;
     private static final String CHAT_MODEL_NAME = "llama3";
+    private final OllamaChatModel ollamaChatModel;
 
     public String getPromptResult(String prompt) {
         ChatResponse response = ollamaChatModel.call(new Prompt(prompt, OllamaOptions.create().withModel(CHAT_MODEL_NAME)));
@@ -31,7 +31,9 @@ public class OllamaLlmChatService {
     public MeaningEvaluationDTO evaluate(String prompt) {
         String ollamaResponse = getPromptResult(prompt);
         log.info(ollamaResponse);
-        return parseJsonString(extractJsonString(ollamaResponse));
+        String findJsonFromResponse = extractJsonString(ollamaResponse);
+        log.info("Found the JSON String from the response: {} ", findJsonFromResponse);
+        return parseJsonString(findJsonFromResponse);
     }
 
     private String extractJsonString(String input) {
@@ -48,7 +50,9 @@ public class OllamaLlmChatService {
         MeaningEvaluationDTO meaningEvaluationDTO;
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
+            log.info("The root node of JSON: {}", rootNode);
             if (rootNode.has("confidence") && rootNode.has("explanation") && rootNode.has("isCorrect")) {
+                log.info("Found the confidence,explanation and isCorrect Tag: {}", rootNode);
                 meaningEvaluationDTO = objectMapper.readValue(jsonString, MeaningEvaluationDTO.class);
             } else {
                 meaningEvaluationDTO = MeaningEvaluationDTO.getDefaultInstance();
@@ -58,6 +62,7 @@ public class OllamaLlmChatService {
             e.printStackTrace();
             log.error("Failed to evaluate the response of the user {}", e.getMessage());
         }
+        log.info("After the object mapper: {}", meaningEvaluationDTO);
         return meaningEvaluationDTO;
     }
 
