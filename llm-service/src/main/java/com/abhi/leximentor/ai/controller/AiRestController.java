@@ -32,6 +32,7 @@ public class AiRestController {
     public @ResponseBody ResponseEntity<MeaningEvaluationDTO> evaluateMeaning(@RequestBody MeaningEvaluationDTO dto, @PathVariable String modelName) {
         log.info("Received a request to evaluate the meaning using model- {}, prompt- {}", modelName, dto);
         MeaningEvaluationDTO meaningEvaluationDTO = chatService.evaluate(dto.getPrompt());
+        log.info("The JSON response as below: {}", meaningEvaluationDTO);
         return ResponseEntity.ok(meaningEvaluationDTO);
     }
 }
