@@ -137,12 +137,12 @@ const LoadPosDrillChallenge = ({drillSetData, challengeId, drillSetWordData, wor
                 <table className="table-auto w-full" cellPadding="10" cellSpacing="10">
                     <tbody>
                     {drillSetData.data.map((item, index) => (<>
-                        <tr className="bg-blue-300 border-2 border-blue-600" key={`word-${index}`}>
-                            <td>
-                                <label className="font-semibold mr-3 my-2">Word:</label>
-                                <label>{item.word}</label>
-                            </td>
-                        </tr>
+                        {/*<tr className="bg-blue-300 border-2 border-blue-600" key={`word-${index}`}>*/}
+                        {/*    <td>*/}
+                        {/*        <label className="font-semibold mr-3 my-2">Word:</label>*/}
+                        {/*        <label>{item.word}</label>*/}
+                        {/*    </td>*/}
+                        {/*</tr>*/}
                         <tr className="bg-yellow-100 border-2 border-yellow-600" key={`meaning-${index}`}>
                             <td>
                                 <label className="font-semibold mr-3 my-2">Meaning:</label>
