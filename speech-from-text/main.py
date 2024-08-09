@@ -4,7 +4,7 @@ from flask_cors import CORS
 import io
 
 app = Flask(__name__)
-# CORS(app)
+CORS(app)
 
 
 @app.route('/api/tts', methods=['POST'])
