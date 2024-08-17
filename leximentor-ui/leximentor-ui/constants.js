@@ -1,5 +1,5 @@
 // export const API_BASE_URL = 'http://nginx-service-k8s.default.svc.cluster.local:6060/api';
-export const API_BASE_URL = 'http://192.168.1.6:31371/api';
+export const API_BASE_URL = 'http://192.168.1.3:31371/api';
 // export const API_BASE_URL = 'http://localhost:9191/api';
 export const API_LEXIMENTOR_BASE_URL = `${API_BASE_URL}/leximentor`;
 export const API_SYNAPSTER_BASE_URL = `${API_BASE_URL}/synapster`;
