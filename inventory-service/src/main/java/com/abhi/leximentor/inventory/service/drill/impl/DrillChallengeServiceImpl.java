@@ -3,6 +3,7 @@ package com.abhi.leximentor.inventory.service.drill.impl;
 import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
+import com.abhi.leximentor.inventory.dto.inv.EvaluatorDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillEvaluation;
 import com.abhi.leximentor.inventory.entities.drill.DrillMetadata;
@@ -10,6 +11,7 @@ import com.abhi.leximentor.inventory.repository.drill.DrillChallengeRepository;
 import com.abhi.leximentor.inventory.repository.drill.DrillEvaluationRepository;
 import com.abhi.leximentor.inventory.repository.drill.DrillMetadataRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillChallengeService;
+import com.abhi.leximentor.inventory.service.inv.EvaluatorService;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
     private final DrillChallengeRepository drillChallengeRepository;
     private final DrillMetadataRepository drillMetadataRepository;
     private final DrillEvaluationRepository drillEvaluationRepository;
+    private final EvaluatorService evaluatorService;
 
     @Override
     @Transactional
@@ -55,5 +58,11 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
         List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(drillChallenge.getDrillChallengeScoresList());
         drillEvaluationRepository.deleteAll(drillEvaluations);
         drillChallengeRepository.delete(drillChallenge);
+    }
+
+    @Override
+    public List<EvaluatorDTO> getEvaluatorsByChallengeId(long challengeRefId) {
+        DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(challengeRefId);
+        return evaluatorService.getByDrillType(drillChallenge.getDrillType());
     }
 }
