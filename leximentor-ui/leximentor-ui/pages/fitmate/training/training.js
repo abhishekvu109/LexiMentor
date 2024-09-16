@@ -1,8 +1,7 @@
-import {API_BASE_URL, API_FITMATE_BASE_URL} from "@/constants";
-import {fetchData, postData, postDataAsJson} from "@/dataService";
+import {API_FITMATE_BASE_URL} from "@/constants";
+import {fetchData, postData} from "@/dataService";
 import Link from "next/link";
 import {useState} from "react";
-import {data} from "autoprefixer";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 
@@ -44,10 +43,10 @@ const FitmateTraining = ({trainings}) => {
         dataInAnArray.push(bodyPartFormData);
         console.log(JSON.stringify(dataInAnArray));
         try {
-            const URL = `${API_FITMATE_BASE_URL}/fitmate/trainings/training`;
+            const URL = `${API_FITMATE_BASE_URL}/trainings/training`;
             const createExerciseResponse = await postData(URL, dataInAnArray);
             setNotificationModal(true);
-            const FETCH_URL = `${API_FITMATE_BASE_URL}/fitmate/trainings`;
+            const FETCH_URL = `${API_FITMATE_BASE_URL}/trainings`;
             const newTrainingData = await fetchData(FETCH_URL);
             setTrainingData(newTrainingData);
         } catch (error) {
@@ -220,7 +219,7 @@ const FitmateTraining = ({trainings}) => {
 export default FitmateTraining;
 
 export async function getServerSideProps(context) {
-    const trainings = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/trainings`);
+    const trainings = await fetchData(`${API_FITMATE_BASE_URL}/trainings`);
     return {
         props: {
             trainings

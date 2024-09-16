@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {fetchData} from "@/dataService";
 import {API_FITMATE_BASE_URL} from "@/constants";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 const FitmateDashboard = ({trainings, bodyParts}) => {
     const [bodyPartsData, setBodyPartsData] = useState(bodyParts);
@@ -18,7 +18,7 @@ const FitmateDashboard = ({trainings, bodyParts}) => {
         }));
     };
     const LoadExerciseData = async () => {
-        const EXERCISE_URL = `${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?bodyPartRefId=${routineDataForm.targetBodyPartRefId}&trainingMetadataRefId=${routineDataForm.trainingMetadataRefId}`;
+        const EXERCISE_URL = `${API_FITMATE_BASE_URL}/exercises/exercise?bodyPartRefId=${routineDataForm.targetBodyPartRefId}&trainingMetadataRefId=${routineDataForm.trainingMetadataRefId}`;
         console.log(EXERCISE_URL)
         console.log(JSON.stringify(routineDataForm))
         const response = await fetchData(EXERCISE_URL);
@@ -255,8 +255,8 @@ const FitmateDashboard = ({trainings, bodyParts}) => {
 export default FitmateDashboard;
 
 export async function getServerSideProps(context) {
-    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/bodyparts`);
-    const trainings = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/trainings`);
+    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/bodyparts`);
+    const trainings = await fetchData(`${API_FITMATE_BASE_URL}/trainings`);
     return {
         props: {
             trainings, bodyParts

@@ -15,4 +15,5 @@ public interface EvaluatorRepository extends JpaRepository<Evaluator, Long> {
     public Evaluator findByRefId(long refId);
 
     public List<Evaluator> findByDrillType(String drillType);
+    public List<Evaluator> findByDrillTypeIgnoreCase(String drillType);
 }

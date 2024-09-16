@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {postData} from "@/dataService";
-import {API_BASE_URL, API_SYNAPSTER_BASE_URL} from "@/constants";
+import {API_SYNAPSTER_BASE_URL} from "@/constants";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 import Link from "next/link";
 
@@ -19,7 +19,7 @@ const Subject = () => {
         console.log(JSON.stringify(subjectFormData));
         const subjectArray = [];
         subjectArray.push(subjectFormData);
-        const URL = `${API_SYNAPSTER_BASE_URL}/synapster/subjects/subject`;
+        const URL = `${API_SYNAPSTER_BASE_URL}/subjects/subject`;
         try {
             const response = await postData(URL, subjectArray);
             setShowModal(true);

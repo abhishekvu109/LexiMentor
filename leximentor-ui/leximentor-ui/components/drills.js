@@ -1,8 +1,6 @@
-import Script from "next/script";
 import React, {useState} from "react";
-import Head from "next/head";
 import Link from "next/link";
-import {API_BASE_URL} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL} from "@/constants";
 
 const Drills = ({data}) => {
     const [isNewDrillModalOpen, setIsNewDrillModalOpen] = useState(false);
@@ -44,7 +42,7 @@ const Drills = ({data}) => {
         e.preventDefault();
         try {
             const queryString = new URLSearchParams(drillData).toString();
-            const response = await fetch(`${API_BASE_URL}/drill/metadata?${queryString}`, {
+            const response = await fetch(`${API_LEXIMENTOR_BASE_URL}/drill/metadata?${queryString}`, {
                 method: 'POST', headers: {
                     'Content-Type': 'application/json',
                 }
@@ -69,7 +67,7 @@ const Drills = ({data}) => {
 
     const LoadTable = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/drill/metadata`, {
+            const response = await fetch(`${API_LEXIMENTOR_BASE_URL}/drill/metadata`, {
                 method: 'GET', headers: {
                     'Content-Type': 'application/json',
                 }
@@ -88,7 +86,7 @@ const Drills = ({data}) => {
 
     const RemoveDrill = async (drillRefId) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/drill/metadata/${drillRefId}`, {
+            const response = await fetch(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/${drillRefId}`, {
                 method: 'DELETE', headers: {
                     'Content-Type': 'application/json',
                 }

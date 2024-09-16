@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
-import {API_BASE_URL} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL} from "@/constants";
 import {deleteData, fetchData, postData} from "@/dataService";
 
 const Challenges = ({data, drillId}) => {
@@ -40,12 +40,12 @@ const Challenges = ({data, drillId}) => {
 
     const createChallenge = async () => {
         const queryString = new URLSearchParams(challengeRequestData).toString();
-        const URL = `${API_BASE_URL}/drill/metadata/challenges/challenge?${queryString}`;
+        const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/challenge?${queryString}`;
         const saveChallengeSavedData = await postData(URL);
         await LoadTable();
     };
     const deleteChallenge = async (drillRefId) => {
-        const URL = `${API_BASE_URL}/drill/metadata/challenges/${drillRefId}`;
+        const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/${drillRefId}`;
         const saveChallengeSavedData = await deleteData(URL);
         await LoadTable();
     };
@@ -53,13 +53,13 @@ const Challenges = ({data, drillId}) => {
     const Evaluate = async (e) => {
         e.preventDefault();
         const queryString = new URLSearchParams(evaluationData).toString();
-        const URL = `${API_BASE_URL}/drill/metadata/challenges/challenge/${evaluationData.challengeId}/evaluate?${queryString}`;
+        const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/challenge/${evaluationData.challengeId}/evaluate?${queryString}`;
         const evaluateFormData = await postData(URL);
         handleEvaluatorModel(false);
     };
 
     const LoadTable = async () => {
-        const URL = `${API_BASE_URL}/drill/metadata/challenges/${drillRefId}`;
+        const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/${drillRefId}`;
         const challengeDataFromDb = await fetchData(URL)
         setChallengeData(challengeDataFromDb);
     };
@@ -140,6 +140,18 @@ const Challenges = ({data, drillId}) => {
         <h2 className="text-4xl  m-2 font-extrabold dark:text-white text-center">
             List of challenges for the drill</h2>
         <div className="container mt-5">
+            <Link href="/dashboard/dashboard">
+                <button type="button" data-modal-target="create-new-drill-modal-form"
+                        data-model-toggle="create-new-drill-modal-form"
+                        className="px-6 py-3.5 m-2 text-base font-medium text-white inline-flex items-center bg-cyan-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg className="w-4 h-4 text-white me-2" aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                    </svg>
+                    Dashboard
+                </button>
+            </Link>
             <button type="button" data-modal-target="create-new-drill-modal-form"
                     onClick={(e) => {
                         e.preventDefault();
@@ -362,7 +374,7 @@ export default Challenges;
 
 export async function getServerSideProps(context) {
     const {drillId} = context.params;
-    const data = await fetchData(`${API_BASE_URL}/drill/metadata/challenges/${drillId}`);
+    const data = await fetchData(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/${drillId}`);
     return {
         props: {
             data, drillId

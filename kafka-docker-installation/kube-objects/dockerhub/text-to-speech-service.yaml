@@ -1,0 +1,34 @@
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-to-speech-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: text-to-speech-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: text-to-speech-app
+    spec:
+      containers:
+        - name: text-to-speech-app
+          image: abhishekofficial109/text-to-speech-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8300
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: text-to-speech-service-k8s
+spec:
+  selector:
+    app: text-to-speech-app
+  ports:
+    - port: 8300

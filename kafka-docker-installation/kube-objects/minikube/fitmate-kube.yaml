@@ -1,0 +1,84 @@
+#Apply the environment dependency
+apiVersion: v1
+kind: ConfigMap # Resource type
+metadata:
+  name: fitmate-config
+  labels:
+    app: fitmate-app
+data:
+  SERVICE_PORT: "9393"
+  MYSQL_HOST: "mysql-service-k8s.default.svc.cluster.local"
+  MYSQL_PORT: "3306"
+  SERVICE_NAME: "fitmate-service-k8s.default.svc.cluster.local"
+
+
+---
+
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitmate-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: fitmate-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fitmate-app
+    spec:
+      containers:
+        - name: fitmate-app
+          image: $(minikube ip):5000/fitmate-service:latest
+          env:
+            - name: SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-config
+                  key: SERVICE_PORT
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-config
+                  key: MYSQL_HOST
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_PORT
+                  name: fitmate-config
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: mysql-user-secret
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: mysql-user-secret
+            - name: SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: SERVICE_NAME
+                  name: fitmate-config
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9393
+#      imagePullSecrets:
+#        - name: my-registry-secret
+
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fitmate-service-k8s
+spec:
+  selector:
+    app: fitmate-app
+  ports:
+    - port: 9393

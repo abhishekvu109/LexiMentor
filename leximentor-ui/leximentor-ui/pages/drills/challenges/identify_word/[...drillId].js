@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import axios from 'axios';
 import Script from "next/script";
-import {API_BASE_URL, API_TEXT_TO_SPEECH} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL, API_TEXT_TO_SPEECH} from "@/constants";
 import {fetchData} from "@/dataService";
 
 const LoadIdentifyWordDrillChallenge = ({drillSetData, challengeId}) => {
@@ -85,7 +85,7 @@ const LoadIdentifyWordDrillChallenge = ({drillSetData, challengeId}) => {
         e.preventDefault();
         console.log(formData);
         try {
-            const URL = `${API_BASE_URL}/drill/metadata/challenges/challenge/${challengeId}/scores`;
+            const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/challenge/${challengeId}/scores`;
             console.log('The URL is ' + URL)
             const response = await fetch(URL, {
                 method: 'PUT', headers: {
@@ -188,7 +188,7 @@ export async function getServerSideProps(context) {
     // Accessing the array of values
     const drillId = params.drillId;
     const challengeId = drillId[1];
-    const drillSetData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/${drillId[0]}`)
+    const drillSetData = await fetchData(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/sets/${drillId[0]}`)
     return {
         props: {
             drillSetData, challengeId

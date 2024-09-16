@@ -29,7 +29,7 @@ public class DrillMetadataController {
     @PostMapping(value = UrlConstants.Drill.DrillMetadata.DRILL_METADATA_ADD, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> drillAdd(@RequestParam int limit, @RequestParam boolean isNewWords) {
         log.info("Received a request for creating new drill from new words: Limit:{}, New words:{}", limit, isNewWords);
-        DrillMetadataDTO dto = (isNewWords) ? drillMetadataService.createDrillFromNewWords(limit) : drillMetadataService.createDrillRandomly(limit);
+        DrillMetadataDTO dto = (isNewWords) ? drillMetadataService.createDrillFromNewWords(limit) : drillMetadataService.createDrillFromExistingWords(limit);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 

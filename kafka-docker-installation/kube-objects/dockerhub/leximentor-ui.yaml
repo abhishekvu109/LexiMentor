@@ -1,0 +1,37 @@
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: ui-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ui-app
+    spec:
+      containers:
+        - name: ui-app
+          image: abhishekofficial109/ui-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui-service-k8s
+spec:
+  selector:
+    app: ui-app
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30603
+  type: NodePort # or NodePort, ClusterIP, etc. depending on your needs

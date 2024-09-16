@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: text-to-speech-app
-          image: localhost:5000/text-to-speech-service
+          image: localhost:5000/text-to-speech-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8300
@@ -32,3 +32,5 @@ spec:
     app: text-to-speech-app
   ports:
     - port: 8300
+      nodePort: 32540
+  type: NodePort

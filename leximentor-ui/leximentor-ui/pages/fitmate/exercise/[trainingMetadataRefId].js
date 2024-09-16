@@ -1,8 +1,7 @@
-import {API_BASE_URL, API_FITMATE_BASE_URL} from "@/constants";
-import {deleteDataByBody, fetchData, postData, postDataAsJson} from "@/dataService";
+import {API_FITMATE_BASE_URL} from "@/constants";
+import {deleteDataByBody, fetchData, postData} from "@/dataService";
 import Link from "next/link";
 import {useState} from "react";
-import {data} from "autoprefixer";
 import ModalDialog from "@/components/modal_notifications/modal_notification_dialog";
 
 
@@ -39,7 +38,7 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
 
     const LoadExerciseData = async () => {
         try {
-            const getExerciseData = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}`);
+            const getExerciseData = await fetchData(`${API_FITMATE_BASE_URL}/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}`);
             setExerciseData(getExerciseData);
         } catch (error) {
             console.log('Some error occurred while loading the exercise data.')
@@ -49,7 +48,7 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
     const DeleteSelectedExercise=async (refId)=>{
         try{
             const formData=[{refId:refId}];
-            const response=await deleteDataByBody(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise`,formData);
+            const response=await deleteDataByBody(`${API_FITMATE_BASE_URL}/exercises/exercise`,formData);
             await LoadExerciseData();
         }catch(error){
             console.log('Unable to delete');
@@ -59,7 +58,7 @@ const FitmateExerciseDashboard = ({exercises, bodyParts, trainingMetadataRefId})
     const SubmitNewExercise = async (e) => {
         e.preventDefault();
         try {
-            const URL = `${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}&targetBodyPartName=${exerciseDataForm.targetBodyPartName}`;
+            const URL = `${API_FITMATE_BASE_URL}/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}&targetBodyPartName=${exerciseDataForm.targetBodyPartName}`;
             const submitNewExerciseResponse = await postData(URL, exerciseDataForm);
             setNotificationModal(true);
             await LoadExerciseData();
@@ -318,8 +317,8 @@ export default FitmateExerciseDashboard;
 
 export async function getServerSideProps(context) {
     const {trainingMetadataRefId} = context.params;
-    const exercises = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}`);
-    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/fitmate/bodyparts`);
+    const exercises = await fetchData(`${API_FITMATE_BASE_URL}/exercises/exercise?trainingMetadataRefId=${trainingMetadataRefId}`);
+    const bodyParts = await fetchData(`${API_FITMATE_BASE_URL}/bodyparts`);
     return {
         props: {
             exercises, bodyParts, trainingMetadataRefId

@@ -1,6 +1,6 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Script from "next/script";
-import {API_BASE_URL} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL} from "@/constants";
 import {fetchData} from "@/dataService";
 
 const LoadPosDrillChallenge = ({drillSetData, challengeId, drillSetWordData, wordToOptions}) => {
@@ -93,7 +93,7 @@ const LoadPosDrillChallenge = ({drillSetData, challengeId, drillSetWordData, wor
         e.preventDefault();
         console.log(formData);
         try {
-            const URL = `${API_BASE_URL}/drill/metadata/challenges/challenge/${challengeId}/scores`;
+            const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/challenge/${challengeId}/scores`;
             console.log('The URL is ' + URL)
             const response = await fetch(URL, {
                 method: 'PUT', headers: {
@@ -137,12 +137,12 @@ const LoadPosDrillChallenge = ({drillSetData, challengeId, drillSetWordData, wor
                 <table className="table-auto w-full" cellPadding="10" cellSpacing="10">
                     <tbody>
                     {drillSetData.data.map((item, index) => (<>
-                        <tr className="bg-blue-300 border-2 border-blue-600" key={`word-${index}`}>
-                            <td>
-                                <label className="font-semibold mr-3 my-2">Word:</label>
-                                <label>{item.word}</label>
-                            </td>
-                        </tr>
+                        {/*<tr className="bg-blue-300 border-2 border-blue-600" key={`word-${index}`}>*/}
+                        {/*    <td>*/}
+                        {/*        <label className="font-semibold mr-3 my-2">Word:</label>*/}
+                        {/*        <label>{item.word}</label>*/}
+                        {/*    </td>*/}
+                        {/*</tr>*/}
                         <tr className="bg-yellow-100 border-2 border-yellow-600" key={`meaning-${index}`}>
                             <td>
                                 <label className="font-semibold mr-3 my-2">Meaning:</label>
@@ -248,8 +248,8 @@ export async function getServerSideProps(context) {
     // Accessing the array of values
     const drillId = params.drillId;
     const challengeId = drillId[1];
-    const drillSetData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/${drillId[0]}`)
-    const drillSetWordData = await fetchData(`${API_BASE_URL}/drill/metadata/sets/words/data/${drillId[0]}`)
+    const drillSetData = await fetchData(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/sets/${drillId[0]}`)
+    const drillSetWordData = await fetchData(`${API_LEXIMENTOR_BASE_URL}/drill/metadata/sets/words/data/${drillId[0]}`)
     const wordToOptions = populateWordToOptions(drillSetData, drillSetWordData);
     return {
         props: {

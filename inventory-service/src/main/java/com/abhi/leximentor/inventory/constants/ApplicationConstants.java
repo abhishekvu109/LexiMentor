@@ -10,6 +10,7 @@ public class ApplicationConstants {
     public static final String KAFKA_GROUP = "word-group-1";
     public static final int STATUS_SUCCESS = 0;
     public static final int STATUS_FAILURE = 1;
+    public static final int MIN_DRILL_SIZE = 5;
 
     public static final String REQUEST_SUCCESS_CODE = "000";
     public static final String REQUEST_SUCCESS_DESCRIPTION = "SUCCESS";

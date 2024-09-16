@@ -1,0 +1,34 @@
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meaning-evaluation-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: meaning-evaluation-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: meaning-evaluation-app
+    spec:
+      containers:
+        - name: meaning-evaluation-app
+          image: abhishekofficial109/meaning-evaluation-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7300
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: meaning-evaluation-service-k8s
+spec:
+  selector:
+    app: meaning-evaluation-app
+  ports:
+    - port: 7300

@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/text-to-speech', methods=['POST'])
+@app.route('/api/tts/text2speech', methods=['POST'])
 def text_to_speech():
     data = request.get_json()
     text = data.get('text')

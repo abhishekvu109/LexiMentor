@@ -1,19 +1,16 @@
 package com.abhi.leximentor.inventory.service.drill.impl;
 
-import com.abhi.leximentor.inventory.constants.ApplicationConstants;
 import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillEvaluationDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillReportResponseDTO;
-import com.abhi.leximentor.inventory.dto.inv.WordDTO;
 import com.abhi.leximentor.inventory.dto.other.LlamaModelDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
 import com.abhi.leximentor.inventory.entities.drill.DrillEvaluation;
 import com.abhi.leximentor.inventory.entities.drill.DrillSet;
 import com.abhi.leximentor.inventory.entities.inv.Evaluator;
-import com.abhi.leximentor.inventory.entities.inv.PartsOfSpeech;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
 import com.abhi.leximentor.inventory.exceptions.entities.ServerException;
 import com.abhi.leximentor.inventory.repository.drill.DrillChallengeRepository;
@@ -22,6 +19,9 @@ import com.abhi.leximentor.inventory.repository.drill.DrillEvaluationRepository;
 import com.abhi.leximentor.inventory.repository.drill.DrillSetRepository;
 import com.abhi.leximentor.inventory.repository.inv.EvaluatorRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillEvaluationService;
+import com.abhi.leximentor.inventory.service.drill.impl.factory.MeaningEvaluator.LlamaMeaningEvaluator;
+import com.abhi.leximentor.inventory.service.drill.impl.factory.MeaningEvaluator.OllamaMeaningEvaluator;
+import com.abhi.leximentor.inventory.service.drill.impl.factory.MeaningEvaluatorFactory;
 import com.abhi.leximentor.inventory.util.LLMPromptBuilder;
 import com.abhi.leximentor.inventory.util.RestAdvancedUtil;
 import com.abhi.leximentor.inventory.util.RestClient;
@@ -32,13 +32,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -46,11 +47,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class DrillEvaluationServiceImpl implements DrillEvaluationService {
-    public static final Integer LLAMA_RETRY_COUNT = 3;
+    public static final Integer LLM_RETRY_COUNT = 3;
     private final DrillEvaluationRepository drillEvaluationRepository;
     private final EvaluatorRepository evaluatorRepository;
     private final RestAdvancedUtil restUtil;
     private final RestClient restClient;
+    private final RestTemplate restTemplate;
     private final RestUtil restUtil2;
     private final DrillSetRepository drillSetRepository;
     private final DrillChallengeScoreRepository drillChallengeScoreRepository;
@@ -137,26 +139,11 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     }
 
     private LlamaModelDTO getLlmResponse(String prompt, String evaluator) {
-        int RETRY_COUNT = LLAMA_RETRY_COUNT;
-        LlamaModelDTO request = LlamaModelDTO.builder().text(prompt).explanation("").confidence(0).build();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        ResponseEntity<LlamaModelDTO> responseEntity = null;
-        LlamaModelDTO llamaModelDTO = null;
-        while (RETRY_COUNT > 0) {
-            try {
-                responseEntity = restClient.post(url, headers, request, LlamaModelDTO.class);
-                llamaModelDTO = responseEntity.getBody();
-                log.info("The evaluator service has returned a response : {}", responseEntity);
-                break;
-            } catch (Exception ex) {
-                log.error("Unable to get response from the evaluator {} for {}", evaluator, request);
-                log.error(ex.getMessage());
-                log.info("Attempting retry : {}", (LLAMA_RETRY_COUNT - RETRY_COUNT) + 1);
-                RETRY_COUNT--;
-            }
-        }
-        return llamaModelDTO;
+        MeaningEvaluatorFactory meaningEvaluatorFactory = null;
+        if (evaluator.equalsIgnoreCase("llama-llm-based-evaluator"))
+            meaningEvaluatorFactory = new LlamaMeaningEvaluator(restClient);
+        else meaningEvaluatorFactory = new OllamaMeaningEvaluator(restClient);
+        return meaningEvaluatorFactory.response(prompt, LLM_RETRY_COUNT);
     }
 
     private String getPrompt(String word, String originalMeaning, String response) {
@@ -207,7 +194,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
         drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
         drillChallenge = drillChallengeRepository.save(drillChallenge);
-        log.info("Saved the results in the challenge entity");
+        log.info("Saved the results in the challenge entity: {}",drillChallenge);
         return this.addAll(drillEvaluationDTOS);
     }
 
@@ -275,7 +262,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
         drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
         drillChallenge = drillChallengeRepository.save(drillChallenge);
-        log.info("Saved the results in the challenge entity");
+        log.info("Saved the results in the challenge entity :{}",drillChallenge);
         return this.addAll(drillEvaluationDTOS);
     }
 
