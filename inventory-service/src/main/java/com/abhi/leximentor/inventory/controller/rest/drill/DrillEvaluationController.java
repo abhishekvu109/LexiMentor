@@ -37,8 +37,8 @@ public class DrillEvaluationController {
     public @ResponseBody ResponseEntity<RestApiResponse> evaluateChallenge(@PathVariable String challengeId, @RequestParam String evaluator) {
         log.info("Received a request for the evaluation of the challenge {} using evaluator {}", challengeId, evaluator);
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(challengeId));
-        if (drillChallenge.getStatus() == Status.DrillChallenge.EVALUATED)
-            throw new ServerException().new ChallengeAlreadyEvaluated("The challenge is already evaluated.");
+//        if (drillChallenge.getStatus() == Status.DrillChallenge.EVALUATED)
+//            throw new ServerException().new ChallengeAlreadyEvaluated("The challenge is already evaluated.");
         log.info("Successfully fetched the drill challenge objects using the challenge id {},{}", challengeId, drillChallenge);
         List<DrillChallengeScoresDTO> drillChallengeScoresDTOS = drillChallengeScoreService.getByDrillChallengeId(drillChallenge);
         log.info("Successfully fetched the {} questions to evaluates from the challenge scores entity", drillChallengeScoresDTOS.size());
