@@ -329,16 +329,23 @@ const Challenges = ({data, drillId}) => {
                                 </Link>)}
                             </td>
                             <td className="px-6 py-4 text-center">
-                                {(item.evaluationStatus == 'Evaluated' || item.status == 'Not Initiated') ? (<Link
+                                {(item.status == 'Not Initiated') ? (<Link
                                     className="font-medium text-gray-300 dark:text-blue-500 hover:underline"
                                     href="#">
                                     Evaluate
-                                </Link>) : (<Link
-                                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                    onClick={() => handleEvaluatorModel(true, item.refId)}
-                                    href="#">
-                                    Evaluate
-                                </Link>)}
+                                </Link>) : item.evaluationStatus === 'Evaluated' ? (<Link
+                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        onClick={() => handleEvaluatorModel(true, item.refId)}
+                                        href="#"
+                                    >
+                                        Retry
+                                    </Link>) : (<Link
+                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        onClick={() => handleEvaluatorModel(true, item.refId)}
+                                        href="#"
+                                    >
+                                        Evaluate
+                                    </Link>)}
                             </td>
                             <td className="px-6 py-4 text-center">
                                 {(item.evaluationStatus != 'Evaluated') ? (<Link
