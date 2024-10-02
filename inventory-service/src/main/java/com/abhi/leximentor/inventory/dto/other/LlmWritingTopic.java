@@ -10,6 +10,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 public class LlmWritingTopic {
     @JsonProperty(value = "topicNo")
     private int topicNo;
