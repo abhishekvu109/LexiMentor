@@ -70,9 +70,9 @@ public class LLMPromptBuilder {
                               \\"topicNo\\": 1,\\n
                               \\"topic\\": \\"The Impact of Globalization on Developing Economies\\",\\n
                               \\"subject\\": \\"\\",\\n
-                              \\"description\\": [\\n
+                              \\"description\\": \\n
                                 \\"In this topic, you can discuss the effects of globalization on developing economies. You could argue whether globalization has brought more benefits or drawbacks to these countries. Some possible points to consider include\\"
-                              ],\\n
+                              ,\\n
                               \\"points\\": [\\n
                                 \\"Increased trade and investment opportunities\\",\\n
                                 \\"Job creation and economic growth\\",\\n
