@@ -64,7 +64,7 @@ public class UrlConstants {
         }
 
         public static class WritingModule{
-            public static final String GENERATE_TOPICS = "/api/v1/leximentor/module/writing/topics";
+            public static final String GENERATE_TOPICS = "/api/leximentor/v1/module/writing/topics";
         }
     }
 }
