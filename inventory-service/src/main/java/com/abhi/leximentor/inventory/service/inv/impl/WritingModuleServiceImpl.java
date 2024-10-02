@@ -85,4 +85,80 @@ public class WritingModuleServiceImpl implements WritingModuleService {
             return null;
         }
     }
+
+//    private static String extractJsonFromResponse1(String response) {
+//        Pattern pattern = Pattern.compile("<response>(.*?)</response>", Pattern.DOTALL);
+//        Matcher matcher = pattern.matcher(response);
+//        if (matcher.find()) {
+//            return matcher.group(1).trim();
+//        }
+//        throw new IllegalArgumentException("No valid JSON found in the response");
+//    }
+//
+//    private static LlmWritingTopicDTO mapLlmResponseToObject1(String response) {
+//        try {
+//            String json = extractJsonFromResponse1(response);
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            return objectMapper.readValue(json, LlmWritingTopicDTO.class);
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//            return null;
+//        }
+//    }
+//
+//    public static void main(String[] args) {
+//        String abc= """
+//                <response>
+//                {
+//                  "topics": [
+//                    {
+//                      "topicNo": 1,
+//                      "topic": "The Role of Free Markets in Economic Development",
+//                      "subject": "global economy, economic development",
+//                      "description": ["In this topic, you can discuss the role of free markets in stimulating economic growth and development. You could argue whether government intervention is necessary to ensure equitable distribution of resources or if market forces are sufficient. Some possible points to consider include"],
+//                      "points": [
+//                        "Advantages of free markets, such as increased competition and innovation",
+//                        "Challenges faced by developing economies, including limited infrastructure and lack of resources",
+//                        "Role of government in regulating markets, including taxation and public spending"
+//                      ],
+//                      "learning": "This topic allows you to demonstrate your understanding of economic systems, market forces, and the role of government in shaping economic development."
+//                    },
+//                    {
+//                      "topicNo": 2,
+//                      "topic": "The Impact of Automation on Job Creation and Unemployment",
+//                      "subject": "macroeconomics, labor market",
+//                      "description": ["In this topic, you can analyze the effects of automation on job creation and unemployment. You could discuss whether automation is a net positive or negative for the economy, considering factors such as"],
+//                      "points": [
+//                        "Job displacement and the need for retraining or upskilling",
+//                        "Increased productivity and efficiency gains",
+//                        "Impact on industries with high automation rates, such as manufacturing"
+//                      ],
+//                      "learning": "This topic enables you to showcase your knowledge of labor market trends, technological advancements, and the challenges of adapting to changing economic conditions."
+//                    },
+//                    {
+//                      "topicNo": 3,
+//                      "topic": "The Effectiveness of Sustainable Development Goals (SDGs) in Addressing Global Challenges",
+//                      "subject": "international development, sustainability",
+//                      "description": ["In this topic, you can evaluate the effectiveness of the SDGs in addressing pressing global challenges. You could discuss whether the goals are achievable and what steps governments, businesses, and individuals can take to support their implementation. Some possible points to consider include"],
+//                      "points": [
+//                        "Goals such as poverty reduction, climate action, and gender equality",
+//                        "Challenges faced by developing economies in achieving the SDGs",
+//                        "Role of international cooperation and diplomacy in supporting sustainable development"
+//                      ],
+//                      "learning": "This topic allows you to demonstrate your understanding of global challenges, sustainable development, and the role of international cooperation in addressing pressing issues."
+//                    }
+//                  ],
+//                  "recommendations": [
+//                    "Read widely on the subject to gather information and ideas.",
+//                    "Structure your essay with a clear introduction, body paragraphs, and conclusion.",
+//                    "Use economic terminology accurately and consistently.",
+//                    "Provide specific examples or case studies to support your arguments.",
+//                    "Practice writing under timed conditions to simulate the IELTS exam experience."
+//                  ]
+//                }
+//                </response>
+//                """;
+//        LlmWritingTopicDTO llmWritingTopicDTO=mapLlmResponseToObject1(abc);
+//        System.out.println(llmWritingTopicDTO);
+//    }
 }
