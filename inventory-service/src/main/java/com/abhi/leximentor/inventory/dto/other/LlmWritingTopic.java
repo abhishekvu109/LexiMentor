@@ -19,7 +19,7 @@ public class LlmWritingTopic {
     @JsonProperty(value = "subject")
     private String subject;
     @JsonProperty(value = "description")
-    private List<String> descriptions;
+    private String descriptions;
     @JsonProperty(value = "points")
     private List<String> points;
     @JsonProperty(value = "learning")

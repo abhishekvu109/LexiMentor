@@ -55,13 +55,13 @@ public class LLMPromptBuilder {
                         The response should be provided in the following JSON format wrapped inside <response></response> tags. 
                         The JSON example provided below is just a sample for your reference. Please generate new, unique topics and do not copy the content from the example.\\n\\n
                         Please follow these guidelines for each field in the JSON format:\\n\\n
-                        - \\"topicNo\\": This is the number of the topic (e.g., 1, 2, etc.).\\n
-                        - \\"topic\\": The title of the economics topic.\\n
-                        - \\"subject\\": The field of the topic (e.g., global economy, monetary policy).\\n
-                        - \\"description\\": A short description explaining how the topic relates to improving English language writing skills for the IELTS exam.\\n
-                        - \\"points\\": A list of important points or arguments related to the topic that the user should focus on in their writing.\\n
-                        - \\"learning\\": A sentence explaining what kind of knowledge or skills the user will develop by writing about this topic.\\n
-                        - \\"recommendations\\": A list of additional recommendations for improving English writing skills while preparing for the IELTS exam.\\n\\n
+                        - \\"topicNo\\": This is the number of the topic (e.g., 1, 2, etc.). Datatype is Integer\\n
+                        - \\"topic\\": The title of the economics topic. Datatype is String\\n
+                        - \\"subject\\": The field of the topic (e.g., global economy, monetary policy). Datatype is String\\n
+                        - \\"description\\": A short description explaining how the topic relates to improving English language writing skills for the IELTS exam. Datatype is String\\n
+                        - \\"points\\": A list of important points or arguments related to the topic that the user should focus on in their writing. Datatype is array of string. Datatype is array of String\\n
+                        - \\"learning\\": A sentence explaining what kind of knowledge or skills the user will develop by writing about this topic. Datatype is string\\n
+                        - \\"recommendations\\": A list of additional recommendations for improving English writing skills while preparing for the IELTS exam. Datatype is array of string.\\n\\n
                         The response should look like this (Note: this is just a sample format for reference, do not copy the same content):\\n\\n
                         <response>\\n
                         {\\n
