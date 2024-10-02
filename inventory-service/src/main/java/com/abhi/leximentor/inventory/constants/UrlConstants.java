@@ -62,5 +62,9 @@ public class UrlConstants {
             public static final String JOB_EXECUTE = "/api/leximentor/jobs/{jobId}";
             public static final String JOB_GET = "/api/leximentor/jobs/{jobId}";
         }
+
+        public static class WritingModule{
+            public static final String GENERATE_TOPICS = "/api/v1/leximentor/module/writing/topics";
+        }
     }
 }
