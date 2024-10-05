@@ -7,6 +7,8 @@ metadata:
     app: writewise-app
 data:
   SERVICE_PORT: "8989"
+  MYSQL_HOST: "mysql-service-k8s.default.svc.cluster.local"
+  MYSQL_PORT: "3306"
   SERVICE_NAME: "writewise-learning-service-k8s.default.svc.cluster.local"
 
 ---
@@ -35,6 +37,26 @@ spec:
                 configMapKeyRef:
                   name: writewise-config
                   key: SERVICE_PORT
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: writewise-config
+                  key: MYSQL_HOST
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_PORT
+                  name: writewise-config
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: mysql-user-secret
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: mysql-user-secret
             - name: SERVICE_NAME
               valueFrom:
                 configMapKeyRef:
