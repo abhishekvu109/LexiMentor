@@ -34,7 +34,7 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public LlmTopicDTO generateTopicsFromLlm(LlmTopicDTO request) {
         loadModelServiceName();
-        String prompt = (StringUtils.isEmpty(request.getPrompt())) ? LLMPromptBuilder.TopicPrompt.prompt(request.getSubject(), request.getNumOfTopic(), request.getExam()) : request.getPrompt();
+        String prompt = (StringUtils.isEmpty(request.getPrompt())) ? LLMPromptBuilder.TopicPrompt.prompt(request.getSubject(), request.getNumOfTopic(), request.getPurpose(), request.getWordCount()) : request.getPrompt();
         request.setPrompt(prompt);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
@@ -54,9 +54,11 @@ public class TopicServiceImpl implements TopicService {
                 retry--;
             }
         }
-        LlmTopicDTO response=mapLlmResponseToObject(responseOutput);
-        if(response!=null){
+        LlmTopicDTO response = mapLlmResponseToObject(responseOutput);
+        if (response != null) {
             response.setPrompt(prompt);
+            response.setSubject(request.getSubject());
+            response.setPurpose(request.getPurpose());
         }
         return response;
     }

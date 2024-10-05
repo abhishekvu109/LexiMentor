@@ -16,8 +16,10 @@ public class LlmTopicDTO {
     private String subject;
     @JsonProperty("numOfTopic")
     private int numOfTopic;
-    @JsonProperty(value = "exam")
-    private String exam;
+    @JsonProperty(value = "purpose", defaultValue = "IELTS exam")
+    private String purpose;
+    @JsonProperty(value = "wordCount", defaultValue = "100")
+    private Integer wordCount;
     private String prompt;
     private List<TopicDTO> topics;
     private List<String> recommendations;

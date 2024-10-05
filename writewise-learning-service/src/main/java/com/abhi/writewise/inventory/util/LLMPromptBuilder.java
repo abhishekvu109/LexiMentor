@@ -5,19 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LLMPromptBuilder {
     public static class TopicPrompt {
-        public static synchronized String prompt(String subject, int numOfTopics, String exam) {
+        public static synchronized String prompt(String subject, int numOfTopics, String purpose,Integer wordCount) {
 
             return String.format("""
                                 {
-                        "prompt": "Suggest %d topics in the subject of %s that can help improve English language writing skills for the %s exam. 
-                        The response should be provided in the following JSON format wrapped inside <response></response> tags. 
+                        "prompt": "Suggest %d topics in the subject of %s that can help improve English language writing skills for the %s.\s
+                        The response should be provided in the following JSON format wrapped inside <response></response> tags.\s
                         The JSON example provided below is just a sample for your reference. Please generate new, unique topics and do not copy the content from the example.\\n\\n
                         Please follow these guidelines for each field in the JSON format:\\n\\n
                         - \\"topicNo\\": This is the number of the topic (e.g., 1, 2, etc.). Datatype is Integer\\n
                         - \\"topic\\": The title of the economics topic. Datatype is String\\n
                         - \\"subject\\": The field of the topic (e.g., global economy, monetary policy). Datatype is String\\n
                         - \\"description\\": A short description explaining how the topic relates to improving English language writing skills for the IELTS exam. Datatype is String\\n
-                        - \\"points\\": A list of important points or arguments related to the topic that the user should focus on in their writing. Datatype is array of string. Datatype is array of String\\n
+                        - \\"points\\": A list of important points or arguments related to the topic that the user should focus on in their writing. The writer will write in %d words, so suggest points accordingly.Datatype is array of string. Datatype is array of String\\n
                         - \\"learning\\": A sentence explaining what kind of knowledge or skills the user will develop by writing about this topic. Datatype is string\\n
                         - \\"recommendations\\": A list of additional recommendations for improving English writing skills while preparing for the IELTS exam. Datatype is array of string.\\n\\n
                         The response should look like this (Note: this is just a sample format for reference, do not copy the same content):\\n\\n
@@ -63,7 +63,7 @@ public class LLMPromptBuilder {
                           ]\\n
                         }\\n</response>"
                     }
-                                """, numOfTopics, subject, exam);
+                                """, numOfTopics, subject, purpose,wordCount);
         }
 
     }
