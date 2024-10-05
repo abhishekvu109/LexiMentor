@@ -9,6 +9,9 @@ data:
   SERVICE_PORT: "8989"
   MYSQL_HOST: "mysql-service-k8s.default.svc.cluster.local"
   MYSQL_PORT: "3306"
+  MONGODB_HOST: "mongodb-service-k8s.default.svc.cluster.local"
+  MONGODB_PORT: "27017"
+  MONGODB_DATABASE: "writewise"
   SERVICE_NAME: "writewise-learning-service-k8s.default.svc.cluster.local"
 
 ---
@@ -46,6 +49,21 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: MYSQL_PORT
+                  name: writewise-config
+            - name: MONGODB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: writewise-config
+                  key: MONGODB_HOST
+            - name: MONGODB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGODB_PORT
+                  name: writewise-config
+            - name: MONGODB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGODB_DATABASE
                   name: writewise-config
             - name: MYSQL_USER
               valueFrom:

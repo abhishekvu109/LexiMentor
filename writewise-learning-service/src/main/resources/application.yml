@@ -1,4 +1,12 @@
 spring:
+  data:
+    mongodb:
+      database: ${MONGODB_DATABASE:writewise}
+      #      username: ${MONGODB_USERNAME:mongoroot}
+      #      password: ${MONGODB_PASSWORD:mongopass}
+      host: ${MONGODB_HOST:localhost}
+      port: ${MONGODB_PORT:27017}
+
   jpa:
     hibernate:
       ddl-auto: update
