@@ -1,0 +1,61 @@
+#Apply the environment dependency
+apiVersion: v1
+kind: ConfigMap # Resource type
+metadata:
+  name: writewise-config
+  labels:
+    app: writewise-app
+data:
+  SERVICE_PORT: "8989"
+  SERVICE_NAME: "writewise-learning-service-k8s.default.svc.cluster.local"
+
+---
+
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: writewise-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: writewise-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: writewise-app
+    spec:
+      containers:
+        - name: writewise-app
+          image: localhost:5000/writewise-learning-service:latest
+          env:
+            - name: SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: writewise-config
+                  key: SERVICE_PORT
+            - name: SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: SERVICE_NAME
+                  name: writewise-config
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8989
+#      imagePullSecrets:
+#        - name: my-registry-secret
+
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: writewise-learning-service-k8s
+spec:
+  selector:
+    app: writewise-app
+  ports:
+    - port: 8989

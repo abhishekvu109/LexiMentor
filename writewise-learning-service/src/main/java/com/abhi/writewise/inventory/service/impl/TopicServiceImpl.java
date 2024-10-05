@@ -1,13 +1,14 @@
-package com.abhi.leximentor.inventory.service.inv.impl;
+package com.abhi.writewise.inventory.service.impl;
 
-import com.abhi.leximentor.inventory.dto.other.LlmWritingTopicDTO;
-import com.abhi.leximentor.inventory.service.inv.WritingModuleService;
-import com.abhi.leximentor.inventory.util.LLMPromptBuilder;
-import com.abhi.leximentor.inventory.util.RestClient;
+import com.abhi.writewise.inventory.dto.LlmTopicDTO;
+import com.abhi.writewise.inventory.service.TopicService;
+import com.abhi.writewise.inventory.util.LLMPromptBuilder;
+import com.abhi.writewise.inventory.util.RestClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -24,16 +25,16 @@ import java.util.regex.Pattern;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class WritingModuleServiceImpl implements WritingModuleService {
+public class TopicServiceImpl implements TopicService {
     private final static String LLM_TOPIC = "ollama-llm-writing-module-topics";
     private final RestClient restClient;
     private String url;
     private final Integer RETRY_COUNT = 3;
 
     @Override
-    public LlmWritingTopicDTO getTopics(LlmWritingTopicDTO request) {
+    public LlmTopicDTO generateTopicsFromLlm(LlmTopicDTO request) {
         loadModelServiceName();
-        String prompt = LLMPromptBuilder.WritingModule.getTopicsPrompt(request.getSubject(), request.getNumOfTopic(), request.getExam());
+        String prompt = (StringUtils.isEmpty(request.getPrompt())) ? LLMPromptBuilder.TopicPrompt.prompt(request.getSubject(), request.getNumOfTopic(), request.getExam()) : request.getPrompt();
         request.setPrompt(prompt);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
@@ -53,7 +54,11 @@ public class WritingModuleServiceImpl implements WritingModuleService {
                 retry--;
             }
         }
-        return mapLlmResponseToObject(responseOutput);
+        LlmTopicDTO response=mapLlmResponseToObject(responseOutput);
+        if(response!=null){
+            response.setPrompt(prompt);
+        }
+        return response;
     }
 
     private void loadModelServiceName() {
@@ -75,15 +80,14 @@ public class WritingModuleServiceImpl implements WritingModuleService {
         throw new IllegalArgumentException("No valid JSON found in the response");
     }
 
-    private LlmWritingTopicDTO mapLlmResponseToObject(String response) {
+    private LlmTopicDTO mapLlmResponseToObject(String response) {
         try {
             String json = extractJsonFromResponse(response);
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(json, LlmWritingTopicDTO.class);
+            return objectMapper.readValue(json, LlmTopicDTO.class);
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;
         }
     }
-
 }
