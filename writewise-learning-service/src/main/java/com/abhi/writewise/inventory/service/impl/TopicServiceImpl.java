@@ -59,6 +59,8 @@ public class TopicServiceImpl implements TopicService {
             response.setPrompt(prompt);
             response.setSubject(request.getSubject());
             response.setPurpose(request.getPurpose());
+            response.setWordCount(request.getWordCount());
+            response.setNumOfTopic(request.getNumOfTopic());
         }
         return response;
     }
