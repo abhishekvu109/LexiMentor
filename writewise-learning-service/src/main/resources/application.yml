@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/
+      uri: mongodb://${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:writewise}
       #      database: ${MONGODB_DATABASE:writewise}
       #      username: ${MONGODB_USERNAME:mongoroot}
       #      password: ${MONGODB_PASSWORD:mongopass}
