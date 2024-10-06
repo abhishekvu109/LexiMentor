@@ -26,6 +26,6 @@ spring:
       maximum-pool-size: 50
 server:
   port: ${SERVICE_PORT:8989}
-logging:
-  level:
-    root: DEBUG
+#logging:
+#  level:
+#    root: DEBUG
