@@ -32,6 +32,16 @@ spec:
     requests:
       storage: 5Gi
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-config
+data:
+  mongod.conf: |
+    # MongoDB Configuration File
+    net:
+      maxIncomingConnections: 10000 # Increase connection limit
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -65,10 +75,16 @@ spec:
           volumeMounts:
             - name: mongodb-storage
               mountPath: /data/db
+            - name: mongodb-config-volume
+              mountPath: /etc/mongod.conf
+              subPath: mongod.conf
       volumes:
         - name: mongodb-storage
           persistentVolumeClaim:
             claimName: mongodb-pvc
+        - name: mongodb-config-volume
+          configMap:
+            name: mongodb-config
 ---
 apiVersion: v1
 kind: Service
