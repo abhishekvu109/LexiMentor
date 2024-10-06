@@ -27,11 +27,11 @@ public class LLmTopicMaster {
     @Column(name = "uuid", nullable = false, unique = true)
     private String uuid;
     @Column(name = "mongo_topic_id")
-    private long mongoTopicId;
+    private String mongoTopicId;
     @Column(name = "mongo_topic_response_id")
-    private long mongoTopicResponseId;
+    private String mongoTopicResponseId;
     @Column(name = "mongo_evaluation_id")
-    private long mongoEvaluationId;
+    private String mongoEvaluationId;
     @CreationTimestamp
     @Column(name = "crtn_date")
     @Setter(AccessLevel.PRIVATE)

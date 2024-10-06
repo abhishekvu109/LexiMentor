@@ -2,6 +2,7 @@ package com.abhi.writewise.inventory.entities.nosql.mongodb;
 
 import jakarta.persistence.Id;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 @Document(collection = "llm_topic")
 public class LLmTopic {
     @Id
-    private Long id;
+    private ObjectId id;
     private String subject;
     private int numOfTopic;
     private String purpose;

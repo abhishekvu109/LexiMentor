@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -79,11 +80,11 @@ public class TopicServiceImpl implements TopicService {
             LLmTopic lLmTopicEntity = WriteWiseServiceUtil.TopicServiceUtil.buildEntity(response);
             lLmTopicEntity = mongoTemplate.insert(lLmTopicEntity);
             log.info("LLM response has been saved in mongo: {}", lLmTopicEntity);
-            long mongoTopicId = lLmTopicEntity.getId();
+            ObjectId mongoTopicId = lLmTopicEntity.getId();
             CompletableFuture.runAsync(() -> {
                 LLmTopicMaster dbEntity = llmTopicMasterRepository.findByRefId(refId);
                 dbEntity.setStatus(Status.Topic.TOPIC_RESPONSE);
-                dbEntity.setMongoTopicId(mongoTopicId);
+                dbEntity.setMongoTopicId(mongoTopicId.toHexString());
                 dbEntity = llmTopicMasterRepository.save(dbEntity);
                 log.info("The SQL record status is changed to {}", Status.Topic.getMessage(Status.Topic.TOPIC_RESPONSE));
                 log.info("Mongo object: {}", dbEntity);
