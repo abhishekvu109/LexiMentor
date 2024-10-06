@@ -12,6 +12,8 @@ data:
   MONGODB_HOST: "mongodb-service-k8s.default.svc.cluster.local"
   MONGODB_PORT: "27017"
   MONGODB_DATABASE: "writewise"
+  MONGODB_USERNAME: "mongoroot"
+  MONGODB_PASSWORD: "mongopass"
   SERVICE_NAME: "writewise-learning-service-k8s.default.svc.cluster.local"
 
 ---
