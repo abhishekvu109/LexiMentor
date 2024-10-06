@@ -26,6 +26,7 @@ public class TopicController {
 
     @PostMapping(value = UrlConstants.Topic.GENERATE_TOPICS, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> generateTopics(@Valid @RequestBody LlmTopicDTO request) {
+        log.debug("New request has been received to generate topics from the LLM service.");
         LlmTopicDTO response = topicService.generateTopicsFromLlm(request);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }

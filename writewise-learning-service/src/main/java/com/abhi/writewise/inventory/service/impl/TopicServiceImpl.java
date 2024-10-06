@@ -1,7 +1,12 @@
 package com.abhi.writewise.inventory.service.impl;
 
+import com.abhi.writewise.inventory.constants.Status;
 import com.abhi.writewise.inventory.dto.LlmTopicDTO;
+import com.abhi.writewise.inventory.entities.nosql.mongodb.LLmTopic;
+import com.abhi.writewise.inventory.entities.sql.mysql.LLmTopicMaster;
+import com.abhi.writewise.inventory.repository.sql.mysql.LlmTopicMasterRepository;
 import com.abhi.writewise.inventory.service.TopicService;
+import com.abhi.writewise.inventory.util.KeyGeneratorUtil;
 import com.abhi.writewise.inventory.util.LLMPromptBuilder;
 import com.abhi.writewise.inventory.util.RestClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,12 +17,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,12 +34,19 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TopicServiceImpl implements TopicService {
     private final static String LLM_TOPIC = "ollama-llm-writing-module-topics";
+    private final LlmTopicMasterRepository llmTopicMasterRepository;
     private final RestClient restClient;
     private String url;
     private final Integer RETRY_COUNT = 3;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public LlmTopicDTO generateTopicsFromLlm(LlmTopicDTO request) {
+        log.debug("LLM topic generation service is called.");
+        LLmTopicMaster sqlEntity = LLmTopicMaster.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).deleteInd(Status.Topic.DeleteStatus.ACTIVE).status(Status.Topic.TOPIC_REQUEST).build();
+        long refId = sqlEntity.getRefId();
+        sqlEntity = llmTopicMasterRepository.save(sqlEntity);
+        log.debug("A new record has been persisted: {}", sqlEntity);
         loadModelServiceName();
         String prompt = (StringUtils.isEmpty(request.getPrompt())) ? LLMPromptBuilder.TopicPrompt.prompt(request.getSubject(), request.getNumOfTopic(), request.getPurpose(), request.getWordCount()) : request.getPrompt();
         request.setPrompt(prompt);
@@ -45,22 +59,35 @@ public class TopicServiceImpl implements TopicService {
             try {
                 responseEntity = restClient.post(url, headers, request, String.class);
                 responseOutput = responseEntity.getBody();
-                log.info("The llm service service has returned a response : {}", responseEntity);
+                log.debug("The llm service service has returned a response : {}", responseEntity);
                 break;
             } catch (Exception ex) {
                 log.error("Unable to get response from the llm service {} for {}", LLM_TOPIC, request);
                 log.error(ex.getMessage());
-                log.info("Attempting retry : {}", (RETRY_COUNT - retry));
+                log.debug("Attempting retry : {}", (RETRY_COUNT - retry));
                 retry--;
             }
         }
         LlmTopicDTO response = mapLlmResponseToObject(responseOutput);
+        log.debug("LLM has generated the response. {}", response);
         if (response != null) {
             response.setPrompt(prompt);
             response.setSubject(request.getSubject());
             response.setPurpose(request.getPurpose());
             response.setWordCount(request.getWordCount());
             response.setNumOfTopic(request.getNumOfTopic());
+            LLmTopic lLmTopicEntity = WriteWiseServiceUtil.TopicServiceUtil.buildEntity(response);
+            lLmTopicEntity = mongoTemplate.insert(lLmTopicEntity);
+            log.debug("LLM response has been saved in mongo: {}", lLmTopicEntity);
+            long mongoTopicId = lLmTopicEntity.getId();
+            CompletableFuture.runAsync(() -> {
+                LLmTopicMaster dbEntity = llmTopicMasterRepository.findByRefId(refId);
+                dbEntity.setStatus(Status.Topic.TOPIC_RESPONSE);
+                dbEntity.setMongoTopicId(mongoTopicId);
+                dbEntity = llmTopicMasterRepository.save(dbEntity);
+                log.debug("The SQL record status is changed to {}", Status.Topic.getMessage(Status.Topic.TOPIC_RESPONSE));
+                log.debug("Mongo object: {}", dbEntity);
+            });
         }
         return response;
     }
