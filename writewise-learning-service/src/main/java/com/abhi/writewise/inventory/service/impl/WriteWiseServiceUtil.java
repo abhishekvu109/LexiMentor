@@ -4,7 +4,6 @@ import com.abhi.writewise.inventory.dto.LlmTopicDTO;
 import com.abhi.writewise.inventory.dto.TopicDTO;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.LLmTopic;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.Topic;
-import com.abhi.writewise.inventory.entities.sql.mysql.LLmTopicMaster;
 
 public class WriteWiseServiceUtil {
     public static class TopicServiceUtil {

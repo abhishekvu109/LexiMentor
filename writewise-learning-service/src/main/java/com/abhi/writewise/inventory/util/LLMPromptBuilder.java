@@ -4,8 +4,223 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LLMPromptBuilder {
+    public static class WordDefinitionPrompt {
+        public static synchronized String prompt(String words) {
+            return String.format("""
+                    I am working on improving my english vocabulary. For that purpose, I would need the some information about the words given in the array(comma separated and enclosed in square brackets). \\n
+                    word_array=[%s] \\n \\n
+                    The information of the each word should be a JSON array in the below format. I will explain the meaning of each attribute used in the JSON. \\n
+                    [
+                      {
+                        \\"word\\": \\"string\\",
+                        \\"source\\": \\"Llama\\",
+                        \\"pronunciation\\": \\"string\\",
+                        \\"mnemonic\\": \\"string\\",
+                        \\"localMeaning\\": \\"string\\",
+                        \\"meanings\\": [
+                          {
+                            \\"meaning\\": \\"string\\",
+                            \\"source\\": \\"string\\"
+                          }
+                        ],
+                        \\"synonyms\\": [
+                          {
+                            \\"synonym\\": \\"string\\",
+                            \\"source\\": \\"string\\"
+                          }
+                        ],
+                        \\"antonyms\\": [
+                          {
+                            \\"antonym\\": \\"string\\",
+                            \\"source\\": \\"string\\"
+                          }
+                        ],
+                        \\"examples\\": [
+                          {
+                            \\"example\\": \\"string\\",
+                            \\"source\\": \\"string\\"
+                          }
+                        ],
+                        \\"partsOfSpeeches\\": [
+                          {
+                            \\"pos\\": \\"string\\",
+                            \\"source\\": \\"string\\"
+                          }
+                        ],
+                        \\"category\\": \\"string\\"
+                      }
+                    ]
+                                        
+                    \\n \\n The following is the detail of each attribute in the JSON. \\n
+                    \\n Word: it is the input word
+                    \\n Source: It should always be \\"Llama\\" because you are generating it.
+                    \\n Pronunciation: Add the pronunciation of the word.
+                    \\n Mnemonic: Add some mnemonic statement that would help to remember the word for ever. The mnemonic should be in the context of it's original definition.If you don't find one, then keep it null.
+                    \\n localMeaning: Add the hindi meaning of the word, and write in hindi language.
+                    \\n Meanings: The definition of the word.
+                    \\n Synonyms: Add at least 5 words that are synonyms.
+                    \\n Antonyms: Add at least 3 words that are antonyms.
+                    \\n Examples: This is basically usages, add at least 3 examples usages of the word.
+                    \\n partsOfSpeeches: Add the Part of speech the word belongs too.
+                    \\n Category: The category to which the word belongs. For example, whether is a cloth,some sport anything. add some meaningful category to which it belongs.
+                                        
+                    \\n Also, make sure that you generate the response to the prompt enclose in response tag <response>yor JSON response.</response>
+                    \\n enclosing in response tag is important because that will help me to identify your response.
+                                        
+                                        
+                    \\n For example, if the input array is [laity,mincing]
+                    \\n then the response to this would be like below.
+                                      
+                    \\n <response>                    
+                    [
+                        {
+                            "word": "laity",
+                            "source": "Llama",
+                            "pronunciation": "LEY-i-tee",
+                            "mnemonic": "Remember that 'laity' sounds like 'lay-ity', and lay people are those who are not part of the clergy or professional religious leadership.",
+                            "localMeaning": "लेयता: धर्मसंस्थान के पादरी या पेशेवर धार्मिक नेतृत्व का हिस्सा नहीं होने वाले लोग।",
+                            "meanings": [
+                                {
+                                    "meaning": "the people of a religious faith as distinguished from its clergy",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "synonyms": [
+                                {
+                                    "synonym": "congregation",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "synonym": "laypeople",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "synonym": "parishioners",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "synonym": "believers",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "synonym": "faithful",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "antonyms": [
+                                {
+                                    "antonym": "clergy",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "antonym": "ecclesiastics",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "antonym": "ministers",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "examples": [
+                                {
+                                    "example": "The laity actively participates in the church community.",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "example": "The sermon was directed towards the laity rather than the clergy.",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "example": "The conference addressed issues relevant to both clergy and laity.",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "partsOfSpeeches": [
+                                {
+                                    "pos": "noun",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "category": "Religion"
+                        },
+                        {
+                            "word": "mincing",
+                            "source": "Llama",
+                            "pronunciation": "MIN-sing",
+                            "mnemonic": "Imagine someone delicately chopping onions into tiny pieces, as if they're being very careful not to hurt the onions' feelings - that's 'mincing'.",
+                            "localMeaning": "कुशलतापूर्वक छोटा करना।",
+                            "meanings": [
+                                {
+                                    "meaning": "affectedly dainty or refined",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "synonyms": [
+                                {
+                                    "synonym": "dainty",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "synonym": "delicate",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "synonym": "precise",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "synonym": "elegant",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "synonym": "fussy",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "antonyms": [
+                                {
+                                    "antonym": "rough",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "antonym": "crude",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "antonym": "bold",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "examples": [
+                                {
+                                    "example": "She spoke in a mincing, affected voice that annoyed everyone.",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "example": "He walked with mincing steps, careful not to disturb anything in the room.",
+                                    "source": "Llama"
+                                },
+                                {
+                                    "example": "Her mincing gestures made her seem overly prim and proper.",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "partsOfSpeeches": [
+                                {
+                                    "pos": "adjective",
+                                    "source": "Llama"
+                                }
+                            ],
+                            "category": "Behavior"
+                        }
+                    ]
+                    </response>                
+                    """, words);
+        }
+    }
+
     public static class TopicPrompt {
-        public static synchronized String prompt(String subject, int numOfTopics, String purpose,Integer wordCount) {
+        public static synchronized String prompt(String subject, int numOfTopics, String purpose, Integer wordCount) {
 
             return String.format("""
                                 {
@@ -63,7 +278,7 @@ public class LLMPromptBuilder {
                           ]\\n
                         }\\n</response>"
                     }
-                                """, numOfTopics, subject, purpose,wordCount);
+                                """, numOfTopics, subject, purpose, wordCount);
         }
 
     }

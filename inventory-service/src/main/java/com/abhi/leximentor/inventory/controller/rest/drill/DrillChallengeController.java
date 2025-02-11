@@ -13,6 +13,7 @@ import com.abhi.leximentor.inventory.service.drill.DrillMetadataService;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,6 +48,10 @@ public class DrillChallengeController {
     @GetMapping(value = UrlConstants.Drill.DrillChallenge.DRILL_GET_EVALUATORS_BY_CHALLENGE_REF_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getEvaluatorsByChallengeRefId(@RequestParam String challengeRefId) {
         log.info("Received a request to fetch all the evaluators for the challenge. {}", challengeRefId);
+        if (StringUtils.isEmpty(challengeRefId)) {
+            log.error("The drill challengeId is null or empty : {}", challengeRefId);
+            return ResponseEntityBuilder.getBuilder(HttpStatus.BAD_REQUEST).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The challengeId is empty.");
+        }
         List<EvaluatorDTO> evaluatorDTOS = drillChallengeService.getEvaluatorsByChallengeId(Long.parseLong(challengeRefId));
         return CollectionUtil.isEmpty(evaluatorDTOS) ? ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve evaluators") : ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTOS);
     }
