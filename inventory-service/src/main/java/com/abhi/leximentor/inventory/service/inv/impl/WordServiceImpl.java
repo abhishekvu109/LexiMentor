@@ -41,6 +41,7 @@ public class WordServiceImpl implements WordService {
     private String URL;
     private final static String WRITEWISE_LLM = "writewise-llm-service";
 
+
     @Override
     @Transactional
     public WordDTO add(WordDTO word) {
@@ -142,6 +143,7 @@ public class WordServiceImpl implements WordService {
     @Override
     public WordDTO generateWordMetadataFromLLM(String word) {
         loadModelServiceName();
+        log.info("Found the URl of the writewise service: {}", URL);
         LinkedList<String> requestWords = new LinkedList<>();
         requestWords.add(word);
         GenerateWordMetadataLlmDTO request = GenerateWordMetadataLlmDTO.builder().words(requestWords).prompt("").response("").build();
@@ -167,9 +169,12 @@ public class WordServiceImpl implements WordService {
             throw new ServerException().new InternalError("Writewise service has returned NULL response.");
         if (StringUtils.isNotEmpty(responseOutput.getResponse())) {
             String jsonResponse = this.extractJsonFromResponse(responseOutput.getResponse());
+            log.info("Extracted the JSON inside the <response> marker : {}", jsonResponse);
             return generateObjectFromTheJson(jsonResponse);
+        } else {
+            log.error("The response is null : {}", responseOutput.getResponse());
+            return null;
         }
-        return null;
     }
 
     private void loadModelServiceName() {
