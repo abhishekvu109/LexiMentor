@@ -10,50 +10,57 @@ public class LLMPromptBuilder {
                     I am improving my English vocabulary and need structured metadata for given words.
 
                     ## **Instructions (Follow Carefully)**
-                    1. **Input words** are enclosed in square brackets: **word_array=[%s]**
-                    2. The words are inside square brackets. If there is one word the it will look like [word1], if we have more words then it will be like [word1,word2,word3] comma separated.
-                    3. If **no words** are provided, return: `<response>[]</response>`  
-                    4. Always enclose your response in `<response>...</response>`  
-                    5. The response **must be valid JSON** with the following structure:  
+                    1. **Input words** are enclosed in `<inputWords>...</inputWords>`:  
+                       ```
+                       <inputWords>
+                         %s
+                       </inputWords>
+                       ```
+                    2. If **no words** are provided, return: `<response></response>`  
+                    3. Always enclose your response in `<response>...</response>`  
+                    4. The response **must be valid JSON** with the following structure:  
 
                     ## **Required JSON Structure**
-                    [
-                      {
-                        "word": "string",  // The input word
-                        "source": "Llama",  // Always "Llama"
-                        "pronunciation": "string",  // IPA or phonetic pronunciation
-                        "mnemonic": "string",  // A memory aid (null if not available)
-                        "localMeaning": "string",  // Hindi meaning in **Devanagari script**
-                        "meanings": [
-                          { "meaning": "string", "source": "Llama" }
-                        ],
-                        "synonyms": [
-                          { "synonym": "string", "source": "Llama" },
-                          { "synonym": "string", "source": "Llama" },
-                          { "synonym": "string", "source": "Llama" },
-                          { "synonym": "string", "source": "Llama" },
-                          { "synonym": "string", "source": "Llama" }
-                        ],
-                        "antonyms": [
-                          { "antonym": "string", "source": "Llama" },
-                          { "antonym": "string", "source": "Llama" },
-                          { "antonym": "string", "source": "Llama" }
-                        ],
-                        "examples": [
-                          { "example": "string", "source": "Llama" },
-                          { "example": "string", "source": "Llama" },
-                          { "example": "string", "source": "Llama" }
-                        ],
-                        "partsOfSpeeches": [
-                          { "pos": "string", "source": "Llama" }
-                        ],
-                        "category": "string"  // A meaningful category (e.g., Art, Science, Emotion)
-                      }
-                    ]
+                    <response>
+                      [
+                        {
+                          "word": "string",  // The input word
+                          "source": "Llama",  // Always "Llama"
+                          "pronunciation": "string",  // IPA or phonetic pronunciation
+                          "mnemonic": "string",  // A memory aid (null if not available)
+                          "localMeaning": "string",  // Hindi meaning in **Devanagari script**
+                          "meanings": [
+                            { "meaning": "string", "source": "Llama" }
+                          ],
+                          "synonyms": [
+                            { "synonym": "string", "source": "Llama" },
+                            { "synonym": "string", "source": "Llama" },
+                            { "synonym": "string", "source": "Llama" }
+                          ],
+                          "antonyms": [
+                            { "antonym": "string", "source": "Llama" },
+                            { "antonym": "string", "source": "Llama" }
+                          ],
+                          "examples": [
+                            { "example": "string", "source": "Llama" }
+                          ],
+                          "partsOfSpeeches": [
+                            { "pos": "string", "source": "Llama" }
+                          ],
+                          "category": "string"
+                        }
+                      ]
+                    </response>
 
                     ---
                     ## **Example Response**
-                    If `word_array=[genre]`, return:
+                    If input is:
+                    ```
+                    <inputWords>
+                      <word>genre</word>
+                    </inputWords>
+                    ```
+                    The output must be:
 
                     <response>
                     [
@@ -69,19 +76,14 @@ public class LLMPromptBuilder {
                         "synonyms": [
                           { "synonym": "category", "source": "Llama" },
                           { "synonym": "type", "source": "Llama" },
-                          { "synonym": "style", "source": "Llama" },
-                          { "synonym": "class", "source": "Llama" },
-                          { "synonym": "form", "source": "Llama" }
+                          { "synonym": "style", "source": "Llama" }
                         ],
                         "antonyms": [
                           { "antonym": "hybrid", "source": "Llama" },
-                          { "antonym": "mixture", "source": "Llama" },
-                          { "antonym": "fusion", "source": "Llama" }
+                          { "antonym": "mixture", "source": "Llama" }
                         ],
                         "examples": [
-                          { "example": "The novel falls under the mystery genre.", "source": "Llama" },
-                          { "example": "He enjoys movies of the horror genre.", "source": "Llama" },
-                          { "example": "Classical music is a genre with rich history.", "source": "Llama" }
+                          { "example": "The novel falls under the mystery genre.", "source": "Llama" }
                         ],
                         "partsOfSpeeches": [
                           { "pos": "noun", "source": "Llama" }
@@ -92,19 +94,17 @@ public class LLMPromptBuilder {
                     </response>
 
                     ---
-                    ## **BONUS TIPS (For Consistency)**
-                    - **Do NOT generate any extra text or explanation.**  
-                    - **Ensure the JSON format is strictly followed.**  
-                    - **Do NOT add missing attributes or change structure.**  
-                    - **If a field is not available, return `"mnemonic": null` instead of omitting it.**  
-                    - **If multiple words are provided, generate a JSON array for all words in order.**  
-                    - **Do NOT interpret the word differently—stick to the standard dictionary meaning.**  
-                    - **Follow the response format exactly, using `<response>...</response>` tags.**  
+                    ## **BONUS TIPS**
+                    - **Do NOT generate extra text or explanations.**  
+                    - **Ensure the JSON follows the exact structure given above.**  
+                    - **Always use `<response>...</response>` to enclose the JSON.**  
+                    - **If multiple words are given, return a JSON array inside `<response>...</response>`.**  
 
                     ---
                     Failure to follow these instructions will result in incorrect output.
                     """, words);
         }
+
 
     }
 

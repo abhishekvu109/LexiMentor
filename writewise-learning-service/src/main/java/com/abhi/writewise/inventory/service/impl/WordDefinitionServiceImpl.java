@@ -40,9 +40,8 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
         if (CollectionUtils.isNotEmpty(request.getWords())) {
             StringBuilder words = new StringBuilder();
             for (String word : request.getWords()) {
-                words.append(word).append(",");
+                words.append("\n\t").append("<word>").append(word).append("</word>");
             }
-            words = new StringBuilder(words.substring(0, words.length() - 1));
             prompt = LLMPromptBuilder.WordDefinitionPrompt.prompt(words.toString());
         } else {
             throw new RuntimeException("No words words");
