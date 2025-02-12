@@ -10,7 +10,7 @@ public class LLMPromptBuilder {
                     I am improving my English vocabulary and need structured metadata for given words.
 
                     ## **Instructions (Follow Carefully)**
-                    1. **Input words** are enclosed in `<inputWords></inputWords>` see below:  
+                    1. **Input words** are enclosed in `markup` see below:  
                        ```
                        <inputWords>
                          %s
