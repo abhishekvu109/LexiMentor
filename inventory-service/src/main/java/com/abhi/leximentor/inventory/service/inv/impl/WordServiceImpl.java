@@ -2,19 +2,32 @@ package com.abhi.leximentor.inventory.service.inv.impl;
 
 import com.abhi.leximentor.inventory.dto.inv.*;
 import com.abhi.leximentor.inventory.entities.inv.*;
+import com.abhi.leximentor.inventory.exceptions.entities.ServerException;
 import com.abhi.leximentor.inventory.repository.inv.LanguageRepository;
 import com.abhi.leximentor.inventory.repository.inv.WordMetadataRepository;
 import com.abhi.leximentor.inventory.service.inv.WordService;
 import com.abhi.leximentor.inventory.util.CollectionUtil;
+import com.abhi.leximentor.inventory.util.RestClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileUrlResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Data
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -23,6 +36,10 @@ public class WordServiceImpl implements WordService {
     private final LanguageRepository languageRepository;
     private final WordMetadataRepository wordRepository;
     private final CollectionUtil collectionUtil;
+    private static final int LLM_RETRY_COUNT = 3;
+    private final RestClient restClient;
+    private String URL;
+    private final static String WRITEWISE_LLM = "writewise-llm-service";
 
     @Override
     @Transactional
@@ -120,5 +137,67 @@ public class WordServiceImpl implements WordService {
         wordDTO.setPartsOfSpeeches(posS);
         wordDTO.setExamples(examples);
         return wordDTO;
+    }
+
+    @Override
+    public WordDTO generateWordMetadataFromLLM(String word) {
+        loadModelServiceName();
+        LinkedList<String> requestWords = new LinkedList<>();
+        requestWords.add(word);
+        GenerateWordMetadataLlmDTO request = GenerateWordMetadataLlmDTO.builder().words(requestWords).prompt("").response("").build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        ResponseEntity<GenerateWordMetadataLlmDTO> responseEntity = null;
+        GenerateWordMetadataLlmDTO responseOutput = null;
+        int retry = LLM_RETRY_COUNT;
+        while (retry > 0) {
+            try {
+                responseEntity = restClient.post(this.URL, headers, request, GenerateWordMetadataLlmDTO.class);
+                responseOutput = responseEntity.getBody();
+                log.info("The llm service has returned a response : {}", responseEntity);
+                break;
+            } catch (Exception ex) {
+                log.error("Unable to get response from the llm service {} for {}", WRITEWISE_LLM, request);
+                log.error(ex.getMessage());
+                log.info("Attempting retry : {}", (LLM_RETRY_COUNT - retry));
+                retry--;
+            }
+        }
+        if (responseOutput == null)
+            throw new ServerException().new InternalError("Writewise service has returned NULL response.");
+        if (StringUtils.isNotEmpty(responseOutput.getResponse())) {
+            String jsonResponse = this.extractJsonFromResponse(responseOutput.getResponse());
+            return generateObjectFromTheJson(jsonResponse);
+        }
+        return null;
+    }
+
+    private void loadModelServiceName() {
+        try {
+            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
+            log.info("Successfully found the llm topic address: {}", properties.getProperty(WRITEWISE_LLM));
+            setURL(properties.getProperty(WRITEWISE_LLM));
+        } catch (IOException ex) {
+            log.error(ex.getMessage());
+        }
+    }
+
+    private String extractJsonFromResponse(String response) {
+        Pattern pattern = Pattern.compile("<response>(.*?)</response>", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(response);
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        }
+        throw new IllegalArgumentException("No valid JSON found in the response");
+    }
+
+    private WordDTO generateObjectFromTheJson(String response) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(response, WordDTO.class);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            return null;
+        }
     }
 }
