@@ -11,9 +11,10 @@ public class LLMPromptBuilder {
 
                     ## **Instructions (Follow Carefully)**
                     1. **Input words** are enclosed in square brackets: **word_array=[%s]**
-                    2. If **no words** are provided, return: `<response>[]</response>`  
-                    3. Always enclose your response in `<response>...</response>`  
-                    4. The response **must be valid JSON** with the following structure:  
+                    2. The words are inside square brackets. If there is one word the it will look like [word1], if we have more words then it will be like [word1,word2,word3] comma separated.
+                    3. If **no words** are provided, return: `<response>[]</response>`  
+                    4. Always enclose your response in `<response>...</response>`  
+                    5. The response **must be valid JSON** with the following structure:  
 
                     ## **Required JSON Structure**
                     [
