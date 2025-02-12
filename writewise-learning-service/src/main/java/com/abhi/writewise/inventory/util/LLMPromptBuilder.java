@@ -7,279 +7,194 @@ public class LLMPromptBuilder {
     public static class WordDefinitionPrompt {
         public static synchronized String prompt(String words) {
             return String.format("""
-                    I am working on improving my english vocabulary. For that purpose, I would need the some information about the words given in the array(comma separated and enclosed in square brackets). \n
-                    word_array=[%s] \n \n
-                    The information of the each word should be a JSON array in the below format. I will explain the meaning of each attribute used in the JSON. \n
+                    I am improving my English vocabulary and need structured metadata for given words.
+
+                    ## **Instructions (Follow Carefully)**
+                    1. **Input words** are enclosed in square brackets: **word_array=[%s]**
+                    2. If **no words** are provided, return: `<response>[]</response>`  
+                    3. Always enclose your response in `<response>...</response>`  
+                    4. The response **must be valid JSON** with the following structure:  
+
+                    ## **Required JSON Structure**
                     [
                       {
-                        "word": "string",
-                        "source": "Llama",
-                        "pronunciation": "string",
-                        "mnemonic": "string",
-                        "localMeaning": "string",
+                        "word": "string",  // The input word
+                        "source": "Llama",  // Always "Llama"
+                        "pronunciation": "string",  // IPA or phonetic pronunciation
+                        "mnemonic": "string",  // A memory aid (null if not available)
+                        "localMeaning": "string",  // Hindi meaning in **Devanagari script**
                         "meanings": [
-                          {
-                            "meaning": "string",
-                            "source": "string"
-                          }
+                          { "meaning": "string", "source": "Llama" }
                         ],
                         "synonyms": [
-                          {
-                            "synonym": "string",
-                            "source": "string"
-                          }
+                          { "synonym": "string", "source": "Llama" },
+                          { "synonym": "string", "source": "Llama" },
+                          { "synonym": "string", "source": "Llama" },
+                          { "synonym": "string", "source": "Llama" },
+                          { "synonym": "string", "source": "Llama" }
                         ],
                         "antonyms": [
-                          {
-                            "antonym": "string",
-                            "source": "string"
-                          }
+                          { "antonym": "string", "source": "Llama" },
+                          { "antonym": "string", "source": "Llama" },
+                          { "antonym": "string", "source": "Llama" }
                         ],
                         "examples": [
-                          {
-                            "example": "string",
-                            "source": "string"
-                          }
+                          { "example": "string", "source": "Llama" },
+                          { "example": "string", "source": "Llama" },
+                          { "example": "string", "source": "Llama" }
                         ],
                         "partsOfSpeeches": [
-                          {
-                            "pos": "string",
-                            "source": "string"
-                          }
+                          { "pos": "string", "source": "Llama" }
                         ],
-                        "category": "string"
+                        "category": "string"  // A meaningful category (e.g., Art, Science, Emotion)
                       }
                     ]
-                                        
-                    \n \n The following is the detail of each attribute in the JSON. \n
-                    \n Word: it is the input word
-                    \n Source: It should always be "Llama" because you are generating it.
-                    \n Pronunciation: Add the pronunciation of the word.
-                    \n Mnemonic: Add some mnemonic statement that would help to remember the word for ever. The mnemonic should be in the context of it's original definition.If you don't find one, then keep it null.
-                    \n localMeaning: Add the hindi meaning of the word, and write in hindi language.
-                    \n Meanings: The definition of the word.
-                    \n Synonyms: Add at least 5 words that are synonyms.
-                    \n Antonyms: Add at least 3 words that are antonyms.
-                    \n Examples: This is basically usages, add at least 3 examples usages of the word.
-                    \n partsOfSpeeches: Add the Part of speech the word belongs too.
-                    \n Category: The category to which the word belongs. For example, whether is a cloth,some sport anything. add some meaningful category to which it belongs.
-                                        
-                    \n Also, make sure that you generate the response to the prompt enclose in response tag <response>yor JSON response.</response>
-                    \n enclosing in response tag is important because that will help me to identify your response.
-                                        
-                                        
-                    \n For example, if the input array is [laity,mincing]
-                    \n then the response to this would be like below.
-                                      
-                    \n <response>                    
+
+                    ---
+                    ## **Example Response**
+                    If `word_array=[genre]`, return:
+
+                    <response>
                     [
-                        {
-                            "word": "laity",
-                            "source": "Llama",
-                            "pronunciation": "LEY-i-tee",
-                            "mnemonic": "Remember that 'laity' sounds like 'lay-ity', and lay people are those who are not part of the clergy or professional religious leadership.",
-                            "localMeaning": "लेयता: धर्मसंस्थान के पादरी या पेशेवर धार्मिक नेतृत्व का हिस्सा नहीं होने वाले लोग।",
-                            "meanings": [
-                                {
-                                    "meaning": "the people of a religious faith as distinguished from its clergy",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "synonyms": [
-                                {
-                                    "synonym": "congregation",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "synonym": "laypeople",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "synonym": "parishioners",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "synonym": "believers",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "synonym": "faithful",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "antonyms": [
-                                {
-                                    "antonym": "clergy",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "antonym": "ecclesiastics",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "antonym": "ministers",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "examples": [
-                                {
-                                    "example": "The laity actively participates in the church community.",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "example": "The sermon was directed towards the laity rather than the clergy.",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "example": "The conference addressed issues relevant to both clergy and laity.",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "partsOfSpeeches": [
-                                {
-                                    "pos": "noun",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "category": "Religion"
-                        },
-                        {
-                            "word": "mincing",
-                            "source": "Llama",
-                            "pronunciation": "MIN-sing",
-                            "mnemonic": "Imagine someone delicately chopping onions into tiny pieces, as if they're being very careful not to hurt the onions' feelings - that's 'mincing'.",
-                            "localMeaning": "कुशलतापूर्वक छोटा करना।",
-                            "meanings": [
-                                {
-                                    "meaning": "affectedly dainty or refined",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "synonyms": [
-                                {
-                                    "synonym": "dainty",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "synonym": "delicate",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "synonym": "precise",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "synonym": "elegant",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "synonym": "fussy",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "antonyms": [
-                                {
-                                    "antonym": "rough",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "antonym": "crude",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "antonym": "bold",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "examples": [
-                                {
-                                    "example": "She spoke in a mincing, affected voice that annoyed everyone.",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "example": "He walked with mincing steps, careful not to disturb anything in the room.",
-                                    "source": "Llama"
-                                },
-                                {
-                                    "example": "Her mincing gestures made her seem overly prim and proper.",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "partsOfSpeeches": [
-                                {
-                                    "pos": "adjective",
-                                    "source": "Llama"
-                                }
-                            ],
-                            "category": "Behavior"
-                        }
+                      {
+                        "word": "genre",
+                        "source": "Llama",
+                        "pronunciation": "ZHAN-ruh",
+                        "mnemonic": "Think of 'genre' as a category, like different books in a library section.",
+                        "localMeaning": "शैली: साहित्य, संगीत या फ़िल्म की श्रेणी",
+                        "meanings": [
+                          { "meaning": "a category of artistic composition", "source": "Llama" }
+                        ],
+                        "synonyms": [
+                          { "synonym": "category", "source": "Llama" },
+                          { "synonym": "type", "source": "Llama" },
+                          { "synonym": "style", "source": "Llama" },
+                          { "synonym": "class", "source": "Llama" },
+                          { "synonym": "form", "source": "Llama" }
+                        ],
+                        "antonyms": [
+                          { "antonym": "hybrid", "source": "Llama" },
+                          { "antonym": "mixture", "source": "Llama" },
+                          { "antonym": "fusion", "source": "Llama" }
+                        ],
+                        "examples": [
+                          { "example": "The novel falls under the mystery genre.", "source": "Llama" },
+                          { "example": "He enjoys movies of the horror genre.", "source": "Llama" },
+                          { "example": "Classical music is a genre with rich history.", "source": "Llama" }
+                        ],
+                        "partsOfSpeeches": [
+                          { "pos": "noun", "source": "Llama" }
+                        ],
+                        "category": "Art"
+                      }
                     ]
-                    </response>                
+                    </response>
+
+                    ---
+                    ## **BONUS TIPS (For Consistency)**
+                    - **Do NOT generate any extra text or explanation.**  
+                    - **Ensure the JSON format is strictly followed.**  
+                    - **Do NOT add missing attributes or change structure.**  
+                    - **If a field is not available, return `"mnemonic": null` instead of omitting it.**  
+                    - **If multiple words are provided, generate a JSON array for all words in order.**  
+                    - **Do NOT interpret the word differently—stick to the standard dictionary meaning.**  
+                    - **Follow the response format exactly, using `<response>...</response>` tags.**  
+
+                    ---
+                    Failure to follow these instructions will result in incorrect output.
                     """, words);
         }
+
     }
 
     public static class TopicPrompt {
         public static synchronized String prompt(String subject, int numOfTopics, String purpose, Integer wordCount) {
-
             return String.format("""
-                                {
-                        "prompt": "Suggest %d topics in the subject of %s that can help improve English language writing skills for the %s.\s
-                        The response should be provided in the following JSON format wrapped inside <response></response> tags.\s
-                        The JSON example provided below is just a sample for your reference. Please generate new, unique topics and do not copy the content from the example. \n \n
-                        Please follow these guidelines for each field in the JSON format: \n \n
-                        - "topicNo": This is the number of the topic (e.g., 1, 2, etc.). Datatype is Integer \n
-                        - "topic": The title of the economics topic. Datatype is String \n
-                        - "subject": The field of the topic (e.g., global economy, monetary policy). Datatype is String \n
-                        - "description": A short description explaining how the topic relates to improving English language writing skills for the IELTS exam. Datatype is String\n
-                        - "points": A list of important points or arguments related to the topic that the user should focus on in their writing. The writer will write in %d words, so suggest points accordingly.Datatype is array of string. Datatype is array of String\n
-                        - "learning": A sentence explaining what kind of knowledge or skills the user will develop by writing about this topic. Datatype is string\n
-                        - "recommendations": A list of additional recommendations for improving English writing skills while preparing for the IELTS exam. Datatype is array of string.\n\n
-                        The response should look like this (Note: this is just a sample format for reference, do not copy the same content): \n \n
-                        <response> \n
-                        { \n
-                          "topics": [ \n
-                            { \n
-                              "topicNo": 1, \n
-                              "topic": "The Impact of Globalization on Developing Economies", \n
-                              "subject": "", \n
-                              "description": \n
-                                "In this topic, you can discuss the effects of globalization on developing economies. You could argue whether globalization has brought more benefits or drawbacks to these countries. Some possible points to consider include"
-                              , \n
-                              "points": [ \n
-                                "Increased trade and investment opportunities", \n
-                                "Job creation and economic growth", \n
-                                "Cultural exchange and transfer of knowledge", \n
-                                "Dependence on foreign aid and debt", \n
-                                "Uneven distribution of wealth and income"
-                              ],\n
-                              "learning": "This topic allows you to demonstrate your understanding of global economics, international trade, and the challenges faced by developing economies." \n
-                            }, \n
-                            { \n
-                              "topicNo": 2, \n
-                              "topic": "The Effectiveness of Monetary Policy in Managing Inflation", \n
-                              "subject": "economy", \n
-                              "description": "In this topic, you can analyze the role of monetary policy (the actions taken by central banks) in controlling inflation. You could discuss whether monetary policy is an effective tool for managing inflation, considering factors such as", \n
-                              "points": [ \n
-                                "Interest rates and their impact on borrowing and spending.", \n
-                                "Quantitative easing and its effects on the economy.", \n
-                                "Inflation targeting and the trade-offs involved.", \n
-                                "Alternative approaches to managing inflation, such as fiscal policy."
-                              ], \n
-                              "learning": "This topic enables you to showcase your knowledge of macroeconomics, monetary policy, and the challenges of managing a country's economy." \n
-                            } \n
-                          ], \n
-                          "recommendations": [ \n
-                            "Read widely on the subject to gather information and ideas.", \n
-                            "Structure your essay with a clear introduction, body paragraphs, and conclusion.", \n
-                            "Use economic terminology accurately and consistently.", \n
-                            "Provide specific examples or case studies to support your arguments.", \n
-                            "Practice writing under timed conditions to simulate the IELTS exam experience."
-                          ] \n
-                        } \n</response>"
+                    {
+                        "prompt": "Generate %d unique topics in the subject of '%s' to improve English writing skills for '%s'. \n
+                        The response must strictly follow the JSON structure enclosed in <response>...</response> tags.\n
+                        The JSON example below is for reference only; do NOT copy the content. Generate new, relevant topics instead.\n\n
+                        
+                        ## **JSON Response Format** (Strictly Follow This)
+                        {
+                          "topics": [
+                            {
+                              "topicNo": Integer, // The topic number (e.g., 1, 2, etc.)
+                              "topic": "String", // The title of the topic
+                              "subject": "String", // The subject category (e.g., Global Economy, Science, History)
+                              "description": "String", // Short explanation of how this topic improves English writing for '%s'
+                              "points": [ // Key points to cover in writing (adjusted for %d words)
+                                "String",
+                                "String",
+                                "String"
+                              ],
+                              "learning": "String" // What the user will learn from writing about this topic
+                            }
+                          ],
+                          "recommendations": [ // General tips for improving writing skills
+                            "String",
+                            "String",
+                            "String"
+                          ]
+                        }
+                        
+                        ---
+                        ## **Example Response (For Format Only, Do Not Copy Content)**
+                        <response>
+                        {
+                          "topics": [
+                            {
+                              "topicNo": 1,
+                              "topic": "The Role of Artificial Intelligence in Modern Society",
+                              "subject": "Technology",
+                              "description": "This topic explores how artificial intelligence impacts different sectors, encouraging analytical and structured writing.",
+                              "points": [
+                                "Definition and brief history of AI",
+                                "AI's role in industries such as healthcare, finance, and automation",
+                                "Ethical concerns and risks of AI",
+                                "Future predictions about AI development"
+                              ],
+                              "learning": "Writing on this topic will improve your ability to present arguments, use technical vocabulary, and structure your essay effectively."
+                            },
+                            {
+                              "topicNo": 2,
+                              "topic": "Climate Change: Causes, Effects, and Solutions",
+                              "subject": "Environment",
+                              "description": "This topic encourages structured argumentation about climate change, helping refine persuasive writing skills.",
+                              "points": [
+                                "Definition and scientific evidence of climate change",
+                                "Major causes of climate change (e.g., carbon emissions, deforestation)",
+                                "Effects on biodiversity, weather patterns, and human health",
+                                "Possible solutions and global initiatives"
+                              ],
+                              "learning": "This topic enhances persuasive writing by requiring logical reasoning and factual support."
+                            }
+                          ],
+                          "recommendations": [
+                            "Use structured arguments with clear introductions and conclusions.",
+                            "Practice writing with a variety of sentence structures to enhance fluency.",
+                            "Include examples and data to support claims.",
+                            "Use topic-specific vocabulary to demonstrate knowledge.",
+                            "Practice writing under timed conditions for exam preparation."
+                          ]
+                        }
+                        </response>
+                        
+                        ---
+                        ## **Guidelines to Ensure a Consistent Response**
+                        - **Do NOT generate explanations or extra text; return only the JSON.**
+                        - **Ensure the JSON follows the exact format given above.**
+                        - **Always enclose the response in `<response>...</response>` tags.**
+                        - **Each topic should be unique, relevant, and structured for easy writing practice.**
+                        - **Adjust the number of points based on the provided word count (%d words).**
+                        - **The subject must be relevant to '%s'.**
+                        - **Use correct grammar, spelling, and structured sentences.**
+                        
+                        Failure to follow these instructions will result in an incorrect response.
                     }
-                                """, numOfTopics, subject, purpose, wordCount);
+                    """, numOfTopics, subject, purpose, purpose, wordCount, wordCount, subject);
         }
+
 
     }
 

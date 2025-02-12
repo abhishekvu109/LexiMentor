@@ -53,7 +53,7 @@ public class TopicServiceImpl implements TopicService {
         request.setPrompt(prompt);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
-        ResponseEntity<String> responseEntity = null;
+        ResponseEntity<String> responseEntity;
         String responseOutput = null;
         int retry = RETRY_COUNT;
         while (retry > 0) {
