@@ -98,7 +98,9 @@ public class TopicServiceImpl implements TopicService {
         try {
             Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
             log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
-            setUrl(properties.getProperty(LLM_TOPIC) + MODEL_NAME);
+            String url = properties.getProperty(LLM_TOPIC) + MODEL_NAME;
+            log.info("URL of the LLM service : {}", url);
+            setUrl(url);
         } catch (IOException ex) {
             log.error(ex.getMessage());
         }
