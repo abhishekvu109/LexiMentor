@@ -100,7 +100,7 @@ public class TopicServiceImpl implements TopicService {
             log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
             String url = properties.getProperty(LLM_TOPIC) + MODEL_NAME;
             log.info("URL of the LLM service : {}", url);
-            setUrl(url);
+            this.setUrl(url);
         } catch (IOException ex) {
             log.error(ex.getMessage());
         }
