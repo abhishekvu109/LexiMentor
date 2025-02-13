@@ -65,12 +65,12 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
                 retry--;
             }
         }
-//        String llmResponse = extractJsonFromResponse(responseOutput);
+        String llmResponse = extractJsonFromResponse(responseOutput);
 //        log.info("LLM has generated the response. {}", llmResponse);
         log.info("LLM has generated the response. {}", responseOutput);
-        if (StringUtils.isNotEmpty(responseOutput)) {
+        if (StringUtils.isNotEmpty(llmResponse)) {
             request.setPrompt(prompt);
-            request.setResponse(responseOutput);
+            request.setResponse(llmResponse);
         }
         return request;
     }
