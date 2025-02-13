@@ -28,7 +28,7 @@ public class AiRestController {
     @PostMapping(value = UrlConstants.EvaluateMeaningPrompts.GENERATE_STANDARD_PROMPT, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<String> textPrompt(@RequestBody TextPromptDTO dto, @PathVariable String modelName) {
         log.info("Received a request for standard text prompt using model- {}, prompt- {}", modelName, dto);
-        String promptResponse = chatService.prompt(dto.getPrompt());
+        String promptResponse = chatService.prompt(dto.getPrompt(), modelName);
         log.info("The String response as below: {}", promptResponse);
         return ResponseEntity.ok(promptResponse);
     }

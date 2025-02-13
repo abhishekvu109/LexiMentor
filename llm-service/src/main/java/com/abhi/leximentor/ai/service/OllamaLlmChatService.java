@@ -77,4 +77,10 @@ public class OllamaLlmChatService implements LlmService {
         ChatResponse response = ollamaChatModel.call(new Prompt(text, OllamaOptions.create().withModel(CHAT_MODEL_NAME)));
         return response.getResult().getOutput().getContent();
     }
+
+    @Override
+    public String prompt(String text, String modelName) {
+        ChatResponse response = ollamaChatModel.call(new Prompt(text, OllamaOptions.create().withModel(modelName)));
+        return response.getResult().getOutput().getContent();
+    }
 }

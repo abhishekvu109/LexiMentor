@@ -6,4 +6,5 @@ public interface LlmService {
     public MeaningEvaluationDTO evaluateWordMeaning(String prompt);
 
     public String prompt(String text);
+    public String prompt(String text,String modelName);
 }
