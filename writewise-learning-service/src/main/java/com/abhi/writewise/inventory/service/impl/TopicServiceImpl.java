@@ -40,7 +40,7 @@ public class TopicServiceImpl implements TopicService {
     private String url;
     private final Integer RETRY_COUNT = 3;
     private final MongoTemplate mongoTemplate;
-    private static final String MODEL_NAME = "deepseek-r1:7b";
+    private  static final String MODEL_NAME="llama";
 
     @Override
     public LlmTopicDTO generateTopicsFromLlm(LlmTopicDTO request) {
@@ -98,9 +98,7 @@ public class TopicServiceImpl implements TopicService {
         try {
             Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
             log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
-            String url = properties.getProperty(LLM_TOPIC) + MODEL_NAME;
-            log.info("URL of the LLM service : {}", url);
-            this.setUrl(url);
+            setUrl(properties.getProperty(LLM_TOPIC)+MODEL_NAME);
         } catch (IOException ex) {
             log.error(ex.getMessage());
         }

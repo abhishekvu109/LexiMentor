@@ -30,7 +30,7 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
     private final static String LLM_TOPIC = "ollama-llm-writing-module-topics";
     private String url;
     private final RestClient restClient;
-
+    private static final String MODEL_NAME = "deepseek-r1:7b";
 
     @Override
     public WordDefinitionDTO generateWordDefinitionFromLlm(WordDefinitionDTO request) {
@@ -49,7 +49,7 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
         request.setPrompt(prompt);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
-        ResponseEntity<String> responseEntity = null;
+        ResponseEntity<String> responseEntity;
         String responseOutput = null;
         int retry = RETRY_COUNT;
         while (retry > 0) {
@@ -79,7 +79,7 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
         try {
             Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
             log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
-            setUrl(properties.getProperty(LLM_TOPIC));
+            setUrl(properties.getProperty(LLM_TOPIC) + MODEL_NAME);
         } catch (IOException ex) {
             log.error(ex.getMessage());
         }
