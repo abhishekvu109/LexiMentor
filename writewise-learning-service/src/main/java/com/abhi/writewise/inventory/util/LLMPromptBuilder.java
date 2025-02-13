@@ -18,7 +18,7 @@ public class LLMPromptBuilder {
                        ```
                     2. If **no words** are provided, return: `<response></response>`  
                     3. Always enclose your response in `<response>...</response>`  
-                    4. The response **must be valid JSON** with the following structure:  
+                    4. The response **must be valid JSON** enclosed in XML with the following structure:  
 
                     ## **Required JSON Structure**
                     <response>
@@ -97,8 +97,8 @@ public class LLMPromptBuilder {
                     ## **BONUS TIPS**
                     - **Do NOT generate extra text or explanations.**  
                     - **Ensure the JSON follows the exact structure given above.**  
-                    - **Always use `<response>...</response>` to enclose the JSON.**  
-                    - **If multiple words are given, return a JSON array inside `<response>...</response>`.**  
+                    - **Always use <response>...</response> to enclose the JSON.**  
+                    - **If multiple words are given, return a JSON array inside XML <response>...</response>.**  
 
                     ---
                     Failure to follow these instructions will result in incorrect output.
