@@ -30,7 +30,7 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
     private final static String LLM_TOPIC = "ollama-llm-writing-module-topics";
     private String url;
     private final RestClient restClient;
-    private static final String MODEL_NAME = "deepseek-r1:7b";
+    private static final String MODEL_NAME = "deepseek-r1:1.5b";
 
     @Override
     public WordDefinitionDTO generateWordDefinitionFromLlm(WordDefinitionDTO request) {
