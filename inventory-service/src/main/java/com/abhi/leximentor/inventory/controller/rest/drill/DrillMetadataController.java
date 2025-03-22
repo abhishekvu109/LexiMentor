@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -50,5 +51,13 @@ public class DrillMetadataController {
         List<DrillMetadataDTO> drillMetadataDTOList = drillMetadataService.getDrills();
         return drillMetadataDTOList != null ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillMetadataDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve drills");
     }
+
+    @GetMapping(value = UrlConstants.Drill.DrillMetadata.DRILL_METADATA_GET_WORDS_BY_REF_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> getWordsByDrillRefId(@PathVariable String drillRefId) {
+        log.info("Received a request to get the words in a drill by drillRefId: {}", drillRefId);
+        Collection<String> words = drillMetadataService.getWordsInStrByDrillRefId(Long.parseLong(drillRefId));
+        return CollectionUtil.isNotEmpty(words) ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, words) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve words in the drills");
+    }
+
 
 }

@@ -15,10 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,28 +36,32 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     @Override
     @Transactional
     public DrillMetadataDTO createDrillRandomly(int size) {
-        if (size < ApplicationConstants.MIN_DRILL_SIZE) throw new IllegalArgumentException("The size of the drill should be at least 20");
+        if (size < ApplicationConstants.MIN_DRILL_SIZE)
+            throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = wordMetadataRepository.findAllRandomlyInLimit(size);
         return getEntity(size, wordMetadataList);
     }
 
     @Override
     public DrillMetadataDTO createDrillFromNewWords(int size) {
-        if (size < ApplicationConstants.MIN_DRILL_SIZE) throw new IllegalArgumentException("The size of the drill should be at least 20");
+        if (size < ApplicationConstants.MIN_DRILL_SIZE)
+            throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = wordMetadataRepository.findAllRandomlyNewWordsLimit(size);
         return getEntity(size, wordMetadataList);
     }
 
     @Override
     public DrillMetadataDTO createDrillFromExistingWords(int size) {
-        if (size < ApplicationConstants.MIN_DRILL_SIZE) throw new IllegalArgumentException("The size of the drill should be at least 20");
+        if (size < ApplicationConstants.MIN_DRILL_SIZE)
+            throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = wordMetadataRepository.findAllRandomlyExistingWordsLimit(size);
         return getEntity(size, wordMetadataList);
     }
 
     @Override
     public DrillMetadataDTO createDrillBySource(int size, String source, boolean isNewWords) {
-        if (size < ApplicationConstants.MIN_DRILL_SIZE) throw new IllegalArgumentException("The size of the drill should be at least 20");
+        if (size < ApplicationConstants.MIN_DRILL_SIZE)
+            throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = (isNewWords) ? wordMetadataRepository.findAllRandomlyNewWordsFromSourceInLimit(size, source) : wordMetadataRepository.findAllRandomlyExistingWordsFromSourceInLimit(size, source);
         return getEntity(size, wordMetadataList);
     }
@@ -104,5 +107,11 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     public DrillMetadataDTO getByRefId(long refId) {
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(refId);
         return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+    }
+
+    @Override
+    public Collection<String> getWordsInStrByDrillRefId(long drillRefId) {
+        DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
+        return drillMetadata.getDrillSetList().stream().map(drillSet -> drillSet.getWordId().getWord()).toList();
     }
 }
