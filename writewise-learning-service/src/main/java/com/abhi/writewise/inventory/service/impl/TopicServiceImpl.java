@@ -40,7 +40,7 @@ public class TopicServiceImpl implements TopicService {
     private String url;
     private final Integer RETRY_COUNT = 3;
     private final MongoTemplate mongoTemplate;
-    private  static final String MODEL_NAME="llama";
+    private  static final String MODEL_NAME="llama3";
 
     @Override
     public LlmTopicDTO generateTopicsFromLlm(LlmTopicDTO request) {
