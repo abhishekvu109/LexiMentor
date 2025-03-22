@@ -147,7 +147,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     }
 
     private String getPrompt(String word, String originalMeaning, String response) {
-        return LLMPromptBuilder.getPrompt(word, originalMeaning, response);
+        return LLMPromptBuilder.EvaluationModule.getPrompt(word, originalMeaning, response);
     }
 
     @Override

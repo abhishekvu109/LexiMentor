@@ -18,17 +18,17 @@ import java.util.regex.Pattern;
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class OllamaLlmChatService {
+public class OllamaLlmChatService implements LlmService {
 
     private static final String CHAT_MODEL_NAME = "llama3";
     private final OllamaChatModel ollamaChatModel;
 
-    public String getPromptResult(String prompt) {
+    private String getPromptResult(String prompt) {
         ChatResponse response = ollamaChatModel.call(new Prompt(prompt, OllamaOptions.create().withModel(CHAT_MODEL_NAME)));
         return response.getResult().getOutput().getContent();
     }
 
-    public MeaningEvaluationDTO evaluate(String prompt) {
+    private MeaningEvaluationDTO evaluate(String prompt) {
         String ollamaResponse = getPromptResult(prompt);
         log.info(ollamaResponse);
         String findJsonFromResponse = extractJsonString(ollamaResponse);
@@ -67,4 +67,20 @@ public class OllamaLlmChatService {
         return meaningEvaluationDTO;
     }
 
+    @Override
+    public MeaningEvaluationDTO evaluateWordMeaning(String prompt) {
+        return this.evaluate(prompt);
+    }
+
+    @Override
+    public String prompt(String text) {
+        ChatResponse response = ollamaChatModel.call(new Prompt(text, OllamaOptions.create().withModel(CHAT_MODEL_NAME)));
+        return response.getResult().getOutput().getContent();
+    }
+
+    @Override
+    public String prompt(String text, String modelName) {
+        ChatResponse response = ollamaChatModel.call(new Prompt(text, OllamaOptions.create().withModel(modelName)));
+        return response.getResult().getOutput().getContent();
+    }
 }

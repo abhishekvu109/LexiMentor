@@ -40,6 +40,7 @@ public class UrlConstants {
     public static class Inventory {
         public static class WordMetaData {
             public static final String WORD_ADD_WORDS = "/api/leximentor/inventory/words";
+            public static final String WORD_GENERATE_METADATA_FROM_LLM = "/api/leximentor/inventory/words/generate";
             public static final String WORD_GET_BY_WORD = "/api/leximentor/inventory/words/{word}";
             public static final String WORD_GET_BY_WORD_REF_ID = "/api/leximentor/inventory/words/{wordRefId}";
             public static final String WORD_GET_SOURCES_BY_WORD_REF_ID = "/api/leximentor/inventory/words/{wordRefId}/sources";
@@ -62,6 +63,10 @@ public class UrlConstants {
             public static final String JOB_CREATE = "/api/leximentor/jobs";
             public static final String JOB_EXECUTE = "/api/leximentor/jobs/{jobId}";
             public static final String JOB_GET = "/api/leximentor/jobs/{jobId}";
+        }
+
+        public static class WritingModule{
+            public static final String GENERATE_TOPICS = "/api/leximentor/v1/module/writing/topics";
         }
     }
 }
