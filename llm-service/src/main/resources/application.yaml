@@ -3,6 +3,6 @@ spring:
     ollama:
       base-url: http://${LLAMA_HOST:localhost}:${LLAMA_PORT:11434}
       chat:
-        model: deepseek-r1:1.5b
+        model: ${LLAMA_MODEL_NAME:llama3}
 server:
   port: 6565
