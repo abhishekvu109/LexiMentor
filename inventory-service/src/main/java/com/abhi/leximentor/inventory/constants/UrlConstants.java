@@ -6,6 +6,7 @@ public class UrlConstants {
             public static final String DRILL_METADATA_ADD = "/api/leximentor/drill/metadata";
             public static final String DRILL_METADATA_ADD_BY_SOURCE = "/api/leximentor/drill/metadata/source/{sourceName}";
             public static final String DRILL_METADATA_DELETE_BY_REF_ID = "/api/leximentor/drill/metadata/{drillRefId}";
+            public static final String DRILL_METADATA_GET_WORDS_BY_REF_ID = "/api/leximentor/drill/metadata/words/{drillRefId}";
 
         }
 
