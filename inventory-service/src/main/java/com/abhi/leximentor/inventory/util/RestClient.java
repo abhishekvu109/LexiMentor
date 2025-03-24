@@ -21,8 +21,8 @@ public class RestClient {
         return restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
     }
 
-    public <T> ResponseEntity<T> post(String url, HttpHeaders headers, T requestBody, Class<T> responseType) {
-        HttpEntity<T> entity = new HttpEntity<>(requestBody, headers);
+    public <E,T> ResponseEntity<T> post(String url, HttpHeaders headers, E requestBody, Class<T> responseType) {
+        HttpEntity<E> entity = new HttpEntity<>(requestBody, headers);
         log.info("The request before sending:{}", entity);
         return restTemplate.exchange(url, HttpMethod.POST, entity, responseType);
     }

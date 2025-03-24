@@ -1,0 +1,103 @@
+#Apply the environment dependency
+apiVersion: v1
+kind: ConfigMap # Resource type
+metadata:
+  name: writewise-config
+  labels:
+    app: writewise-app
+data:
+  SERVICE_PORT: "8989"
+  MYSQL_HOST: "mysql-service-k8s.default.svc.cluster.local"
+  MYSQL_PORT: "3306"
+  MONGODB_HOST: "mongodb-service-k8s.default.svc.cluster.local"
+  MONGODB_PORT: "27017"
+  MONGODB_DATABASE: "writewise"
+  MONGODB_USERNAME: "mongoroot"
+  MONGODB_PASSWORD: "mongopass"
+  SERVICE_NAME: "writewise-learning-service-k8s.default.svc.cluster.local"
+
+---
+
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: writewise-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: writewise-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: writewise-app
+    spec:
+      containers:
+        - name: writewise-app
+          image: localhost:5000/writewise-learning-service:latest
+          env:
+            - name: SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: writewise-config
+                  key: SERVICE_PORT
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: writewise-config
+                  key: MYSQL_HOST
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_PORT
+                  name: writewise-config
+            - name: MONGODB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: writewise-config
+                  key: MONGODB_HOST
+            - name: MONGODB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGODB_PORT
+                  name: writewise-config
+            - name: MONGODB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGODB_DATABASE
+                  name: writewise-config
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: mysql-user-secret
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: mysql-user-secret
+            - name: SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: SERVICE_NAME
+                  name: writewise-config
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8989
+#      imagePullSecrets:
+#        - name: my-registry-secret
+
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: writewise-learning-service-k8s
+spec:
+  selector:
+    app: writewise-app
+  ports:
+    - port: 8989

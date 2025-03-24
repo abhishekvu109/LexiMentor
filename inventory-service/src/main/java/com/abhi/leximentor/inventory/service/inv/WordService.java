@@ -31,4 +31,6 @@ public interface WordService {
     public Set<String> getUniqueSourcesByWordRefId(long wordRefId);
 
     public WordDTO getWordByWordRefIdAndSource(String source, long wordRefId);
+
+    public WordDTO generateWordMetadataFromLLM(String word);
 }

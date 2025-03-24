@@ -10,14 +10,20 @@ const Challenges = ({data, drillId}) => {
     const [challengeData, setChallengeData] = useState(data);
     const [drillRefId, setDrillRefId] = useState(drillId);
     const [isEvaluatorVisible, setIsEvaluatorVisible] = useState(false);
+    const [challengeEvaluators, setChallengeEvaluators] = useState(null);
     const [challengeRequestData, setChallengeRequestData] = useState({drillId: drillId, drillType: ''});
     const [evaluationData, setEvaluationData] = useState({challengeId: "", evaluator: ""});
     const handleChange = (e) => {
         // Update form data state when input fields change
         setEvaluationData({...evaluationData, [e.target.name]: e.target.value});
     };
-    const handleEvaluatorModel = (isOpen) => {
+    const handleEvaluatorModel = async (isOpen, challengeId) => {
         setIsEvaluatorVisible(isOpen);
+        const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/challenge/evaluators?challengeRefId=${challengeId}`;
+        const challengeEvalData = await fetchData(URL);
+        console.log(challengeEvalData);
+        setChallengeEvaluators(challengeEvalData);
+        setEvaluationData({challengeId: `${challengeId}`, evaluator: ''});
     };
 
     const getDrillTypeLink = (drillType) => {
@@ -55,7 +61,7 @@ const Challenges = ({data, drillId}) => {
         const queryString = new URLSearchParams(evaluationData).toString();
         const URL = `${API_LEXIMENTOR_BASE_URL}/drill/metadata/challenges/challenge/${evaluationData.challengeId}/evaluate?${queryString}`;
         const evaluateFormData = await postData(URL);
-        handleEvaluatorModel(false);
+        await handleEvaluatorModel(false, '');
     };
 
     const LoadTable = async () => {
@@ -78,7 +84,7 @@ const Challenges = ({data, drillId}) => {
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                     Create New Drill
                                 </h3>
-                                <button type="button" onClick={() => handleEvaluatorModel(false)}
+                                <button type="button" onClick={() => handleEvaluatorModel(false, '')}
                                         className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                                         data-modal-toggle="create-new-drill-modal-form">
                                     <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -97,23 +103,28 @@ const Challenges = ({data, drillId}) => {
                                         <label htmlFor="limit"
                                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Challenge
                                             ID</label>
-                                        <input type="text" name="challengeId" id="challengeId"
+                                        <input type="text" name="challengeId" id="challengeId" disabled={true}
                                                value={evaluationData.challengeId} onChange={handleChange}
                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                                placeholder="" required=""/>
                                     </div>
                                     <div className="col-span-2 sm:col-span-1">
-                                        <label htmlFor="isNewWords"
-                                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Evaluator</label>
-                                        {/*<select id="isNewWords" name="isNewWords"*/}
-                                        {/*        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">*/}
-                                        {/*    <option selected="" value="true">True</option>*/}
-                                        {/*    <option value="false">False</option>*/}
-                                        {/*</select>*/}
-                                        <input type="text" name="evaluator" id="evaluator"
-                                               value={evaluationData.evaluator} onChange={handleChange}
-                                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                               placeholder="" required=""/>
+                                        <label htmlFor="evaluator"
+                                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                            Evaluator
+                                        </label>
+                                        {(challengeEvaluators && challengeEvaluators.data && challengeEvaluators.data.length > 0) ? (
+                                            <select id="evaluator" name="evaluator" value={evaluationData.evaluator}
+                                                    onChange={handleChange}
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                    required>
+                                                <option value="">Select Evaluator</option>
+                                                {challengeEvaluators.data.map((item, index) => (
+                                                    <option key={index} value={item.name}>
+                                                        {item.name}
+                                                    </option>))}
+                                            </select>) : (
+                                            <p className="text-sm text-gray-500">No evaluators available.</p>)}
                                     </div>
                                 </div>
                                 <button type="submit"
@@ -318,16 +329,23 @@ const Challenges = ({data, drillId}) => {
                                 </Link>)}
                             </td>
                             <td className="px-6 py-4 text-center">
-                                {(item.evaluationStatus == 'Evaluated' || item.status == 'Not Initiated') ? (<Link
+                                {(item.status == 'Not Initiated') ? (<Link
                                     className="font-medium text-gray-300 dark:text-blue-500 hover:underline"
                                     href="#">
                                     Evaluate
-                                </Link>) : (<Link
-                                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                    onClick={() => handleEvaluatorModel(true)}
-                                    href="#">
-                                    Evaluate
-                                </Link>)}
+                                </Link>) : item.evaluationStatus === 'Evaluated' ? (<Link
+                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        onClick={() => handleEvaluatorModel(true, item.refId)}
+                                        href="#"
+                                    >
+                                        Retry
+                                    </Link>) : (<Link
+                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        onClick={() => handleEvaluatorModel(true, item.refId)}
+                                        href="#"
+                                    >
+                                        Evaluate
+                                    </Link>)}
                             </td>
                             <td className="px-6 py-4 text-center">
                                 {(item.evaluationStatus != 'Evaluated') ? (<Link

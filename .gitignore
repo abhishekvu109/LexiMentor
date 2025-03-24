@@ -1,1 +1,69 @@
 /dnd/
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Maven target directory
+target/
+
+# Gradle build directory
+build/
+
+# IntelliJ IDEA project files
+.idea/
+*.iml
+
+# Eclipse project files
+.project
+.classpath
+.settings/
+
+# NetBeans project files
+nbproject/
+
+# VS Code settings
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+**/node_modules/
+**/.pnp
+.pnp.js
+
+# Environment variables
+.env
+
+# Ignore Spring Boot specific files
+**/bin/
+**/out/
+**/logs/
+**/database/
+
+# Ignore generated files
+*.war
+*.jar
+*.ear
+
+# Ignore test reports
+surefire-reports/
+
+# Lombok cache
+.lombok/
+
+# Ignore database files
+*.h2.db
+*.mv.db
+
+# Ignore coverage reports
+/coverage/
+/.scannerwork/
+/target/site/
+
+dist/
+dump.rdb
+

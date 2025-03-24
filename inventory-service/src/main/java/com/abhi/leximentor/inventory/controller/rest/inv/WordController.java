@@ -6,6 +6,7 @@ import com.abhi.leximentor.inventory.dto.inv.WordDTO;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
 import com.abhi.leximentor.inventory.service.inv.WordService;
+import com.abhi.leximentor.inventory.util.CollectionUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -35,6 +33,18 @@ public class WordController {
             Collection<WordDTO> responses = wordService.addAll(wordDTOS.values());
         });
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "You request has been submitted and is in process");
+    }
+
+    @PostMapping(value = UrlConstants.Inventory.WordMetaData.WORD_GENERATE_METADATA_FROM_LLM, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> generateWordMetadataFromLLM(@RequestBody Collection<String> words) {
+        Collection<WordDTO> response=new LinkedList<>();
+        for(String word:words){
+            response.add(wordService.generateWordMetadataFromLLM(word));
+        }
+
+        return (CollectionUtil.isNotEmpty(response))
+                ? ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response)
+                : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Something is wrong");
     }
 
     @GetMapping(value = UrlConstants.Inventory.WordMetaData.WORD_GET_BY_WORD_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)

@@ -30,8 +30,19 @@ items:
     data:
       MYSQL_DATABASE: "abhishek"
 
-  - # Applying the persistent volume for the MySQL database
+  - # Create the ConfigMap for MySQL configuration (my.cnf)
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: mysql-custom-config
+    data:
+      my.cnf: |
+        [mysqld]
+        max_connections = 500 # Increased max connections
+        wait_timeout = 600
+        interactive_timeout = 600
 
+  - # Applying the persistent volume for the MySQL database
     apiVersion: v1
     kind: PersistentVolume
     metadata:
@@ -49,7 +60,6 @@ items:
         path: "/opt/mysql/data"
 
   - # Applying the Persistent Volume claims for the MySQL Database
-
     apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
@@ -64,11 +74,9 @@ items:
         requests:
           storage: 5Gi
 
-
   - # Applying the MySQL Deployment
-
     apiVersion: apps/v1
-    kind: Deployment # Resource type
+    kind: Deployment
     metadata:
       name: mysql-deployment-config
     spec:
@@ -110,10 +118,16 @@ items:
               volumeMounts:
                 - name: mysqldb # the persistent volume to maintain the consistency. This is the most important part in storage strategy
                   mountPath: /var/lib/mysql
+                - name: mysql-custom-config # Mount the custom MySQL configuration file
+                  mountPath: /etc/mysql/conf.d/my.cnf
+                  subPath: my.cnf
           volumes:
             - name: mysqldb
               persistentVolumeClaim:
                 claimName: mysql-pvc-config
+            - name: mysql-custom-config # Add volume for the custom config
+              configMap:
+                name: mysql-custom-config
 
   - # Applying the service for the container. The type is of ClusterIP because we want the DB to be accessed only through the REST API endpoint
     apiVersion: v1

@@ -6,6 +6,7 @@ public class UrlConstants {
             public static final String DRILL_METADATA_ADD = "/api/leximentor/drill/metadata";
             public static final String DRILL_METADATA_ADD_BY_SOURCE = "/api/leximentor/drill/metadata/source/{sourceName}";
             public static final String DRILL_METADATA_DELETE_BY_REF_ID = "/api/leximentor/drill/metadata/{drillRefId}";
+            public static final String DRILL_METADATA_GET_WORDS_BY_REF_ID = "/api/leximentor/drill/metadata/words/{drillRefId}";
 
         }
 
@@ -13,6 +14,7 @@ public class UrlConstants {
             //            Add challenges to the drill.
             public static final String DRILL_CHALLENGE_ADD = "/api/leximentor/drill/metadata/challenges/challenge";
             public static final String DRILL_GET_CHALLENGES_BY_DRILL_ID = "/api/leximentor/drill/metadata/challenges/{drillRefId}";
+            public static final String DRILL_GET_EVALUATORS_BY_CHALLENGE_REF_ID = "/api/leximentor/drill/metadata/challenges/challenge/evaluators";
             public static final String DRILL_DELETE_CHALLENGES_BY_DRILL_ID = "/api/leximentor/drill/metadata/challenges/{drillRefId}";
         }
 
@@ -38,6 +40,7 @@ public class UrlConstants {
     public static class Inventory {
         public static class WordMetaData {
             public static final String WORD_ADD_WORDS = "/api/leximentor/inventory/words";
+            public static final String WORD_GENERATE_METADATA_FROM_LLM = "/api/leximentor/inventory/words/generate";
             public static final String WORD_GET_BY_WORD = "/api/leximentor/inventory/words/{word}";
             public static final String WORD_GET_BY_WORD_REF_ID = "/api/leximentor/inventory/words/{wordRefId}";
             public static final String WORD_GET_SOURCES_BY_WORD_REF_ID = "/api/leximentor/inventory/words/{wordRefId}/sources";
@@ -60,6 +63,10 @@ public class UrlConstants {
             public static final String JOB_CREATE = "/api/leximentor/jobs";
             public static final String JOB_EXECUTE = "/api/leximentor/jobs/{jobId}";
             public static final String JOB_GET = "/api/leximentor/jobs/{jobId}";
+        }
+
+        public static class WritingModule{
+            public static final String GENERATE_TOPICS = "/api/leximentor/v1/module/writing/topics";
         }
     }
 }
