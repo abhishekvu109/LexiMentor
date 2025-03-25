@@ -118,8 +118,7 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
                                 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4
                                 focus:outline-none focus:ring-lime-200 dark:focus
                         :ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                            onClick={() => handleConvertToSpeech(wordData.data.word)}>Click to
-                        listen
+                            onClick={() => handleConvertToSpeech(wordData.data.word)}>Pronounce
                     </button>
                 </div>
             </div>
