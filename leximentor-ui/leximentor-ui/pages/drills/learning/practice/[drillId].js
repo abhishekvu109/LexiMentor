@@ -113,30 +113,21 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
                 <div className="ml-5">
                     <h2 className="text-3xl font-extrabold dark:text-white">{wordData.data.word}</h2>
                 </div>
+                <div className="ml-5">
+                    <button type="button" className=" text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200
+                                hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4
+                                focus:outline-none focus:ring-lime-200 dark:focus
+                        :ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                            onClick={() => handleConvertToSpeech(wordData.data.word)}>Click to
+                        listen
+                    </button>
+                </div>
             </div>
 
             <div
                 className={currentIndex % 2 == 0 ? "flex flex-row my-2" : "flex flex-row my-2"}>
                 <div className="grid grid-cols-1 gap-2 m-2 w-full">
                     <ol className="space-y-4 text-black-200 font-sans list-decimal list-inside dark:text-gray-400 text-xl">
-
-                        {wordData.data != null && wordData.data.word ? (<>
-                            <hr className="h-px my-1 bg-gray-400 border-0 dark:bg-gray-700"/>
-                            <li>
-                                <b>Pronunciation</b>
-                                <ul className="ps-5 mt-2 space-y-1 list-disc list-inside">
-                                    <li>
-                                        <button type="button" className=" text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200
-                                hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4
-                                focus:outline-none focus:ring-lime-200 dark:focus
-                        :ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                                                onClick={() => handleConvertToSpeech(wordData.data.word)}>Click to
-                                            listen
-                                        </button>
-                                    </li>
-                                </ul>
-                            </li>
-                        </>) : (<></>)}
 
                         {wordData.data != null && wordData.data.word ? (<>
                             <hr className="h-px my-1 bg-gray-400 border-0 dark:bg-gray-700"/>
