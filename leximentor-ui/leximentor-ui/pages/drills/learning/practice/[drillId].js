@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
-import {API_LEXIMENTOR_BASE_URL} from "@/constants";
+import {API_LEXIMENTOR_BASE_URL, API_TEXT_TO_SPEECH} from "@/constants";
 import Link from "next/link";
 import {fetchData} from "@/dataService";
 import Head from "next/head";
 import Script from "next/script";
+import axios from "axios";
 
 const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -35,6 +36,17 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
 
     const nextWord = () => {
         setCurrentIndex((currentIndex + 1) % size);
+    };
+
+    const handleConvertToSpeech = async (text) => {
+        try {
+            const response = await axios.post(API_TEXT_TO_SPEECH, {text}, {responseType: 'arraybuffer'});
+            const audioUrl = URL.createObjectURL(new Blob([response.data]));
+            const audio = new Audio(audioUrl);
+            await audio.play();
+        } catch (error) {
+            console.error('Error converting text to speech:', error);
+        }
     };
 
     return (<>
@@ -101,185 +113,16 @@ const LoadDrillSet = ({drillSetData, drillId, wordMetadata, sourcesData}) => {
                 <div className="ml-5">
                     <h2 className="text-3xl font-extrabold dark:text-white">{wordData.data.word}</h2>
                 </div>
+                <div className="ml-5">
+                    <button type="button" className=" text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200
+                                hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4
+                                focus:outline-none focus:ring-lime-200 dark:focus
+                        :ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                            onClick={() => handleConvertToSpeech(wordData.data.word)}>Pronounce
+                    </button>
+                </div>
             </div>
-            {/*<div*/}
-            {/*    className={currentIndex % 2 == 0 ? "flex flex-row my-2 bg-green-200 border-1" : "flex flex-row my-2 bg-cyan-200 border-1"}>*/}
-            {/*    <div className="grid grid-cols-12 gap-2 m-2 w-full">*/}
-            {/*        <div className="col-span-1">*/}
-            {/*            <p className="text-sm font-medium text-gray-900 dark:text-white">Drill Id</p>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-11">*/}
-            {/*                <span*/}
-            {/*                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                    {drillId}*/}
-            {/*                </span>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-1">*/}
-            {/*            <p className="text-sm font-medium text-gray-900 dark:text-white">WordId</p>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-11">*/}
-            {/*                <span*/}
-            {/*                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                    {wordData.data.refId}*/}
-            {/*                </span>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-1">*/}
-            {/*            <p className="text-sm font-medium text-gray-900 dark:text-white">Word</p>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-11">*/}
-            {/*                <span*/}
-            {/*                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                    {wordData.data.word}*/}
-            {/*                </span>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-1">*/}
-            {/*            <p className="text-sm font-medium text-gray-900 dark:text-white">Source</p>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-11">*/}
-            {/*                <span*/}
-            {/*                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                    {wordData.data.source}*/}
-            {/*                </span>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-1">*/}
-            {/*            <p className="text-sm font-medium text-gray-900 dark:text-white">Language</p>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-11">*/}
-            {/*                <span*/}
-            {/*                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                    {wordData.data.language}*/}
-            {/*                </span>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-1">*/}
-            {/*            <p className="text-sm font-medium text-gray-900 dark:text-white">Status</p>*/}
-            {/*        </div>*/}
-            {/*        <div className="col-span-11">*/}
-            {/*                <span*/}
-            {/*                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                    {wordData.data.status}*/}
-            {/*                </span>*/}
-            {/*        </div>*/}
-            {/*        {wordData.data != null && wordData.data.pronunciation ? (<>*/}
-            {/*            <div className="col-span-1">*/}
-            {/*                <p className="text-sm font-medium text-gray-900 dark:text-white">Pronunciation</p>*/}
-            {/*            </div>*/}
-            {/*            <div className="col-span-11">*/}
-            {/*                        <span*/}
-            {/*                            className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                            {wordData.data.pronunciation}*/}
-            {/*                        </span>*/}
-            {/*            </div>*/}
-            {/*        </>) : (<></>)}*/}
-            {/*        {wordData.data != null && wordData.data.mnemonic ? (<>*/}
-            {/*            <div className="col-span-1">*/}
-            {/*                <p className="text-sm font-medium text-gray-900 dark:text-white">Mnemonic</p>*/}
-            {/*            </div>*/}
-            {/*            <div className="col-span-11">*/}
-            {/*                        <span*/}
-            {/*                            className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                            {wordData.data.mnemonic}*/}
-            {/*                        </span>*/}
-            {/*            </div>*/}
-            {/*        </>) : (<></>)}*/}
-            {/*        {wordData.data != null && wordData.data.localMeaning ? (<>*/}
-            {/*            <div className="col-span-1">*/}
-            {/*                <p className="text-sm font-medium text-gray-900 dark:text-white">Local Meaning</p>*/}
-            {/*            </div>*/}
-            {/*            <div className="col-span-11">*/}
-            {/*                        <span*/}
-            {/*                            className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                            {wordData.data.localMeaning}*/}
-            {/*                        </span>*/}
-            {/*            </div>*/}
-            {/*        </>) : (<></>)}*/}
-            {/*        {wordData.data != null && wordData.data.partsOfSpeeches.length > 0 ? (<>*/}
-            {/*            <div className="col-span-1">*/}
-            {/*                <p className="text-sm font-medium text-gray-900 dark:text-white">POS</p>*/}
-            {/*            </div>*/}
-            {/*            <div className="col-span-11">*/}
-            {/*                {wordData.data.partsOfSpeeches.map((item, index) => (<>*/}
-            {/*                                <span*/}
-            {/*                                    key={index}*/}
-            {/*                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"*/}
-            {/*                                >*/}
-            {/*                                    {item.pos}*/}
-            {/*                                </span>*/}
-            {/*                </>))}*/}
-            {/*            </div>*/}
-            {/*        </>) : (<></>)}*/}
-            {/*        {wordData.data != null && wordData.data.meanings.length > 0 ? (<>*/}
-            {/*            <div className="col-span-1">*/}
-            {/*                <p className="text-sm font-medium text-gray-900 dark:text-white">Meanings</p>*/}
-            {/*            </div>*/}
-            {/*            <div className="col-span-11">*/}
-            {/*                {wordData.data.meanings.map((item, index) => (<>*/}
-            {/*                                <span*/}
-            {/*                                    key={index}*/}
-            {/*                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"*/}
-            {/*                                >*/}
-            {/*                                    {item.meaning}*/}
-            {/*                                </span>*/}
-            {/*                </>))}*/}
-            {/*            </div>*/}
-            {/*        </>) : (<></>)}*/}
-            {/*        {wordData.data != null && wordData.data.synonyms.length > 0 ? (<>*/}
-            {/*            <div className="col-span-1">*/}
-            {/*                <p className="text-sm font-medium text-gray-900 dark:text-white">Synonyms</p>*/}
-            {/*            </div>*/}
-            {/*            <div className="col-span-11">*/}
-            {/*                {wordData.data.synonyms.map((item, index) => (<>*/}
-            {/*                                <span*/}
-            {/*                                    key={index}*/}
-            {/*                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"*/}
-            {/*                                >*/}
-            {/*                                    {item.synonym}*/}
-            {/*                                </span>*/}
-            {/*                </>))}*/}
-            {/*            </div>*/}
-            {/*        </>) : (<></>)}*/}
-            {/*        {wordData.data != null && wordData.data.antonyms.length > 0 ? (<>*/}
-            {/*            <div className="col-span-1">*/}
-            {/*                <p className="text-sm font-medium text-gray-900 dark:text-white">Antonyms</p>*/}
-            {/*            </div>*/}
-            {/*            <div className="col-span-11">*/}
-            {/*                {wordData.data.antonyms.map((item, index) => (<>*/}
-            {/*                                <span*/}
-            {/*                                    key={index}*/}
-            {/*                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"*/}
-            {/*                                >*/}
-            {/*                                    {item.antonym}*/}
-            {/*                                </span>*/}
-            {/*                </>))}*/}
-            {/*            </div>*/}
-            {/*        </>) : (<></>)}*/}
-            {/*        {wordData.data != null && wordData.data.examples.length > 0 ? (<>*/}
-            {/*            <div className="col-span-1">*/}
-            {/*                <p className="text-sm font-medium text-gray-900 dark:text-white">Examples</p>*/}
-            {/*            </div>*/}
-            {/*            <div className="col-span-11">*/}
-            {/*                {wordData.data.examples.map((item, index) => (<>*/}
-            {/*                                <span*/}
-            {/*                                    key={index}*/}
-            {/*                                    className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"*/}
-            {/*                                >*/}
-            {/*                                    {item.example}*/}
-            {/*                                </span>*/}
-            {/*                </>))}*/}
-            {/*            </div>*/}
-            {/*        </>) : (<></>)}*/}
-            {/*        {wordData.data != null && wordData.data.category ? (<>*/}
-            {/*            <div className="col-span-1">*/}
-            {/*                <p className="text-sm font-medium text-gray-900 dark:text-white">Category</p>*/}
-            {/*            </div>*/}
-            {/*            <div className="col-span-11">*/}
-            {/*                        <span*/}
-            {/*                            className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">*/}
-            {/*                            {wordData.data.category}*/}
-            {/*                        </span>*/}
-            {/*            </div>*/}
-            {/*        </>) : (<></>)}*/}
-            {/*    </div>*/}
-            {/*</div>*/}
+
             <div
                 className={currentIndex % 2 == 0 ? "flex flex-row my-2" : "flex flex-row my-2"}>
                 <div className="grid grid-cols-1 gap-2 m-2 w-full">
