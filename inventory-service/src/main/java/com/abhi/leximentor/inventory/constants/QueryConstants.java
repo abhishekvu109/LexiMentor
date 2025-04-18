@@ -11,6 +11,9 @@ public class QueryConstants {
             public static final String GET_EXISTING_WORD_IN_LIMIT = "SELECT a.* FROM inv_word_metadata a where a.word_id in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
             public static final String GET_EXISTING_WORD_BY_SOURCE_LIMIT = "SELECT a.* FROM inv_word_metadata a where a.source=:source and a.word_id in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
             public static final String GET_NEW_WORD_BY_SOURCE_LIMIT = "SELECT a.* FROM inv_word_metadata a where a.source=:source and a.word_id not in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
+            public static final String GET_COUNT_OF_WORDS_BY_POS = "SELECT count(*) FROM inv_parts_of_speech a WHERE a.pos=:pos";
+
         }
+
     }
 }
