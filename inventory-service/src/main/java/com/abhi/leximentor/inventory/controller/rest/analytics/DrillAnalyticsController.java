@@ -22,7 +22,7 @@ public class DrillAnalyticsController {
     private final DrillAnalyticsService drillAnalyticsService;
 
 
-    @GetMapping(value = UrlConstants.Drill.DrillAnalytics.DRILL_GET_ANALYTICS_DRILL_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = UrlConstants.Drill.DrillAnalytics.DRILL_GET_ANALYTICS_DRILL_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public ResponseEntity<RestApiResponse> getDrillAnalyticsData(@PathVariable String drillRefId) {
         DrillAnalyticsDTO response = drillAnalyticsService.getDrillAnalyticsData(Long.parseLong(drillRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
