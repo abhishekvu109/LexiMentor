@@ -18,10 +18,10 @@ is_inventory(){
     fi 
 
     cd ../kafka-docker-installation/kube-objects/
-    microk8s kubectl -f delete nginx-kube.yaml
-    microk8s kubectl -f delete word-inventory-service.yaml
-    microk8s kubectl -f apply word-inventory-service.yaml
-    microk8s kubectl -f apply nginx-kube.yaml
+    microk8s kubectl delete -f nginx-kube.yaml
+    microk8s kubectl delete -f  word-inventory-service.yaml
+    microk8s kubectl apply -f  word-inventory-service.yaml
+    microk8s kubectl apply -f  nginx-kube.yaml
 
 }
 
