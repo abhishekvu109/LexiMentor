@@ -15,4 +15,5 @@ public class DrillAnalyticsDTO {
     private double drillSuccessInPercentage;
     private List<WordDTO> topChallengingWordsInTheDrill;
     private double avgDrillScore;
+    private int countOfChallenges;
 }

@@ -66,12 +66,18 @@ public class DrillAnalyticsServiceImpl implements DrillAnalyticsService {
     }
 
     @Override
+    public int getCountOfChallengesInADrill(long drillRefId) {
+        return drillMetadataRepository.findByRefId(drillRefId).getDrillChallenges().size();
+    }
+
+    @Override
     public DrillAnalyticsDTO getDrillAnalyticsData(long drillRefId) {
         return DrillAnalyticsDTO.builder()
                 .countOfWordsLearned(this.getCountOfWordsLearned(drillRefId))
                 .avgDrillScore(this.getAvgDrillScore(drillRefId))
                 .drillSuccessInPercentage(this.getDrillSuccessInPercentage(drillRefId))
                 .topChallengingWordsInTheDrill(this.getTopNChallengingWordsInTheDrill(10))
+                .countOfChallenges(this.getCountOfChallengesInADrill(drillRefId))
                 .build();
     }
 }

@@ -4,7 +4,6 @@ import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.dto.analytics.DrillAnalyticsDTO;
 import com.abhi.leximentor.inventory.dto.inv.WordDTO;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -23,5 +22,8 @@ public interface DrillAnalyticsService {
 
     public Map<DrillTypes, Double> getAvgDrillScoreOfAllDrills(long drillRefId);
 
+    public int getCountOfChallengesInADrill(long drillRefId);
+
     public DrillAnalyticsDTO getDrillAnalyticsData(long drillRefId);
+
 }
