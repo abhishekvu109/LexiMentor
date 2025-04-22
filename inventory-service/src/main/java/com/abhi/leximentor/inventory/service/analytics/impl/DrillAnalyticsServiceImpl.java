@@ -31,7 +31,7 @@ public class DrillAnalyticsServiceImpl implements DrillAnalyticsService {
 
     @Override
     public double getDrillSuccessInPercentage(long drillRefId) {
-        return drillMetadataRepository.findByRefId(drillRefId).getDrillChallenges().stream().mapToDouble(DrillChallenge::getDrillScore).sum();
+        return Math.round(drillMetadataRepository.findByRefId(drillRefId).getDrillChallenges().stream().mapToDouble(DrillChallenge::getDrillScore).average().getAsDouble() * 100.0) / 100.0;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DrillAnalyticsServiceImpl implements DrillAnalyticsService {
     @Override
     public double getAvgDrillScore(long drillRefId) {
         OptionalDouble optionalDouble = drillMetadataRepository.findByRefId(drillRefId).getDrillChallenges().stream().mapToDouble(DrillChallenge::getDrillScore).average();
-        if (optionalDouble.isPresent()) return optionalDouble.getAsDouble();
+        if (optionalDouble.isPresent()) return Math.round(optionalDouble.getAsDouble() * 100.0) / 100.0;
         else throw new ServerException().new InternalError("Unable to compute.");
     }
 
@@ -72,12 +72,6 @@ public class DrillAnalyticsServiceImpl implements DrillAnalyticsService {
 
     @Override
     public DrillAnalyticsDTO getDrillAnalyticsData(long drillRefId) {
-        return DrillAnalyticsDTO.builder()
-                .countOfWordsLearned(this.getCountOfWordsLearned(drillRefId))
-                .avgDrillScore(this.getAvgDrillScore(drillRefId))
-                .drillSuccessInPercentage(this.getDrillSuccessInPercentage(drillRefId))
-                .topChallengingWordsInTheDrill(this.getTopNChallengingWordsInTheDrill(10))
-                .countOfChallenges(this.getCountOfChallengesInADrill(drillRefId))
-                .build();
+        return DrillAnalyticsDTO.builder().countOfWordsLearned(this.getCountOfWordsLearned(drillRefId)).avgDrillScore(this.getAvgDrillScore(drillRefId)).drillSuccessInPercentage(this.getDrillSuccessInPercentage(drillRefId)).topChallengingWordsInTheDrill(this.getTopNChallengingWordsInTheDrill(10)).countOfChallenges(this.getCountOfChallengesInADrill(drillRefId)).build();
     }
 }
