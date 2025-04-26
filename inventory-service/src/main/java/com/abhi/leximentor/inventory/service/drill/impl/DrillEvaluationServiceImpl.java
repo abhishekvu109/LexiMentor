@@ -150,6 +150,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         return LLMPromptBuilder.EvaluationModule.getPrompt(word, originalMeaning, response);
     }
 
+
     @Override
     public void setUrl(String url) {
         this.url = url;

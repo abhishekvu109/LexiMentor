@@ -16,4 +16,18 @@ public class QueryConstants {
         }
 
     }
+    public static class Analytics{
+        public static class DrillChallenge{
+            public static final String GET_DRILL_CHALLENGE_METADATA= """
+                    select dc.drill_type 'drillType',
+                           count(1) 'drillCount',
+                           avg(dc.drill_score) 'avgScore',
+                           min(dc.drill_score) 'lowestScore',
+                           max(dc.drill_score) 'highestScore'
+                    from
+                        drill_challenge dc
+                    group by drill_type;
+                    """;
+        }
+    }
 }

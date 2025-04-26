@@ -37,6 +37,7 @@ public class UrlConstants {
 
         public static class DrillAnalytics {
             public static final String DRILL_GET_ANALYTICS_DRILL_REF_ID = "/api/leximentor/analytics/drill/{drillRefId}";
+            public static final String DRILL_GET_CHALLENGE_METADATA_ANALYTICS_DRILL_REF_ID = "/api/leximentor/analytics/drill/challenge/metedata";
         }
 
     }
