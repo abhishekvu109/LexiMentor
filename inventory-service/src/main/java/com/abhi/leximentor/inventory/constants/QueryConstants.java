@@ -26,7 +26,7 @@ public class QueryConstants {
                            max(dc.drill_score) 'highestScore'
                     from
                         drill_challenge dc
-                    group by drill_type;
+                    group by dc.drill_type;
                     """;
         }
     }
