@@ -17,8 +17,11 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:abhishek}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      idle-timeout: 60000
+      idle-timeout: 600000
       maximum-pool-size: 50
+      max-lifetime: 1800000
+      validation-timeout: 5000
+      keepalive-time: 300000
 #  kafka:
 #    consumer:
 #      bootstrap-servers: 192.168.1.7:9092
