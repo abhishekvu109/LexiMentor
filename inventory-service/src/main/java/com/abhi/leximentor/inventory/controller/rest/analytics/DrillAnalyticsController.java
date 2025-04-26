@@ -32,7 +32,7 @@ public class DrillAnalyticsController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
-    @GetMapping(value = UrlConstants.Drill.DrillAnalytics.DRILL_GET_CHALLENGE_METADATA_ANALYTICS_DRILL_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = UrlConstants.Drill.DrillAnalytics.DRILL_GET_DRILL_CHALLENGE_METADATA_ANALYTICS, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public ResponseEntity<RestApiResponse> getDrillOverallChallengeAnalytics() {
         List<DrillChallengeAnalyticsDTO> drillChallengeAnalyticsDTOList = drillChallengeAnalyticsService.getDrillChallengeMetadataAnalytics();
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillChallengeAnalyticsDTOList);
