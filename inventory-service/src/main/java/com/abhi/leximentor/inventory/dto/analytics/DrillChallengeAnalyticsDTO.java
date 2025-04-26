@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class DrillChallengeAnalyticsDTO {
     private String drillType;
-    private int drillCount;
+    private long drillCount;
     private double avgScore;
     //Should contain score of the challenge that scored the highest
     private double lowestScore;

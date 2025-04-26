@@ -27,7 +27,7 @@ public class DrillChallengeAnalyticsImpl implements DrillChallengeAnalyticsServi
             DrillChallengeAnalyticsDTO drillChallengeAnalyticsDTO = DrillChallengeAnalyticsDTO.builder().build();
             String drillType = tuple.get("drillType", String.class);
             drillChallengeAnalyticsDTO.setDrillType(drillType);
-            drillChallengeAnalyticsDTO.setDrillCount(tuple.get("drillCount", Integer.class));
+            drillChallengeAnalyticsDTO.setDrillCount(tuple.get("drillCount", Long.class));
             drillChallengeAnalyticsDTO.setAvgScore(tuple.get("avgScore", Double.class));
             drillChallengeAnalyticsDTO.setHighestScore(tuple.get("highestScore", Double.class));
             drillChallengeAnalyticsDTO.setLowestScore(tuple.get("lowestScore", Double.class));
