@@ -52,7 +52,7 @@ public class OllamaLlmChatService implements LlmService {
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
             log.info("The root node of JSON: {}", rootNode);
-            if (rootNode.has("confidence") && rootNode.has("explanation") && rootNode.has("isCorrect")) {
+            if (rootNode.has("confidence") && rootNode.has("explanation") && rootNode.has("correct")) {
                 log.info("Found the confidence,explanation and isCorrect Tag: {}", rootNode);
                 meaningEvaluationDTO = objectMapper.readValue(jsonString, MeaningEvaluationDTO.class);
             } else {

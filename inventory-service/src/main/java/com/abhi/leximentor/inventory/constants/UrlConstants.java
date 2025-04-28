@@ -35,6 +35,11 @@ public class UrlConstants {
             public static final String DRILL_GET_EVALUATION_RESULT_BY_CHALLENGE_ID = "/api/leximentor/drill/metadata/challenges/challenge/{challengeId}/report";
         }
 
+        public static class DrillAnalytics {
+            public static final String DRILL_GET_ANALYTICS_DRILL_REF_ID = "/api/leximentor/analytics/drill/{drillRefId}";
+            public static final String DRILL_GET_DRILL_CHALLENGE_METADATA_ANALYTICS = "/api/leximentor/analytics/drill/challenge/metadata";
+        }
+
     }
 
     public static class Inventory {
@@ -65,7 +70,7 @@ public class UrlConstants {
             public static final String JOB_GET = "/api/leximentor/jobs/{jobId}";
         }
 
-        public static class WritingModule{
+        public static class WritingModule {
             public static final String GENERATE_TOPICS = "/api/leximentor/v1/module/writing/topics";
         }
     }

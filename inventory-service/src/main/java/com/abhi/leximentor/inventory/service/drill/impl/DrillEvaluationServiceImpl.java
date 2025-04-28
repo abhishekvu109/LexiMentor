@@ -93,13 +93,14 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
                 String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
                 log.info("Successfully formatted the prompt : {}", prompt);
                 loadModelServiceName(evaluator);
-                LlamaModelDTO llamaModelDTO = StringUtils.isNotEmpty(dto.getResponse()) ? getLlmResponse(prompt, evaluator) : LlamaModelDTO.builder().isCorrect(false).explanation("Response was empty").confidence(100).build();
+                LlamaModelDTO llamaModelDTO = StringUtils.isNotEmpty(dto.getResponse()) ? getLlmResponse(prompt, evaluator) : LlamaModelDTO.builder().correct(false).explanation("Response was empty").confidence(100).build();
                 llamaModelDTO = llamaModelDTO == null ? LlamaModelDTO.getDefaultInstance() : llamaModelDTO;
                 log.info("The evaluator service has returned a response : {}", llamaModelDTO);
                 DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
                 drillChallenge = (drillChallenge == null) ? scores.getChallengeId() : drillChallenge;
                 scores.setCorrect(llamaModelDTO.isCorrect());
                 totalCorrect += llamaModelDTO.isCorrect() ? 1 : 0;
+                log.info("Total correct in the challenge: {}", totalCorrect);
                 totalIncorrect += llamaModelDTO.isCorrect() ? 0 : 1;
                 drillChallengeScores.add(scores);
                 drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason(llamaModelDTO.getExplanation()).confidence(llamaModelDTO.getConfidence()).evaluator(evaluator).build());
@@ -150,6 +151,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         return LLMPromptBuilder.EvaluationModule.getPrompt(word, originalMeaning, response);
     }
 
+
     @Override
     public void setUrl(String url) {
         this.url = url;
@@ -194,7 +196,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
         drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
         drillChallenge = drillChallengeRepository.save(drillChallenge);
-        log.info("Saved the results in the challenge entity: {}",drillChallenge);
+        log.info("Saved the results in the challenge entity: {}", drillChallenge);
         return this.addAll(drillEvaluationDTOS);
     }
 
@@ -262,7 +264,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
         drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
         drillChallenge = drillChallengeRepository.save(drillChallenge);
-        log.info("Saved the results in the challenge entity :{}",drillChallenge);
+        log.info("Saved the results in the challenge entity :{}", drillChallenge);
         return this.addAll(drillEvaluationDTOS);
     }
 

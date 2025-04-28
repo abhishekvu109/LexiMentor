@@ -17,6 +17,30 @@ public class LLMPromptBuilder {
             boolean isCorrect = true;
             int confidence = 0;
             String explanation = "Explanation of your decision";
+
+            public boolean isCorrect() {
+                return isCorrect;
+            }
+
+            public void setCorrect(boolean correct) {
+                isCorrect = correct;
+            }
+
+            public int getConfidence() {
+                return confidence;
+            }
+
+            public void setConfidence(int confidence) {
+                this.confidence = confidence;
+            }
+
+            public String getExplanation() {
+                return explanation;
+            }
+
+            public void setExplanation(String explanation) {
+                this.explanation = explanation;
+            }
         }
 
         private static String json() {
@@ -24,7 +48,8 @@ public class LLMPromptBuilder {
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             String output = "";
             try {
-                output = objectMapper.writeValueAsString(new OutputLLM());
+                OutputLLM outputLLM=new OutputLLM();
+                output = objectMapper.writeValueAsString(outputLLM);
             } catch (Exception ex) {
                 log.error("Unable to deserialize the JSON");
             }

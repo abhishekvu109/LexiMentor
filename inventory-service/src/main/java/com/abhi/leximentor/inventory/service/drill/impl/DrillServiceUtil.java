@@ -52,7 +52,8 @@ public class DrillServiceUtil {
             return drillChallenge;
         }
 
-        public static DrillChallengeDTO buildDTO(DrillChallenge entity, DrillMetadata drillMetadata) {
+        public static DrillChallengeDTO buildDTO(DrillChallenge entity) {
+            DrillMetadata drillMetadata=entity.getDrillId();
             return DrillChallengeDTO.builder().refId(String.valueOf(entity.getRefId())).drillType(entity.getDrillType()).evaluationStatus(Status.DrillChallenge.getEvaluationStatus(entity.getEvaluationStatus())).status(Status.DrillChallenge.getStatus(entity.getStatus())).drillRefId(String.valueOf(drillMetadata.getRefId())).drillScore(entity.getDrillScore()).isPass(entity.isPass()).totalCorrect(entity.getTotalCorrect()).totalWrong(entity.getTotalWrong()).crtnDate(entity.getCrtnDate()).build();
         }
 
