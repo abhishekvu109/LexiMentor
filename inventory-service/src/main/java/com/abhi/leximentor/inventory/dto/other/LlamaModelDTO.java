@@ -14,12 +14,12 @@ public class LlamaModelDTO {
     private int confidence;
     @JsonProperty("explanation")
     private String explanation;
-    @JsonProperty("isCorrect")
-    private boolean isCorrect;
+    @JsonProperty("correct")
+    private boolean correct;
     private String error;
     private String modelResponse;
 
     public static LlamaModelDTO getDefaultInstance() {
-        return LlamaModelDTO.builder().confidence(0).isCorrect(false).explanation("EVALUATION_FAILED").build();
+        return LlamaModelDTO.builder().confidence(0).correct(false).explanation("EVALUATION_FAILED").build();
     }
 }
