@@ -3,6 +3,10 @@ package com.abhi.leximentor.inventory.entities.drill;
 import com.abhi.leximentor.inventory.entities.inv.Evaluator;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,4 +46,12 @@ public class DrillEvaluation {
 
     @Column(name = "reason", length = 5000)
     private String reason;
+
+    @CreationTimestamp
+    @Column(name = "crtn_date")
+    private LocalDateTime crtnDate;
+
+    @UpdateTimestamp
+    @Column(name = "last_upd_date")
+    private LocalDateTime lastUpdDate;
 }

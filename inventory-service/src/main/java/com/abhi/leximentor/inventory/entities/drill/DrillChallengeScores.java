@@ -27,11 +27,11 @@ public class DrillChallengeScores {
     @Column(name = "uuid")
     private String uuid;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "drill_challenge_id")
     private DrillChallenge challengeId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "drill_set_id")
     private DrillSet drillSetId;
 

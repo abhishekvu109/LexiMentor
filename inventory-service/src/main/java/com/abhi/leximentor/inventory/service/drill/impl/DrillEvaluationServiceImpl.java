@@ -22,10 +22,7 @@ import com.abhi.leximentor.inventory.service.drill.DrillEvaluationService;
 import com.abhi.leximentor.inventory.service.drill.impl.factory.MeaningEvaluator.LlamaMeaningEvaluator;
 import com.abhi.leximentor.inventory.service.drill.impl.factory.MeaningEvaluator.OllamaMeaningEvaluator;
 import com.abhi.leximentor.inventory.service.drill.impl.factory.MeaningEvaluatorFactory;
-import com.abhi.leximentor.inventory.util.LLMPromptBuilder;
-import com.abhi.leximentor.inventory.util.RestAdvancedUtil;
-import com.abhi.leximentor.inventory.util.RestClient;
-import com.abhi.leximentor.inventory.util.RestUtil;
+import com.abhi.leximentor.inventory.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -64,10 +61,17 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     public DrillEvaluationDTO add(DrillEvaluationDTO dto) {
         DrillChallengeScores drillChallengeScores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getDrillChallengeScoresDTO().getRefId()));
         Evaluator evaluator = evaluatorRepository.findByNameAndDrillType(dto.getEvaluator(), drillChallengeScores.getChallengeId().getDrillType());
-        DrillEvaluation drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, drillChallengeScores);
+        List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresAndEvaluator(drillChallengeScores, evaluator);
+        DrillEvaluation drillEvaluation;
+        if (CollectionUtil.isEmpty(drillEvaluations)) {
+            drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, drillChallengeScores);
+        } else {
+            drillEvaluation = drillEvaluations.get(0);
+        }
         drillEvaluation = drillEvaluationRepository.save(drillEvaluation);
         return DrillServiceUtil.DrillEvaluationUtil.buildDTO(drillEvaluation, DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(drillEvaluation.getDrillChallengeScores()));
     }
+
 
     @Override
     @Transactional
