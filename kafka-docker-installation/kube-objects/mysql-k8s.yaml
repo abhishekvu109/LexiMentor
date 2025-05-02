@@ -91,6 +91,7 @@ items:
         spec:
           containers:
             - image: mysql:latest # Pull the new MySQL image
+              imagePullPolicy: IfNotPresent
               name: mysql-db # Name of the container
               env:
                 - name: MYSQL_ROOT_PASSWORD # MySQL Root password environment data
