@@ -30,6 +30,7 @@ public class NamedObjectServiceImpl implements NamedObjectService {
     @Override
     public List<NamedObjectDTO> addAll(List<NamedObjectDTO> dtos) {
         List<NamedObject> entities = dtos.stream().map(NamedObjectBuilder::buildEntity).toList();
+        entities = namedObjectRepository.saveAll(entities);
         return entities.stream().map(NamedObjectBuilder::buildDTO).toList();
     }
 
