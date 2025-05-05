@@ -32,7 +32,7 @@ public class DrillServiceUtil {
         }
 
         public static DrillMetadataDTO buildDTO(DrillMetadata drillMetadata) {
-            return DrillMetadataDTO.builder().refId(String.valueOf(drillMetadata.getRefId())).name(drillMetadata.getName()).status(Status.ApplicationStatus.getStatusStr(drillMetadata.getStatus())).crtnDate(drillMetadata.getCrtnDate()).overAllScore(drillMetadata.getOverallScore()).drillName(drillMetadata.getNamedObject() == null ? "" : drillMetadata.getNamedObject().getName()).namedObjectDTO(NamedObjectServiceImpl.NamedObjectBuilder.buildDTO(drillMetadata.getNamedObject())).build();
+            return DrillMetadataDTO.builder().refId(String.valueOf(drillMetadata.getRefId())).name(drillMetadata.getName()).status(Status.ApplicationStatus.getStatusStr(drillMetadata.getStatus())).crtnDate(drillMetadata.getCrtnDate()).overAllScore(drillMetadata.getOverallScore()).drillName(drillMetadata.getNamedObject() == null ? "" : drillMetadata.getNamedObject().getName()).namedObjectDTO((drillMetadata.getNamedObject() != null) ? NamedObjectServiceImpl.NamedObjectBuilder.buildDTO(drillMetadata.getNamedObject()) : null).build();
         }
     }
 
