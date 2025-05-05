@@ -78,7 +78,7 @@ public class NamedObjectServiceImpl implements NamedObjectService {
         namedObjectRepository.delete(namedObjectRepository.findByRefId(dto.getRefId()));
     }
 
-    static class NamedObjectBuilder {
+    public static class NamedObjectBuilder {
 
         public static NamedObject buildEntity(NamedObjectDTO dto) {
             String tags = dto.getTags().stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(",", "[", "]"));
