@@ -8,6 +8,9 @@ public class UrlConstants {
             public static final String DRILL_METADATA_DELETE_BY_REF_ID = "/api/leximentor/drill/metadata/{drillRefId}";
             public static final String DRILL_METADATA_GET_WORDS_BY_REF_ID = "/api/leximentor/drill/metadata/words/{drillRefId}";
 
+            public static final String DRILL_METADATA_ASSIGN_NAME = "/api/leximentor/drill/metadata/assign-name";
+
+
         }
 
         public static class DrillChallenge {
