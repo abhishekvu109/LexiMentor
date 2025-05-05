@@ -31,4 +31,10 @@ public class QueryConstants {
 
         }
     }
+
+    public static class NamedObject {
+        public static final String GET_ACTIVE_NAMED_OBJECT = """
+                SELECT * FROM named_object where status=1 LIMIT 1
+                """;
+    }
 }

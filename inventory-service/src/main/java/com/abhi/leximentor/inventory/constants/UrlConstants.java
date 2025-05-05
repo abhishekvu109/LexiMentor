@@ -74,4 +74,8 @@ public class UrlConstants {
             public static final String GENERATE_TOPICS = "/api/leximentor/v1/module/writing/topics";
         }
     }
+
+    public static class NamedObject{
+        public static final  String ADD_NAMED_OBJECT="/api/leximentor/v1/named/object";
+    }
 }

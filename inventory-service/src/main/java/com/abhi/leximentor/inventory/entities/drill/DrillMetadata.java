@@ -1,5 +1,6 @@
 package com.abhi.leximentor.inventory.entities.drill;
 
+import com.abhi.leximentor.inventory.entities.NamedObject;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -49,4 +50,10 @@ public class DrillMetadata {
 
     @OneToMany(mappedBy = "drillId", cascade = CascadeType.ALL)
     private List<DrillChallenge> drillChallenges;
+
+    @Column(name = "drill_name")
+    private String drillname;
+
+    @OneToOne
+    private NamedObject namedObject;
 }

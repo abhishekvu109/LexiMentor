@@ -13,6 +13,7 @@ import java.util.List;
 public class DrillMetadataDTO {
     private String refId;
     private String name;
+    private String drillName;
     private String status;
     private LocalDateTime crtnDate;
     private double overAllScore;

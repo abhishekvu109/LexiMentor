@@ -1,12 +1,21 @@
 package com.abhi.leximentor.inventory.constants;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Status {
     public static class ApplicationStatus {
         public static final int ACTIVE = 1;
         public static final int INACTIVE = 0;
 
-        public static String getStatus(int status) {
+        public static final String ACTIVE_STR = "ACTIVE";
+        public static final String INACTIVE_STR = "INACTIVE";
+
+        public static String getStatusStr(int status) {
             return (status == ACTIVE) ? "Active" : "Inactive";
+        }
+
+        public static int getStatus(String status) {
+            return StringUtils.equalsIgnoreCase(status, ACTIVE_STR) ? ACTIVE : INACTIVE;
         }
     }
 
