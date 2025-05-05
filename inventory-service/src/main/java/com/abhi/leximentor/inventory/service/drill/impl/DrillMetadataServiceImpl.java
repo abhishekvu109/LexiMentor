@@ -132,6 +132,10 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
         log.info("Retrieved drill metadata [ID: {}] for refId: {}", drillMetadata.getId(), drillRefId);
 
+        if(drillMetadata.getNamedObject()!=null){
+            throw new ServerException().new InternalError("Drillmetadata already has a name.");
+        }
+
         NamedObject namedObject = namedObjectRepository.get();
         if (namedObject == null) {
             log.error("No active NamedObject found for drill refId: {}", drillRefId);
