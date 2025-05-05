@@ -82,7 +82,7 @@ public class NamedObjectServiceImpl implements NamedObjectService {
         public static NamedObject buildEntity(NamedObjectDTO dto) {
             String tags = dto.getTags().stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(",", "[", "]"));
             String aliases = dto.getAliases().stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(",", "[", "]"));
-            return NamedObject.builder().refId(KeyGeneratorUtil.refId()).name(dto.getName()).alias(aliases).tags(tags).description(dto.getDescription()).genre(dto.getGenre()).status(Status.ApplicationStatus.ACTIVE).build();
+            return NamedObject.builder().refId(KeyGeneratorUtil.refId()).name(dto.getName()).alias(aliases).tags(tags).description(dto.getDescription()).genre(dto.getGenre()).status(Status.ApplicationStatus.ACTIVE).subGenre(dto.getSubGenre()).build();
         }
 
         public static NamedObjectDTO buildDTO(NamedObject entity) {
@@ -97,7 +97,7 @@ public class NamedObjectServiceImpl implements NamedObjectService {
                 String aliases = entity.getAlias();
                 aliasesList = Arrays.stream(aliases.replace("[", "").replace("]", "").split(",")).toList();
             }
-            return NamedObjectDTO.builder().refId(entity.getRefId()).name(entity.getName()).aliases(aliasesList).tags(tagsList).status(Status.ApplicationStatus.getStatusStr(entity.getStatus())).build();
+            return NamedObjectDTO.builder().refId(entity.getRefId()).name(entity.getName()).aliases(aliasesList).tags(tagsList).status(Status.ApplicationStatus.getStatusStr(entity.getStatus())).genre(entity.getGenre()).subGenre(entity.getSubGenre()).build();
         }
     }
 }

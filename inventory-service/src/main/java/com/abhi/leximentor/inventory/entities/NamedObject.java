@@ -30,6 +30,9 @@ public class NamedObject {
     @Column(nullable = false, length = 50)
     private String genre;  // E.g., "Mythology", "Astronomy", "Nature"
 
+    @Column(nullable = true, length = 50)
+    private String subGenre;  // E.g., "Mythology", "Astronomy", "Nature"
+
     @Column(length = 255)
     private String description;
 
