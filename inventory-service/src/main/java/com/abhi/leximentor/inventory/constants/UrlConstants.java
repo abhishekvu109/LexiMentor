@@ -8,6 +8,9 @@ public class UrlConstants {
             public static final String DRILL_METADATA_DELETE_BY_REF_ID = "/api/leximentor/drill/metadata/{drillRefId}";
             public static final String DRILL_METADATA_GET_WORDS_BY_REF_ID = "/api/leximentor/drill/metadata/words/{drillRefId}";
 
+            public static final String DRILL_METADATA_ASSIGN_NAME = "/api/leximentor/drill/metadata/assign-name/{drillRefId}";
+
+
         }
 
         public static class DrillChallenge {
@@ -73,5 +76,9 @@ public class UrlConstants {
         public static class WritingModule {
             public static final String GENERATE_TOPICS = "/api/leximentor/v1/module/writing/topics";
         }
+    }
+
+    public static class NamedObject{
+        public static final  String ADD_NAMED_OBJECT="/api/leximentor/v1/named/object";
     }
 }

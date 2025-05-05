@@ -1,10 +1,15 @@
 package com.abhi.leximentor.inventory.service.drill.impl;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
+import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.dto.drill.DrillMetadataDTO;
+import com.abhi.leximentor.inventory.entities.NamedObject;
 import com.abhi.leximentor.inventory.entities.drill.*;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
-import com.abhi.leximentor.inventory.repository.drill.*;
+import com.abhi.leximentor.inventory.exceptions.entities.ServerException;
+import com.abhi.leximentor.inventory.repository.NamedObjectRepository;
+import com.abhi.leximentor.inventory.repository.drill.DrillEvaluationRepository;
+import com.abhi.leximentor.inventory.repository.drill.DrillMetadataRepository;
 import com.abhi.leximentor.inventory.repository.inv.WordMetadataRepository;
 import com.abhi.leximentor.inventory.service.drill.DrillMetadataService;
 import com.abhi.leximentor.inventory.util.ApplicationUtil;
@@ -22,16 +27,14 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Transactional
 public class DrillMetadataServiceImpl implements DrillMetadataService {
 
     private final DrillMetadataRepository drillMetadataRepository;
     private final WordMetadataRepository wordMetadataRepository;
     private final ApplicationUtil applicationUtil;
-    private final DrillServiceUtil drillServiceUtil;
-    private final DrillChallengeRepository drillChallengeRepository;
     private final DrillEvaluationRepository drillEvaluationRepository;
-    private final DrillChallengeScoreRepository drillChallengeScoreRepository;
-    private final DrillSetRepository drillSetRepository;
+    private final NamedObjectRepository namedObjectRepository;
 
     @Override
     @Transactional
@@ -92,12 +95,6 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
         List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(drillChallengeScores);
         drillEvaluationRepository.deleteAll(drillEvaluations);
         log.info("Removed the drill evaluations");
-//        drillChallengeScoreRepository.deleteAll(drillChallengeScores);
-//        log.info("Removed all the drill challenge scores");
-//        drillChallengeRepository.deleteAll(drillChallenges);
-//        log.info("Removed all the drill challenges");
-//        drillSetRepository.deleteAll(drillSetList);
-//        log.info("Removed all the drill set");
         drillMetadataRepository.delete(drillMetadata);
         log.info("The entity has been deleted: {}", drillMetadata.getName());
     }
@@ -114,4 +111,48 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
         return drillMetadata.getDrillSetList().stream().map(drillSet -> drillSet.getWordId().getWord()).toList();
     }
+
+    //    @Override
+//    @Transactional
+//    public DrillMetadataDTO assignDrillName(long drillRefId) {
+//        DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
+//        NamedObject namedObject = namedObjectRepository.get();
+//        if (namedObject == null) throw new ServerException.NoActiveNameObjectFound("No active Named object found");
+//        drillMetadata.setNamedObject(namedObject);
+//        drillMetadata = drillMetadataRepository.save(drillMetadata);
+//        namedObject.setStatus(Status.ApplicationStatus.INACTIVE);
+//        namedObjectRepository.save(namedObject);
+//        return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+//    }
+    @Override
+    @Transactional
+    public DrillMetadataDTO assignDrillName(long drillRefId) {
+        log.info("Starting name assignment for drill with refId: {}", drillRefId);
+
+        DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
+        log.info("Retrieved drill metadata [ID: {}] for refId: {}", drillMetadata.getId(), drillRefId);
+
+        NamedObject namedObject = namedObjectRepository.get();
+        if (namedObject == null) {
+            log.error("No active NamedObject found for drill refId: {}", drillRefId);
+            throw new ServerException.NoActiveNameObjectFound("No active Named object found");
+        }
+        log.info("Acquired NamedObject [ID: {}, Name: {}]", namedObject.getId(), namedObject.getName());
+
+        drillMetadata.setNamedObject(namedObject);
+        log.info("Assigned name '{}' to drill [ID: {}]", namedObject.getName(), drillMetadata.getId());
+
+        drillMetadata = drillMetadataRepository.save(drillMetadata);
+        log.info("Updated drill metadata [ID: {}] persisted successfully", drillMetadata.getId());
+
+        namedObject.setStatus(Status.ApplicationStatus.INACTIVE);
+        log.info("Marking NamedObject [ID: {}] as INACTIVE", namedObject.getId());
+
+        namedObjectRepository.save(namedObject);
+        log.info("NamedObject [ID: {}] status update persisted", namedObject.getId());
+
+        log.info("Completed name assignment for drill [ID: {}]", drillMetadata.getId());
+        return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+    }
+
 }

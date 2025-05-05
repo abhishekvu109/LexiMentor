@@ -92,6 +92,7 @@ items:
           containers:
             - image: mysql:latest # Pull the new MySQL image
               name: mysql-db # Name of the container
+              imagePullPolicy: IfNotPresent
               env:
                 - name: MYSQL_ROOT_PASSWORD # MySQL Root password environment data
                   valueFrom:

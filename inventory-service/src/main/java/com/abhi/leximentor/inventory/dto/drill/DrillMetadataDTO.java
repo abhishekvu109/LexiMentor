@@ -1,5 +1,6 @@
 package com.abhi.leximentor.inventory.dto.drill;
 
+import com.abhi.leximentor.inventory.dto.NamedObjectDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,9 +14,11 @@ import java.util.List;
 public class DrillMetadataDTO {
     private String refId;
     private String name;
+    private String drillName;
     private String status;
     private LocalDateTime crtnDate;
     private double overAllScore;
     private List<DrillSetDTO> drillSetDTOList;
     private List<DrillChallengeDTO> drillChallengeDTOList;
+    private NamedObjectDTO namedObjectDTO;
 }
