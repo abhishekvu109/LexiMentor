@@ -98,7 +98,7 @@ public class NamedObjectServiceImpl implements NamedObjectService {
                 String aliases = entity.getAlias();
                 aliasesList = Arrays.stream(aliases.replace("[", "").replace("]", "").split(",")).toList();
             }
-            return NamedObjectDTO.builder().refId(entity.getRefId()).name(entity.getName()).aliases(aliasesList).tags(tagsList).status(Status.ApplicationStatus.getStatusStr(entity.getStatus())).genre(entity.getGenre()).subGenre(entity.getSubGenre()).build();
+            return NamedObjectDTO.builder().refId(entity.getRefId()).name(entity.getName()).description(entity.getDescription()).aliases(aliasesList).tags(tagsList).status(Status.ApplicationStatus.getStatusStr(entity.getStatus())).genre(entity.getGenre()).subGenre(entity.getSubGenre()).build();
         }
     }
 }
