@@ -24,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -40,7 +42,7 @@ public class TopicServiceImpl implements TopicService {
     private String url;
     private final Integer RETRY_COUNT = 3;
     private final MongoTemplate mongoTemplate;
-    private  static final String MODEL_NAME="llama3";
+    private static final String MODEL_NAME = "llama3";
 
     @Override
     public LlmTopicDTO generateTopicsFromLlm(LlmTopicDTO request) {
@@ -98,7 +100,7 @@ public class TopicServiceImpl implements TopicService {
         try {
             Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
             log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
-            setUrl(properties.getProperty(LLM_TOPIC)+MODEL_NAME);
+            setUrl(properties.getProperty(LLM_TOPIC) + MODEL_NAME);
         } catch (IOException ex) {
             log.error(ex.getMessage());
         }
@@ -123,4 +125,10 @@ public class TopicServiceImpl implements TopicService {
             return null;
         }
     }
+
+    @Override
+    public List<LlmTopicDTO> findAll() {
+        return llmTopicMasterRepository.findAll().stream().map(sqlEntity -> WriteWiseServiceUtil.TopicServiceUtil.buildLlmTopicDTO(sqlEntity, Objects.requireNonNull(mongoTemplate.findById(sqlEntity.getMongoTopicId(), LLmTopic.class)))).toList();
+    }
+
 }

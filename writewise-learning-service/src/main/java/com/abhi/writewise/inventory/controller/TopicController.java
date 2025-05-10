@@ -13,21 +13,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TopicController {
+
     private final TopicService topicService;
 
     @PostMapping(value = UrlConstants.Topic.GENERATE_TOPICS, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> generateTopics(@Valid @RequestBody LlmTopicDTO request) {
         log.info("New request has been received to generate topics from the LLM service.");
-        LlmTopicDTO response = topicService.generateTopicsFromLlm(request);
-        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+            LlmTopicDTO response = topicService.generateTopicsFromLlm(request);
+        });
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Submitted a request to generate the topics.");
+    }
+
+    @GetMapping(value = UrlConstants.Topic.GENERATE_TOPICS, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getAllTopics() {
+        log.info("Received a request to fetch all the topics.");
+        List<LlmTopicDTO> response = topicService.findAll();
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 }

@@ -4,6 +4,7 @@ import com.abhi.writewise.inventory.dto.LlmTopicDTO;
 import com.abhi.writewise.inventory.dto.TopicDTO;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.LLmTopic;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.Topic;
+import com.abhi.writewise.inventory.entities.sql.mysql.LLmTopicMaster;
 
 public class WriteWiseServiceUtil {
     public static class TopicServiceUtil {
@@ -15,5 +16,27 @@ public class WriteWiseServiceUtil {
             return Topic.builder().topicNo(dto.getTopicNo()).topic(dto.getTopic()).subject(dto.getSubject()).description(dto.getDescriptions()).points(dto.getPoints()).learning(dto.getLearning()).build();
         }
 
+        public static LlmTopicDTO buildLlmTopicDTO(LLmTopicMaster sqlEntity, LLmTopic noSqlEntity) {
+            return LlmTopicDTO.builder()
+                    .subject(noSqlEntity.getSubject())
+                    .numOfTopic(noSqlEntity.getNumOfTopic())
+                    .purpose(noSqlEntity.getPurpose())
+                    .wordCount(noSqlEntity.getWordCount())
+                    .prompt(noSqlEntity.getPrompt())
+                    .topics(noSqlEntity.getTopics().stream().map(TopicServiceUtil::buildTopicDTO).toList())
+                    .recommendations(noSqlEntity.getRecommendations())
+                    .build();
+        }
+
+        public static TopicDTO buildTopicDTO(Topic topic) {
+            return TopicDTO.builder()
+                    .topicNo(topic.getTopicNo())
+                    .topic(topic.getTopic())
+                    .subject(topic.getSubject())
+                    .descriptions(topic.getDescription())
+                    .points(topic.getPoints())
+                    .learning(topic.getLearning())
+                    .build();
+        }
     }
 }
