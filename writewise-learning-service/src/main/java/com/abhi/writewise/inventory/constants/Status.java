@@ -38,5 +38,8 @@ public class Status {
         public static String getMessage(Integer status) {
             return statusMap.get(status);
         }
+        public static String getStatusStr(Integer status) {
+            return statusShortMap.get(status);
+        }
     }
 }

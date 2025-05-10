@@ -1,5 +1,6 @@
 package com.abhi.writewise.inventory.service.impl;
 
+import com.abhi.writewise.inventory.constants.Status;
 import com.abhi.writewise.inventory.dto.LlmTopicDTO;
 import com.abhi.writewise.inventory.dto.TopicDTO;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.LLmTopic;
@@ -25,6 +26,7 @@ public class WriteWiseServiceUtil {
                     .prompt(noSqlEntity.getPrompt())
                     .topics(noSqlEntity.getTopics().stream().map(TopicServiceUtil::buildTopicDTO).toList())
                     .recommendations(noSqlEntity.getRecommendations())
+                    .status(Status.Topic.getStatusStr(sqlEntity.getStatus()))
                     .build();
         }
 

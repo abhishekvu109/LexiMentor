@@ -28,4 +28,6 @@ public class LlmTopicDTO {
     private List<TopicDTO> topics;
     @JsonProperty("recommendations")
     private List<String> recommendations;
+    @JsonProperty("status")
+    private String status;
 }
