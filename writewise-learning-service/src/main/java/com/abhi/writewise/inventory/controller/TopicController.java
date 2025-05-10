@@ -40,4 +40,11 @@ public class TopicController {
         List<LlmTopicDTO> response = topicService.findAll();
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
+
+    @GetMapping(value = UrlConstants.Topic.GET_TOPIC_BY_TOPIC_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> findByRefId(@PathVariable String topicRefId) {
+        log.info("Received a request a fetch Topic by refId: {}", topicRefId);
+        LlmTopicDTO response = topicService.findByRefId(Long.parseLong(topicRefId));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+    }
 }
