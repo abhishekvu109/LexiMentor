@@ -135,7 +135,7 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public LlmTopicDTO findByRefId(long refId) {
         LLmTopicMaster sqlLlmEntity = llmTopicMasterRepository.findByRefId(refId);
-        LLmTopic noSqlLlmEntity = mongoTemplate.findById(refId, LLmTopic.class);
+        LLmTopic noSqlLlmEntity = mongoTemplate.findById(sqlLlmEntity.getMongoTopicId(), LLmTopic.class);
         if(noSqlLlmEntity==null)
             throw new ServerException().new InternalError("Unable to find the equivalent Mongo DB instance.");
         return WriteWiseServiceUtil.TopicServiceUtil.buildLlmTopicDTO(sqlLlmEntity, noSqlLlmEntity);
