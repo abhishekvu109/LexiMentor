@@ -30,4 +30,6 @@ public class LlmTopicDTO {
     private List<String> recommendations;
     @JsonProperty("status")
     private String status;
+    @JsonProperty("refId")
+    private String refId;
 }

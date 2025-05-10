@@ -4,6 +4,7 @@ import com.abhi.writewise.inventory.constants.Status;
 import com.abhi.writewise.inventory.dto.LlmTopicDTO;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.LLmTopic;
 import com.abhi.writewise.inventory.entities.sql.mysql.LLmTopicMaster;
+import com.abhi.writewise.inventory.exceptions.entities.ServerException;
 import com.abhi.writewise.inventory.repository.sql.mysql.LlmTopicMasterRepository;
 import com.abhi.writewise.inventory.service.TopicService;
 import com.abhi.writewise.inventory.util.KeyGeneratorUtil;
@@ -131,4 +132,12 @@ public class TopicServiceImpl implements TopicService {
         return llmTopicMasterRepository.findAll().stream().map(sqlEntity -> WriteWiseServiceUtil.TopicServiceUtil.buildLlmTopicDTO(sqlEntity, Objects.requireNonNull(mongoTemplate.findById(sqlEntity.getMongoTopicId(), LLmTopic.class)))).toList();
     }
 
+    @Override
+    public LlmTopicDTO findByRefId(long refId) {
+        LLmTopicMaster sqlLlmEntity = llmTopicMasterRepository.findByRefId(refId);
+        LLmTopic noSqlLlmEntity = mongoTemplate.findById(refId, LLmTopic.class);
+        if(noSqlLlmEntity==null)
+            throw new ServerException().new InternalError("Unable to find the equivalent Mongo DB instance.");
+        return WriteWiseServiceUtil.TopicServiceUtil.buildLlmTopicDTO(sqlLlmEntity, noSqlLlmEntity);
+    }
 }

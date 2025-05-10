@@ -27,6 +27,7 @@ public class WriteWiseServiceUtil {
                     .topics(noSqlEntity.getTopics().stream().map(TopicServiceUtil::buildTopicDTO).toList())
                     .recommendations(noSqlEntity.getRecommendations())
                     .status(Status.Topic.getStatusStr(sqlEntity.getStatus()))
+                    .refId(String.valueOf(sqlEntity.getRefId()))
                     .build();
         }
 

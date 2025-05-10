@@ -8,4 +8,6 @@ public interface TopicService {
     public LlmTopicDTO generateTopicsFromLlm(LlmTopicDTO request);
 
     public List<LlmTopicDTO> findAll();
+
+    public LlmTopicDTO findByRefId(long refId);
 }
