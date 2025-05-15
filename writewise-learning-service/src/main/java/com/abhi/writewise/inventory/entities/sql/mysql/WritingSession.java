@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name = "writewise_llm_topic_master")
-public class LLmTopicMaster {
+public class WritingSession {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false)

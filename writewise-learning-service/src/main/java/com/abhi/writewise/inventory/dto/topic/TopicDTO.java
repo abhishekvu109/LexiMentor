@@ -1,4 +1,4 @@
-package com.abhi.writewise.inventory.dto;
+package com.abhi.writewise.inventory.dto.topic;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,4 +26,8 @@ public class TopicDTO {
     private List<String> points;
     @JsonProperty(value = "learning")
     private String learning;
+    @JsonProperty(value = "refId")
+    private String refId;
+    @JsonProperty(value = "uuid")
+    private String uuid;
 }

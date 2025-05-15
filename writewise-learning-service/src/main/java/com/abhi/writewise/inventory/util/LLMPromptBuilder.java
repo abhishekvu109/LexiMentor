@@ -199,4 +199,99 @@ public class LLMPromptBuilder {
 
     }
 
+    public static class EvaluationPrompt {
+        public static synchronized String prompt(String topic, String subject, String points, String recommendations, String userResponse) {
+            return String.format("""
+                    You are an expert writing evaluator specializing in English writing skills, particularly for exams like IELTS.
+                                            
+                    ## Task:
+                    You will receive a JSON payload enclosed within `<Request></Request>` tags.
+                    The payload contains:
+                    - A topic.
+                    - A genre.
+                    - Key focus points.
+                    - Recommendations.
+                    - The user's written response.
+                                            
+                    Your role is to critically evaluate the `userResponse` on the following **six writing quality metrics**:
+                    1. Spelling
+                    2. Grammar
+                    3. Punctuation
+                    4. Vocabulary
+                    5. StyleAndTone
+                    6. CreativityAndThinking
+                                            
+                    For **each metric**, you must:
+                    - Assign a **score out of 100** (integer only).
+                    - Provide **at least 10 critical comments** highlighting specific issues in the writing.
+                    - Provide **at least 5 alternate suggestions** showing how the user could have written better.
+                                            
+                    ## Mandatory Output Format:
+                    Your response must be **strictly enclosed within `<Response>...</Response>` tags**, and the body must be a **valid JSON object**.
+                                            
+                    You must **NOT generate any explanations, extra text, or summaries outside the JSON and `<Response>` tags**.
+                                            
+                    Ensure the response strictly follows the format below:
+                                            
+                    <Response>
+                    {
+                      "spelling":{
+                        "score": 0-100,
+                        "comments": ["...minimum 10 critical comments..."],
+                        "alternateSuggestions": ["...minimum 5 suggestions to improve..."]
+                      },
+                      "grammar":{
+                        ...
+                      },
+                      "punctuation":{
+                        ...
+                      },
+                      "vocabulary":{
+                        ...
+                      },
+                      "styleAndTone":{
+                        ...
+                      },
+                      "creativityAndThinking":{
+                        ...
+                      }
+                      "OverallRecommendations":[
+                        "Suggest on high-level what to improve like a judge."
+                      ]
+                    }
+                    </Response>
+                                            
+                    ## Understanding the parameters
+                    - Spelling: If the spelling is wrong then indicate which word is written is wrong and the mention the correct spelling.
+                    - Grammar: Check for English grammar and point out the sentence where the grammar is incorrect. Be critical at low-level, do not provide comments on high-level.
+                    - Punctuation: Look for commas, full-stop everything.
+                    - Vocabulary: explain why the word is incorrect and what should have been used.
+                    - Creativity and Thinking: Eventually this is the most important thing for improvement. Explain why it is not very creative and what is creative in the writing.
+                    - OverallRecommendations: Suggest multiple recommendations to focus so that the user understands the major problems in writing. Things to learn as much as the user can.
+                                            
+                    ## Important guidelines:
+                    - Be strictly critical and detailed in your comments.
+                    - Focus comments on both technical correctness and writing style.
+                    - Use bullet-style critical comments, pointing out flaws precisely.
+                    - For suggestions, show better phrasing, alternate sentences, or improvements the user can make.
+                    - Ensure the suggestions are actionable, practical, and demonstrate correct English usage.
+                                            
+                    ## Input:
+                    <Request>
+                    {
+                      "topic":"%s",
+                      "genre":"%s",
+                      "points":[
+                        %s
+                      ],
+                      "recommendations":[
+                        %s
+                      ],
+                      "userResponse":"%s"
+                    }
+                    </Request>
+                                            
+                    """, topic, subject, points, recommendations, userResponse);
+        }
+    }
 }

@@ -1,11 +1,15 @@
 package com.abhi.writewise.inventory.service.impl;
 
 import com.abhi.writewise.inventory.constants.Status;
-import com.abhi.writewise.inventory.dto.LlmTopicDTO;
-import com.abhi.writewise.inventory.entities.nosql.mongodb.LLmTopic;
-import com.abhi.writewise.inventory.entities.sql.mysql.LLmTopicMaster;
+import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
+import com.abhi.writewise.inventory.entities.nosql.mongodb.response.Response;
+import com.abhi.writewise.inventory.entities.nosql.mongodb.response.ResponseMaster;
+import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.TopicGeneration;
+import com.abhi.writewise.inventory.entities.sql.mysql.WritingSession;
 import com.abhi.writewise.inventory.exceptions.entities.ServerException;
-import com.abhi.writewise.inventory.repository.sql.mysql.LlmTopicMasterRepository;
+import com.abhi.writewise.inventory.repository.nosql.ResponseMasterRepository;
+import com.abhi.writewise.inventory.repository.nosql.TopicGenerationRepository;
+import com.abhi.writewise.inventory.repository.sql.mysql.WritingSessionRepository;
 import com.abhi.writewise.inventory.service.TopicService;
 import com.abhi.writewise.inventory.util.KeyGeneratorUtil;
 import com.abhi.writewise.inventory.util.LLMPromptBuilder;
@@ -25,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -38,19 +43,21 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TopicServiceImpl implements TopicService {
     private final static String LLM_TOPIC = "ollama-llm-writing-module-topics";
-    private final LlmTopicMasterRepository llmTopicMasterRepository;
+    private static final String MODEL_NAME = "llama3";
+    private final WritingSessionRepository writingSessionRepository;
     private final RestClient restClient;
-    private String url;
     private final Integer RETRY_COUNT = 3;
     private final MongoTemplate mongoTemplate;
-    private static final String MODEL_NAME = "llama3";
+    private final TopicGenerationRepository topicGenerationRepository;
+    private final ResponseMasterRepository responseMasterRepository;
+    private String url;
 
     @Override
-    public LlmTopicDTO generateTopicsFromLlm(LlmTopicDTO request) {
+    public TopicGenerationDTO generateTopicsFromLlm(TopicGenerationDTO request) {
         log.info("LLM topic generation service is called.");
-        LLmTopicMaster sqlEntity = LLmTopicMaster.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).deleteInd(Status.Topic.DeleteStatus.ACTIVE).status(Status.Topic.TOPIC_REQUEST).build();
+        WritingSession sqlEntity = WritingSession.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).deleteInd(Status.Topic.DeleteStatus.ACTIVE).status(Status.Topic.TOPIC_REQUEST).build();
         long refId = sqlEntity.getRefId();
-        sqlEntity = llmTopicMasterRepository.save(sqlEntity);
+        sqlEntity = writingSessionRepository.save(sqlEntity);
         log.info("A new record has been persisted: {}", sqlEntity);
         loadModelServiceName();
         String prompt = (StringUtils.isEmpty(request.getPrompt())) ? LLMPromptBuilder.TopicPrompt.prompt(request.getSubject(), request.getNumOfTopic(), request.getPurpose(), request.getWordCount()) : request.getPrompt();
@@ -73,7 +80,7 @@ public class TopicServiceImpl implements TopicService {
                 retry--;
             }
         }
-        LlmTopicDTO response = mapLlmResponseToObject(responseOutput);
+        TopicGenerationDTO response = mapLlmResponseToObject(responseOutput);
         log.info("LLM has generated the response. {}", response);
         if (response != null) {
             response.setPrompt(prompt);
@@ -81,20 +88,38 @@ public class TopicServiceImpl implements TopicService {
             response.setPurpose(request.getPurpose());
             response.setWordCount(request.getWordCount());
             response.setNumOfTopic(request.getNumOfTopic());
-            LLmTopic lLmTopicEntity = WriteWiseServiceUtil.TopicServiceUtil.buildEntity(response);
-            lLmTopicEntity = mongoTemplate.insert(lLmTopicEntity);
-            log.info("LLM response has been saved in mongo: {}", lLmTopicEntity);
-            ObjectId mongoTopicId = lLmTopicEntity.getId();
+            TopicGeneration topicGenerationEntity = TopicResponseEvalServiceUtil.TopicUtil.buildEntity(response);
+//            topicGenerationEntity = mongoTemplate.insert(topicGenerationEntity);
+            topicGenerationEntity = topicGenerationRepository.save(topicGenerationEntity);
+            log.info("LLM response has been saved in mongo: {}", topicGenerationEntity);
+            ResponseMaster responseMaster = buildResponseEntity(topicGenerationEntity, refId);
+            responseMaster = responseMasterRepository.save(responseMaster);
+            ObjectId mongoTopicId = topicGenerationEntity.getId();
+            ObjectId responseMasterId = responseMaster.getId();
             CompletableFuture.runAsync(() -> {
-                LLmTopicMaster dbEntity = llmTopicMasterRepository.findByRefId(refId);
+                WritingSession dbEntity = writingSessionRepository.findByRefId(refId);
                 dbEntity.setStatus(Status.Topic.TOPIC_RESPONSE);
                 dbEntity.setMongoTopicId(mongoTopicId.toHexString());
-                dbEntity = llmTopicMasterRepository.save(dbEntity);
+                dbEntity.setMongoTopicResponseId(responseMasterId.toHexString());
+                dbEntity = writingSessionRepository.save(dbEntity);
                 log.info("The SQL record status is changed to {}", Status.Topic.getMessage(Status.Topic.TOPIC_RESPONSE));
                 log.info("Mongo object: {}", dbEntity);
             });
         }
         return response;
+    }
+
+    private ResponseMaster buildResponseEntity(TopicGeneration topicGeneration, long sqlRefId) {
+        ResponseMaster responseMaster = TopicResponseEvalServiceUtil.ResponseUtil.BuildEntity.buildResponseMaster();
+        List<Response> responses = new LinkedList<>();
+        topicGeneration.getTopics().forEach(topic -> {
+            Response response = TopicResponseEvalServiceUtil.ResponseUtil.BuildEntity.buildResponse();
+            response.setTopic(topic);
+            responses.add(response);
+        });
+        responseMaster.setTopicResponseList(responses);
+        responseMaster.setSqlRefId(sqlRefId);
+        return responseMaster;
     }
 
     private void loadModelServiceName() {
@@ -116,11 +141,11 @@ public class TopicServiceImpl implements TopicService {
         throw new IllegalArgumentException("No valid JSON found in the response");
     }
 
-    private LlmTopicDTO mapLlmResponseToObject(String response) {
+    private TopicGenerationDTO mapLlmResponseToObject(String response) {
         try {
             String json = extractJsonFromResponse(response);
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(json, LlmTopicDTO.class);
+            return objectMapper.readValue(json, TopicGenerationDTO.class);
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;
@@ -128,16 +153,16 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public List<LlmTopicDTO> findAll() {
-        return llmTopicMasterRepository.findAll().stream().map(sqlEntity -> WriteWiseServiceUtil.TopicServiceUtil.buildLlmTopicDTO(sqlEntity, Objects.requireNonNull(mongoTemplate.findById(sqlEntity.getMongoTopicId(), LLmTopic.class)))).toList();
+    public List<TopicGenerationDTO> findAll() {
+        return writingSessionRepository.findAll().stream().map(sqlEntity -> TopicResponseEvalServiceUtil.TopicUtil.buildLlmTopicDTO(sqlEntity, Objects.requireNonNull(mongoTemplate.findById(sqlEntity.getMongoTopicId(), TopicGeneration.class)))).toList();
     }
 
     @Override
-    public LlmTopicDTO findByRefId(long refId) {
-        LLmTopicMaster sqlLlmEntity = llmTopicMasterRepository.findByRefId(refId);
-        LLmTopic noSqlLlmEntity = mongoTemplate.findById(sqlLlmEntity.getMongoTopicId(), LLmTopic.class);
-        if(noSqlLlmEntity==null)
+    public TopicGenerationDTO findByRefId(long refId) {
+        WritingSession sqlLlmEntity = writingSessionRepository.findByRefId(refId);
+        TopicGeneration noSqlLlmEntity = mongoTemplate.findById(sqlLlmEntity.getMongoTopicId(), TopicGeneration.class);
+        if (noSqlLlmEntity == null)
             throw new ServerException().new InternalError("Unable to find the equivalent Mongo DB instance.");
-        return WriteWiseServiceUtil.TopicServiceUtil.buildLlmTopicDTO(sqlLlmEntity, noSqlLlmEntity);
+        return TopicResponseEvalServiceUtil.TopicUtil.buildLlmTopicDTO(sqlLlmEntity, noSqlLlmEntity);
     }
 }

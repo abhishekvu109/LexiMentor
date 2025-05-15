@@ -1,13 +1,13 @@
 package com.abhi.writewise.inventory.service;
 
-import com.abhi.writewise.inventory.dto.LlmTopicDTO;
+import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
 
 import java.util.List;
 
 public interface TopicService {
-    public LlmTopicDTO generateTopicsFromLlm(LlmTopicDTO request);
+    public TopicGenerationDTO generateTopicsFromLlm(TopicGenerationDTO request);
 
-    public List<LlmTopicDTO> findAll();
+    public List<TopicGenerationDTO> findAll();
 
-    public LlmTopicDTO findByRefId(long refId);
+    public TopicGenerationDTO findByRefId(long refId);
 }
