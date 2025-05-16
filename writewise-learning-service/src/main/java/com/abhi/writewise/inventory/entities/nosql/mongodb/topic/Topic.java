@@ -1,4 +1,4 @@
-package com.abhi.writewise.inventory.entities.nosql.mongodb;
+package com.abhi.writewise.inventory.entities.nosql.mongodb.topic;
 
 import jakarta.persistence.Id;
 import lombok.*;
@@ -13,15 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "llm_topic")
-public class LLmTopic {
+@Document(collection = "topic")
+public class Topic {
     @Id
     private ObjectId id;
+    private int topicNo;
+    private long refId;
+    private String uuid;
+    private String topic;
     private String subject;
-    private int numOfTopic;
-    private String purpose;
-    private int wordCount;
-    private String prompt;
-    private List<Topic> topics;
-    private List<String> recommendations;
+    private String description;
+    private List<String> points;
+    private String learning;
 }
