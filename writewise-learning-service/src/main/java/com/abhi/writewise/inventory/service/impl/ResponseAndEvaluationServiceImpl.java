@@ -181,6 +181,10 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
             log.error("The response version is not found: {}",versionRefId);
             throw new ServerException().new InternalError("Response version not found");
         }
+        if(responseVersion.getResponseStatus()==Status.EvaluationStatus.COMPLETED){
+            log.error("The response has been already evaluated.");
+            throw new ServerException().new InternalError("The evaluation has already been evaluated.");
+        }
         EvaluationResultDTO llmResponse = sendToLlmForEvaluation(responseEntity.getTopic(),
                 topicGeneration.getRecommendations(),
                 responseVersion.getResponse());

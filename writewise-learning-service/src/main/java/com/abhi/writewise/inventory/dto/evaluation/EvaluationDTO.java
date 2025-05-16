@@ -19,4 +19,5 @@ public class EvaluationDTO {
     private LocalDateTime lastUpdDate;
     private String evaluationStatus;
     private double score;
+    private String status;
 }

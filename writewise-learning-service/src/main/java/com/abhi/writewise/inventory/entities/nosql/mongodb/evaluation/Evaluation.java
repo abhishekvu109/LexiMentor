@@ -19,5 +19,4 @@ public class Evaluation {
     private LocalDateTime lastUpdDate;
     private int evaluationStatus;
     private double score;
-
 }

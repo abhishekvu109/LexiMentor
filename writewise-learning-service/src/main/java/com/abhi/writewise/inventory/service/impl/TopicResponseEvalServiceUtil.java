@@ -287,7 +287,7 @@ public class TopicResponseEvalServiceUtil {
                         .evaluationResult(BuildEntity.buildEvaluationResult(dto.getEvaluationResult()))
                         .createDate(LocalDateTime.now())
                         .lastUpdDate(LocalDateTime.now())
-                        .evaluationStatus(Status.EvaluationStatus.IN_PROGRESS)
+                        .evaluationStatus(Status.EvaluationStatus.NOT_STARTED)
                         .score(dto.getScore())
                         .build();
             }
@@ -296,6 +296,9 @@ public class TopicResponseEvalServiceUtil {
                 return Evaluation.builder()
                         .refId(KeyGeneratorUtil.refId())
                         .uuid(KeyGeneratorUtil.uuid())
+                        .createDate(LocalDateTime.now())
+                        .lastUpdDate(LocalDateTime.now())
+                        .evaluationStatus(Status.EvaluationStatus.NOT_STARTED)
                         .evaluationResult(EvaluationUtil.BuildEntity.buildEvaluationResult())
                         .build();
             }
