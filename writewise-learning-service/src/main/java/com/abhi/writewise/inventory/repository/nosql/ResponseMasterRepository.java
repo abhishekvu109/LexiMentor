@@ -11,8 +11,6 @@ import java.util.List;
 public interface ResponseMasterRepository extends MongoRepository<ResponseMaster, ObjectId> {
     ResponseMaster findByRefId(long refId);
 
-    ResponseMaster findByLlmTopicRefId(String llmTopicRefId);
-
     ResponseMaster findByUuid(String uuid);
 
 }
