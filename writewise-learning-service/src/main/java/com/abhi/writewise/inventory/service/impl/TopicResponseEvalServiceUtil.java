@@ -7,6 +7,7 @@ import com.abhi.writewise.inventory.dto.evaluation.EvaluationMetricDTO;
 import com.abhi.writewise.inventory.dto.evaluation.EvaluationResultDTO;
 import com.abhi.writewise.inventory.dto.response.ResponseDTO;
 import com.abhi.writewise.inventory.dto.response.ResponseMasterDTO;
+import com.abhi.writewise.inventory.dto.response.ResponseVersionDTO;
 import com.abhi.writewise.inventory.dto.topic.TopicDTO;
 import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation.Evaluation;
@@ -14,6 +15,7 @@ import com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation.Evaluation
 import com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation.EvaluationResult;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.Response;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.ResponseMaster;
+import com.abhi.writewise.inventory.entities.nosql.mongodb.response.ResponseVersion;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.Topic;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.TopicGeneration;
 import com.abhi.writewise.inventory.entities.sql.mysql.WritingSession;
@@ -85,11 +87,9 @@ public class TopicResponseEvalServiceUtil {
         public static class BuildDTO {
             public static ResponseDTO buildResponse(Response entity) {
                 return ResponseDTO.builder()
-                        .refId(entity.getRefId())
+                        .refId(String.valueOf(entity.getRefId()))
                         .topic(TopicUtil.buildTopicDTO(entity.getTopic()))
-                        .response(entity.getResponse())
-                        .responseStatus(Status.TopicResponse.getString(entity.getResponseStatus()))
-                        .evaluation(entity.getEvaluation() == null ? null : EvaluationUtil.BuildDTO.buildEvaluation(entity.getEvaluation()))
+                        .responseVersionDTOs(entity.getResponseVersions().stream().map(BuildDTO::buildResponseVersion).toList())
                         .build();
             }
 
@@ -106,6 +106,20 @@ public class TopicResponseEvalServiceUtil {
                         .topicResponseList(entity.getTopicResponseList().stream().map(BuildDTO::buildResponse).toList())
                         .build();
             }
+
+            public static ResponseVersionDTO buildResponseVersion(ResponseVersion entity){
+                return ResponseVersionDTO.builder()
+                        .refId(String.valueOf(entity.getRefId()))
+                        .uuid(entity.getUuid())
+                        .versionNumber(entity.getVersionNumber())
+                        .createDate(entity.getCreateDate())
+                        .lastUpdDate(entity.getLastUpdDate())
+                        .isLatest(entity.isLatest())
+                        .response(entity.getResponse())
+                        .responseStatus(Status.TopicResponse.getString(entity.getResponseStatus()))
+                        .evaluation(EvaluationUtil.BuildDTO.buildEvaluation(entity.getEvaluation()))
+                        .build();
+            }
         }
 
         public static class BuildEntity {
@@ -113,8 +127,7 @@ public class TopicResponseEvalServiceUtil {
                 return Response.builder()
                         .refId(KeyGeneratorUtil.refId())
                         .uuid(KeyGeneratorUtil.uuid())
-                        .response(dto.getResponse())
-                        .responseStatus(Status.TopicResponse.IN_PROGRESS)
+                        .responseVersions(Collections.emptyList())
                         .build();
             }
 
@@ -122,8 +135,7 @@ public class TopicResponseEvalServiceUtil {
                 return Response.builder()
                         .refId(KeyGeneratorUtil.refId())
                         .uuid(KeyGeneratorUtil.uuid())
-                        .responseStatus(Status.TopicResponse.NOT_STARTED)
-                        .evaluation(EvaluationUtil.BuildEntity.buildEvaluation())
+                        .responseVersions(Collections.emptyList())
                         .build();
             }
 
@@ -146,6 +158,29 @@ public class TopicResponseEvalServiceUtil {
                         .status(Status.TopicResponse.NOT_STARTED)
                         .createDate(LocalDateTime.now())
                         .lastUpdDate(LocalDateTime.now())
+                        .build();
+            }
+
+            public static ResponseVersion buildResponseVersion() {
+                return ResponseVersion.builder()
+                        .refId(KeyGeneratorUtil.refId())
+                        .uuid(KeyGeneratorUtil.uuid())
+                        .isLatest(true)
+                        .versionNumber(1)
+                        .status(ApplicationConstants.Status.ACTIVE)
+                        .createDate(LocalDateTime.now())
+                        .lastUpdDate(LocalDateTime.now())
+                        .evaluation(TopicResponseEvalServiceUtil.EvaluationUtil.BuildEntity.buildEvaluation())
+                        .build();
+            }
+
+            public static ResponseVersion buildResponseVersion(ResponseVersionDTO dto) {
+                return ResponseVersion.builder()
+                        .refId(KeyGeneratorUtil.refId())
+                        .uuid(KeyGeneratorUtil.uuid())
+                        .createDate(LocalDateTime.now())
+                        .lastUpdDate(LocalDateTime.now())
+                        .evaluation(TopicResponseEvalServiceUtil.EvaluationUtil.BuildEntity.buildEvaluation(dto.getEvaluation()))
                         .build();
             }
         }

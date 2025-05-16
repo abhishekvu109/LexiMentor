@@ -10,4 +10,6 @@ public interface TopicService {
     public List<TopicGenerationDTO> findAll();
 
     public TopicGenerationDTO findByRefId(long refId);
+
+    public void remove(long refId);
 }

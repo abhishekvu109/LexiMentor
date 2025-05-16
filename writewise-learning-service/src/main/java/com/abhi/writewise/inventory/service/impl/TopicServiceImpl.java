@@ -27,6 +27,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -164,5 +165,22 @@ public class TopicServiceImpl implements TopicService {
         if (noSqlLlmEntity == null)
             throw new ServerException().new InternalError("Unable to find the equivalent Mongo DB instance.");
         return TopicResponseEvalServiceUtil.TopicUtil.buildLlmTopicDTO(sqlLlmEntity, noSqlLlmEntity);
+    }
+
+    @Override
+    @Transactional
+    public void remove(long refId) {
+        WritingSession writingSession=writingSessionRepository.findByRefId(refId);
+        if(StringUtils.isNotEmpty(writingSession.getMongoTopicId())){
+            TopicGeneration topicGeneration=topicGenerationRepository.findById(new ObjectId(writingSession.getMongoTopicId())).orElse(null);
+            if(topicGeneration!=null)
+                topicGenerationRepository.delete(topicGeneration);
+        }
+        if(StringUtils.isNotEmpty(writingSession.getMongoTopicResponseId())){
+            ResponseMaster responseMaster=responseMasterRepository.findById(new ObjectId(writingSession.getMongoTopicResponseId())).orElse(null);
+            if(responseMaster!=null)
+                responseMasterRepository.delete(responseMaster);
+        }
+        writingSessionRepository.delete(writingSession);
     }
 }

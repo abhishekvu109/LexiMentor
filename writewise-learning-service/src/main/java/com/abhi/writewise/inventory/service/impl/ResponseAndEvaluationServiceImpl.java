@@ -9,6 +9,7 @@ import com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation.Evaluation
 import com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation.EvaluationResult;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.Response;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.ResponseMaster;
+import com.abhi.writewise.inventory.entities.nosql.mongodb.response.ResponseVersion;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.Topic;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.TopicGeneration;
 import com.abhi.writewise.inventory.entities.sql.mysql.WritingSession;
@@ -38,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -55,6 +57,9 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
     private final Integer RETRY_COUNT = 3;
     private final RestClient restClient;
 
+    private static final Integer DRAFT = 0;
+    private static final Integer SUBMITTED = 1;
+
 
     @Setter
     @Getter
@@ -64,16 +69,16 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
     @Override
     @Transactional
     public ResponseMasterDTO submit(long sqlRefId, long topicRefId, String response) {
-        return add(sqlRefId, topicRefId, response, Status.TopicResponse.SUBMITTED);
+        return add(sqlRefId, topicRefId, response, SUBMITTED);
     }
 
     @Override
     @Transactional
     public ResponseMasterDTO saveAsDraft(long sqlRefId, long topicRefId, String response) {
-        return add(sqlRefId, topicRefId, response, Status.TopicResponse.IN_PROGRESS);
+        return add(sqlRefId, topicRefId, response, DRAFT);
     }
 
-    private ResponseMasterDTO add(long sqlRefId, long topicRefId, String response, int status) {
+    private ResponseMasterDTO add(long sqlRefId, long topicRefId, String response, int requestType) {
         WritingSession writingSession = writingSessionRepository.findByRefId(sqlRefId);
         if (writingSession == null) {
             log.error("Unable to find the Writing Session SQL object: {}", sqlRefId);
@@ -97,15 +102,45 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
             log.error("Unable to find the equivalent Response for the topic given:{}", topicRefId);
             throw new ServerException().new InternalError("Requested response is not found.");
         }
-        updatedResponse.setResponse(response);
-        updatedResponse.setResponseStatus(status);
+        ResponseVersion responseVersion;
+        boolean isNewResponseVersion=false;
+        // If the response is in draft/ not-submitted then DO NOT create a new Response Version
+        if (CollectionUtils.isEmpty(updatedResponse.getResponseVersions()) || isExistingResponseVersionInProgress(updatedResponse)) {
+            isNewResponseVersion=true;
+            ResponseVersion prevLatest=updatedResponse.getResponseVersions().stream().filter(ResponseVersion::isLatest).findAny().orElse(null);
+            if(prevLatest==null){
+                log.error("Unable to find the previous version that is latest");
+                throw new ServerException().new InternalError("Previous latest Response version not found");
+            }
+            prevLatest.setLatest(false);
+            responseVersion = TopicResponseEvalServiceUtil.ResponseUtil.BuildEntity.buildResponseVersion();
+        }else{
+            responseVersion=updatedResponse.getResponseVersions().stream().filter(rv->rv.getResponseStatus()!=Status.TopicResponse.SUBMITTED).max(Comparator.comparing(ResponseVersion::getResponseStatus)).orElse(null);
+            if(responseVersion==null){
+                log.error("Unable to find a response version that is in-progress/not-started and has maximum version number.");
+                throw new ServerException().new InternalError("Unable to find the valid Response Version object.");
+            }
+            responseVersion.setVersionNumber(responseVersion.getVersionNumber()+1);
+        }
+        responseVersion.setLastUpdDate(LocalDateTime.now());
+        responseVersion.setResponse(response);
+        responseVersion.setResponseStatus((requestType==SUBMITTED)?Status.TopicResponse.SUBMITTED:Status.TopicResponse.IN_PROGRESS);
+        if(isNewResponseVersion)
+            updatedResponse.getResponseVersions().add(responseVersion);
         responseMaster = responseMasterRepository.save(responseMaster);
         return TopicResponseEvalServiceUtil.ResponseUtil.BuildDTO.buildResponseMaster(responseMaster);
     }
 
+
+
+    private boolean isExistingResponseVersionInProgress(Response response) {
+        List<ResponseVersion> responseVersions = response.getResponseVersions().stream().filter(rv -> rv.getResponseStatus() != Status.TopicResponse.SUBMITTED).toList();
+        return (CollectionUtils.isNotEmpty(responseVersions));
+    }
+
     @Override
     @Transactional
-    public ResponseMasterDTO evaluate(long sqlRefId, long topicRefId) {
+    public ResponseMasterDTO evaluate(long sqlRefId, long versionRefId, long topicRefId) {
         WritingSession writingSession = writingSessionRepository.findByRefId(sqlRefId);
         if (writingSession == null) {
             log.error("Unable to find the Writing Session SQL object: {}", sqlRefId);
@@ -141,17 +176,22 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
             log.error("Unable to find the Response entity.{}", topicRefId);
             throw new ServerException().new InternalError("The response entity is not linked with the response master");
         }
+        ResponseVersion responseVersion=responseEntity.getResponseVersions().stream().filter(rv->rv.getRefId()==versionRefId).findAny().orElse(null);
+        if(responseVersion==null){
+            log.error("The response version is not found: {}",versionRefId);
+            throw new ServerException().new InternalError("Response version not found");
+        }
         EvaluationResultDTO llmResponse = sendToLlmForEvaluation(responseEntity.getTopic(),
                 topicGeneration.getRecommendations(),
-                responseEntity.getResponse());
-        Evaluation llmEvaluation = updateLlmResponseInEntity(responseEntity, llmResponse);
-        responseEntity.setEvaluation(llmEvaluation);
+                responseVersion.getResponse());
+        Evaluation llmEvaluation = updateLlmResponseInEntity(responseVersion, llmResponse);
+        responseVersion.setEvaluation(llmEvaluation);
         responseMaster = responseMasterRepository.save(responseMaster);
         return TopicResponseEvalServiceUtil.ResponseUtil.BuildDTO.buildResponseMaster(responseMaster);
     }
 
-    private Evaluation updateLlmResponseInEntity(Response responseEntity, EvaluationResultDTO llmResponse) {
-        Evaluation evaluation = responseEntity.getEvaluation();
+    private Evaluation updateLlmResponseInEntity(ResponseVersion responseVersion, EvaluationResultDTO llmResponse) {
+        Evaluation evaluation = responseVersion.getEvaluation();
         if (evaluation == null) {
             evaluation = TopicResponseEvalServiceUtil.EvaluationUtil.BuildEntity.buildEvaluation();
         }

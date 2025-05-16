@@ -15,7 +15,6 @@ public class EvaluationDTO {
     private String refId;
     private String uuid;
     private EvaluationResultDTO evaluationResult;
-    private List<EvaluationRecommendationDTO> recommendations;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdDate;
     private String evaluationStatus;

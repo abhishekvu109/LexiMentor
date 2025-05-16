@@ -7,5 +7,5 @@ public interface ResponseAndEvaluationService {
 
     public ResponseMasterDTO saveAsDraft(long sqlRefId, long topicRefId,String response);
 
-    public ResponseMasterDTO evaluate(long sqlRefId,long topicRefId);
+    public ResponseMasterDTO evaluate(long sqlRefId,long versionRefId,long topicRefId);
 }

@@ -34,11 +34,12 @@ public class ResponseAndEvaluationController {
 
     @PostMapping(value = UrlConstants.ResponseAndEvaluate.RESPONSE_EVALUATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> evaluate(@RequestBody EvaluateRequest evaluateRequest) {
-        ResponseMasterDTO responseMasterDTO = responseAndEvaluationService.evaluate(Long.parseLong(evaluateRequest.writingSessionRefId()), Long.parseLong(evaluateRequest.topicRefId()));
+        ResponseMasterDTO responseMasterDTO = responseAndEvaluationService.evaluate(Long.parseLong(evaluateRequest.writingSessionRefId()), Long.parseLong(evaluateRequest.versionRefId()), Long.parseLong(evaluateRequest.topicRefId()));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, responseMasterDTO);
     }
 
-    public record EvaluateRequest(@NotBlank String writingSessionRefId, @NotBlank String topicRefId) {
+    public record EvaluateRequest(@NotBlank String writingSessionRefId, @NotBlank String topicRefId,
+                                  @NotBlank String versionRefId) {
     }
 
     private record CollectRequest(@NotBlank String writingSessionRefId, @NotBlank String topicRefId,

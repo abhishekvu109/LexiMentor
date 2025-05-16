@@ -47,4 +47,11 @@ public class TopicController {
         TopicGenerationDTO response = topicService.findByRefId(Long.parseLong(topicRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
+
+    @DeleteMapping(value = UrlConstants.Topic.DELETE_TOPIC_BY_TOPIC_ID, produces = MediaType.TEXT_PLAIN_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> deleteByRefId(@PathVariable String topicRefId) {
+        log.info("Received a request a delete Topic by refId: {}", topicRefId);
+        topicService.remove(Long.parseLong(topicRefId));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.MOVED_PERMANENTLY).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Topic has been removed successfully.");
+    }
 }

@@ -4,6 +4,8 @@ import com.abhi.writewise.inventory.dto.topic.TopicDTO;
 import com.abhi.writewise.inventory.dto.evaluation.EvaluationDTO;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Builder
 @ToString
@@ -11,9 +13,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseDTO {
-    private long refId;
+    private String refId;
+    private String uuid;
     private TopicDTO topic;
-    private String response;
-    private String responseStatus;
-    private EvaluationDTO evaluation;
+    private List<ResponseVersionDTO> responseVersionDTOs;
 }
