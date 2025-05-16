@@ -170,17 +170,24 @@ public class TopicServiceImpl implements TopicService {
     @Override
     @Transactional
     public void remove(long refId) {
-        WritingSession writingSession=writingSessionRepository.findByRefId(refId);
-        if(StringUtils.isNotEmpty(writingSession.getMongoTopicId())){
-            TopicGeneration topicGeneration=topicGenerationRepository.findById(new ObjectId(writingSession.getMongoTopicId())).orElse(null);
-            if(topicGeneration!=null)
-                topicGenerationRepository.delete(topicGeneration);
+        WritingSession writingSession = writingSessionRepository.findByRefId(refId);
+        if (StringUtils.isNotEmpty(writingSession.getMongoTopicId())) {
+            TopicGeneration topicGeneration = topicGenerationRepository.findById(new ObjectId(writingSession.getMongoTopicId())).orElse(null);
+            if (topicGeneration != null) topicGenerationRepository.delete(topicGeneration);
         }
-        if(StringUtils.isNotEmpty(writingSession.getMongoTopicResponseId())){
-            ResponseMaster responseMaster=responseMasterRepository.findById(new ObjectId(writingSession.getMongoTopicResponseId())).orElse(null);
-            if(responseMaster!=null)
-                responseMasterRepository.delete(responseMaster);
+        if (StringUtils.isNotEmpty(writingSession.getMongoTopicResponseId())) {
+            ResponseMaster responseMaster = responseMasterRepository.findById(new ObjectId(writingSession.getMongoTopicResponseId())).orElse(null);
+            if (responseMaster != null) responseMasterRepository.delete(responseMaster);
         }
         writingSessionRepository.delete(writingSession);
+    }
+
+    @Override
+    @Transactional
+    public void removeAll() {
+        List<WritingSession> writingSessions = writingSessionRepository.findAll();
+        writingSessions.forEach(ws -> {
+            remove(ws.getRefId());
+        });
     }
 }

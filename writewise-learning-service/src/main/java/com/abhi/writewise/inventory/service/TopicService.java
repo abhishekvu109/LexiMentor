@@ -12,4 +12,6 @@ public interface TopicService {
     public TopicGenerationDTO findByRefId(long refId);
 
     public void remove(long refId);
+
+    public void removeAll();
 }

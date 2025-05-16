@@ -54,4 +54,11 @@ public class TopicController {
         topicService.remove(Long.parseLong(topicRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.MOVED_PERMANENTLY).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Topic has been removed successfully.");
     }
+
+    @DeleteMapping(value = UrlConstants.Topic.DELETE_ALL_TOPICS,produces = MediaType.TEXT_PLAIN_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> deleteAll(){
+        log.info("A request has been received to delete all the topics.");
+        topicService.removeAll();
+        return ResponseEntityBuilder.getBuilder(HttpStatus.MOVED_PERMANENTLY).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Topics have been removed successfully.");
+    }
 }
