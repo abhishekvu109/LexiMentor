@@ -2,6 +2,7 @@ package com.abhi.writewise.inventory.controller;
 
 import com.abhi.writewise.inventory.constants.ApplicationConstants;
 import com.abhi.writewise.inventory.constants.UrlConstants;
+import com.abhi.writewise.inventory.dto.topic.TopicDTO;
 import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
 import com.abhi.writewise.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.writewise.inventory.model.rest.RestApiResponse;
@@ -61,5 +62,12 @@ public class TopicController {
         log.info("A request has been received to delete all the topics.");
         topicService.removeAll();
         return ResponseEntityBuilder.getBuilder(HttpStatus.MOVED_PERMANENTLY).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Topics have been removed successfully.");
+    }
+
+    @GetMapping(value = UrlConstants.Topic.V1.GENERATE_ALL_TOPICS,produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> getAllTopicsDetails(){
+        log.info("A request has been received to generate all the topics.");
+        List<TopicDTO> topicDTOS=topicService.findAllTopics();
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, topicDTOS);
     }
 }

@@ -1,9 +1,11 @@
 package com.abhi.writewise.inventory.service.impl;
 
 import com.abhi.writewise.inventory.constants.Status;
+import com.abhi.writewise.inventory.dto.topic.TopicDTO;
 import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.Response;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.ResponseMaster;
+import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.Topic;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.TopicGeneration;
 import com.abhi.writewise.inventory.entities.sql.mysql.WritingSession;
 import com.abhi.writewise.inventory.exceptions.entities.ServerException;
@@ -155,7 +157,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<TopicGenerationDTO> findAll() {
-        return writingSessionRepository.findAll().stream().map(sqlEntity -> TopicResponseEvalServiceUtil.TopicUtil.buildLlmTopicDTO(sqlEntity, Objects.requireNonNull(mongoTemplate.findById(sqlEntity.getMongoTopicId(), TopicGeneration.class)))).toList();
+        return writingSessionRepository.findAll().stream().filter(writingSession -> StringUtils.isNotEmpty(writingSession.getMongoTopicId())).toList().stream().map(sqlEntity -> TopicResponseEvalServiceUtil.TopicUtil.buildLlmTopicDTO(sqlEntity, Objects.requireNonNull(mongoTemplate.findById(sqlEntity.getMongoTopicId(), TopicGeneration.class)))).toList();
     }
 
     @Override
@@ -189,5 +191,15 @@ public class TopicServiceImpl implements TopicService {
         writingSessions.forEach(ws -> {
             remove(ws.getRefId());
         });
+    }
+
+    @Override
+    public List<TopicDTO> findAllTopics() {
+        List<TopicGeneration> topicGenerations = topicGenerationRepository.findAll();
+        List<Topic> topics = new LinkedList<>();
+        topicGenerations.forEach(topicGeneration -> {
+            topics.addAll(topicGeneration.getTopics());
+        });
+        return topics.stream().map(TopicResponseEvalServiceUtil.TopicUtil::buildTopicDTO).toList();
     }
 }

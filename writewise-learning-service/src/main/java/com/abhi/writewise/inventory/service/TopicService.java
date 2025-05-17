@@ -1,5 +1,6 @@
 package com.abhi.writewise.inventory.service;
 
+import com.abhi.writewise.inventory.dto.topic.TopicDTO;
 import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface TopicService {
     public void remove(long refId);
 
     public void removeAll();
+
+    public List<TopicDTO> findAllTopics();
 }
