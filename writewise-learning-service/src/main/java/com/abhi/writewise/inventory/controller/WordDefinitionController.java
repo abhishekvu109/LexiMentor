@@ -13,18 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+@RequestMapping(value = UrlConstants.Topic.BASE_URL)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WordDefinitionController {
     private final WordDefinitionService wordDefinitionService;
 
-    @PostMapping(value = UrlConstants.Topic.GENERATE_WORD_METADATA, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = UrlConstants.Topic.V1.GENERATE_WORD_METADATA, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> generateWordMetadata(@Valid @RequestBody WordDefinitionDTO request) {
         log.info("New request gas been received to generate the word definition from the LLM service.");
         WordDefinitionDTO response = wordDefinitionService.generateWordDefinitionFromLlm(request);
