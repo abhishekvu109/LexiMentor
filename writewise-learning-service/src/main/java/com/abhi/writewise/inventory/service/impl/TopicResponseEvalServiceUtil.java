@@ -20,6 +20,7 @@ import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.Topic;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.TopicGeneration;
 import com.abhi.writewise.inventory.entities.sql.mysql.WritingSession;
 import com.abhi.writewise.inventory.util.KeyGeneratorUtil;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -36,7 +37,7 @@ public class TopicResponseEvalServiceUtil {
                     .wordCount(dto.getWordCount())
                     .prompt(dto.getPrompt())
                     .recommendations(dto.getRecommendations())
-                    .topics(dto.getTopics().stream().map(TopicUtil::buildEntity).toList())
+                    .topics((CollectionUtils.isNotEmpty(dto.getTopics())?dto.getTopics().stream().map(TopicUtil::buildEntity).toList():Collections.emptyList()))
                     .build();
         }
 
@@ -60,7 +61,7 @@ public class TopicResponseEvalServiceUtil {
                     .purpose(noSqlEntity.getPurpose())
                     .wordCount(noSqlEntity.getWordCount())
                     .prompt(noSqlEntity.getPrompt())
-                    .topics(noSqlEntity.getTopics().stream().map(TopicUtil::buildTopicDTO).toList())
+                    .topics((CollectionUtils.isNotEmpty(noSqlEntity.getTopics())?noSqlEntity.getTopics().stream().map(TopicUtil::buildTopicDTO).toList():Collections.emptyList()))
                     .recommendations(noSqlEntity.getRecommendations())
                     .status(Status.Topic.getStatusStr(sqlEntity.getStatus()))
                     .refId(String.valueOf(sqlEntity.getRefId()))
@@ -89,7 +90,7 @@ public class TopicResponseEvalServiceUtil {
                 return ResponseDTO.builder()
                         .refId(String.valueOf(entity.getRefId()))
                         .topic(TopicUtil.buildTopicDTO(entity.getTopic()))
-                        .responseVersionDTOs(entity.getResponseVersions().stream().map(BuildDTO::buildResponseVersion).toList())
+                        .responseVersionDTOs((CollectionUtils.isNotEmpty(entity.getResponseVersions())?entity.getResponseVersions().stream().map(BuildDTO::buildResponseVersion).toList():Collections.emptyList()))
                         .build();
             }
 
@@ -103,7 +104,7 @@ public class TopicResponseEvalServiceUtil {
                         .isPassed(entity.isPassed())
                         .createDate(entity.getCreateDate())
                         .lastUpdDate(entity.getLastUpdDate())
-                        .topicResponseList(entity.getTopicResponseList().stream().map(BuildDTO::buildResponse).toList())
+                        .topicResponseList((CollectionUtils.isNotEmpty(entity.getTopicResponseList())?entity.getTopicResponseList().stream().map(BuildDTO::buildResponse).toList():Collections.emptyList()))
                         .build();
             }
 
