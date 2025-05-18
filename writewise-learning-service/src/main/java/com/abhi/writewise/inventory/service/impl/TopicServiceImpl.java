@@ -215,11 +215,13 @@ public class TopicServiceImpl implements TopicService {
         for (TopicGeneration topicGeneration : topicGenerations) {
             if (CollectionUtils.isNotEmpty(topicGeneration.getTopics())) {
                 topic = topicGeneration.getTopics().stream().filter(topicEntity -> topicEntity.getRefId() == refId).findAny().orElse(null);
-                tg = topicGeneration;
-                break;
+                if(topic!=null){
+                    tg = topicGeneration;
+                    break;
+                }
             }
         }
-        if (tg != null && topic != null) {
+        if (tg != null) {
             TopicDTO topicDTO = TopicResponseEvalServiceUtil.TopicUtil.buildTopicDTO(topic);
             topicDTO.setRecommendations(tg.getRecommendations());
             return topicDTO;
