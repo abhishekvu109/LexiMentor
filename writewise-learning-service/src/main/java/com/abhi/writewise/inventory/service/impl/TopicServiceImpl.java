@@ -5,6 +5,7 @@ import com.abhi.writewise.inventory.dto.topic.TopicDTO;
 import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.Response;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.ResponseMaster;
+import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.Topic;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.TopicGeneration;
 import com.abhi.writewise.inventory.entities.sql.mysql.WritingSession;
 import com.abhi.writewise.inventory.exceptions.entities.ServerException;
@@ -53,7 +54,7 @@ public class TopicServiceImpl implements TopicService {
     private String url;
 
     @Override
-    public TopicGenerationDTO generateTopicsFromLlm(TopicGenerationDTO request) {
+    public TopicGenerationDTO addTopicGenerationsUsingLLM(TopicGenerationDTO request) {
         log.info("LLM topic generation service is called.");
         WritingSession sqlEntity = WritingSession.builder().refId(KeyGeneratorUtil.refId()).uuid(KeyGeneratorUtil.uuid()).deleteInd(Status.Topic.DeleteStatus.ACTIVE).status(Status.Topic.TOPIC_REQUEST).build();
         long refId = sqlEntity.getRefId();
@@ -153,12 +154,12 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public List<TopicGenerationDTO> findAll() {
+    public List<TopicGenerationDTO> findAllTopicGenerations() {
         return writingSessionRepository.findAll().stream().filter(writingSession -> StringUtils.isNotEmpty(writingSession.getMongoTopicId())).toList().stream().map(sqlEntity -> TopicResponseEvalServiceUtil.TopicUtil.buildLlmTopicDTO(sqlEntity, Objects.requireNonNull(mongoTemplate.findById(sqlEntity.getMongoTopicId(), TopicGeneration.class)))).toList();
     }
 
     @Override
-    public TopicGenerationDTO findByRefId(long refId) {
+    public TopicGenerationDTO findTopicGenerationByRefId(long refId) {
         WritingSession sqlLlmEntity = writingSessionRepository.findByRefId(refId);
         TopicGeneration noSqlLlmEntity = mongoTemplate.findById(sqlLlmEntity.getMongoTopicId(), TopicGeneration.class);
         if (noSqlLlmEntity == null)
@@ -168,7 +169,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     @Transactional
-    public void remove(long refId) {
+    public void removeTopicGenerationByRefId(long refId) {
         WritingSession writingSession = writingSessionRepository.findByRefId(refId);
         if (StringUtils.isNotEmpty(writingSession.getMongoTopicId())) {
             TopicGeneration topicGeneration = topicGenerationRepository.findById(new ObjectId(writingSession.getMongoTopicId())).orElse(null);
@@ -183,10 +184,10 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     @Transactional
-    public void removeAll() {
+    public void removeAllTopicGenerations() {
         List<WritingSession> writingSessions = writingSessionRepository.findAll();
         writingSessions.forEach(ws -> {
-            remove(ws.getRefId());
+            removeTopicGenerationByRefId(ws.getRefId());
         });
     }
 
@@ -204,5 +205,31 @@ public class TopicServiceImpl implements TopicService {
             }
         });
         return topicDTOS;
+    }
+
+    @Override
+    public TopicDTO findTopicByRefId(long refId) {
+        List<TopicGeneration> topicGenerations = topicGenerationRepository.findAll();
+        TopicGeneration tg = null;
+        Topic topic = null;
+        for (TopicGeneration topicGeneration : topicGenerations) {
+            if (CollectionUtils.isNotEmpty(topicGeneration.getTopics())) {
+                topic = topicGeneration.getTopics().stream().filter(topicEntity -> topicEntity.getRefId() == refId).findAny().orElse(null);
+                tg = topicGeneration;
+                break;
+            }
+        }
+        if (tg != null && topic != null) {
+            TopicDTO topicDTO = TopicResponseEvalServiceUtil.TopicUtil.buildTopicDTO(topic);
+            topicDTO.setRecommendations(tg.getRecommendations());
+            return topicDTO;
+        } else {
+            throw new ServerException().new InternalError("TopicDTO can't be built.");
+        }
+    }
+
+    @Override
+    public void removeTopicByRefId(long refId) {
+
     }
 }

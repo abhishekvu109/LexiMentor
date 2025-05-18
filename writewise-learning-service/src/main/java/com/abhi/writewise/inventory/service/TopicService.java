@@ -6,15 +6,17 @@ import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
 import java.util.List;
 
 public interface TopicService {
-    public TopicGenerationDTO generateTopicsFromLlm(TopicGenerationDTO request);
+    public TopicGenerationDTO addTopicGenerationsUsingLLM(TopicGenerationDTO request);
 
-    public List<TopicGenerationDTO> findAll();
+    public List<TopicGenerationDTO> findAllTopicGenerations();
 
-    public TopicGenerationDTO findByRefId(long refId);
+    public TopicGenerationDTO findTopicGenerationByRefId(long refId);
 
-    public void remove(long refId);
+    public void removeTopicGenerationByRefId(long refId);
 
-    public void removeAll();
+    public void removeAllTopicGenerations();
 
     public List<TopicDTO> findAllTopics();
+    public TopicDTO findTopicByRefId(long refId);
+    public void removeTopicByRefId(long refId);
 }
