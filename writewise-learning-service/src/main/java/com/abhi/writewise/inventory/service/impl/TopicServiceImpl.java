@@ -5,7 +5,6 @@ import com.abhi.writewise.inventory.dto.topic.TopicDTO;
 import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.Response;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.ResponseMaster;
-import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.Topic;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.TopicGeneration;
 import com.abhi.writewise.inventory.entities.sql.mysql.WritingSession;
 import com.abhi.writewise.inventory.exceptions.entities.ServerException;
@@ -20,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -196,10 +193,16 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public List<TopicDTO> findAllTopics() {
         List<TopicGeneration> topicGenerations = topicGenerationRepository.findAll();
-        List<Topic> topics = new LinkedList<>();
+        List<TopicDTO> topicDTOS = new LinkedList<>();
         topicGenerations.forEach(topicGeneration -> {
-            topics.addAll(topicGeneration.getTopics());
+            List<TopicDTO> dtos = CollectionUtils.isNotEmpty(topicGeneration.getTopics()) ? topicGeneration.getTopics().stream().map(TopicResponseEvalServiceUtil.TopicUtil::buildTopicDTO).toList() : Collections.emptyList();
+            if (CollectionUtils.isNotEmpty(dtos)) {
+                dtos.forEach(dto -> {
+                    dto.setRecommendations(topicGeneration.getRecommendations());
+                });
+                topicDTOS.addAll(dtos);
+            }
         });
-        return topics.stream().map(TopicResponseEvalServiceUtil.TopicUtil::buildTopicDTO).toList();
+        return topicDTOS;
     }
 }
