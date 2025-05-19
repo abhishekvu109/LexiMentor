@@ -34,4 +34,6 @@ public class TopicGenerationDTO {
     private String refId;
     @JsonProperty("uuid")
     private String uuid;
+    @JsonProperty("writingSessionRefId")
+    private String writingSessionRefId;
 }

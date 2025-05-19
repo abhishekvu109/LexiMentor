@@ -32,4 +32,6 @@ public class TopicDTO {
     private String uuid;
     @JsonProperty("recommendations")
     private List<String> recommendations;
+    @JsonProperty("writingSessionRefId")
+    private String writingSessionRefId;
 }

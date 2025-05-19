@@ -21,6 +21,7 @@ import com.abhi.writewise.inventory.entities.nosql.mongodb.topic.TopicGeneration
 import com.abhi.writewise.inventory.entities.sql.mysql.WritingSession;
 import com.abhi.writewise.inventory.util.KeyGeneratorUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -54,14 +55,15 @@ public class TopicResponseEvalServiceUtil {
                     .build();
         }
 
-        public static TopicGenerationDTO buildLlmTopicDTO(WritingSession sqlEntity, TopicGeneration noSqlEntity) {
+        public static TopicGenerationDTO buildDTO(WritingSession sqlEntity, TopicGeneration noSqlEntity) {
             return TopicGenerationDTO.builder()
                     .subject(noSqlEntity.getSubject())
+                    .writingSessionRefId(String.valueOf(sqlEntity.getRefId()))
                     .numOfTopic(noSqlEntity.getNumOfTopic())
                     .purpose(noSqlEntity.getPurpose())
                     .wordCount(noSqlEntity.getWordCount())
                     .prompt(noSqlEntity.getPrompt())
-                    .topics((CollectionUtils.isNotEmpty(noSqlEntity.getTopics())?noSqlEntity.getTopics().stream().map(TopicUtil::buildTopicDTO).toList():Collections.emptyList()))
+                    .topics((CollectionUtils.isNotEmpty(noSqlEntity.getTopics())?noSqlEntity.getTopics().stream().map(TopicUtil::buildDTO).toList():Collections.emptyList()))
                     .recommendations(noSqlEntity.getRecommendations())
                     .status(Status.Topic.getStatusStr(sqlEntity.getStatus()))
                     .refId(String.valueOf(sqlEntity.getRefId()))
@@ -69,7 +71,7 @@ public class TopicResponseEvalServiceUtil {
                     .build();
         }
 
-        public static TopicDTO buildTopicDTO(Topic topic) {
+        public static TopicDTO buildDTO(Topic topic) {
             return TopicDTO.builder()
                     .topicNo(topic.getTopicNo())
                     .topic(topic.getTopic())
@@ -89,7 +91,7 @@ public class TopicResponseEvalServiceUtil {
             public static ResponseDTO buildResponse(Response entity) {
                 return ResponseDTO.builder()
                         .refId(String.valueOf(entity.getRefId()))
-                        .topic(TopicUtil.buildTopicDTO(entity.getTopic()))
+                        .topic(TopicUtil.buildDTO(entity.getTopic()))
                         .responseVersionDTOs((CollectionUtils.isNotEmpty(entity.getResponseVersions())?entity.getResponseVersions().stream().map(BuildDTO::buildResponseVersion).toList():Collections.emptyList()))
                         .build();
             }

@@ -155,7 +155,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<TopicGenerationDTO> findAllTopicGenerations() {
-        return writingSessionRepository.findAll().stream().filter(writingSession -> StringUtils.isNotEmpty(writingSession.getMongoTopicId())).toList().stream().map(sqlEntity -> TopicResponseEvalServiceUtil.TopicUtil.buildLlmTopicDTO(sqlEntity, Objects.requireNonNull(mongoTemplate.findById(sqlEntity.getMongoTopicId(), TopicGeneration.class)))).toList();
+        return writingSessionRepository.findAll().stream().filter(writingSession -> StringUtils.isNotEmpty(writingSession.getMongoTopicId())).toList().stream().map(sqlEntity -> TopicResponseEvalServiceUtil.TopicUtil.buildDTO(sqlEntity, Objects.requireNonNull(mongoTemplate.findById(sqlEntity.getMongoTopicId(), TopicGeneration.class)))).toList();
     }
 
     @Override
@@ -164,7 +164,7 @@ public class TopicServiceImpl implements TopicService {
         TopicGeneration noSqlLlmEntity = mongoTemplate.findById(sqlLlmEntity.getMongoTopicId(), TopicGeneration.class);
         if (noSqlLlmEntity == null)
             throw new ServerException().new InternalError("Unable to find the equivalent Mongo DB instance.");
-        return TopicResponseEvalServiceUtil.TopicUtil.buildLlmTopicDTO(sqlLlmEntity, noSqlLlmEntity);
+        return TopicResponseEvalServiceUtil.TopicUtil.buildDTO(sqlLlmEntity, noSqlLlmEntity);
     }
 
     @Override
@@ -196,10 +196,17 @@ public class TopicServiceImpl implements TopicService {
         List<TopicGeneration> topicGenerations = topicGenerationRepository.findAll();
         List<TopicDTO> topicDTOS = new LinkedList<>();
         topicGenerations.forEach(topicGeneration -> {
-            List<TopicDTO> dtos = CollectionUtils.isNotEmpty(topicGeneration.getTopics()) ? topicGeneration.getTopics().stream().map(TopicResponseEvalServiceUtil.TopicUtil::buildTopicDTO).toList() : Collections.emptyList();
+            List<TopicDTO> dtos = CollectionUtils.isNotEmpty(topicGeneration.getTopics()) ?
+                    topicGeneration.getTopics().stream().map(TopicResponseEvalServiceUtil.TopicUtil::buildDTO).toList() :
+                    Collections.emptyList();
             if (CollectionUtils.isNotEmpty(dtos)) {
+                WritingSession writingSession = writingSessionRepository.findByMongoTopicId(topicGeneration.getId().toHexString());
+                if (writingSession == null) {
+                    throw new ServerException().new InternalError("WritingSession object is not found.");
+                }
                 dtos.forEach(dto -> {
                     dto.setRecommendations(topicGeneration.getRecommendations());
+                    dto.setWritingSessionRefId(String.valueOf(writingSession.getRefId()));
                 });
                 topicDTOS.addAll(dtos);
             }
@@ -212,18 +219,25 @@ public class TopicServiceImpl implements TopicService {
         List<TopicGeneration> topicGenerations = topicGenerationRepository.findAll();
         TopicGeneration tg = null;
         Topic topic = null;
+        String writingSessionRefId = null;
         for (TopicGeneration topicGeneration : topicGenerations) {
             if (CollectionUtils.isNotEmpty(topicGeneration.getTopics())) {
                 topic = topicGeneration.getTopics().stream().filter(topicEntity -> topicEntity.getRefId() == refId).findAny().orElse(null);
-                if(topic!=null){
+                if (topic != null) {
+                    WritingSession writingSession = writingSessionRepository.findByMongoTopicId(topicGeneration.getId().toHexString());
+                    if (writingSession == null) {
+                        throw new ServerException().new InternalError("WritingSession object is not found.");
+                    }
+                    writingSessionRefId = String.valueOf(writingSession.getRefId());
                     tg = topicGeneration;
                     break;
                 }
             }
         }
         if (tg != null) {
-            TopicDTO topicDTO = TopicResponseEvalServiceUtil.TopicUtil.buildTopicDTO(topic);
+            TopicDTO topicDTO = TopicResponseEvalServiceUtil.TopicUtil.buildDTO(topic);
             topicDTO.setRecommendations(tg.getRecommendations());
+            topicDTO.setWritingSessionRefId(writingSessionRefId);
             return topicDTO;
         } else {
             throw new ServerException().new InternalError("TopicDTO can't be built.");

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WritingSessionRepository extends JpaRepository<WritingSession, Long> {
     WritingSession findByRefId(long refId);
+
+    WritingSession findByMongoTopicId(String mongoTopicId);
 }
