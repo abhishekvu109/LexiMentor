@@ -60,6 +60,8 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
     private static final Integer DRAFT = 0;
     private static final Integer SUBMITTED = 1;
 
+    private static final Integer FIRST_VERSION=1;
+
 
     @Setter
     @Getter
@@ -105,7 +107,23 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
         ResponseVersion responseVersion;
         boolean isNewResponseVersion=false;
         // If the response is in draft/ not-submitted then DO NOT create a new Response Version
-        if (CollectionUtils.isEmpty(updatedResponse.getResponseVersions()) || isExistingResponseVersionInProgress(updatedResponse)) {
+        //If it is the first response version
+        if(CollectionUtils.isEmpty(updatedResponse.getResponseVersions())){
+            isNewResponseVersion=true;
+            responseVersion = TopicResponseEvalServiceUtil.ResponseUtil.BuildEntity.buildResponseVersion();
+            responseVersion.setLatest(true);
+            responseVersion.setVersionNumber(FIRST_VERSION);
+        }
+        else if (isExistingResponseVersionInProgress(updatedResponse)) {
+            List<ResponseVersion> responseVersions = updatedResponse.getResponseVersions().stream().filter(rv -> rv.getResponseStatus() == Status.TopicResponse.IN_PROGRESS).sorted(Comparator.comparing(ResponseVersion::getCreateDate).reversed()).toList();
+            if(CollectionUtils.isNotEmpty(responseVersions)){
+                responseVersion=responseVersions.get(0);
+            }else{
+                throw new ServerException().new InternalError("In-progress Response Version is not found.");
+            }
+
+        }else{
+
             isNewResponseVersion=true;
             ResponseVersion prevLatest=updatedResponse.getResponseVersions().stream().filter(ResponseVersion::isLatest).findAny().orElse(null);
             if(prevLatest==null){
@@ -114,13 +132,13 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
             }
             prevLatest.setLatest(false);
             responseVersion = TopicResponseEvalServiceUtil.ResponseUtil.BuildEntity.buildResponseVersion();
-        }else{
-            responseVersion=updatedResponse.getResponseVersions().stream().filter(rv->rv.getResponseStatus()!=Status.TopicResponse.SUBMITTED).max(Comparator.comparing(ResponseVersion::getResponseStatus)).orElse(null);
-            if(responseVersion==null){
+            responseVersion.setLatest(true);
+            ResponseVersion maxResponseVersion=updatedResponse.getResponseVersions().stream().filter(rv->rv.getResponseStatus()==Status.TopicResponse.SUBMITTED).max(Comparator.comparing(ResponseVersion::getResponseStatus)).orElse(null);
+            if(maxResponseVersion==null){
                 log.error("Unable to find a response version that is in-progress/not-started and has maximum version number.");
                 throw new ServerException().new InternalError("Unable to find the valid Response Version object.");
             }
-            responseVersion.setVersionNumber(responseVersion.getVersionNumber()+1);
+            responseVersion.setVersionNumber(maxResponseVersion.getVersionNumber()+1);
         }
         responseVersion.setLastUpdDate(LocalDateTime.now());
         responseVersion.setResponse(response);
