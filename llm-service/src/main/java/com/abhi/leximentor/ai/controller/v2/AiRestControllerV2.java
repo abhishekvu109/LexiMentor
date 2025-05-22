@@ -1,7 +1,12 @@
 package com.abhi.leximentor.ai.controller.v2;
 
+import com.abhi.leximentor.ai.constants.ApplicationConstants;
 import com.abhi.leximentor.ai.constants.UrlConstants;
+import com.abhi.leximentor.ai.dto.OllamaDTO;
+import com.abhi.leximentor.ai.dto.OllamaResponseDTO;
 import com.abhi.leximentor.ai.service.LLMPromptService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,18 +24,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class AiRestControllerV2 {
 
     private final LLMPromptService promptService;
-
+    private final ObjectMapper mapper;
 
     @PostMapping(value = UrlConstants.EvaluateMeaningPrompts.V2.GENERATE_STANDARD_PROMPT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<String> generatePromptResponse(@RequestBody PromptRequest promptRequest) {
-        String response = promptService.execute(promptRequest.prompt(), promptRequest.format(), promptRequest.model());
+    public @ResponseBody ResponseEntity<OllamaResponseDTO> generatePromptResponse(@RequestBody PromptRequest promptRequest) {
+        OllamaDTO request = OllamaDTO.builder()
+                .stream(false)
+                .prompt(promptRequest.prompt())
+                .model(promptRequest.model()).build();
+        try {
+            request.setFormat(mapper.readTree(ApplicationConstants.LLM_EVALUATION_RESPONSE_FORMAT));
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+        OllamaResponseDTO response = promptService.execute(request);
         return ResponseEntity.ok(response);
     }
 
-    private record PromptRequest(
-            @NotBlank String prompt,
-            @NotBlank String model,
-            String format
-    ) {
+    private record PromptRequest(@NotBlank String prompt, @NotBlank String model) {
     }
 }

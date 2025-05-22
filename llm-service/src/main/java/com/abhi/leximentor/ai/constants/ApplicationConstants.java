@@ -23,4 +23,111 @@ public class ApplicationConstants {
         public static final String LLAMA = "llama-llm-based-evaluator";
         public static final String OLLAMA = "ollama-llm-based-evaluator";
     }
+
+    public static final String LLM_EVALUATION_RESPONSE_FORMAT = """
+            {
+              "type": "object",
+              "properties": {
+                "spelling": {
+                  "type": "object",
+                  "properties": {
+                    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+                    "comments": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "alternateSuggestion": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["score", "comments", "alternateSuggestion"]
+                },
+                "grammar": {
+                  "type": "object",
+                  "properties": {
+                    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+                    "comments": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "alternateSuggestion": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["score", "comments", "alternateSuggestion"]
+                },
+                "punctuation": {
+                  "type": "object",
+                  "properties": {
+                    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+                    "comments": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "alternateSuggestion": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["score", "comments", "alternateSuggestion"]
+                },
+                "vocabulary": {
+                  "type": "object",
+                  "properties": {
+                    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+                    "comments": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "alternateSuggestion": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["score", "comments", "alternateSuggestion"]
+                },
+                "styleAndTone": {
+                  "type": "object",
+                  "properties": {
+                    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+                    "comments": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "alternateSuggestion": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["score", "comments", "alternateSuggestion"]
+                },
+                "creativityAndThinking": {
+                  "type": "object",
+                  "properties": {
+                    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+                    "comments": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "alternateSuggestion": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["score", "comments", "alternateSuggestion"]
+                }
+              },
+              "required": [
+                "spelling",
+                "grammar",
+                "punctuation",
+                "vocabulary",
+                "styleAndTone",
+                "creativityAndThinking"
+              ]
+            }
+                        
+            """;
 }
