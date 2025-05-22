@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OllamaLlmChatService implements LlmService {
 
-    private static final String CHAT_MODEL_NAME = "llama3";
+    private static final String CHAT_MODEL_NAME = "llama3.2";
     private final OllamaChatModel ollamaChatModel;
 
     private String getPromptResult(String prompt) {

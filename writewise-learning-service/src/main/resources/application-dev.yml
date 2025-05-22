@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: writewise-learning-service
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USERNAME:mongoroot}:${MONGODB_PASSWORD:mongopass}@${MONGODB_HOST:192.168.1.90}:${MONGODB_PORT:31120}/${MONGODB_DATABASE:writewise}?authSource=admin
+      database: ${MONGODB_DATABASE:writewise}
+      username: ${MONGODB_USERNAME:mongoroot}
+      password: ${MONGODB_PASSWORD:mongopass}
+      #      host: ${MONGODB_HOST:localhost}
+      #      port: ${MONGODB_PORT:27017}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: true
+  datasource:
+    username: ${MYSQL_USER:abhishek}
+    password: ${MYSQL_PASSWORD:abhishek}
+    url: jdbc:mysql://${MYSQL_HOST:192.168.1.90}:${MYSQL_PORT:31124}/${MYSQL_DATABASE:abhishek}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      idle-timeout: 60000
+      maximum-pool-size: 50
+server:
+  port: ${SERVICE_PORT:8989}
+#logging:
+#  level:
+#    root: DEBUG
+
+ollama-llm-writing-module-topics: http://192:168:1:90:31434/api/v1/llm/text/
