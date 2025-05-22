@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RestClient {
+
     private final RestTemplate restTemplate;
 
     public <T> ResponseEntity<T> get(String url, HttpHeaders headers, Class<T> responseType) {
