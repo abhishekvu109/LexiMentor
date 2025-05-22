@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +28,8 @@ public class AiRestControllerV2 {
     private final ObjectMapper mapper;
 
     @PostMapping(value = UrlConstants.EvaluateMeaningPrompts.V2.GENERATE_STANDARD_PROMPT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<OllamaResponseDTO> generatePromptResponse(@RequestBody PromptRequest promptRequest) {
-        OllamaDTO request = OllamaDTO.builder()
-                .stream(false)
-                .prompt(promptRequest.prompt())
-                .model(promptRequest.model()).build();
+    public @ResponseBody ResponseEntity<String> generatePromptResponse(@RequestBody PromptRequest promptRequest) {
+        OllamaDTO request = OllamaDTO.builder().stream(false).prompt(promptRequest.prompt()).model(promptRequest.model()).build();
         try {
             request.setFormat(mapper.readTree(ApplicationConstants.LLM_EVALUATION_RESPONSE_FORMAT));
         } catch (JsonProcessingException e) {
@@ -39,7 +37,10 @@ public class AiRestControllerV2 {
             throw new RuntimeException(e);
         }
         OllamaResponseDTO response = promptService.execute(request);
-        return ResponseEntity.ok(response);
+        if (StringUtils.isEmpty(response.getResponse())) {
+            throw new RuntimeException("Response is NULL.");
+        }
+        return ResponseEntity.ok(response.getResponse());
     }
 
     private record PromptRequest(@NotBlank String prompt, @NotBlank String model) {
