@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class AiRestController {
+public class AiRestControllerV2 {
 
     private final LLMPromptService promptService;
 
