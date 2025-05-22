@@ -7,4 +7,6 @@ public interface LlmService {
 
     public String prompt(String text);
     public String prompt(String text,String modelName);
+    public String prompt(String text,String modelName,String format);
+
 }
