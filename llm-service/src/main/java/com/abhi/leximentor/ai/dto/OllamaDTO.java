@@ -14,4 +14,5 @@ public class OllamaDTO {
     private boolean stream;
     private JsonNode format;
     private String prompt;
+    private OllamaOptionsDTO options;
 }
