@@ -1,6 +1,5 @@
 package com.abhi.leximentor.ai.controller.v2;
 
-import com.abhi.leximentor.ai.constants.ApplicationConstants;
 import com.abhi.leximentor.ai.constants.UrlConstants;
 import com.abhi.leximentor.ai.dto.OllamaDTO;
 import com.abhi.leximentor.ai.dto.OllamaOptionsDTO;
@@ -42,6 +41,7 @@ public class AiRestControllerV2 {
             log.error(e.getMessage());
             throw new RuntimeException(e);
         }
+        log.info("Received a request: {}", request);
         OllamaResponseDTO response = promptService.execute(request);
         if (StringUtils.isEmpty(response.getResponse())) {
             throw new RuntimeException("Response is NULL.");
