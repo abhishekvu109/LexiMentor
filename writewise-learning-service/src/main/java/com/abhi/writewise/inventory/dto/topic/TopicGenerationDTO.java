@@ -1,4 +1,4 @@
-package com.abhi.writewise.inventory.dto;
+package com.abhi.writewise.inventory.dto.topic;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LlmTopicDTO {
+public class TopicGenerationDTO {
     @JsonProperty("subject")
     private String subject;
     @JsonProperty("numOfTopic")
@@ -32,4 +32,8 @@ public class LlmTopicDTO {
     private String status;
     @JsonProperty("refId")
     private String refId;
+    @JsonProperty("uuid")
+    private String uuid;
+    @JsonProperty("writingSessionRefId")
+    private String writingSessionRefId;
 }

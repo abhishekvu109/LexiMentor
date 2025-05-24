@@ -3,6 +3,7 @@ package com.abhi.leximentor.ai.service;
 import com.abhi.leximentor.ai.dto.MeaningEvaluationDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -10,6 +11,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Matcher;
@@ -20,7 +22,10 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OllamaLlmChatService implements LlmService {
 
-    private static final String CHAT_MODEL_NAME = "llama3";
+
+    private static final String CHAT_MODEL_NAME="llama3";
+    @Value("${llm-base-url}")
+    private String BASE_URL;
     private final OllamaChatModel ollamaChatModel;
 
     private String getPromptResult(String prompt) {
@@ -81,6 +86,12 @@ public class OllamaLlmChatService implements LlmService {
     @Override
     public String prompt(String text, String modelName) {
         ChatResponse response = ollamaChatModel.call(new Prompt(text, OllamaOptions.create().withModel(modelName)));
+        return response.getResult().getOutput().getContent();
+    }
+
+    @Override
+    public String prompt(String text, String modelName, String format) {
+        ChatResponse response = ollamaChatModel.call(new Prompt(text, OllamaOptions.create().withModel(modelName).withFormat(format)));
         return response.getResult().getOutput().getContent();
     }
 }
