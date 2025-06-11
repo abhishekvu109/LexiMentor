@@ -61,7 +61,7 @@ def update_start_end_indexes(json_str, error_list):
     return error_list
 
 
-@app.route('/api/writewise/util/v1/low-level-evaluation/fix-indexes', methods=['POST'])
+@app.route('/api/app-util/v1/low-level-evaluation/fix-indexes', methods=['POST'])
 def validate_update_json():
     data = request.get_json()
     json_str = data.get("text", "")
