@@ -38,8 +38,8 @@ def update_start_end_indexes(json_str, error_list):
     visited_positions = []
 
     # Process each error in the errorList
-    for error in error_list:
-        incorrect_text = error['incorrectText']
+    for error in error_list["errorList"]:
+        incorrect_text = error["incorrectText"]
         # Escape special characters in incorrect_text for regex
         escaped_text = re.escape(incorrect_text)
 
