@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   data:
     mongodb:
       uri: mongodb://${MONGODB_USERNAME:mongoroot}:${MONGODB_PASSWORD:mongopass}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:writewise}?authSource=admin
@@ -22,10 +24,11 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:abhishek}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      idle-timeout: 60000
+      idle-timeout: 900000
       maximum-pool-size: 50
+      keepalive-time: 900000
 server:
   port: ${SERVICE_PORT:8989}
-#logging:
-#  level:
-#    root: DEBUG
+logging:
+  level:
+    org.springframework.boot.context.config: DEBUG

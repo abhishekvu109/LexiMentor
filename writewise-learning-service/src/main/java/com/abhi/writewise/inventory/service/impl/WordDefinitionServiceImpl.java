@@ -26,11 +26,11 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WordDefinitionServiceImpl implements WordDefinitionService {
-    private final Integer RETRY_COUNT = 3;
     private final static String LLM_TOPIC = "ollama-llm-writing-module-topics";
-    private String url;
-    private final RestClient restClient;
     private static final String MODEL_NAME = "deepseek-r1:1.5b";
+    private final Integer RETRY_COUNT = 3;
+    private final RestClient restClient;
+    private String url;
 
     @Override
     public WordDefinitionDTO generateWordDefinitionFromLlm(WordDefinitionDTO request) {
@@ -77,7 +77,7 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
 
     private void loadModelServiceName() {
         try {
-            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
+            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application-dev.properties"));
             log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
             setUrl(properties.getProperty(LLM_TOPIC) + MODEL_NAME);
         } catch (IOException ex) {

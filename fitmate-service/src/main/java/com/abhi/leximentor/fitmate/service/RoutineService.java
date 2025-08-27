@@ -1,12 +1,15 @@
 package com.abhi.leximentor.fitmate.service;
 
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
+import com.abhi.leximentor.fitmate.dto.RoutineSearchFilter;
 
 import java.util.List;
 
 public interface RoutineService {
 
-    List<RoutineDTO> addAll(List<RoutineDTO> routineDTOS);
+    RoutineDTO add(RoutineDTO routineDTO);
+
+    RoutineDTO addByNames(RoutineDTO routineDTO);
 
     RoutineDTO getByRefId(long refId);
 
@@ -18,4 +21,6 @@ public interface RoutineService {
     void delete(RoutineDTO routineDTO);
 
     void deleteAll(List<RoutineDTO> routineDTOS);
+
+    List<RoutineDTO> search(RoutineSearchFilter filter);
 }

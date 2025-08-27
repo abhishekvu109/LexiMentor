@@ -21,4 +21,6 @@ public interface DrillMetadataService {
     public DrillMetadataDTO getByRefId(long refId);
 
     public Collection<String> getWordsInStrByDrillRefId(long drillRefId);
+
+    public DrillMetadataDTO assignDrillName(long drillRefId);
 }

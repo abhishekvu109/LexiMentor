@@ -1,0 +1,787 @@
+[
+    {
+        "name": "Athena the Wise #1",
+        "genre": "Mythology",
+        "subGenre": "Greek",
+        "aliases": [
+            "Pallas",
+            "Parthenos"
+        ],
+        "tags": [
+            "Greek Mythology",
+            "Wisdom",
+            "Warfare",
+            "Owl",
+            "Strategy",
+            "Acropolis",
+            "Patron of Athens"
+        ],
+        "description": "Named after a Greek deity, Athena the Wise #1 represents the wisdom and strategic prowess once embodied in ancient tales. Revered for intellect and justice, this figure reminds us of Athena’s legacy in the halls of Olympus."
+    },
+    {
+        "name": "Thor the Bold #2",
+        "genre": "Mythology",
+        "subGenre": "Norse",
+        "aliases": [
+            "Thunderer",
+            "Son of Odin"
+        ],
+        "tags": [
+            "Norse Mythology",
+            "Thunder",
+            "Hammer",
+            "Mjolnir",
+            "Storms",
+            "Asgard",
+            "Protector"
+        ],
+        "description": "Inspired by the might of Norse legends, Thor the Bold #2 carries the spirit of thunder and unshakable strength. Like Thor of Asgard, this entity defends the realm with unrelenting courage and honor."
+    },
+    {
+        "name": "Anubis the Eternal #3",
+        "genre": "Mythology",
+        "subGenre": "Egyptian",
+        "aliases": [
+            "Inpu",
+            "Yinepu"
+        ],
+        "tags": [
+            "Egyptian Mythology",
+            "Death",
+            "Mummification",
+            "Jackal",
+            "Underworld",
+            "Embalming",
+            "Tombs"
+        ],
+        "description": "Drawing from the mysticism of ancient Egypt, Anubis the Eternal #3 channels the protective and guiding nature of Anubis. With dominion over rites and the underworld, this figure ensures the passage of souls with solemn grace."
+    },
+    {
+        "name": "Kali the Just #4",
+        "genre": "Mythology",
+        "subGenre": "Hindu",
+        "aliases": [
+            "Kalika",
+            "Mahakali"
+        ],
+        "tags": [
+            "Hindu Mythology",
+            "Destruction",
+            "Time",
+            "Power",
+            "Goddess",
+            "Liberation",
+            "Rebirth"
+        ],
+        "description": "Symbolizing transformation and divine power, Kali the Just #4 evokes the fearsome and nurturing aspects of Kali. Associated with cosmic cycles and liberation, this persona embodies both destruction and spiritual rebirth."
+    },
+    {
+        "name": "Hera the Bold #5",
+        "genre": "Mythology",
+        "subGenre": "Greek",
+        "aliases": [
+            "Queen of Olympus",
+            "Juno"
+        ],
+        "tags": [
+            "Greek Mythology",
+            "Marriage",
+            "Queen",
+            "Peacock",
+            "Olympus",
+            "Family",
+            "Power"
+        ],
+        "description": "Known for her regal authority and fierce loyalty, Hera the Bold #5 embodies the majestic presence of the Greek goddess of marriage. As queen of the gods, she commands respect and upholds the sanctity of family and union."
+    },
+    {
+        "name": "Loki the Wise #6",
+        "genre": "Mythology",
+        "subGenre": "Norse",
+        "aliases": [
+            "The Trickster",
+            "Shape-shifter"
+        ],
+        "tags": [
+            "Norse Mythology",
+            "Chaos",
+            "Trickery",
+            "Fire",
+            "Deception",
+            "Transformation"
+        ],
+        "description": "Loki the Wise #6 carries the chaotic brilliance of the Norse trickster god. Known for cunning plots and unpredictable behavior, this figure challenges norms and reveals truths hidden behind illusions."
+    },
+    {
+        "name": "Ra the Eternal #7",
+        "genre": "Mythology",
+        "subGenre": "Egyptian",
+        "aliases": [
+            "Re",
+            "Sun God"
+        ],
+        "tags": [
+            "Egyptian Mythology",
+            "Sun",
+            "Creation",
+            "Sky",
+            "Falcon",
+            "Solar Disk"
+        ],
+        "description": "Radiating the brilliance of the midday sun, Ra the Eternal #7 signifies rebirth, light, and divine kingship. Like the Egyptian sun god, this entity guides the cosmic cycle and oversees the heavens with unyielding power."
+    },
+    {
+        "name": "Shiva of Olympus #8",
+        "genre": "Mythology",
+        "subGenre": "Hindu",
+        "aliases": [
+            "Mahadeva",
+            "Nataraja"
+        ],
+        "tags": [
+            "Hindu Mythology",
+            "Destruction",
+            "Dance",
+            "Meditation",
+            "Cosmic Energy",
+            "Third Eye"
+        ],
+        "description": "Combining peace and power, Shiva of Olympus #8 channels the Hindu god’s dual nature. Known as both the destroyer and benefactor, this figure meditates beyond time and dances the rhythm of universal renewal."
+    },
+    {
+        "name": "Freya the Just #9",
+        "genre": "Mythology",
+        "subGenre": "Norse",
+        "aliases": [
+            "Lady of the Vanir",
+            "Goddess of Love"
+        ],
+        "tags": [
+            "Norse Mythology",
+            "Love",
+            "War",
+            "Magic",
+            "Fertility",
+            "Falcon Cloak"
+        ],
+        "description": "Freya the Just #9 captures the mysterious elegance of the Norse goddess of love and war. With beauty and battle prowess alike, she watches over fates with fierce independence and deep empathy."
+    },
+    {
+        "name": "Osiris the Brave #10",
+        "genre": "Mythology",
+        "subGenre": "Egyptian",
+        "aliases": [
+            "Lord of the Underworld",
+            "Judge of the Dead"
+        ],
+        "tags": [
+            "Egyptian Mythology",
+            "Afterlife",
+            "Green Skin",
+            "Rebirth",
+            "Fertility",
+            "Justice"
+        ],
+        "description": "Symbol of death and resurrection, Osiris the Brave #10 guards the passage between worlds. As judge of the dead, he restores balance and guides souls toward eternal peace and renewal."
+    },
+    {
+        "name": "Durga the Divine #11",
+        "genre": "Mythology",
+        "subGenre": "Hindu",
+        "aliases": [
+            "Mahishasuramardini",
+            "Devi"
+        ],
+        "tags": [
+            "Hindu Mythology",
+            "Protection",
+            "Power",
+            "Warrior Goddess",
+            "Tiger",
+            "Victory"
+        ],
+        "description": "Durga the Divine #11 represents unyielding force and protective grace. Riding a tiger, she defeats chaos and evil with divine weapons, embodying the fearless guardian of righteousness."
+    },
+    {
+        "name": "Apollo of Asgard #12",
+        "genre": "Mythology",
+        "subGenre": "Greek",
+        "aliases": [
+            "Phoebus",
+            "God of Light"
+        ],
+        "tags": [
+            "Greek Mythology",
+            "Sun",
+            "Music",
+            "Prophecy",
+            "Healing",
+            "Lyre"
+        ],
+        "description": "Apollo of Asgard #12 shines as a beacon of enlightenment and artistic genius. Guiding truth, prophecy, and music, this figure brings harmony to both the heavens and the human soul."
+    },
+    {
+        "name": "Frigg the Eternal #13",
+        "genre": "Mythology",
+        "subGenre": "Norse",
+        "aliases": [
+            "Queen of Asgard",
+            "Wife of Odin"
+        ],
+        "tags": [
+            "Norse Mythology",
+            "Foresight",
+            "Love",
+            "Family",
+            "Sky",
+            "Wisdom"
+        ],
+        "description": "Frigg the Eternal #13 exemplifies foresight and maternal strength. As queen of the gods, she weaves fate’s tapestry and guards the secrets of destiny with serene wisdom."
+    },
+    {
+        "name": "Isis the Wise #14",
+        "genre": "Mythology",
+        "subGenre": "Egyptian",
+        "aliases": [
+            "Aset",
+            "Throne Goddess"
+        ],
+        "tags": [
+            "Egyptian Mythology",
+            "Magic",
+            "Motherhood",
+            "Healing",
+            "Resurrection",
+            "Wings"
+        ],
+        "description": "A symbol of devotion and magical healing, Isis the Wise #14 gathers strength from compassion. As protector of the throne and nurturer of life, she restores what has been broken and offers divine solace."
+    },
+    {
+        "name": "Rama the Just #15",
+        "genre": "Mythology",
+        "subGenre": "Hindu",
+        "aliases": [
+            "Ramachandra",
+            "Seventh Avatar of Vishnu"
+        ],
+        "tags": [
+            "Hindu Mythology",
+            "Dharma",
+            "Hero",
+            "Bow",
+            "Ayodhya",
+            "Virtue"
+        ],
+        "description": "Rama the Just #15 upholds righteousness and ideal kingship. As the hero of the Ramayana, his unwavering adherence to dharma and moral integrity make him a timeless symbol of justice and sacrifice."
+    },
+    {
+        "name": "Ares the Bold #16",
+        "genre": "Mythology",
+        "subGenre": "Greek",
+        "aliases": [
+            "God of War",
+            "Enyalius"
+        ],
+        "tags": [
+            "Greek Mythology",
+            "War",
+            "Bloodlust",
+            "Battle",
+            "Spear",
+            "Shield"
+        ],
+        "description": "Ares the Bold #16 embodies the raw fury and chaos of warfare. As the Greek god of war, he charges into battle with reckless valor, representing both the glory and brutality of conflict."
+    },
+    {
+        "name": "Odin the All-Seeing #17",
+        "genre": "Mythology",
+        "subGenre": "Norse",
+        "aliases": [
+            "Allfather",
+            "One-Eyed God"
+        ],
+        "tags": [
+            "Norse Mythology",
+            "Wisdom",
+            "Runes",
+            "Ravens",
+            "Sacrifice",
+            "Fate"
+        ],
+        "description": "Odin the All-Seeing #17 seeks knowledge at any cost. As the Norse Allfather, he sacrifices for wisdom, commands the runes, and peers into fate’s secrets with unwavering determination and ancient power."
+    },
+    {
+        "name": "Lakshmi the Radiant #18",
+        "genre": "Mythology",
+        "subGenre": "Hindu",
+        "aliases": [
+            "Sri",
+            "Goddess of Wealth"
+        ],
+        "tags": [
+            "Hindu Mythology",
+            "Prosperity",
+            "Fortune",
+            "Lotus",
+            "Generosity",
+            "Light"
+        ],
+        "description": "Lakshmi the Radiant #18 blesses the world with abundance and grace. As the Hindu goddess of wealth, she brings both spiritual and material prosperity, illuminating paths with her golden light."
+    },
+    {
+        "name": "Heimdall the Watcher #19",
+        "genre": "Mythology",
+        "subGenre": "Norse",
+        "aliases": [
+            "Guardian of Bifrost",
+            "White God"
+        ],
+        "tags": [
+            "Norse Mythology",
+            "Watchfulness",
+            "Bridge",
+            "Horn",
+            "Sight",
+            "Foresight"
+        ],
+        "description": "Heimdall the Watcher #19 stands vigilant at the edge of the realms. As guardian of Bifrost, he sees and hears all, awaiting the day of Ragnarok with steadfast loyalty and cosmic awareness."
+    },
+    {
+        "name": "Saraswati the Harmonious #20",
+        "genre": "Mythology",
+        "subGenre": "Hindu",
+        "aliases": [
+            "Goddess of Learning",
+            "Veena Player"
+        ],
+        "tags": [
+            "Hindu Mythology",
+            "Wisdom",
+            "Music",
+            "Arts",
+            "Education",
+            "Purity"
+        ],
+        "description": "Saraswati the Harmonious #20 inspires creativity and intellect. As the goddess of knowledge, she flows like a serene river, nurturing learning, language, and the arts with divine clarity."
+    },
+    {
+        "name": "Hades the Silent #21",
+        "genre": "Mythology",
+        "subGenre": "Greek",
+        "aliases": [
+            "Plouton",
+            "Lord of the Underworld"
+        ],
+        "tags": [
+            "Greek Mythology",
+            "Underworld",
+            "Shadows",
+            "Wealth",
+            "Cerberus",
+            "Afterlife"
+        ],
+        "description": "Hades the Silent #21 rules the unseen realms with calm authority. Far from malevolent, he governs the dead with fairness and keeps balance in the cycle of life and death."
+    },
+    {
+        "name": "Ganesha the Opener #22",
+        "genre": "Mythology",
+        "subGenre": "Hindu",
+        "aliases": [
+            "Vighnaharta",
+            "Ganapati"
+        ],
+        "tags": [
+            "Hindu Mythology",
+            "Beginnings",
+            "Wisdom",
+            "Elephant Head",
+            "Obstacles",
+            "Learning"
+        ],
+        "description": "Ganesha the Opener #22 removes obstacles and grants clarity. As the elephant-headed god, he’s invoked at the start of every journey, guiding seekers with humor, insight, and benevolent protection."
+    },
+    {
+        "name": "Thoth the Scribe #23",
+        "genre": "Mythology",
+        "subGenre": "Egyptian",
+        "aliases": [
+            "Djehuty",
+            "God of Writing"
+        ],
+        "tags": [
+            "Egyptian Mythology",
+            "Wisdom",
+            "Moon",
+            "Scroll",
+            "Judgment",
+            "Knowledge"
+        ],
+        "description": "Thoth the Scribe #23 records the truths of gods and men. As guardian of wisdom and lunar cycles, he brings order through language, science, and sacred rites of balance."
+    },
+    {
+        "name": "Artemis the Hunter #24",
+        "genre": "Mythology",
+        "subGenre": "Greek",
+        "aliases": [
+            "Cynthia",
+            "Diana"
+        ],
+        "tags": [
+            "Greek Mythology",
+            "Moon",
+            "Wilderness",
+            "Archery",
+            "Virginity",
+            "Nature"
+        ],
+        "description": "Artemis the Hunter #24 roams untamed lands with silent grace. As protector of wildlife and women, she strikes with divine arrows and keeps the balance between civilization and wild beauty."
+    }
+]
+[
+    {
+        "name": "Colossus of Rhodes #1",
+        "genre": "Historical Monument",
+        "subGenre": "Ancient Wonder",
+        "aliases": [
+            "Helios Statue",
+            "Giant of Rhodes"
+        ],
+        "tags": [
+            "Ancient Greece",
+            "Statue",
+            "Bronze",
+            "Helios",
+            "Port Entrance",
+            "Wonder of the World"
+        ],
+        "description": "Colossus of Rhodes #1 was a towering statue of the sun god Helios, symbolizing victory and unity. Built to celebrate Rhodes' triumph over Cyprus, it stood at the harbor, representing strength and maritime pride in ancient Greece."
+    },
+    {
+        "name": "Petra the Hidden Rose #2",
+        "genre": "Historical Monument",
+        "subGenre": "Nabataean",
+        "aliases": [
+            "Rose City",
+            "Lost City"
+        ],
+        "tags": [
+            "Jordan",
+            "Rock-cut",
+            "Treasury",
+            "Nabataean",
+            "Desert",
+            "Caravan Trade"
+        ],
+        "description": "Petra the Hidden Rose #2 lies carved into rose-colored cliffs, once a vibrant hub of the Nabataean trade routes. The intricate façades and winding canyons reflect a civilization of immense architectural and cultural depth."
+    },
+    {
+        "name": "Angkor Wat Eternal #3",
+        "genre": "Historical Monument",
+        "subGenre": "Khmer",
+        "aliases": [
+            "Temple City",
+            "Vishnu’s Abode"
+        ],
+        "tags": [
+            "Cambodia",
+            "Hindu Temple",
+            "Khmer Empire",
+            "Buddhism",
+            "Stone Carvings",
+            "Sunrise"
+        ],
+        "description": "Angkor Wat Eternal #3 is a massive temple complex originally dedicated to Vishnu. Its harmonious symmetry and exquisite bas-reliefs have transformed it into a symbol of national pride and spiritual grandeur in Cambodia."
+    },
+    {
+        "name": "Thebes Legacy Gate #4",
+        "genre": "Historical Monument",
+        "subGenre": "Egyptian",
+        "aliases": [
+            "City of a Hundred Gates",
+            "Luxor"
+        ],
+        "tags": [
+            "Egypt",
+            "Karnak",
+            "Obelisks",
+            "Hypostyle Hall",
+            "Ancient Capital"
+        ],
+        "description": "Thebes Legacy Gate #4 served as a religious capital of ancient Egypt. The towering obelisks, sprawling temples, and hieroglyph-covered walls reflect centuries of devotion to the gods and pharaohs."
+    },
+    {
+        "name": "Acropolis Crown #5",
+        "genre": "Historical Monument",
+        "subGenre": "Greek",
+        "aliases": [
+            "Athens High City",
+            "Parthenon Hill"
+        ],
+        "tags": [
+            "Greece",
+            "Athens",
+            "Parthenon",
+            "Democracy",
+            "Classical Architecture"
+        ],
+        "description": "Acropolis Crown #5 stands above Athens as a beacon of classical civilization. The Parthenon and its surroundings symbolize democratic ideals, artistic excellence, and the enduring legacy of ancient Greece."
+    },
+    {
+        "name": "Machu Picchu Mistveil #6",
+        "genre": "Historical Monument",
+        "subGenre": "Inca",
+        "aliases": [
+            "Lost City of the Incas",
+            "Sun Temple"
+        ],
+        "tags": [
+            "Peru",
+            "Terraces",
+            "Sacred Valley",
+            "Andes",
+            "Stonework"
+        ],
+        "description": "Machu Picchu Mistveil #6 is a mystical Incan site nestled in the Andes. Its precise stone constructions and panoramic views echo the ingenuity and spiritual depth of a vanished empire."
+    },
+    {
+        "name": "Stonehenge Circle #7",
+        "genre": "Historical Monument",
+        "subGenre": "Neolithic",
+        "aliases": [
+            "Druid’s Circle",
+            "Megalithic Monument"
+        ],
+        "tags": [
+            "United Kingdom",
+            "Astronomy",
+            "Solstice",
+            "Sarsen Stones",
+            "Ritual Site"
+        ],
+        "description": "Stonehenge Circle #7 remains an enigmatic stone formation whose alignment with celestial events suggests astronomical or ritualistic significance, revealing the spiritual and scientific curiosity of Neolithic peoples."
+    },
+    {
+        "name": "Great Wall Sentinel #8",
+        "genre": "Historical Monument",
+        "subGenre": "Chinese",
+        "aliases": [
+            "Long Wall",
+            "10,000 Li Wall"
+        ],
+        "tags": [
+            "China",
+            "Fortification",
+            "Watchtowers",
+            "Ming Dynasty",
+            "UNESCO"
+        ],
+        "description": "Great Wall Sentinel #8 stretches over mountains and valleys, built to guard against invasions and unite territories. Its scale and endurance make it one of the most remarkable engineering feats in history."
+    },
+    {
+        "name": "Taj Mahal Whisper #9",
+        "genre": "Historical Monument",
+        "subGenre": "Mughal",
+        "aliases": [
+            "Crown Palace",
+            "Marble Mausoleum"
+        ],
+        "tags": [
+            "India",
+            "Agra",
+            "Love",
+            "Mausoleum",
+            "White Marble",
+            "UNESCO"
+        ],
+        "description": "Taj Mahal Whisper #9 is a luminous white marble tomb commissioned by Shah Jahan for his beloved wife Mumtaz. Its symmetry, gardens, and calligraphy speak of eternal love and Mughal artistry."
+    },
+    {
+        "name": "Chichen Itza Echo #10",
+        "genre": "Historical Monument",
+        "subGenre": "Maya",
+        "aliases": [
+            "Temple of Kukulcan",
+            "Sacred Cenote"
+        ],
+        "tags": [
+            "Mexico",
+            "Pyramid",
+            "Equinox",
+            "Maya Civilization",
+            "Astronomy"
+        ],
+        "description": "Chichen Itza Echo #10 features the Temple of Kukulcan, where sunlight and architecture create a serpent illusion during equinoxes. It highlights the Maya’s precise astronomical knowledge and ritual practices."
+    },
+    {
+        "name": "Alhambra Garden Flame #11",
+        "genre": "Historical Monument",
+        "subGenre": "Islamic",
+        "aliases": [
+            "Red Castle",
+            "Moorish Palace"
+        ],
+        "tags": [
+            "Spain",
+            "Granada",
+            "Andalusia",
+            "Islamic Art",
+            "Courtyards"
+        ],
+        "description": "Alhambra Garden Flame #11 is an Andalusian masterpiece of Islamic architecture. With intricate tilework, flowing fountains, and lush courtyards, it embodies a poetic blend of nature and structure."
+    },
+    {
+        "name": "Easter Island Sentinel #12",
+        "genre": "Historical Monument",
+        "subGenre": "Polynesian",
+        "aliases": [
+            "Moai Statues",
+            "Rapa Nui Guardians"
+        ],
+        "tags": [
+            "Chile",
+            "Mystery",
+            "Carved Heads",
+            "Island Culture",
+            "Stone Monoliths"
+        ],
+        "description": "Easter Island Sentinel #12 features massive stone heads known as moai, carved by the Rapa Nui. Their size and mystery symbolize ancestral protection and spiritual presence across the Pacific island."
+    },
+    {
+        "name": "Hagia Sophia Lightspire #13",
+        "genre": "Historical Monument",
+        "subGenre": "Byzantine",
+        "aliases": [
+            "Church of Holy Wisdom",
+            "Ayasofya"
+        ],
+        "tags": [
+            "Turkey",
+            "Istanbul",
+            "Byzantine",
+            "Mosque",
+            "Dome",
+            "Christianity",
+            "Islam"
+        ],
+        "description": "Hagia Sophia Lightspire #13 is a marvel of religious transformation. Once a Byzantine cathedral, later an Ottoman mosque, and now a museum, it bridges empires and faiths with its majestic dome."
+    },
+    {
+        "name": "Moai Crestwatch #14",
+        "genre": "Historical Monument",
+        "subGenre": "Polynesian",
+        "aliases": [
+            "Rano Raraku Guardians",
+            "Stone Elders"
+        ],
+        "tags": [
+            "Easter Island",
+            "Volcanic Rock",
+            "Statues",
+            "Ancestral Spirits"
+        ],
+        "description": "Moai Crestwatch #14 guards the island with solemn expressions carved in volcanic stone. These mysterious figures reflect the Rapa Nui's reverence for ancestry and spiritual connection to the land."
+    },
+    {
+        "name": "Tower of Pisa Lean #15",
+        "genre": "Historical Monument",
+        "subGenre": "Romanesque",
+        "aliases": [
+            "Leaning Tower",
+            "Campanile of Pisa"
+        ],
+        "tags": [
+            "Italy",
+            "Tilted",
+            "Engineering",
+            "Bell Tower",
+            "Tourism"
+        ],
+        "description": "Tower of Pisa Lean #15 tilts gracefully in the heart of Italy. Despite its unintended lean, the Romanesque bell tower has become a symbol of architectural wonder and global curiosity."
+    },
+    {
+        "name": "Neuschwanstein Dreamspire #16",
+        "genre": "Historical Monument",
+        "subGenre": "Romantic",
+        "aliases": [
+            "Fairy Tale Castle",
+            "Ludwig's Castle"
+        ],
+        "tags": [
+            "Germany",
+            "Bavaria",
+            "Castle",
+            "Inspiration",
+            "Romanticism"
+        ],
+        "description": "Neuschwanstein Dreamspire #16 rises like a dream from the Bavarian Alps. Commissioned by King Ludwig II, it inspired fantasy architecture and remains a symbol of romanticism and imagination."
+    },
+    {
+        "name": "Borobudur Stupa Rise #17",
+        "genre": "Historical Monument",
+        "subGenre": "Buddhist",
+        "aliases": [
+            "Buddhist Temple",
+            "Java Monument"
+        ],
+        "tags": [
+            "Indonesia",
+            "Buddhism",
+            "Stupa",
+            "Reliefs",
+            "Pilgrimage"
+        ],
+        "description": "Borobudur Stupa Rise #17 is the largest Buddhist temple in the world. Its nine stacked platforms adorned with reliefs guide devotees through symbolic spiritual ascension to enlightenment."
+    },
+    {
+        "name": "Forbidden City Veil #18",
+        "genre": "Historical Monument",
+        "subGenre": "Imperial Chinese",
+        "aliases": [
+            "Purple Forbidden City",
+            "Imperial Palace"
+        ],
+        "tags": [
+            "China",
+            "Beijing",
+            "Dynasty",
+            "Emperor",
+            "Architecture",
+            "Court"
+        ],
+        "description": "Forbidden City Veil #18 housed Chinese emperors for nearly five centuries. With its golden roofs and crimson walls, it remains a sprawling symbol of imperial tradition, power, and cultural heritage."
+    },
+    {
+        "name": "Pyramid of Giza Sentinel #19",
+        "genre": "Historical Monument",
+        "subGenre": "Egyptian",
+        "aliases": [
+            "Great Pyramid",
+            "Khufu's Tomb"
+        ],
+        "tags": [
+            "Egypt",
+            "Ancient Wonder",
+            "Pharaoh",
+            "Tomb",
+            "Limestone"
+        ],
+        "description": "Pyramid of Giza Sentinel #19 is the last remaining wonder of the ancient world. Built for Pharaoh Khufu, its geometry and alignment demonstrate extraordinary ancient engineering and cosmic understanding."
+    },
+    {
+        "name": "Mont-Saint-Michel Tidehold #20",
+        "genre": "Historical Monument",
+        "subGenre": "Medieval",
+        "aliases": [
+            "Abbey Fortress",
+            "Tidal Island"
+        ],
+        "tags": [
+            "France",
+            "Gothic",
+            "Monastery",
+            "Tide",
+            "Pilgrimage"
+        ],
+        "description": "Mont-Saint-Michel Tidehold #20 rises dramatically above the tides of Normandy. This fortified island abbey blends Gothic elegance with medieval defense, becoming a spiritual and architectural marvel of France."
+    }
+]

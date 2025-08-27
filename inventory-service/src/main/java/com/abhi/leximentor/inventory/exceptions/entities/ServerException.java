@@ -25,5 +25,9 @@ public class ServerException {
         }
     }
 
-
+    public static class NoActiveNameObjectFound extends RuntimeException {
+        public NoActiveNameObjectFound(String message) {
+            super(message);
+        }
+    }
 }

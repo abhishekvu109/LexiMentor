@@ -6,14 +6,16 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString(exclude = {"excercise"})
+@ToString(exclude = {"training"})
 @Entity
 @Table(name = "fitmate_routine")
 public class Routine {
@@ -32,24 +34,30 @@ public class Routine {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "is_completed")
-    private boolean isCompleted;
-
-    @Column(name = "completion_unit")
-    private String completionUnit;
-
-    @Column(name = "measurement")
-    private int measurement;
+    @Column(name = "status")
+    private int status;
 
     @CreationTimestamp
     @Column(name = "crtn_date")
-    private LocalDateTime crtndate;
+    private LocalDateTime crtnDate;
 
     @UpdateTimestamp
     @Column(name = "last_upd_date")
     private LocalDateTime lastUpdDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "excercise_id")
-    private Exercise excercise;
+    @JoinColumn(name = "training_id")
+    private Training training;
+
+    @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Drill> drills;
+
+    @Column(name = "routine_date")
+    private LocalDate routineDate;
+
+    @Column(name = "burnt_calories")
+    private double burntCalories;
+
+    @Column(name = "duration_in_minutes")
+    private double durationInMinutes;
 }

@@ -3,6 +3,7 @@ FROM openjdk:17
 
 EXPOSE 8989
 COPY ./target/classes/application.properties /
+COPY ./target/classes/application-prod.properties /
 ADD target/writewise-learning-service.jar writewise-learning-service.jar
 
 ENTRYPOINT ["java", "-jar", "writewise-learning-service.jar"]

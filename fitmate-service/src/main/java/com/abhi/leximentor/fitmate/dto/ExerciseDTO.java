@@ -20,7 +20,8 @@ public class ExerciseDTO {
     private String status;
     private LocalDateTime crtnDate;
     private LocalDateTime lastUpdDate;
-    private TrainingMetadataDTO trainingMetadata;
-    private BodyPartsDTO targetBodyPart;
-    private List<String> secondaryBodyParts;
+    private TrainingDTO training;
+    private BodyPartsDTO bodyPart;
+    private List<MuscleDTO> targetMuscles;
+    private List<String> equipments;
 }

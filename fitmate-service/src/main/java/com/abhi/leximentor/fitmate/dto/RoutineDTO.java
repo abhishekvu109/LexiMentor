@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Data
@@ -13,11 +14,13 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class RoutineDTO {
     private String refId;
+    private String key;
     private String description;
-    private boolean isCompleted;
-    private String completionUnit;
-    private int measurement;
+    private String status;
+    private String workoutDate;
     private LocalDateTime crtnDate;
-    private LocalDateTime lastUpdDate;
-    private ExerciseDTO excerciseDTO;
+    private TrainingDTO training;
+    private List<DrillDTO> drills;
+    private double burntCalories;
+    private double durationInMinutes;
 }

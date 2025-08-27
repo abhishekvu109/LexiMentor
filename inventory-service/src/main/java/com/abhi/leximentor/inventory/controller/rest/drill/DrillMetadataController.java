@@ -59,5 +59,10 @@ public class DrillMetadataController {
         return CollectionUtil.isNotEmpty(words) ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, words) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve words in the drills");
     }
 
+    @PostMapping(value = UrlConstants.Drill.DrillMetadata.DRILL_METADATA_ASSIGN_NAME, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> assignNameToDrill(@PathVariable String drillRefId) {
+        DrillMetadataDTO response = drillMetadataService.assignDrillName(Long.parseLong(drillRefId));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+    }
 
 }

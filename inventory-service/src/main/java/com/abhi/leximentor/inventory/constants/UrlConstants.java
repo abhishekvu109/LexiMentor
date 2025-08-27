@@ -8,6 +8,9 @@ public class UrlConstants {
             public static final String DRILL_METADATA_DELETE_BY_REF_ID = "/api/leximentor/drill/metadata/{drillRefId}";
             public static final String DRILL_METADATA_GET_WORDS_BY_REF_ID = "/api/leximentor/drill/metadata/words/{drillRefId}";
 
+            public static final String DRILL_METADATA_ASSIGN_NAME = "/api/leximentor/drill/metadata/assign-name/{drillRefId}";
+
+
         }
 
         public static class DrillChallenge {
@@ -33,6 +36,11 @@ public class UrlConstants {
         public static class DrillEvaluation {
             public static final String DRILL_EVALUATE_BY_CHALLENGE_ID = "/api/leximentor/drill/metadata/challenges/challenge/{challengeId}/evaluate";
             public static final String DRILL_GET_EVALUATION_RESULT_BY_CHALLENGE_ID = "/api/leximentor/drill/metadata/challenges/challenge/{challengeId}/report";
+        }
+
+        public static class DrillAnalytics {
+            public static final String DRILL_GET_ANALYTICS_DRILL_REF_ID = "/api/leximentor/analytics/drill/{drillRefId}";
+            public static final String DRILL_GET_DRILL_CHALLENGE_METADATA_ANALYTICS = "/api/leximentor/analytics/drill/challenge/metadata";
         }
 
     }
@@ -65,8 +73,12 @@ public class UrlConstants {
             public static final String JOB_GET = "/api/leximentor/jobs/{jobId}";
         }
 
-        public static class WritingModule{
+        public static class WritingModule {
             public static final String GENERATE_TOPICS = "/api/leximentor/v1/module/writing/topics";
         }
+    }
+
+    public static class NamedObject{
+        public static final  String ADD_NAMED_OBJECT="/api/leximentor/v1/named/object";
     }
 }

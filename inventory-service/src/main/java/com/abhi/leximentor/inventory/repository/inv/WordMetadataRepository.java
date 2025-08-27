@@ -4,6 +4,7 @@ import com.abhi.leximentor.inventory.constants.QueryConstants;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -31,5 +32,6 @@ public interface WordMetadataRepository extends JpaRepository<WordMetadata, Long
     @Query(value = QueryConstants.Inventory.WordMetadata.GET_NEW_WORD_BY_SOURCE_LIMIT, nativeQuery = true)
     public List<WordMetadata> findAllRandomlyNewWordsFromSourceInLimit(int limit, String source);
 
-
+    @Query(value = QueryConstants.Inventory.WordMetadata.GET_COUNT_OF_WORDS_BY_POS, nativeQuery = true)
+    int findCountOfWordsByPos(@Param("pos") String pos);
 }
