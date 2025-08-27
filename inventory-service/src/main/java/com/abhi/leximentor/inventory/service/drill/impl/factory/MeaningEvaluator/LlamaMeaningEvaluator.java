@@ -29,7 +29,7 @@ public class LlamaMeaningEvaluator implements MeaningEvaluatorFactory {
     public LlamaModelDTO response(String prompt, int retryCount) {
         int RETRY_COUNT = retryCount;
         loadModelServiceName();
-        LlamaModelDTO request = LlamaModelDTO.builder().text(prompt).explanation("").confidence(0).build();
+        LlamaModelDTO request = LlamaModelDTO.builder().explanation("").confidence(0).build();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         ResponseEntity<LlamaModelDTO> responseEntity = null;

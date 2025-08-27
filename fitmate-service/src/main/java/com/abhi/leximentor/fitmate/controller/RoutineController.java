@@ -4,13 +4,13 @@ import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
 import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.constants.UrlConstants;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
+import com.abhi.leximentor.fitmate.dto.RoutineSearchFilter;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
 import com.abhi.leximentor.fitmate.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,29 +25,22 @@ public class RoutineController {
     private final RoutineService routineService;
 
     @PostMapping(value = UrlConstants.RoutineUrl.ROUTINE_ADD, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody List<RoutineDTO> request) {
-        try {
-            List<RoutineDTO> response = routineService.addAll(request);
-            if (CollectionUtils.isNotEmpty(response)) {
-                return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
-            }
-            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
-        } catch (Exception ex) {
-            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
-        }
+    public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody RoutineDTO request) {
+        RoutineDTO response = routineService.addByNames(request);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
     @GetMapping(value = UrlConstants.RoutineUrl.ROUTINE_GET_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByRefId(@PathVariable String routineRefId) {
-        try {
-            RoutineDTO response = routineService.getByRefId(Long.parseLong(routineRefId));
-            if (response != null) {
-                return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
-            }
-            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
-        } catch (Exception ex) {
-            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
-        }
+        RoutineDTO response = routineService.getByRefId(Long.parseLong(routineRefId));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+    }
+
+
+    @GetMapping(value = UrlConstants.RoutineUrl.ROUTINE_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> get(@ModelAttribute RoutineSearchFilter filter) {
+        List<RoutineDTO> result = routineService.search(filter);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, result);
     }
 
 
@@ -73,5 +66,6 @@ public class RoutineController {
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
         }
     }
+
 
 }

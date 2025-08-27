@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString(exclude = {"trainingMetadata","targetBodyPart","secondaryBodyParts"})
+@ToString(exclude = {"training", "targetBodyPart"})
 @Entity
 @Table(name = "fitmate_exercise")
 public class Exercise {
@@ -52,14 +52,25 @@ public class Exercise {
 
     @ManyToOne
     @JoinColumn(name = "training_metatdata_id")
-    private TrainingMetadata trainingMetadata;
+    private Training training;
 
     @ManyToOne
     @JoinColumn(name = "target_body_part")
-    private BodyParts targetBodyPart;
+    private BodyPart targetBodyPart;
 
-    @ManyToMany
-    @JoinTable(name = "fitmate_excercise_to_body_parts", joinColumns = {@JoinColumn(name = "excercise_id")}, inverseJoinColumns = {@JoinColumn(name = "body_part_id")})
-    private List<BodyParts> secondaryBodyParts;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "fitmate_exercise_muscle", joinColumns = @JoinColumn(name = "exercise_id"), inverseJoinColumns = @JoinColumn(name = "muscle_id"))
+    private List<Muscle> targetMuscles;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "fitmate_exercise_resources", joinColumns = @JoinColumn(name = "exercise_id"), inverseJoinColumns = @JoinColumn(name = "resource_id"))
+    private List<FitmateResource> resources;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "fitmate_exercise_equipments",
+            joinColumns = @JoinColumn(name = "exercise_id")
+    )
+    @Column(name = "equipment")
+    private List<String> equipments;
 }

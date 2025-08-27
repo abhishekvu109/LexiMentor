@@ -3,55 +3,86 @@ package com.abhi.leximentor.fitmate.service.impl;
 import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.constants.Status;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
-import com.abhi.leximentor.fitmate.entities.BodyParts;
-import com.abhi.leximentor.fitmate.entities.Exercise;
-import com.abhi.leximentor.fitmate.entities.TrainingMetadata;
+import com.abhi.leximentor.fitmate.entities.*;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
-import com.abhi.leximentor.fitmate.repository.BodyPartsRepository;
-import com.abhi.leximentor.fitmate.repository.ExerciseRepository;
-import com.abhi.leximentor.fitmate.repository.TrainingMetadataRepository;
+import com.abhi.leximentor.fitmate.repository.*;
 import com.abhi.leximentor.fitmate.service.ExerciseService;
+import com.abhi.leximentor.fitmate.service.ResourceService;
+import com.abhi.leximentor.fitmate.util.KeyGeneratorUtil;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ExerciseServiceImpl implements ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
-    private final TrainingMetadataRepository trainingMetadataRepository;
+    private final TrainingRepository trainingRepository;
     private final BodyPartsRepository bodyPartsRepository;
+    private final MuscleRepository muscleRepository;
+    private final ResourceService resourceService;
+    private final FitmateResourceRepository fitmateResourceRepository;
 
     @Override
     @Transactional
     public List<ExerciseDTO> addAll(List<ExerciseDTO> exerciseDTOS) throws ServerException.EntityObjectNotFound {
         List<Exercise> exercises = new LinkedList<>();
         for (ExerciseDTO exerciseDTO : exerciseDTOS) {
-            TrainingMetadata trainingMetadata = trainingMetadataRepository.findByRefId(Long.parseLong(exerciseDTO.getTrainingMetadata().getRefId()));
-            if (trainingMetadata == null)
-                throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-            BodyParts bodyParts = bodyPartsRepository.findByRefId(Long.parseLong(exerciseDTO.getTargetBodyPart().getRefId()));
-            if (bodyParts == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-            List<BodyParts> bodyPartsList = (CollectionUtils.isNotEmpty(exerciseDTO.getSecondaryBodyParts())) ? bodyPartsRepository.findByNameIn(exerciseDTO.getSecondaryBodyParts()) : null;
-            exercises.add(FitmateServiceUtil.ExcerciseUtil.buildEntity(exerciseDTO, trainingMetadata, bodyParts, bodyPartsList));
+            Training training = StringUtils.isNotEmpty(exerciseDTO.getTraining().getName()) ? trainingRepository.findByNameIgnoreCase(exerciseDTO.getTraining().getName()) : trainingRepository.findByRefId(Long.parseLong(exerciseDTO.getTraining().getRefId()));
+            if (training == null) {
+                log.error("The training object is not found.");
+                throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND + " {Training Object.} ");
+            }
+            BodyPart bodyPart = StringUtils.isNotEmpty(exerciseDTO.getBodyPart().getName()) ?
+                    bodyPartsRepository.findByName(exerciseDTO.getBodyPart().getName()) :
+                    bodyPartsRepository.findByRefId(Long.parseLong(exerciseDTO.getBodyPart().getRefId()));
+            if (bodyPart == null) {
+                log.error("The body part object is not found.");
+                throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND + "{Body part object}");
+            }
+            List<Muscle> muscles = null;
+            if (CollectionUtils.isNotEmpty(exerciseDTO.getTargetMuscles())) {
+                muscles = muscleRepository.findByNameInIgnoreCase(exerciseDTO
+                        .getTargetMuscles()
+                        .stream()
+                        .filter(muscle -> StringUtils.isNotEmpty(muscle.getName()))
+                        .map(muscle -> muscle.getName().toLowerCase(Locale.ROOT))
+                        .toList());
+            }
+            exercises.add(FitmateServiceUtil.ExerciseUtil.buildEntity(exerciseDTO, training, bodyPart, muscles));
         }
+
         List<Exercise> response = exerciseRepository.saveAll(exercises);
-        return response.stream().map(FitmateServiceUtil.ExcerciseUtil::buildDto).toList();
+//        return response.stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
+        List<ExerciseDTO> output = new LinkedList<>();
+        response.forEach(exercise -> {
+            try {
+                output.add(FitmateServiceUtil.ExerciseUtil.buildDto(exercise));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        return output;
     }
 
     @Override
     public ExerciseDTO getByRefId(long refId) throws ServerException.EntityObjectNotFound {
         Exercise exercise = exerciseRepository.findByRefId(refId);
         if (exercise == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-        return FitmateServiceUtil.ExcerciseUtil.buildDto(exercise);
+        return FitmateServiceUtil.ExerciseUtil.buildDto(exercise);
     }
 
     @Override
@@ -61,14 +92,14 @@ public class ExerciseServiceImpl implements ExerciseService {
         List<Exercise> exercises = exerciseRepository.findByRefIdIn(refIds);
         if (exercises.size() != refIds.size())
             throw new ServerException().new EntityObjectNotFound(LogConstants.GENERIC_EXCEPTION);
-        return exercises.stream().map(FitmateServiceUtil.ExcerciseUtil::buildDto).toList();
+        return exercises.stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
     }
 
     @Override
     public ExerciseDTO getByName(String name) {
         Exercise exercise = exerciseRepository.findByName(name.toUpperCase());
         if (exercise == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-        return FitmateServiceUtil.ExcerciseUtil.buildDto(exercise);
+        return FitmateServiceUtil.ExerciseUtil.buildDto(exercise);
     }
 
     @Override
@@ -80,18 +111,18 @@ public class ExerciseServiceImpl implements ExerciseService {
         exercise.setDescription(exerciseDTO.getDescription());
         exercise.setUnit(exerciseDTO.getUnit());
         exercise.setStatus(Status.ApplicationStatus.getStatus(exerciseDTO.getStatus()));
-        BodyParts targetBodyPart = bodyPartsRepository.findByRefId(Long.parseLong(exerciseDTO.getRefId()));
+        BodyPart targetBodyPart = bodyPartsRepository.findByRefId(Long.parseLong(exerciseDTO.getRefId()));
         if (targetBodyPart == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
         exercise.setTargetBodyPart(targetBodyPart);
-        return FitmateServiceUtil.ExcerciseUtil.buildDto(exerciseRepository.save(exercise));
+        return FitmateServiceUtil.ExerciseUtil.buildDto(exerciseRepository.save(exercise));
     }
 
     @Override
     public List<ExerciseDTO> getByBodyPartRefId(long bodyPartRefId) throws ServerException.EntityObjectNotFound {
-        BodyParts bodyParts = bodyPartsRepository.findByRefId(bodyPartRefId);
-        if (bodyParts == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-        List<Exercise> exercises = exerciseRepository.findByTargetBodyPart(bodyParts);
-        return exercises.stream().map(FitmateServiceUtil.ExcerciseUtil::buildDto).toList();
+        BodyPart bodyPart = bodyPartsRepository.findByRefId(bodyPartRefId);
+        if (bodyPart == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
+        List<Exercise> exercises = exerciseRepository.findByTargetBodyPart(bodyPart);
+        return exercises.stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
     }
 
     @Override
@@ -109,32 +140,104 @@ public class ExerciseServiceImpl implements ExerciseService {
         log.info("Converted all the list of exercise IDs: {}", exerciseRefIds);
         List<Exercise> exercises = exerciseRepository.findByRefIdIn(exerciseRefIds);
         log.info("Fetched all the exercise data from the database: {}", exercises);
+        exercises.forEach(exercise -> {
+            exercise.setEquipments(Collections.emptyList());
+            exercise.setResources(Collections.emptyList());
+            exercise.setTargetMuscles(Collections.emptyList());
+        });
+        exerciseRepository.saveAll(exercises);
         exerciseRepository.deleteAll(exercises);
     }
 
     @Override
     public List<ExerciseDTO> getAllByTrainingMetadataRefId(long trainingMetadataRefId) {
-        TrainingMetadata trainingMetadata = trainingMetadataRepository.findByRefId(trainingMetadataRefId);
-        if (trainingMetadata == null)
-            throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-        List<Exercise> exercises = exerciseRepository.findByTrainingMetadata(trainingMetadata);
-        return exercises.stream().map(FitmateServiceUtil.ExcerciseUtil::buildDto).toList();
+        Training training = trainingRepository.findByRefId(trainingMetadataRefId);
+        if (training == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
+        List<Exercise> exercises = exerciseRepository.findByTraining(training);
+        return exercises.stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
     }
 
     @Override
     public List<ExerciseDTO> getAllByTrainingMetadataRefIdAndTragetBodyPartRefId(long trainingMetadatRefId, long targetBodyPartRefId) {
-        TrainingMetadata trainingMetadata = trainingMetadataRepository.findByRefId(trainingMetadatRefId);
-        if (trainingMetadata == null)
-            throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-        BodyParts bodyParts = bodyPartsRepository.findByRefId(targetBodyPartRefId);
-        if (bodyParts == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-        List<Exercise> exercises = exerciseRepository.findByTrainingMetadataAndTargetBodyPart(trainingMetadata, bodyParts);
-        return exercises.stream().map(FitmateServiceUtil.ExcerciseUtil::buildDto).toList();
+        Training training = trainingRepository.findByRefId(trainingMetadatRefId);
+        if (training == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
+        BodyPart bodyPart = bodyPartsRepository.findByRefId(targetBodyPartRefId);
+        if (bodyPart == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
+        List<Exercise> exercises = exerciseRepository.findByTrainingAndTargetBodyPart(training, bodyPart);
+        return exercises.stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
     }
 
     @Override
     public List<ExerciseDTO> getAll() {
-        List<Exercise> exercises = exerciseRepository.findAll();
-        return exercises.stream().map(FitmateServiceUtil.ExcerciseUtil::buildDto).toList();
+        return exerciseRepository.findAll().stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
+    }
+
+    @Override
+    public void deleteAll() {
+        exerciseRepository.deleteAll();
+    }
+
+    @Override
+    @Transactional
+    public void updateResource(ExerciseDTO exerciseDTO, List<MultipartFile> files) {
+        List<FitmateResource> resources = new ArrayList<>();
+        files.forEach(file -> {
+            String fileName = KeyGeneratorUtil.uuid();
+            String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
+            fileName = fileName + extension;
+            String resourceId;
+            try {
+                resourceId = resourceService.save(file, fileName);
+            } catch (IOException e) {
+                throw new ServerException().new InternalError(e.getMessage());
+            }
+            FitmateResource fitmateResource = FitmateResource.builder()
+                    .fileName(fileName)
+                    .contentType(file.getContentType())
+                    .resourceId(resourceId)
+                    .refId(KeyGeneratorUtil.refId())
+                    .uuid(fileName)
+                    .extension(extension)
+                    .build();
+            fitmateResource = fitmateResourceRepository.save(fitmateResource);
+            resources.add(fitmateResource);
+        });
+        Exercise exercise = exerciseRepository.findByRefId(Long.parseLong(exerciseDTO.getRefId()));
+        if (exercise == null) {
+            throw new ServerException().new EntityObjectNotFound("Exercise object is not found.");
+        }
+        exercise.setResources(resources);
+        exerciseRepository.save(exercise);
+    }
+
+    @Override
+    public List<Map<String, Object>> findAllResources(long refId) {
+        List<Map<String, Object>> files = new ArrayList<>();
+        Exercise exercise = exerciseRepository.findByRefId(refId);
+        List<GridFSFile> gridFSFiles = exercise.getResources()
+                .stream()
+                .map(FitmateResource::getResourceId)
+                .toList()
+                .stream()
+                .map(resourceService::findGridFile)
+                .toList();
+        gridFSFiles.forEach(file -> {
+            Map<String, Object> fileInfo = new HashMap<>();
+            fileInfo.put("id", file.getObjectId().toString());
+            fileInfo.put("filename", file.getFilename());
+            fileInfo.put("contentType", file.getMetadata() != null ? file.getMetadata().getString("_contentType") : null);
+            fileInfo.put("length", file.getLength());
+            fileInfo.put("uploadDate", file.getUploadDate());
+            fileInfo.put("downloadUrl", "/files/" + file.getObjectId().toString());
+            files.add(fileInfo);
+        });
+        return files;
+    }
+
+    @Override
+    public Optional<GridFsResource> findResource(long refId, String resourceId) {
+        Exercise exercise = exerciseRepository.findByRefId(refId);
+        FitmateResource fitmateResource = exercise.getResources().stream().filter(resource -> StringUtils.equals(resourceId, resource.getResourceId())).findAny().orElseThrow(() -> new ServerException().new InternalError("Resource not found."));
+        return resourceService.find(fitmateResource.getResourceId());
     }
 }
