@@ -1,6 +1,5 @@
 package com.abhi.leximentor.fitmate.entities;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,10 +13,10 @@ import java.util.List;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString(exclude = {"excercises"})
+@ToString
 @Entity
-@Table(name = "fitmate_training_metadata")
-public class TrainingMetadata {
+@Table(name = "fitmate_muscle")
+public class Muscle {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,11 +32,8 @@ public class TrainingMetadata {
     @Column(name = "name", unique = true)
     private String name;
 
-    @Column(name = "description", length = 2000)
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-
-    @Column(name = "status")
-    private int status;
 
     @CreationTimestamp
     @Column(name = "crtn_date")
@@ -47,6 +43,13 @@ public class TrainingMetadata {
     @Column(name = "last_upd_date")
     private LocalDateTime lastUpdDate;
 
-    @OneToMany(mappedBy = "trainingMetadata", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Exercise> excercises;
+    @Column(name = "body_part_id")
+    private Long bodyPart;
+
+    @Column(name = "status")
+    private int status;
+
+    @OneToMany
+    @JoinTable(name = "fitmate_muscle_resources", joinColumns = @JoinColumn(name = "muscle_id"), inverseJoinColumns = @JoinColumn(name = "resource_id"))
+    private List<FitmateResource> resources;
 }

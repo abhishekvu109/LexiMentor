@@ -9,4 +9,7 @@ public interface ResponseRepository {
     Response findByUuid(String uuid);
 
     Response findByResponseMasterAndRefId(String id, long refId);
+
+    Response findByTopicRefId(long topicRefId);
+
 }

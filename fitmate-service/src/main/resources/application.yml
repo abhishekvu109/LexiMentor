@@ -1,8 +1,12 @@
 spring:
-  #  sql:
-  #    init:
-  #      mode: always
-  #      data-locations: classpath:schema.sql
+  profiles:
+    active: dev
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USERNAME:mongoroot}:${MONGODB_PASSWORD:mongopass}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:fitmate}?authSource=admin
+      database: ${MONGODB_DATABASE:fitmate}
+      username: ${MONGODB_USERNAME:mongoroot}
+      password: ${MONGODB_PASSWORD:mongopass}
   jpa:
     hibernate:
       ddl-auto: update
@@ -19,9 +23,12 @@ spring:
     hikari:
       idle-timeout: 60000
       maximum-pool-size: 50
-#  kafka:
-#    consumer:
-#      bootstrap-servers: 192.168.1.7:9092
-#      group-id: word-group-1
+  application:
+    name: fitmate-service
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+      enabled: true
 server:
   port: ${SERVICE_PORT:9393}

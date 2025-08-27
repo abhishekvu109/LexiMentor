@@ -4,11 +4,11 @@ package com.abhi.leximentor.fitmate.controller;
 import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
 import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.constants.UrlConstants;
-import com.abhi.leximentor.fitmate.dto.TrainingMetadataDTO;
+import com.abhi.leximentor.fitmate.dto.TrainingDTO;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
-import com.abhi.leximentor.fitmate.service.TrainingMetaDataService;
+import com.abhi.leximentor.fitmate.service.TrainingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,13 +22,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TrainingMetadataController {
-    private final TrainingMetaDataService trainingMetaDataService;
+public class TrainingController {
+    private final TrainingService trainingService;
 
     @PostMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_ADD, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody List<TrainingMetadataDTO> request) {
+    public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody List<TrainingDTO> request) {
         try {
-            List<TrainingMetadataDTO> response = trainingMetaDataService.addAll(request);
+            List<TrainingDTO> response = trainingService.addAll(request);
             if (CollectionUtils.isNotEmpty(response)) {
                 return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
             }
@@ -41,7 +41,7 @@ public class TrainingMetadataController {
     @GetMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_GET_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByRefId(@PathVariable String trainingMetadataRefId) {
         try {
-            TrainingMetadataDTO response = trainingMetaDataService.getByRefId(Long.parseLong(trainingMetadataRefId));
+            TrainingDTO response = trainingService.getByRefId(Long.parseLong(trainingMetadataRefId));
             if (response != null) {
                 return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
             }
@@ -54,7 +54,7 @@ public class TrainingMetadataController {
     @GetMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByName(@RequestParam String name) {
         try {
-            TrainingMetadataDTO response = trainingMetaDataService.getByName(name);
+            TrainingDTO response = trainingService.getByName(name);
             if (response != null) {
                 return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
             }
@@ -67,7 +67,7 @@ public class TrainingMetadataController {
     @GetMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_GET_ALL, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getAll() {
         try {
-            List<TrainingMetadataDTO> response = trainingMetaDataService.getAll();
+            List<TrainingDTO> response = trainingService.getAll();
             if (response != null) {
                 return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
             }
@@ -78,9 +78,9 @@ public class TrainingMetadataController {
     }
 
     @PutMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_UPDATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> update(@RequestBody TrainingMetadataDTO request) {
+    public @ResponseBody ResponseEntity<RestApiResponse> update(@RequestBody TrainingDTO request) {
         try {
-            TrainingMetadataDTO response = trainingMetaDataService.update(request);
+            TrainingDTO response = trainingService.update(request);
             if (response != null) {
                 return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
             }
@@ -91,9 +91,9 @@ public class TrainingMetadataController {
     }
 
     @DeleteMapping(value = UrlConstants.TrainingMetadataUrl.TRAINING_METADATA_DELETE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> delete(@RequestBody List<TrainingMetadataDTO> request) {
+    public @ResponseBody ResponseEntity<RestApiResponse> delete(@RequestBody List<TrainingDTO> request) {
         try {
-            trainingMetaDataService.deleteAll(request);
+            trainingService.deleteAll(request);
             return ResponseEntityBuilder.getBuilder(HttpStatus.NO_CONTENT).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Deleted successfully");
         } catch (Exception ex) {
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);

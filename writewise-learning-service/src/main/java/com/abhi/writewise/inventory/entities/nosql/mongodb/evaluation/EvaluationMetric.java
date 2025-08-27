@@ -1,5 +1,6 @@
 package com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation;
 
+import com.abhi.writewise.inventory.util.KeyGeneratorUtil;
 import lombok.*;
 
 import java.util.List;
@@ -12,11 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 public class EvaluationMetric {
 
-    private long refId;
-    private String uuid;
+    @Builder.Default
+    private long refId = KeyGeneratorUtil.refId();
+    @Builder.Default
+    private String uuid = KeyGeneratorUtil.uuid();
     private int category;
     private double score; // e.g., 0 to 10
     private List<String> comments; // model feedback
-    private List<String> alternateSuggestions; // optional alternate way of writing
+    private List<String> alternateSuggestion; // optional alternate way of writing
 
 }

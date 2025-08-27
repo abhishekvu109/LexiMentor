@@ -48,7 +48,7 @@ public class LLMPromptBuilder {
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             String output = "";
             try {
-                OutputLLM outputLLM=new OutputLLM();
+                OutputLLM outputLLM = new OutputLLM();
                 output = objectMapper.writeValueAsString(outputLLM);
             } catch (Exception ex) {
                 log.error("Unable to deserialize the JSON");
@@ -58,6 +58,56 @@ public class LLMPromptBuilder {
 
         public static synchronized String getPrompt(String word, String officialMeaning, String candidateResponse) {
             return DEFAULT_PROMPT + json() + NEW_LINE + "Here's the scenario:" + NEW_LINE + "word: " + word + NEW_LINE + "Official Definition:" + officialMeaning + NEW_LINE + "Student's response:" + candidateResponse + NEW_LINE + NEW_LINE + FINAL_PROMPT;
+        }
+
+        public static synchronized String getPrompt2(String word, String officialMeaning, String candidateResponse) {
+            String prompt = """
+                    You are an evaluator assessing whether a student has correctly understood a vocabulary word. \s
+                    You will be given: \s
+                    - The word \s
+                    - The official definition \s
+                    - The student's response \s
+                                        
+                    inside a markup tag below like <input></input> below
+                                        
+                    Your task is to determine if the student's response captures the same **sense or meaning** as the official definition. \s
+                    Do NOT be overly strict with wording or phrasing — if the student's response conveys the same idea, mark it as correct. \s
+                    Only mark incorrect if the response significantly changes or distorts the meaning. \s
+                                        
+                    Return your evaluation in strict JSON format: \s
+                    {
+                      "confidence": 0-100,\s
+                      "explanation": "Clear reasoning for why it is correct or incorrect",
+                      "correct": true/false
+                    }
+                                        
+                    ### Notes:
+                    - Confidence reflects how sure you are about your judgment. \s
+                    - High confidence (80–100) when the meaning clearly matches or clearly does not match. \s
+                    - Medium confidence (40–70) when the answer is somewhat ambiguous. \s
+                    - Low confidence (0–30) when it's very difficult to decide. \s
+                    - Be flexible with synonyms, rephrasings, and variations in style. \s
+                    - Focus on the **core sense of meaning**. \s
+                                        
+                    ### Example Scenario:
+                    word: Centrifugal \s
+                    Official Definition: Tending to move away from a center \s
+                    Student's response: Tendency to move away from the center \s
+                                        
+                    Expected JSON output: \s
+                    {
+                      "confidence": 95,
+                      "explanation": "The student's response conveys the same meaning as the official definition, only with slightly different wording.",
+                      "correct": true
+                    }
+                    ...........................................................................................................
+                    <input>
+                    word: %s
+                    officialMeaning: %s
+                    student's response: %s
+                    </input>
+                    """;
+            return String.format(prompt, word, officialMeaning, candidateResponse);
         }
     }
 

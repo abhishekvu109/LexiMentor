@@ -57,7 +57,7 @@ public class BodyPartsController {
     }
 
     @GetMapping(value = UrlConstants.BodyPartsUrl.BODY_PARTS_GET_ALL, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getByRefId() {
+    public @ResponseBody ResponseEntity<RestApiResponse> getAll() {
         try {
             List<BodyPartsDTO> response = bodyPartService.getAll();
             if (response != null) {

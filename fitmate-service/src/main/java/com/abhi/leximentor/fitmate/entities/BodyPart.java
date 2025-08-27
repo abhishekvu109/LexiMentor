@@ -10,11 +10,10 @@ import java.util.List;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString(exclude = {"excercises","excercise"})
+@ToString(exclude = {"excercises", "targetMuscles"})
 @Entity
-
 @Table(name = "fitmate_body_parts")
-public class BodyParts {
+public class BodyPart {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,18 +29,20 @@ public class BodyParts {
     @Column(name = "name", unique = true)
     private String name;
 
-    @Column(name = "primary_name")
-    private String primaryName;
-
-    @Column(name = "description", length = 50)
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "status")
     private int status;
 
-    @ManyToMany(mappedBy = "secondaryBodyParts", fetch = FetchType.LAZY)
-    private List<Exercise> excercises;
-
     @OneToMany(mappedBy = "targetBodyPart")
-    private List<Exercise> excercise;
+    private List<Exercise> exercises;
+
+    @OneToMany(mappedBy = "bodyPart")
+    private List<Muscle> targetMuscles;
+
+
+    @OneToMany
+    @JoinTable(name = "fitmate_bodypart_resources", joinColumns = @JoinColumn(name = "bodypart_id"), inverseJoinColumns = @JoinColumn(name = "resource_id"))
+    private List<FitmateResource> resources;
 }

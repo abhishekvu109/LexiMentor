@@ -77,7 +77,7 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
 
     private void loadModelServiceName() {
         try {
-            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
+            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application-dev.properties"));
             log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
             setUrl(properties.getProperty(LLM_TOPIC) + MODEL_NAME);
         } catch (IOException ex) {

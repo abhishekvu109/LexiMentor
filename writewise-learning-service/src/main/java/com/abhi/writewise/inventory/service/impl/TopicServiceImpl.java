@@ -125,7 +125,7 @@ public class TopicServiceImpl implements TopicService {
 
     private void loadModelServiceName() {
         try {
-            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
+            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application-dev.properties"));
             log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
             setUrl(properties.getProperty(LLM_TOPIC) + MODEL_NAME);
         } catch (IOException ex) {
@@ -160,10 +160,10 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public TopicGenerationDTO findTopicGenerationByRefId(long refId) {
-        WritingSession sqlLlmEntity = writingSessionRepository.findByRefId(refId);
-        TopicGeneration noSqlLlmEntity = mongoTemplate.findById(sqlLlmEntity.getMongoTopicId(), TopicGeneration.class);
+        TopicGeneration noSqlLlmEntity = topicGenerationRepository.findByRefId(refId);
         if (noSqlLlmEntity == null)
             throw new ServerException().new InternalError("Unable to find the equivalent Mongo DB instance.");
+        WritingSession sqlLlmEntity = writingSessionRepository.findByMongoTopicId(noSqlLlmEntity.getId().toHexString());
         return TopicResponseEvalServiceUtil.TopicUtil.buildDTO(sqlLlmEntity, noSqlLlmEntity);
     }
 

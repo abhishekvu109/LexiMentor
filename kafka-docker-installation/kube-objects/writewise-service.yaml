@@ -15,6 +15,7 @@ data:
   MONGODB_USERNAME: "mongoroot"
   MONGODB_PASSWORD: "mongopass"
   SERVICE_NAME: "writewise-learning-service-k8s.default.svc.cluster.local"
+  SPRING_PROFILES_ACTIVE: "prod"
 
 ---
 
@@ -37,6 +38,11 @@ spec:
         - name: writewise-app
           image: localhost:5000/writewise-learning-service:latest
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: writewise-config
+                  key: SPRING_PROFILES_ACTIVE
             - name: SERVICE_PORT
               valueFrom:
                 configMapKeyRef:

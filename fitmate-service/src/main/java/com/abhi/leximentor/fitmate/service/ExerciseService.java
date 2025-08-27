@@ -1,8 +1,14 @@
 package com.abhi.leximentor.fitmate.service;
 
+import com.abhi.leximentor.fitmate.constants.ResourceExtension;
+import com.abhi.leximentor.fitmate.constants.ResourceType;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface ExerciseService {
 
@@ -25,7 +31,15 @@ public interface ExerciseService {
 
     ExerciseDTO update(ExerciseDTO excerciseDTO);
 
-    void delete(ExerciseDTO excerciseDTO);
+    void delete(ExerciseDTO exerciseDTO);
 
-    void deleteAll(List<ExerciseDTO> excerciseDTOS);
+    void deleteAll(List<ExerciseDTO> exerciseDTOS);
+
+    void deleteAll();
+
+    void updateResource(ExerciseDTO exerciseDTO,List<MultipartFile> files);
+
+    List<Map<String, Object>> findAllResources(long refId);
+
+    Optional<GridFsResource> findResource(long refId,String resourceId);
 }

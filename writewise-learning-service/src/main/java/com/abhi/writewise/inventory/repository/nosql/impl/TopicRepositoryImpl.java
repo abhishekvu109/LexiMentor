@@ -72,4 +72,23 @@ public class TopicRepositoryImpl implements TopicRepository {
         List<TopicGeneration> topicGenerationList = topicGenerationRepository.findAll();
         return topicGenerationList.stream().filter(topicGeneration -> CollectionUtils.isNotEmpty(topicGeneration.getTopics())).toList().stream().flatMap(tg -> tg.getTopics().stream()).toList().stream().filter(topic -> topic.getRefId() == refId).findFirst().orElse(null);
     }
+
+    @Override
+    public List<String> getRecommendationsByTopicRefId(long topicRefId) {
+        List<TopicGeneration> topicGenerations = writingSessionRepository
+                .findAll()
+                .stream()
+                .filter(ws -> StringUtils.isNotEmpty(ws.getMongoTopicId()))
+                .map(ws -> topicGenerationRepository.findById(new ObjectId(ws.getMongoTopicId())).orElseThrow(() -> new ServerException().new InternalError("TopicGeneration object is not found."))).toList();
+        for (TopicGeneration tg : topicGenerations) {
+            if (CollectionUtils.isNotEmpty(tg.getTopics())) {
+                Topic topic = tg.getTopics().stream().filter(topic1 -> topic1.getRefId() == topicRefId).findAny().orElse(null);
+                if (topic != null) {
+                    return tg.getRecommendations();
+                }
+            }
+        }
+        log.error("TopicGeneration with the topicRefId is not found:{}", topicRefId);
+        throw new ServerException().new InternalError("TopicGeneration with the topicRefId is not found");
+    }
 }

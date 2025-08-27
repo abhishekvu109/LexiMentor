@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface TopicGenerationRepository extends MongoRepository<TopicGeneration, ObjectId> {
     TopicGeneration findByRefId(long refId);
+
     TopicGeneration findByUuid(String uuid);
+
     List<TopicGeneration> findBySubject(String subject);
 }

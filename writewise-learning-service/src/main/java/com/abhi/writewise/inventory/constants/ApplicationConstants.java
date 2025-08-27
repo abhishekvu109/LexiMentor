@@ -1,6 +1,9 @@
 package com.abhi.writewise.inventory.constants;
 
+import com.abhi.writewise.inventory.model.OllamaOptionsDTO;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -16,7 +19,83 @@ public class ApplicationConstants {
     public static final String REQUEST_SUCCESS_CODE = "000";
     public static final String REQUEST_SUCCESS_DESCRIPTION = "SUCCESS";
     public static final String REQUEST_FAILURE_DESCRIPTION = "FAILED";
-
+    public static final String HIGH_LEVEL_EVALUATION_RESULT_JSON_SCHEMA = """
+            {
+              "$schema": "http://json-schema.org/draft-07/schema#",
+              "type": "object",
+              "required": ["spelling", "grammar", "punctuation", "vocabulary", "styleAndTone", "creativityAndThinking"],
+              "properties": {
+                "spelling": { "$ref": "#/definitions/section" },
+                "grammar": { "$ref": "#/definitions/section" },
+                "punctuation": { "$ref": "#/definitions/section" },
+                "vocabulary": { "$ref": "#/definitions/section" },
+                "styleAndTone": { "$ref": "#/definitions/section" },
+                "creativityAndThinking": { "$ref": "#/definitions/section" }
+              },
+              "definitions": {
+                "section": {
+                  "type": "object",
+                  "required": ["score", "comments", "alternateSuggestion"],
+                  "properties": {
+                    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+                    "comments": { "type": "array", "items": { "type": "string" } },
+                    "alternateSuggestion": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              }
+            }
+            """;
+    public static final String LOW_LEVEL_EVALUATION_RESULT_JSON_SCHEMA = """        
+            {
+              "$schema": "http://json-schema.org/draft-07/schema#",
+              "type": "object",
+              "required": ["errorList"],
+              "properties": {
+                "errorList": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "type",
+                      "subType",
+                      "incorrectText",
+                      "correctedText",
+                      "explanation"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "Grammar",
+                          "Punctuation",
+                          "Vocabulary",
+                          "Style & Tone",
+                          "Creativity"
+                        ]
+                      },
+                      "subType": {
+                        "type": "string"
+                      },
+                      "incorrectText": {
+                        "type": "string"
+                      },
+                      "correctedText": {
+                        "type": "string"
+                      },
+                      "explanation": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+                        
+            """;
 
     public static class MediaType {
         public static final String APPLICATION_JSON = APPLICATION_JSON_VALUE;
@@ -28,6 +107,10 @@ public class ApplicationConstants {
         public static final String ACTIVE_STRING = "Active";
         public static final int INACTIVE = 0;
         public static final String INACTIVE_STRING = "Inactive";
+
+        public static String getStatusStr(int status) {
+            return status == ACTIVE ? ACTIVE_STRING : INACTIVE_STRING;
+        }
     }
 
     public static class EvaluationCategory {
@@ -92,4 +175,23 @@ public class ApplicationConstants {
         }
 
     }
+
+    public static OllamaOptionsDTO DEFAULT_OLLAMA_OPTIONS = OllamaOptionsDTO.builder()
+            .seed(42)
+            .num_predict(20000)
+            .top_k(40)
+            .top_p(0.95)
+            .min_p(0.05)
+            .typical_p(0.7)
+            .repeat_last_n(33)
+            .temperature(0.3)
+            .repeat_penalty(1.1)
+            .presence_penalty(0.5)
+            .frequency_penalty(0.5)
+            .penalize_newline(false)
+            .stop(List.of("user:"))
+            .numa(false)
+            .num_ctx(12888)
+            .use_mmap(true)
+            .build();
 }

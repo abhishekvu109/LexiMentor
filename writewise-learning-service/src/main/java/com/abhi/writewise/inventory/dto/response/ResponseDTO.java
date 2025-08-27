@@ -1,7 +1,6 @@
 package com.abhi.writewise.inventory.dto.response;
 
 import com.abhi.writewise.inventory.dto.topic.TopicDTO;
-import com.abhi.writewise.inventory.dto.evaluation.EvaluationDTO;
 import lombok.*;
 
 import java.util.List;

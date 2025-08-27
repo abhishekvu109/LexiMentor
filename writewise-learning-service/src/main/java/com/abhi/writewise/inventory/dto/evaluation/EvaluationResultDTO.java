@@ -23,4 +23,5 @@ public class EvaluationResultDTO {
     private EvaluationMetricDTO creativityAndThinking;
     private double score;
     private List<String> comments;
+
 }

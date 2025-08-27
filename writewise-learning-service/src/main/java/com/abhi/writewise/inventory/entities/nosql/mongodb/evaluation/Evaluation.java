@@ -1,5 +1,6 @@
 package com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,9 +15,12 @@ import java.util.List;
 public class Evaluation {
     private long refId;
     private String uuid;
+    private String evaluator;
     private EvaluationResult evaluationResult;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdDate;
     private int evaluationStatus;
     private double score;
+    @JsonProperty("errorList")
+    private List<EvaluationErrorList> errorList;
 }

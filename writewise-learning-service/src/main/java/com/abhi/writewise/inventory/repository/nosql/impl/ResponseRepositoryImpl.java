@@ -2,11 +2,15 @@ package com.abhi.writewise.inventory.repository.nosql.impl;
 
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.Response;
 import com.abhi.writewise.inventory.entities.nosql.mongodb.response.ResponseMaster;
+import com.abhi.writewise.inventory.entities.sql.mysql.WritingSession;
 import com.abhi.writewise.inventory.exceptions.entities.ServerException;
 import com.abhi.writewise.inventory.repository.nosql.ResponseMasterRepository;
 import com.abhi.writewise.inventory.repository.nosql.ResponseRepository;
+import com.abhi.writewise.inventory.repository.nosql.TopicGenerationRepository;
+import com.abhi.writewise.inventory.repository.sql.mysql.WritingSessionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,8 @@ import java.util.List;
 public class ResponseRepositoryImpl implements ResponseRepository {
 
     private final ResponseMasterRepository responseMasterRepository;
+    private final WritingSessionRepository writingSessionRepository;
+    private final TopicGenerationRepository topicGenerationRepository;
 
     @Override
     public Response findByRefId(long refId) {
@@ -41,4 +47,22 @@ public class ResponseRepositoryImpl implements ResponseRepository {
         }
         return responseMaster.getTopicResponseList().stream().filter(res -> res.getRefId() == refId).findFirst().orElse(null);
     }
+
+    @Override
+    public Response findByTopicRefId(long topicRefId) {
+        List<WritingSession> writingSessions = writingSessionRepository.findAll();
+        List<ResponseMaster> responseMasters = writingSessions.stream().filter(ws -> StringUtils.isNotEmpty(ws.getMongoTopicResponseId())).map(ws -> responseMasterRepository.findById(new ObjectId(ws.getMongoTopicResponseId())).get()).toList();
+        Response response = responseMasters.stream()
+                .filter(rm -> CollectionUtils.isNotEmpty(rm.getTopicResponseList()))
+                .flatMap(rm -> rm.getTopicResponseList().stream())
+                .filter(res -> res.getTopic() != null && res.getTopic().getRefId() == topicRefId)
+                .findAny()
+                .orElse(null);
+        if (response == null) {
+            throw new ServerException().new InternalError("Response Object is not found");
+        }
+        return response;
+    }
+
+
 }

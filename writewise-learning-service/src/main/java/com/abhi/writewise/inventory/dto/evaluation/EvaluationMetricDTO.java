@@ -18,5 +18,5 @@ public class EvaluationMetricDTO {
     private String category;
     private double score;
     private List<String> comments;
-    private List<String> alternateSuggestions;
+    private List<String> alternateSuggestion;
 }

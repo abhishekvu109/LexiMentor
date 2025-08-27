@@ -14,10 +14,12 @@ import java.util.List;
 public class EvaluationDTO {
     private String refId;
     private String uuid;
+    private String evaluator;
     private EvaluationResultDTO evaluationResult;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdDate;
     private String evaluationStatus;
     private double score;
     private String status;
+    private List<EvaluationErrorListDTO> errorList;
 }

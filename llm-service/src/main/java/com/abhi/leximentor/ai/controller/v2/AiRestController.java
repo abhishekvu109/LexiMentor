@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class AiRestControllerV2 {
+public class AiRestController {
 
     private final LLMPromptService promptService;
     private final ObjectMapper mapper;
@@ -34,9 +34,9 @@ public class AiRestControllerV2 {
             if (StringUtils.isNotEmpty(promptRequest.format())) {
                 request.setFormat(mapper.readTree(promptRequest.format()));
             }
-//            else {
-//                request.setFormat(mapper.readTree(ApplicationConstants.LLM_EVALUATION_RESPONSE_FORMAT));
-//            }
+            if (promptRequest.options() != null) {
+                request.setOptions(promptRequest.options());
+            }
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
@@ -49,6 +49,7 @@ public class AiRestControllerV2 {
         return ResponseEntity.ok(response.getResponse());
     }
 
-    private record PromptRequest(String format, @NotBlank String prompt, @NotBlank String model) {
+    private record PromptRequest(String format, @NotBlank String prompt, @NotBlank String model,
+                                 OllamaOptionsDTO options) {
     }
 }

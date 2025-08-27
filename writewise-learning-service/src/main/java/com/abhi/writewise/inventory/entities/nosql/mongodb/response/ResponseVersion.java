@@ -4,6 +4,7 @@ import com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation.Evaluation
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode
@@ -22,4 +23,11 @@ public class ResponseVersion {
     private String response;
     private int responseStatus;
     private Evaluation evaluation;
+    private List<Evaluation> evaluations;
+    private String llmEvaluationText;
+    private int llmEvaluationStatus;
+    private String lowLevelEvaluationText;
+    private int lowLevelEvaluationStatus;
+    private String lowLevelEvaluationModel;
+    private String highLevelEvaluationModel;
 }
