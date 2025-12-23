@@ -111,9 +111,11 @@ public class ExerciseServiceImpl implements ExerciseService {
         exercise.setDescription(exerciseDTO.getDescription());
         exercise.setUnit(exerciseDTO.getUnit());
         exercise.setStatus(Status.ApplicationStatus.getStatus(exerciseDTO.getStatus()));
-        BodyPart targetBodyPart = bodyPartsRepository.findByRefId(Long.parseLong(exerciseDTO.getRefId()));
+        BodyPart targetBodyPart = bodyPartsRepository.findByNameIgnoreCase(exerciseDTO.getBodyPart().getName());
         if (targetBodyPart == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
         exercise.setTargetBodyPart(targetBodyPart);
+        exercise.setEquipments(null);
+        exercise.setEquipments(exerciseDTO.getEquipments());
         return FitmateServiceUtil.ExerciseUtil.buildDto(exerciseRepository.save(exercise));
     }
 
@@ -199,14 +201,20 @@ public class ExerciseServiceImpl implements ExerciseService {
                     .uuid(fileName)
                     .extension(extension)
                     .build();
-            fitmateResource = fitmateResourceRepository.save(fitmateResource);
+//            fitmateResource = fitmateResourceRepository.save(fitmateResource);
             resources.add(fitmateResource);
         });
         Exercise exercise = exerciseRepository.findByRefId(Long.parseLong(exerciseDTO.getRefId()));
         if (exercise == null) {
             throw new ServerException().new EntityObjectNotFound("Exercise object is not found.");
         }
-        exercise.setResources(resources);
+        List<FitmateResource> existingResources = exercise.getResources();
+        if (CollectionUtils.isEmpty(existingResources)) {
+            exercise.setResources(resources);
+        } else {
+            existingResources.addAll(resources);
+            exercise.setResources(existingResources);
+        }
         exerciseRepository.save(exercise);
     }
 
@@ -237,7 +245,99 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Override
     public Optional<GridFsResource> findResource(long refId, String resourceId) {
         Exercise exercise = exerciseRepository.findByRefId(refId);
-        FitmateResource fitmateResource = exercise.getResources().stream().filter(resource -> StringUtils.equals(resourceId, resource.getResourceId())).findAny().orElseThrow(() -> new ServerException().new InternalError("Resource not found."));
+        FitmateResource fitmateResource = null;
+        if (StringUtils.isEmpty(resourceId)) {
+            if (CollectionUtils.isNotEmpty(exercise.getResources())) {
+                fitmateResource = exercise.getResources().get(0);
+            } else {
+                throw new ServerException().new InternalError("Resource not found.");
+            }
+        } else {
+            fitmateResource = exercise.getResources().stream().filter(resource -> StringUtils.equals(resourceId, resource.getResourceId())).findAny().orElseThrow(() -> new ServerException().new InternalError("Resource not found."));
+        }
+        return resourceService.find(fitmateResource.getResourceId());
+    }
+
+    @Override
+    @Transactional
+    public void updateResource(ExerciseDTO exerciseDTO, List<MultipartFile> files, String placeholder) {
+        if (StringUtils.isEmpty(placeholder)) {
+            throw new ServerException().new InternalError("placeholder is required.");
+        }
+        Exercise exercise = exerciseRepository.findByRefId(Long.parseLong(exerciseDTO.getRefId()));
+        if (exercise == null) {
+            throw new ServerException().new EntityObjectNotFound("Exercise object is not found.");
+        }
+        List<FitmateResource> fitmateResources = exercise.getResources();
+        fitmateResources = CollectionUtils.isEmpty(fitmateResources) ? new ArrayList<>() : fitmateResources;
+        FitmateResource fitmateResource = fitmateResources
+                .stream()
+                .filter(fr -> StringUtils.equalsIgnoreCase(placeholder, fr.getPlaceholder()))
+                .findAny()
+                .orElse(null);
+        if (fitmateResource == null) {
+            for (MultipartFile file : files) {
+                String fileName = KeyGeneratorUtil.uuid();
+                String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
+                fileName = fileName + extension;
+                String resourceId;
+                try {
+                    resourceId = resourceService.save(file, fileName);
+                } catch (IOException e) {
+                    throw new ServerException().new InternalError(e.getMessage());
+                }
+                FitmateResource fitmateResource1 = FitmateResource.builder()
+                        .fileName(fileName)
+                        .contentType(file.getContentType())
+                        .resourceId(resourceId)
+                        .refId(KeyGeneratorUtil.refId())
+                        .placeholder(placeholder)
+                        .uuid(fileName)
+                        .extension(extension)
+                        .build();
+                fitmateResources.add(fitmateResource1);
+                exercise.setResources(fitmateResources);
+                exerciseRepository.save(exercise);
+            }
+        } else {
+            for (MultipartFile file : files) {
+                resourceService.remove(fitmateResource.getResourceId());
+                String fileName = KeyGeneratorUtil.uuid();
+                String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
+                fileName = fileName + extension;
+                String resourceId;
+                try {
+                    resourceId = resourceService.save(file, fileName);
+                } catch (IOException e) {
+                    throw new ServerException().new InternalError(e.getMessage());
+                }
+                fitmateResource.setFileName(fileName);
+                fitmateResource.setContentType(file.getContentType());
+                fitmateResource.setResourceId(resourceId);
+                fitmateResource.setPlaceholder(placeholder);
+                fitmateResource.setExtension(extension);
+                exerciseRepository.save(exercise);
+            }
+        }
+    }
+
+    @Override
+    public Optional<GridFsResource> findResource(long refId, String resourceId, String placeholder) {
+        Exercise exercise = exerciseRepository.findByRefId(refId);
+        FitmateResource fitmateResource;
+        if (StringUtils.isNotEmpty(resourceId)) {
+            fitmateResource = exercise.getResources()
+                    .stream()
+                    .filter(resource -> StringUtils.equals(resourceId, resource.getResourceId()))
+                    .findAny()
+                    .orElseThrow(() -> new ServerException().new InternalError("Resource not found."));
+        } else {
+            fitmateResource = exercise.getResources()
+                    .stream()
+                    .filter(resource -> StringUtils.equalsIgnoreCase(placeholder, resource.getPlaceholder()))
+                    .findAny()
+                    .orElseThrow(() -> new ServerException().new InternalError("Resource not found."));
+        }
         return resourceService.find(fitmateResource.getResourceId());
     }
 }

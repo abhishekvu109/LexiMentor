@@ -6,12 +6,14 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 public interface RoutineRepository extends JpaRepository<Routine, Long>, JpaSpecificationExecutor<Routine> {
 
-    Routine findByRefId(long refId);
+    Stream<Routine> findAllBy();
 
+    Routine findByRefId(long refId);
 
     List<Routine> findByRefIdIn(List<Long> refIds);
 
