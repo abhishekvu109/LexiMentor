@@ -54,6 +54,7 @@ public class DrillChallengeScoreServiceImpl implements DrillChallengeScoreServic
                 DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
                 DrillChallengeScores drillChallengeScore = drillChallengeScoreRepository.findByDrillSetIdAndChallengeId(drillSet, drillChallenge);
                 drillChallengeScore.setResponse(dto.getResponse());
+                drillChallengeScore.setCorrect(dto.isCorrect());
                 drillChallengeScore = drillChallengeScoreRepository.save(drillChallengeScore);
                 output.add(DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(drillChallengeScore));
             }

@@ -10,6 +10,7 @@ import java.util.List;
 public interface BodyPartsRepository extends JpaRepository<BodyPart, Long> {
     BodyPart findByRefId(long refId);
 
+    BodyPart findByNameIgnoreCase(String name);
     BodyPart findByName(String name);
 
     List<BodyPart> findByRefIdIn(List<Long> refIds);

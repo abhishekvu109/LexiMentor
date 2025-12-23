@@ -1,6 +1,5 @@
 package com.abhi.leximentor.fitmate.entities;
 
-import com.abhi.leximentor.fitmate.constants.ResourceExtension;
 import com.abhi.leximentor.fitmate.constants.ResourceType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -45,4 +44,6 @@ public class FitmateResource {
     @Column(name = "resource_id", nullable = false)
     private String resourceId;
 
+    @Column(name = "placeholder", nullable = true)
+    private String placeholder;
 }

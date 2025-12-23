@@ -29,6 +29,7 @@ import com.abhi.leximentor.inventory.util.RestClient;
 import com.abhi.leximentor.inventory.util.RestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileUrlResource;
@@ -141,7 +142,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     @Override
     @Transactional
     public List<DrillEvaluationDTO> evaluateMeaning(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, DrillChallenge drillChallenge, String evaluator) {
-        return meaningDrillEvaluator.init(drillChallengeScoresDTOS, drillChallenge, LLM_URL, MODEL_NAME,evaluator).evaluate().getResult();
+        return meaningDrillEvaluator.init(drillChallengeScoresDTOS, drillChallenge, LLM_URL, MODEL_NAME, evaluator).evaluate().getResult();
     }
 
     private void loadModelServiceName(String evaluator) {
@@ -207,6 +208,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge.setDrillScore(totalCorrect);
         drillChallenge.setTotalCorrect(totalCorrect);
         drillChallenge.setTotalWrong(totalIncorrect);
+        drillChallenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
         drillChallenge.setStatus(Status.DrillChallenge.EVALUATED);
         drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
         drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
@@ -276,12 +278,113 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         drillChallenge.setTotalCorrect(totalCorrect);
         drillChallenge.setTotalWrong(totalIncorrect);
         drillChallenge.setStatus(Status.DrillChallenge.EVALUATED);
+        drillChallenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
         drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
         drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
         drillChallenge = drillChallengeRepository.save(drillChallenge);
         log.info("Saved the results in the challenge entity :{}", drillChallenge);
         return this.addAll(drillEvaluationDTOS);
     }
+
+    @Transactional
+    public List<DrillEvaluationDTO> evaluateContextMaster(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, DrillChallenge drillChallenge) {
+        log.info("Initiated the Context Master evaluation.");
+        List<DrillEvaluationDTO> drillEvaluationDTOS = new LinkedList<>();
+        List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
+        int totalWords = drillChallengeScoresDTOS.size();
+        log.info("Total words to evaluate:{}", totalWords);
+        int totalCorrect = 0;
+        int totalIncorrect = 0;
+        Evaluator evaluator = evaluatorRepository.findByDrillType(DrillTypes.CONTEXT_MASTER.name()).get(0);
+        for (DrillChallengeScoresDTO dto : drillChallengeScoresDTOS) {
+            DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
+            WordMetadata wordMetadata = drillSet.getWordId();
+            DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+            boolean isCorrect = StringUtils.equalsIgnoreCase(scores.getQuestion(), scores.getResponse());
+            scores.setCorrect(isCorrect);
+            totalCorrect += isCorrect ? 1 : 0;
+            totalIncorrect += isCorrect ? 0 : 1;
+            drillChallengeScores.add(scores);
+            drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason(isCorrect ? "The match is found." : "The match is not found.").confidence(100).evaluator(evaluator.getName()).build());
+        }
+        drillChallengeScoreRepository.saveAll(drillChallengeScores);
+        log.info("Saved all the drill scores");
+        drillChallenge.setDrillScore(totalCorrect);
+        drillChallenge.setTotalCorrect(totalCorrect);
+        drillChallenge.setTotalWrong(totalIncorrect);
+        drillChallenge.setStatus(Status.DrillChallenge.EVALUATED);
+        drillChallenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
+        drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
+        drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
+        drillChallenge = drillChallengeRepository.save(drillChallenge);
+        log.info("Saved the results in the challenge entity :{}", drillChallenge);
+        return this.addAll(drillEvaluationDTOS);
+    }
+
+    @Transactional
+    public List<DrillEvaluationDTO> evaluateMatchWord(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, DrillChallenge drillChallenge) {
+        log.info("Initiated the Match Word evaluation.");
+        List<DrillEvaluationDTO> drillEvaluationDTOS = new LinkedList<>();
+        List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
+        int totalWords = drillChallengeScoresDTOS.size();
+        log.info("Total words to evaluate:{}", totalWords);
+        int totalCorrect = 0;
+        int totalIncorrect = 0;
+        Evaluator evaluator = evaluatorRepository.findByDrillType(DrillTypes.MATCH_WORD.name()).get(0);
+        for (DrillChallengeScoresDTO dto : drillChallengeScoresDTOS) {
+            DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+            boolean isCorrect = dto.isCorrect();
+            totalCorrect += isCorrect ? 1 : 0;
+            totalIncorrect += isCorrect ? 0 : 1;
+            drillChallengeScores.add(scores);
+            drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason(isCorrect ? "The match is found." : "The match is not found.").confidence(100).evaluator(evaluator.getName()).build());
+        }
+        drillChallengeScoreRepository.saveAll(drillChallengeScores);
+        log.info("Saved all the drill scores");
+        drillChallenge.setDrillScore(totalCorrect);
+        drillChallenge.setTotalCorrect(totalCorrect);
+        drillChallenge.setTotalWrong(totalIncorrect);
+        drillChallenge.setStatus(Status.DrillChallenge.EVALUATED);
+        drillChallenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
+        drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
+        drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
+        drillChallenge = drillChallengeRepository.save(drillChallenge);
+        log.info("Saved the results in the challenge entity :{}", drillChallenge);
+        return this.addAll(drillEvaluationDTOS);
+    }
+
+    @Transactional
+    public List<DrillEvaluationDTO> evaluateWordScramble(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, DrillChallenge drillChallenge) {
+        log.info("Initiated the word scramble evaluation.");
+        List<DrillEvaluationDTO> drillEvaluationDTOS = new LinkedList<>();
+        List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
+        int totalWords = drillChallengeScoresDTOS.size();
+        log.info("Total words to evaluate:{}", totalWords);
+        int totalCorrect = 0;
+        int totalIncorrect = 0;
+        Evaluator evaluator = evaluatorRepository.findByDrillType(DrillTypes.WORD_SCRAMBLE.name()).get(0);
+        for (DrillChallengeScoresDTO dto : drillChallengeScoresDTOS) {
+            DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+            boolean isCorrect = dto.isCorrect();
+            totalCorrect += isCorrect ? 1 : 0;
+            totalIncorrect += isCorrect ? 0 : 1;
+            drillChallengeScores.add(scores);
+            drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason(isCorrect ? "The match is found." : "The match is not found.").confidence(100).evaluator(evaluator.getName()).build());
+        }
+        drillChallengeScoreRepository.saveAll(drillChallengeScores);
+        log.info("Saved all the drill scores");
+        drillChallenge.setDrillScore(totalCorrect);
+        drillChallenge.setTotalCorrect(totalCorrect);
+        drillChallenge.setTotalWrong(totalIncorrect);
+        drillChallenge.setStatus(Status.DrillChallenge.EVALUATED);
+        drillChallenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
+        drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
+        drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
+        drillChallenge = drillChallengeRepository.save(drillChallenge);
+        log.info("Saved the results in the challenge entity :{}", drillChallenge);
+        return this.addAll(drillEvaluationDTOS);
+    }
+
 
     @Override
     @Transactional
@@ -300,6 +403,12 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
                 drillEvaluationDTOS = evaluateGuess(drillChallengeScoresDTOS, challenge);
             else if (drillType.equals(DrillTypes.LEARN_POS.name()))
                 drillEvaluationDTOS = evaluatePOS(drillChallengeScoresDTOS, challenge);
+            else if (drillType.equals(DrillTypes.CONTEXT_MASTER.name()))
+                drillEvaluationDTOS = evaluateContextMaster(drillChallengeScoresDTOS, challenge);
+            else if (StringUtils.equals(drillType, DrillTypes.MATCH_WORD.name()))
+                drillEvaluationDTOS = evaluateMatchWord(drillChallengeScoresDTOS, challenge);
+            else if (StringUtils.equals(drillType, DrillTypes.WORD_SCRAMBLE.name()))
+                drillEvaluationDTOS = evaluateWordScramble(drillChallengeScoresDTOS, challenge);
             else drillEvaluationDTOS = evaluateMeaning(drillChallengeScoresDTOS, challenge, evaluator);
             challenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
             drillChallengeRepository.save(challenge);
