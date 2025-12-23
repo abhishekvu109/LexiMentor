@@ -143,9 +143,11 @@ public class ExerciseController {
     }
 
     @PutMapping(value = UrlConstants.ExerciseUrl.EXERCISE_UPDATE_RESOURCES, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> uploadResources(@RequestParam("files") List<MultipartFile> files, @RequestParam("refId") String refId) {
+    public @ResponseBody ResponseEntity<RestApiResponse> uploadResources(@RequestParam(name = "files") List<MultipartFile> files,
+                                                                         @RequestParam(name = "refId") String refId,
+                                                                         @RequestParam(name = "placeholder", required = false) String placeholder) {
         ExerciseDTO exerciseDTO = ExerciseDTO.builder().refId(refId).build();
-        exerciseService.updateResource(exerciseDTO, files);
+        exerciseService.updateResource(exerciseDTO, files, placeholder);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Successfully updated the resources.");
     }
 
@@ -156,8 +158,10 @@ public class ExerciseController {
     }
 
     @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET_RESOURCE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GridFsResource> getResource(@RequestParam("resourceId") String resourceId, @RequestParam("refId") String refId) {
-        return exerciseService.findResource(Long.parseLong(refId), resourceId)
+    public ResponseEntity<GridFsResource> getResource(@RequestParam("resourceId") String resourceId,
+                                                      @RequestParam("refId") String refId,
+                                                      @RequestParam(name = "placeholder", required = false) String placeholder) {
+        return exerciseService.findResource(Long.parseLong(refId), resourceId,placeholder)
                 .map(resource -> ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(resource.getContentType()))
                         .header(HttpHeaders.CONTENT_DISPOSITION,

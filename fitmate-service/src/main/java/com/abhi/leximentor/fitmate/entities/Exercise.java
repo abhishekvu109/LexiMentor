@@ -62,7 +62,7 @@ public class Exercise {
     @JoinTable(name = "fitmate_exercise_muscle", joinColumns = @JoinColumn(name = "exercise_id"), inverseJoinColumns = @JoinColumn(name = "muscle_id"))
     private List<Muscle> targetMuscles;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "fitmate_exercise_resources", joinColumns = @JoinColumn(name = "exercise_id"), inverseJoinColumns = @JoinColumn(name = "resource_id"))
     private List<FitmateResource> resources;
 

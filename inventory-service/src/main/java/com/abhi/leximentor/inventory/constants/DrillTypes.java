@@ -2,7 +2,7 @@ package com.abhi.leximentor.inventory.constants;
 
 public enum DrillTypes {
 
-    LEARN_MEANING, LEARNING_SPELLINGS, LEARN_POS, LEARN_PRONUNCIATION, LEARN_MISSING_CHARACTERS, IDENTIFY_WORD, GUESS_WORD, CONTEXT_MASTER, SPEED_TYPER, FLASHCARD_BLITZ, WORD_SCRAMBLE;
+    LEARN_MEANING, LEARNING_SPELLINGS, LEARN_POS, LEARN_PRONUNCIATION, LEARN_MISSING_CHARACTERS, IDENTIFY_WORD, GUESS_WORD, CONTEXT_MASTER, SPEED_TYPER, FLASHCARD_BLITZ, WORD_SCRAMBLE,MATCH_WORD;
 
     public static DrillTypes getType(String drillTypes) {
         return switch (drillTypes.toUpperCase()) {
@@ -16,6 +16,7 @@ public enum DrillTypes {
             case "FB" -> FLASHCARD_BLITZ;
             case "ST" -> SPEED_TYPER;
             case "WS" -> WORD_SCRAMBLE;
+            case "MW" -> MATCH_WORD;
             default -> LEARN_MISSING_CHARACTERS;
         };
     }

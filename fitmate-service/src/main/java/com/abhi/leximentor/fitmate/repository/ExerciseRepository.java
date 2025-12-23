@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
+    Stream<Exercise> findAllBy();
+
     Exercise findByRefId(long refId);
 
     Exercise findByName(String name);
