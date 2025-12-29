@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: leximentor-service
+          uri: http://localhost:9191/api/leximentor/
+          predicates:
+            - Path=/api/leximentor/**
+        - id: fitmate-service
+          uri: http://localhost:9393/api/fitmate/
+          predicates:
+            - Path=/api/fitmate/**
+        - id: synapster-service
+          uri: http://localhost:9292/api/synapster/
+          predicates:
+            - Path=/api/synapster/**
+        - id: tts-service
+          uri: http://localhost:8300/api/tts/
+          predicates:
+            - Path=/api/tts/**
+        - id: writewise-service
+          uri: http://localhost:8989/api/writewise/
+          predicates:
+            - Path=/api/writewise/**
+        - id: api-util-service
+          uri: http://localhost:4545/api/app-util/
+          predicates:
+            - Path=/api/app-util/**
+        - id: auth-service
+          uri: http://localhost:4848/api/auth/
+          predicates:
+            - Path=/api/auth/**
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  port: 8085
+
+auth:
+  validate:
+    url: "http://localhost:4848/api/auth/v1/validate"
+
+eureka:
+  client:
+    enabled: false
+
+jwt:
+  secret: ${JWT_SECRET:wjLtLybJFSwextSItNP0Pkr18tulzIapq8J++qbfuNv3LYwpodefGTpbvXSrrxcs6w0oYjRVKGoz4Gn/47dJyw==}

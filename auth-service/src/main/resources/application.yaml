@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: auth-service
+  datasource:
+    username: ${MYSQL_USER:abhishek}
+    password: ${MYSQL_PASSWORD:abhishek}
+    url: jdbc:mysql://${MYSQL_HOST:192.168.1.90}:${MYSQL_PORT:31124}/${MYSQL_DATABASE:saarthi_users}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      idle-timeout: 900000
+      maximum-pool-size: 50
+      keepalive-time: 900000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    generate-ddl: true
+
+
+server:
+  port: ${SERVICE_PORT:4848}
+
+logging:
+  level:
+    org.springframework.boot.context.config: DEBUG
+
+jwt:
+  secret: ${JWT_SECRET:wjLtLybJFSwextSItNP0Pkr18tulzIapq8J++qbfuNv3LYwpodefGTpbvXSrrxcs6w0oYjRVKGoz4Gn/47dJyw==}
+  token:
+    expiration:
+      ms: 3600000
+  refresh:
+    token:
+      expiration:
+        ms: 86400000

@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: api-gateway
+  profiles:
+    active: prod
+  cloud:
+    discovery:
+      enabled: false
+    gateway:
+      routes:
+        - id: leximentor-service
+          uri: http://word-inventory-service-k8s.default.svc.cluster.local:9191/api/leximentor/
+          predicates:
+            - Path=/api/leximentor/**
+        - id: fitmate-service
+          uri: http://fitmate-service-k8s.default.svc.cluster.local:9393/api/fitmate/
+          predicates:
+            - Path=/api/fitmate/**
+        - id: synapster-service
+          uri: http://synapster-service-k8s.default.svc.cluster.local:9292/api/synapster/
+          predicates:
+            - Path=/api/synapster/**
+        - id: tts-service
+          uri: http://text-to-speech-service-k8s.default.svc.cluster.local:8300/api/tts/
+          predicates:
+            - Path=/api/tts/**
+        - id: writewise-service
+          uri: http://writewise-learning-service-k8s.default.svc.cluster.local:8989/api/writewise/
+          predicates:
+            - Path=/api/writewise/**
+        - id: api-util-service
+          uri: http://leximentor-util-service-k8s.default.svc.cluster.local:4545/api/app-util/
+          predicates:
+            - Path=/api/app-util/**
+        - id: auth-service
+          uri: http://auth-service-k8s.default.svc.cluster.local:4848/api/auth/
+          predicates:
+            - Path=/api/auth/**
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  port: 8085
+
+
+auth:
+  validate:
+    url: "http://auth-service-k8s.default.svc.cluster.local:4848/api/auth/v1/validate"
+
+eureka:
+  client:
+    enabled: false
+
+jwt:
+  secret: ${JWT_SECRET:wjLtLybJFSwextSItNP0Pkr18tulzIapq8J++qbfuNv3LYwpodefGTpbvXSrrxcs6w0oYjRVKGoz4Gn/47dJyw==}
+
+gateway:
+  security:
+    introspection:
+      required: true
