@@ -2,7 +2,6 @@ package com.abhi.saarthi.auth.service;
 
 import com.abhi.saarthi.auth.dto.AppUser;
 import com.abhi.saarthi.auth.dto.AuthResponse;
-import com.abhi.saarthi.auth.entity.User;
 
 public interface UserService {
     AppUser save(AppUser user);
