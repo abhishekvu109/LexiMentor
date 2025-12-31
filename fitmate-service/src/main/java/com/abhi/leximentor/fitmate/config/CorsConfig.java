@@ -3,10 +3,9 @@ package com.abhi.leximentor.fitmate.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsWebFilter;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
 
 @Configuration
 public class CorsConfig {
@@ -24,25 +23,28 @@ public class CorsConfig {
 //    }
 
     @Bean
-    public CorsWebFilter corsWebFilter() {
+    public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // Option A: Development (temporary - less secure)
-        // config.addAllowedOrigin("*");
+        // Recommended: list exact origins (never use "*" with credentials)
+        config.addAllowedOrigin("http://localhost:3000");          // your frontend dev URL
+        config.addAllowedOriginPattern("http://192.168.*.*:*");       // if using Vite
+        // config.addAllowedOrigin("https://your-production-domain.com");
 
-        // Option B: Production / recommended
-        config.addAllowedOrigin("http://localhost:3000");         // ← your frontend
-        config.addAllowedOrigin("https://your-frontend-domain.com");
-        config.addAllowedOriginPattern("http://192.168.*.*:*");   // optional: local network
-
-        config.setAllowCredentials(true);                         // keep if using cookies/auth
+        config.setAllowCredentials(true);                          // keep if using cookies/auth
         config.addAllowedHeader("*");
-        config.addAllowedMethod("*");                             // or list: GET, POST, PUT, ...
-        config.setMaxAge(3600L);                                  // cache preflight 1 hour
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("PATCH");
+        config.setMaxAge(3600L);                                   // cache preflight 1 hour
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);          // apply to everything
+        source.registerCorsConfiguration("/**", config);           // apply to all paths
 
-        return new CorsWebFilter(source);
+        return new CorsFilter(source);
     }
+
 }
