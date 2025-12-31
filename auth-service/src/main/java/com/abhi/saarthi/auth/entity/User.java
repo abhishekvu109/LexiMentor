@@ -55,6 +55,9 @@ public class User implements UserDetails {
     @Column(name = "last_upd_date")
     private LocalDateTime lastUpdDate;
 
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    private RefreshToken refreshToken;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));

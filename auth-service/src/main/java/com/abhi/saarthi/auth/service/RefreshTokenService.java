@@ -1,9 +1,12 @@
 package com.abhi.saarthi.auth.service;
 
 import com.abhi.saarthi.auth.entity.RefreshToken;
+import com.abhi.saarthi.auth.entity.User;
 import com.abhi.saarthi.auth.repository.RefreshTokenRepository;
 import com.abhi.saarthi.auth.repository.UserRepository;
+import com.abhi.saarthi.auth.util.KeyGeneratorUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RefreshTokenService {
@@ -27,15 +30,22 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
+
+    @Transactional
     public RefreshToken createRefreshToken(Long userId) {
-        RefreshToken refreshToken = new RefreshToken();
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found."));
+        RefreshToken token = user.getRefreshToken();
+        if (token == null) {
+            return RefreshToken.builder()
+                    .user(user)
+                    .expiryDate(Instant.now().plusMillis(refreshTokenDurationMs))
+                    .token(KeyGeneratorUtil.uuid())
+                    .build();
+        } else {
+            token = this.verifyExpiration(token);
+            return token;
+        }
 
-        refreshToken.setUser(userRepository.findById(userId).get());
-        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
-        refreshToken.setToken(UUID.randomUUID().toString());
-
-        refreshToken = refreshTokenRepository.save(refreshToken);
-        return refreshToken;
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {

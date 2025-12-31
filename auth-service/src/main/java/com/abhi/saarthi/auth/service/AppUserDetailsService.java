@@ -1,6 +1,5 @@
 package com.abhi.saarthi.auth.service;
 
-import com.abhi.saarthi.auth.entity.User;
 import com.abhi.saarthi.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
