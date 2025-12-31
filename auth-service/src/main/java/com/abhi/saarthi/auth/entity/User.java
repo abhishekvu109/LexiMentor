@@ -55,8 +55,14 @@ public class User implements UserDetails {
     @Column(name = "last_upd_date")
     private LocalDateTime lastUpdDate;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private RefreshToken refreshToken;
+
+    @Column(name = "email")
+    private String email;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserProfile userProfile;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
