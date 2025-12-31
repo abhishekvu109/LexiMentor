@@ -6,7 +6,7 @@ spring:
       enabled: false
     gateway:
       default-filters:
-        - name: DeduplicateResponseHeader
+        - name: DedupeResponseHeader
           args:
             name: Access-Control-Allow-Origin Access-Control-Allow-Credentials
             strategy: RETAIN_FIRST
