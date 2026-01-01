@@ -36,22 +36,29 @@ public class RefreshTokenService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found."));
         RefreshToken token = user.getRefreshToken();
         if (token == null) {
-            return RefreshToken.builder()
+            token = RefreshToken.builder()
                     .user(user)
                     .expiryDate(Instant.now().plusMillis(refreshTokenDurationMs))
                     .token(KeyGeneratorUtil.uuid())
                     .build();
+            return refreshTokenRepository.save(token);
         } else {
-            token = this.verifyExpiration(token);
+
+            if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
+                token.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
+                token.setToken(KeyGeneratorUtil.uuid());
+                token = refreshTokenRepository.save(token);
+            }
             return token;
         }
 
     }
 
+    @Transactional
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
-            throw new RuntimeException("Refresh token was expired. Please make a new signin request");
+            throw new RuntimeException("Refresh token was expired. Please make a new sign in request");
         }
         return token;
     }
