@@ -7,6 +7,11 @@ spring:
     discovery:
       enabled: false
     gateway:
+      default-filters:
+        - name: DedupeResponseHeader
+          args:
+            name: Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            strategy: RETAIN_FIRST
       routes:
         - id: leximentor-service
           uri: http://word-inventory-service-k8s.default.svc.cluster.local:9191/api/leximentor/

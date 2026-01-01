@@ -25,7 +25,7 @@ public class UserProfile {
 
     @OneToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id")
-    private User userId;
+    private User user;
 
     private String firstName;
     private String lastName;
