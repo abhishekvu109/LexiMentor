@@ -109,6 +109,75 @@ public class LLMPromptBuilder {
                     """;
             return String.format(prompt, word, officialMeaning, candidateResponse);
         }
+
+        public static synchronized String getPromptForSentenceUsage(
+                String word,
+                String officialMeaning,
+                String candidateSentence,
+                String exampleUsages) {
+
+            String prompt = """
+                    You are a strict but fair vocabulary usage evaluator for language learners.
+                    Your task is to judge whether the student's sentence correctly and naturally uses the word
+                    according to its official meaning.
+
+                    You will be given:
+                    - The target word
+                    - The official definition
+                    - Some good real-world example usages (important reference!)
+                    - The student's usage sentence
+
+                    Evaluation criteria (be reasonably strict):
+                    1. Does the sentence use the word with the **correct meaning** according to the official definition?
+                    2. Is the word used in a **grammatically correct** way?
+                    3. Is the usage **natural** and idiomatic for native speakers?
+                    4. Are there any **collocation** errors or clearly unnatural combinations?
+
+                    Return your evaluation in **strict JSON format only**:
+
+                    {
+                      "correct": true/false,
+                      "confidence": 0-100,
+                      "explanation": "clear, specific reasoning (2-4 sentences)",
+                    }
+
+                    ### Important guidelines:
+                    - Be **lenient** with very minor grammar/spelling mistakes if meaning & usage are clearly correct
+                    - Be **strict** when:
+                      • Wrong meaning / semantic error
+                      • Very unnatural or impossible collocation
+                      • Word used with opposite meaning
+                    - Use the provided example usages as the gold standard for naturalness and typical contexts
+                    - Confidence:
+                      • 85–100 = very clear case
+                      • 60–84 = mostly correct with small issues
+                      • 30–59 = borderline / debatable
+                      • 0–29  = clearly wrong
+
+                    ### Examples of evaluation:
+                    Good example:
+                    Word: reluctant
+                    Official meaning: unwilling and hesitant
+                    Sentence: She was reluctant to share her real opinion during the meeting.
+                    → correct: true, confidence: 94
+
+                    Bad example:
+                    Word: reluctant
+                    Sentence: He was very reluctant to win the race.
+                    → correct: false, confidence: 98 (wrong meaning)
+
+                    <input>
+                    word: %s
+                    officialMeaning: %s
+                    studentSentence: %s
+                    exampleSentences: [%s]
+                    </input>
+
+                    Respond **only** with valid JSON — no other text.
+                    """;
+
+            return String.format(prompt, word, officialMeaning, candidateSentence, exampleUsages);
+        }
     }
 
     public static class WritingModule {
