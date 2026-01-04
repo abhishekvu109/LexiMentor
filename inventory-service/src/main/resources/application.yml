@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   sql:
     init:
       mode: always
@@ -30,3 +30,17 @@ spring:
 #      group-id: word-group-1
 server:
   port: ${SERVICE_PORT:9191}
+
+leximentor:
+  services:
+    app-llm:
+      service:
+        base-url: http://llm-service-k8s.default.svc.cluster.local:6565/api/v1/llm/evaluation/meaning/
+    ollama:
+      service:
+        base-url: http://192.168.1.90:31434/api/v2/llm/text
+      model:
+        name: ministral-3:3b
+    writewise:
+      service:
+        base-url: http://leximentor-util-service-k8s.default.svc.cluster.local:4545/api/

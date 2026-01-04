@@ -23,6 +23,7 @@ import com.abhi.leximentor.inventory.service.drill.impl.factory.MeaningEvaluator
 import com.abhi.leximentor.inventory.service.drill.impl.factory.MeaningEvaluator.OllamaMeaningEvaluator;
 import com.abhi.leximentor.inventory.service.drill.impl.factory.MeaningEvaluatorFactory;
 import com.abhi.leximentor.inventory.service.evaluation.MeaningDrillEvaluator;
+import com.abhi.leximentor.inventory.service.evaluation.SentenceDrillEvaluator;
 import com.abhi.leximentor.inventory.util.LLMPromptBuilder;
 import com.abhi.leximentor.inventory.util.RestAdvancedUtil;
 import com.abhi.leximentor.inventory.util.RestClient;
@@ -60,6 +61,7 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
     private final DrillChallengeScoreRepository drillChallengeScoreRepository;
     private final DrillChallengeRepository drillChallengeRepository;
     private final MeaningDrillEvaluator meaningDrillEvaluator;
+    private final SentenceDrillEvaluator sentenceDrillEvaluator;
     private String url;
 
     @Value("${ollama-llm-writing-module-topics}")
@@ -84,65 +86,15 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
         return dtos.stream().map(this::add).collect(Collectors.toList());
     }
 
-    //    @Override
-//    @Transactional
-//    public List<DrillEvaluationDTO> evaluateMeaning(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, String evaluator) throws Exception {
-//        log.info("Initiated the meaning evaluation. The evaluator is: {}", evaluator);
-//        List<DrillEvaluationDTO> drillEvaluationDTOS = new LinkedList<>();
-//        List<DrillChallengeScores> drillChallengeScores = new LinkedList<>();
-//        int totalWords = drillChallengeScoresDTOS.size();
-//        log.info("Total words to evaluate:{}", totalWords);
-//        int totalCorrect = 0;
-//        int totalIncorrect = 0;
-//        DrillChallenge drillChallenge = null;
-//        for (DrillChallengeScoresDTO dto : drillChallengeScoresDTOS) {
-//            if (StringUtils.isNotEmpty(dto.getResponse())) {
-//                DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
-//                WordMetadata wordMetadata = drillSet.getWordId();
-//                String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
-//                log.info("Successfully formatted the prompt : {}", prompt);
-//                loadModelServiceName(evaluator);
-//                LlamaModelDTO llamaModelDTO = StringUtils.isNotEmpty(dto.getResponse()) ?
-//                        getLlmResponse(prompt, evaluator) :
-//                        LlamaModelDTO.builder().correct(false).explanation("Response was empty").confidence(100).build();
-//                llamaModelDTO = llamaModelDTO == null ? LlamaModelDTO.getDefaultInstance() : llamaModelDTO;
-//                log.info("The evaluator service has returned a response : {}", llamaModelDTO);
-//                DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
-//                drillChallenge = (drillChallenge == null) ? scores.getChallengeId() : drillChallenge;
-//                scores.setCorrect(llamaModelDTO.isCorrect());
-//                totalCorrect += llamaModelDTO.isCorrect() ? 1 : 0;
-//                log.info("Total correct in the challenge: {}", totalCorrect);
-//                totalIncorrect += llamaModelDTO.isCorrect() ? 0 : 1;
-//                drillChallengeScores.add(scores);
-//                drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason(llamaModelDTO.getExplanation()).confidence(llamaModelDTO.getConfidence()).evaluator(evaluator).build());
-//            } else {
-//                log.info("The user has not put a response.");
-//                DrillChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
-//                drillChallenge = (drillChallenge == null) ? scores.getChallengeId() : drillChallenge;
-//                scores.setCorrect(false);
-//                totalCorrect += 0;
-//                totalIncorrect += 1;
-//                drillChallengeScores.add(scores);
-//                drillEvaluationDTOS.add(DrillEvaluationDTO.builder().drillChallengeScoresDTO(dto).reason("Response was empty").confidence(100).evaluator(evaluator).build());
-//            }
-//
-//        }
-//        drillChallengeScoreRepository.saveAll(drillChallengeScores);
-//        log.info("Saved all the drill scores");
-//        drillChallenge.setDrillScore(totalCorrect);
-//        drillChallenge.setTotalCorrect(totalCorrect);
-//        drillChallenge.setTotalWrong(totalIncorrect);
-//        drillChallenge.setStatus(Status.DrillChallenge.EVALUATED);
-//        drillChallenge.setDrillScore(DrillServiceUtil.DrillChallengeUtil.score(totalCorrect, totalIncorrect));
-//        drillChallenge.setPass(DrillServiceUtil.DrillChallengeUtil.isPass(drillChallenge.getDrillScore()));
-//        drillChallenge = drillChallengeRepository.save(drillChallenge);
-//        log.info("Saved the results in the challenge entity. {}", drillChallenge);
-//        return this.addAll(drillEvaluationDTOS);
-//    }
     @Override
     @Transactional
     public List<DrillEvaluationDTO> evaluateMeaning(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, DrillChallenge drillChallenge, String evaluator) {
         return meaningDrillEvaluator.init(drillChallengeScoresDTOS, drillChallenge, LLM_URL, MODEL_NAME, evaluator).evaluate().getResult();
+    }
+
+    @Transactional
+    public List<DrillEvaluationDTO> evaluateSentenceUsage(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, DrillChallenge drillChallenge, String evaluator) {
+        return sentenceDrillEvaluator.init(drillChallengeScoresDTOS, drillChallenge, evaluator).evaluate().getResult();
     }
 
     private void loadModelServiceName(String evaluator) {
@@ -409,6 +361,8 @@ public class DrillEvaluationServiceImpl implements DrillEvaluationService {
                 drillEvaluationDTOS = evaluateMatchWord(drillChallengeScoresDTOS, challenge);
             else if (StringUtils.equals(drillType, DrillTypes.WORD_SCRAMBLE.name()))
                 drillEvaluationDTOS = evaluateWordScramble(drillChallengeScoresDTOS, challenge);
+            else if (StringUtils.equals(drillType, DrillTypes.SENTENCE_USAGE.name()))
+                drillEvaluationDTOS = evaluateSentenceUsage(drillChallengeScoresDTOS, challenge, evaluator);
             else drillEvaluationDTOS = evaluateMeaning(drillChallengeScoresDTOS, challenge, evaluator);
             challenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
             drillChallengeRepository.save(challenge);
