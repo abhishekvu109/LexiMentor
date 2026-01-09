@@ -8,6 +8,7 @@ import com.abhi.leximentor.fitmate.dto.RoutineSearchFilter;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
+import com.abhi.leximentor.fitmate.service.RoutineGeneratorService;
 import com.abhi.leximentor.fitmate.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RoutineController {
     private final RoutineService routineService;
+    private final RoutineGeneratorService generateRoutine;
 
     @PostMapping(value = UrlConstants.RoutineUrl.ROUTINE_ADD, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody RoutineDTO request) {
@@ -65,6 +68,15 @@ public class RoutineController {
         } catch (Exception ex) {
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
         }
+    }
+
+    @PostMapping(value = UrlConstants.RoutineUrl.ROUTINE_GENERATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> generateRoutine(@RequestBody Map<String, Object> request) {
+        String trainingType = (String) request.get("trainingType");
+        @SuppressWarnings("unchecked")
+        List<String> targetBodyParts = (List<String>) request.get("targetBodyParts");
+        RoutineDTO response = generateRoutine.generateRoutine(trainingType, targetBodyParts);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
 

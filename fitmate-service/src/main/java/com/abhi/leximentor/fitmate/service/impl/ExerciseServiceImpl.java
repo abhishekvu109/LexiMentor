@@ -2,6 +2,7 @@ package com.abhi.leximentor.fitmate.service.impl;
 
 import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.constants.Status;
+import com.abhi.leximentor.fitmate.constants.Unit;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
 import com.abhi.leximentor.fitmate.entities.*;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
@@ -109,7 +110,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         if (exercise == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
         exercise.setName(exerciseDTO.getName());
         exercise.setDescription(exerciseDTO.getDescription());
-        exercise.setUnit(exerciseDTO.getUnit());
+        exercise.setUnit(Unit.from(exercise.getUnit()).getValue());
         exercise.setStatus(Status.ApplicationStatus.getStatus(exerciseDTO.getStatus()));
         BodyPart targetBodyPart = bodyPartsRepository.findByNameIgnoreCase(exerciseDTO.getBodyPart().getName());
         if (targetBodyPart == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);

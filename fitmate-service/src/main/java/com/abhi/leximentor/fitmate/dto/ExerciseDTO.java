@@ -18,6 +18,8 @@ public class ExerciseDTO {
     private String description;
     private String unit;
     private String status;
+    private String difficultyLevel;
+    private String riskLevel;
     private LocalDateTime crtnDate;
     private LocalDateTime lastUpdDate;
     private TrainingDTO training;
