@@ -14,7 +14,6 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
 
     Training findByName(String name);
 
-
     @Query(value = QueryConstants.Training.GET_TRAINING_BY_NAME, nativeQuery = true)
     Training findByNameIgnoreCase(String name);
 
