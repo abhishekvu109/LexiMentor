@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping("/api/cashflow/v1/households/budgets")
+@RequestMapping("/api/cashflow/households/budgets")
 public class BudgetController {
 
     private final BudgetService budgetService;

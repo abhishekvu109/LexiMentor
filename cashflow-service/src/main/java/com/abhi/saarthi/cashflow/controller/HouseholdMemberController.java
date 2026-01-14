@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping("/api/cashflow/v1/households/household-members")
+@RequestMapping("/api/cashflow/households/household-members")
 public class HouseholdMemberController {
 
     private final HouseholdMemberService householdMemberService;

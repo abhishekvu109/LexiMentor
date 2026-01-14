@@ -5,10 +5,10 @@ import com.abhi.saarthi.cashflow.constants.Status;
 import com.abhi.saarthi.cashflow.dto.HouseholdDTO;
 import com.abhi.saarthi.cashflow.entities.Household;
 import com.abhi.saarthi.cashflow.exceptions.entities.ServerException;
+import com.abhi.saarthi.cashflow.mappers.HouseholdMapper;
 import com.abhi.saarthi.cashflow.model.HouseholdSearchFilter;
 import com.abhi.saarthi.cashflow.repository.HouseholdRepository;
 import com.abhi.saarthi.cashflow.service.HouseholdService;
-import com.abhi.saarthi.cashflow.service.util.ServiceUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,6 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class HouseholdServiceImpl implements HouseholdService {
     private final HouseholdRepository householdRepository;
+    private final HouseholdMapper householdMapper;
 
     private static Specification<Household> withRefId(String refId) {
         if (StringUtils.isNotEmpty(refId)) {
@@ -68,10 +68,10 @@ public class HouseholdServiceImpl implements HouseholdService {
     @Transactional
     public List<HouseholdDTO> add(List<HouseholdDTO> householdDTOS) {
         log.info("Adding new households: {}", householdDTOS);
-        List<Household> households = householdDTOS.stream().map(ServiceUtil.HouseholdUtil::buildEntity).toList();
+        List<Household> households = householdDTOS.stream().map(householdMapper::toEntity).toList();
         households = householdRepository.saveAll(households);
         log.info("Successfully added new households: {}", households);
-        return households.stream().map(ServiceUtil.HouseholdUtil::buildDTO).collect(Collectors.toList());
+        return households.stream().map(householdMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -81,12 +81,13 @@ public class HouseholdServiceImpl implements HouseholdService {
         List<Household> households = householdDTOS.stream().map(dto -> {
             Household household = householdRepository
                     .findByRefId(Long.parseLong(dto.getRefId()))
-                    .orElseThrow(() -> new ServerException().new EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getRefId())));
-            return ServiceUtil.HouseholdUtil.updateEntity(household, dto);
+                    .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getRefId())));
+            householdMapper.updateEntityFromDto(dto, household);
+            return household;
         }).toList();
         households = householdRepository.saveAll(households);
         log.info("Successfully updated households: {}", households);
-        return households.stream().map(ServiceUtil.HouseholdUtil::buildDTO).collect(Collectors.toList());
+        return households.stream().map(householdMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -95,7 +96,7 @@ public class HouseholdServiceImpl implements HouseholdService {
         log.info("Deleting households: {}", householdDTOS);
         List<Household> households = householdDTOS.stream().map(dto -> householdRepository
                 .findByRefId(Long.parseLong(dto.getRefId()))
-                .orElseThrow(() -> new ServerException().new EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getRefId())))).toList();
+                .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getRefId())))).toList();
         householdRepository.deleteAll(households);
         log.info("Successfully deleted households");
     }
@@ -111,7 +112,7 @@ public class HouseholdServiceImpl implements HouseholdService {
         specification = specification.and(withRefId(filter.getRefId()));
         Sort sort = Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
         List<HouseholdDTO> households = householdRepository.findAll(specification, sort).stream()
-                .map(ServiceUtil.HouseholdUtil::buildDTO).toList();
+                .map(householdMapper::toDto).toList();
         log.info("Found {} households", households.size());
         return households;
     }
@@ -121,8 +122,8 @@ public class HouseholdServiceImpl implements HouseholdService {
         log.info("Finding household by refId: {}", refId);
         Household household = householdRepository
                 .findByRefId(refId)
-                .orElseThrow(() -> new ServerException().new EntityObjectNotFound(String.format("Entity object household not found for refId : %s", refId)));
+                .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", refId)));
         log.info("Found household: {}", household);
-        return ServiceUtil.HouseholdUtil.buildDTO(household);
+        return householdMapper.toDto(household);
     }
 }

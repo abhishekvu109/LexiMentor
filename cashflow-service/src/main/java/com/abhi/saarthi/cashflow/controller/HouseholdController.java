@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping("/api/cashflow/v1/households")
+@RequestMapping("/api/cashflow/households")
 public class HouseholdController {
 
     private final HouseholdService householdService;
@@ -56,7 +56,7 @@ public class HouseholdController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
-    @GetMapping(value = "/household/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/household/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody HouseholdSearchFilter filter) {
         log.info("Received a request to search household with filter: {}", filter);
         List<HouseholdDTO> response = householdService.search(filter);

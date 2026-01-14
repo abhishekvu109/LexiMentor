@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping("/api/cashflow/v1/categories")
+@RequestMapping("/api/cashflow/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;

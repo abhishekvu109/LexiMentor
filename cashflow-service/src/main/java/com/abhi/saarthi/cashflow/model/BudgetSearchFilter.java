@@ -8,4 +8,6 @@ import lombok.ToString;
 public class BudgetSearchFilter {
     private String refId;
     private String uuid;
+    private String sortBy = "year";
+    private String sortDir = "desc";
 }
