@@ -3,6 +3,8 @@ package com.abhi.saarthi.cashflow.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "category")
 @Getter
@@ -24,4 +26,6 @@ public class Category {
     private String name;            // "Groceries", "Rent", "Entertainment"
 
     private int status;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
