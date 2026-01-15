@@ -8,12 +8,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = KeyGeneratorUtil.class, imports = KeyGeneratorUtil.class)
+@Mapper(componentModel = "spring", uses = {KeyGeneratorUtil.class, HouseholdMemberMapper.class}, imports = KeyGeneratorUtil.class)
 public interface HouseholdMapper {
     @Mapping(target = "uuid", expression = "java(KeyGeneratorUtil.uuid())")
     @Mapping(target = "refId", expression = "java(KeyGeneratorUtil.refId())")
     @Mapping(target = "currency", expression = "java(Currency.parse(householdDTO.getCurrency()))")
-    @Mapping(target = "status", constant = "1")
+    @Mapping(target = "status", expression = "java(Status.ApplicationStatus.getStatus(householdDTO.getStatus()))")
+    @Mapping(target = "members", source = "householdDTO.members")
     Household toEntity(HouseholdDTO householdDTO);
 
 
