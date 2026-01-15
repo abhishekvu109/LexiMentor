@@ -4,9 +4,11 @@ import com.abhi.saarthi.cashflow.constants.Currency;
 import com.abhi.saarthi.cashflow.constants.Status;
 import com.abhi.saarthi.cashflow.dto.HouseholdDTO;
 import com.abhi.saarthi.cashflow.entities.Household;
+import com.abhi.saarthi.cashflow.entities.HouseholdMember;
 import com.abhi.saarthi.cashflow.exceptions.entities.ServerException;
 import com.abhi.saarthi.cashflow.mappers.HouseholdMapper;
 import com.abhi.saarthi.cashflow.model.HouseholdSearchFilter;
+import com.abhi.saarthi.cashflow.repository.HouseholdMemberRepository;
 import com.abhi.saarthi.cashflow.repository.HouseholdRepository;
 import com.abhi.saarthi.cashflow.service.HouseholdService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class HouseholdServiceImpl implements HouseholdService {
     private final HouseholdRepository householdRepository;
     private final HouseholdMapper householdMapper;
+    private final HouseholdMemberRepository householdMemberRepository;
 
     private static Specification<Household> withRefId(String refId) {
         if (StringUtils.isNotEmpty(refId)) {
@@ -68,7 +71,11 @@ public class HouseholdServiceImpl implements HouseholdService {
     @Transactional
     public List<HouseholdDTO> add(List<HouseholdDTO> householdDTOS) {
         log.info("Adding new households: {}", householdDTOS);
-        List<Household> households = householdDTOS.stream().map(householdMapper::toEntity).toList();
+        List<Household> households = householdDTOS.stream().map(householdMapper::toEntity).peek(household -> {
+            if (household.getMembers() != null) {
+                household.getMembers().forEach(member -> member.setHousehold(household));
+            }
+        }).toList();
         households = householdRepository.saveAll(households);
         log.info("Successfully added new households: {}", households);
         return households.stream().map(householdMapper::toDto).collect(Collectors.toList());
