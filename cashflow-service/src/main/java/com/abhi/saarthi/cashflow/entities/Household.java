@@ -3,6 +3,7 @@ package com.abhi.saarthi.cashflow.entities;
 import com.abhi.saarthi.cashflow.constants.Currency;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,7 +33,8 @@ public class Household {
     private Currency currency;        // default: "INR"
 
     @Column(updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HouseholdMember> members;
