@@ -13,10 +13,11 @@ public interface HouseholdMapper {
     @Mapping(target = "uuid", expression = "java(KeyGeneratorUtil.uuid())")
     @Mapping(target = "refId", expression = "java(KeyGeneratorUtil.refId())")
     @Mapping(target = "currency", expression = "java(Currency.parse(householdDTO.getCurrency()))")
-    @Mapping(target = "status", expression = "java(Status.ApplicationStatus.getStatus(householdDTO.getStatus()))")
+    @Mapping(target = "status", constant = "1")
     Household toEntity(HouseholdDTO householdDTO);
 
 
+    @Mapping(target = "status", expression = "java(com.abhi.saarthi.cashflow.constants.Status.ApplicationStatus.getStatusStr(household.getStatus()))")
     HouseholdDTO toDto(Household household);
 
     void updateEntityFromDto(HouseholdDTO householdDTO, @MappingTarget Household household);
