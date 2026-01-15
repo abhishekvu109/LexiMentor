@@ -3,6 +3,8 @@ package com.abhi.saarthi.cashflow.entities;
 import com.abhi.saarthi.cashflow.constants.ExpenseType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,12 +51,10 @@ public class Expense {
 
     @Column(name = "created_date")
     @Setter(AccessLevel.PRIVATE)
+    @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_date")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
-    @PreUpdate
-    private void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }
