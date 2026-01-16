@@ -39,10 +39,10 @@ public class Household {
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HouseholdMember> members;
 
-    @OneToMany(mappedBy = "household")
+    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Expense> expenses;
 
-    @OneToMany(mappedBy = "household")
+    @OneToMany(mappedBy = "household",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Budget> budgets;
 
     private int status;

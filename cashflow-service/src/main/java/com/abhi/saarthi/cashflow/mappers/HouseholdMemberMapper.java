@@ -10,9 +10,10 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring", uses = KeyGeneratorUtil.class, imports = KeyGeneratorUtil.class)
 public interface HouseholdMemberMapper {
 
-    @Mapping(target = "household.refId", source = "householdRefId")
+//    @Mapping(target = "household.refId", source = "householdRefId")
     @Mapping(target = "uuid", expression = "java(KeyGeneratorUtil.uuid())")
     @Mapping(target = "refId", expression = "java(KeyGeneratorUtil.refId())")
+    @Mapping(target = "status", constant = "1")
     HouseholdMember toEntity(HouseholdMemberDTO householdMemberDTO);
 
     @Mapping(target = "householdRefId", source = "household.refId")

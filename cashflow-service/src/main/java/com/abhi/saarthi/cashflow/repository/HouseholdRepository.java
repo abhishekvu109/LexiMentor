@@ -9,5 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface HouseholdRepository extends JpaRepository<Household, Long>, JpaSpecificationExecutor<Household> {
+
     Optional<Household> findByRefId(long refId);
 }

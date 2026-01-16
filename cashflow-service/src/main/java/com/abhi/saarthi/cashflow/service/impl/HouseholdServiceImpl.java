@@ -4,7 +4,6 @@ import com.abhi.saarthi.cashflow.constants.Currency;
 import com.abhi.saarthi.cashflow.constants.Status;
 import com.abhi.saarthi.cashflow.dto.HouseholdDTO;
 import com.abhi.saarthi.cashflow.entities.Household;
-import com.abhi.saarthi.cashflow.entities.HouseholdMember;
 import com.abhi.saarthi.cashflow.exceptions.entities.ServerException;
 import com.abhi.saarthi.cashflow.mappers.HouseholdMapper;
 import com.abhi.saarthi.cashflow.model.HouseholdSearchFilter;
@@ -109,9 +108,11 @@ public class HouseholdServiceImpl implements HouseholdService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<HouseholdDTO> search(HouseholdSearchFilter filter) {
         log.info("Searching for households with filter: {}", filter);
         Specification<Household> specification = Specification.unrestricted();
+        specification = (StringUtils.isNotEmpty(filter.getUser())) ? ((root, query, cb) -> cb.equal(root.get("members").get("user"), filter.getUser())) : specification;
         specification = specification.and(withName(filter.getName()));
         specification = specification.and(withCurrency(filter.getCurrency()));
         specification = specification.and(withStatus(filter.getStatus()));
@@ -125,6 +126,7 @@ public class HouseholdServiceImpl implements HouseholdService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HouseholdDTO findByRefId(long refId) {
         log.info("Finding household by refId: {}", refId);
         Household household = householdRepository
