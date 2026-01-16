@@ -25,4 +25,9 @@ public class UserController {
     public @ResponseBody ResponseEntity<RestApiResponse> register(@RequestBody AppUser request) {
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_CODE, userService.save(request));
     }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> findAll() {
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_CODE, userService.findAllUsers());
+    }
 }
