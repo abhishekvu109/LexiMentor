@@ -3,6 +3,7 @@ package com.abhi.saarthi.auth.service.impl;
 import com.abhi.saarthi.auth.constant.Status;
 import com.abhi.saarthi.auth.dto.AppUser;
 import com.abhi.saarthi.auth.dto.AuthResponse;
+import com.abhi.saarthi.auth.dto.UserDTO;
 import com.abhi.saarthi.auth.entity.User;
 import com.abhi.saarthi.auth.repository.UserRepository;
 import com.abhi.saarthi.auth.service.ServiceUtil;
@@ -19,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -49,9 +52,18 @@ public class UserServiceImpl implements UserService {
             if (username != null && jwtUtil.validateToken(token, username)) {
                 return new AuthResponse("AUTHORIZED");
             }
-        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
+                 IllegalArgumentException e) {
             log.warn("JWT Validation Error: {}", e.getMessage());
         }
         return new AuthResponse("UNAUTHORIZED");
+    }
+
+    @Override
+    public List<UserDTO> findAllUsers() {
+        return userRepository.findAll().stream().map(user -> UserDTO.builder()
+                .username(user.getUsername())
+                .status(Status.ApplicationStatus.getStatusStr(user.getStatus()))
+                .build()).toList();
     }
 }
