@@ -11,11 +11,13 @@ import org.mapstruct.MappingTarget;
 public interface BudgetMapper {
 
     @Mapping(target = "household.refId", source = "householdRefId")
+    @Mapping(target = "category.refId", source = "categoryRefId")
     @Mapping(target = "uuid", expression = "java(KeyGeneratorUtil.uuid())")
     @Mapping(target = "refId", expression = "java(KeyGeneratorUtil.refId())")
     Budget toEntity(BudgetDTO budgetDTO);
 
     @Mapping(target = "householdRefId", source = "household.refId")
+    @Mapping(target = "categoryRefId", source = "category.refId")
     BudgetDTO toDto(Budget budget);
 
     void updateEntityFromDto(BudgetDTO budgetDTO, @MappingTarget Budget budget);

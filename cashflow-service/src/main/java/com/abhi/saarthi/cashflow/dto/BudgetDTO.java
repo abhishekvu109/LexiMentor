@@ -17,6 +17,7 @@ public class BudgetDTO {
     private Period period;
     private String status;
     private String householdRefId;
+    private String categoryRefId;
     private int year;
     private int month;
     private LocalDateTime createdAt;

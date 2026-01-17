@@ -6,6 +6,7 @@ import com.abhi.saarthi.cashflow.exceptions.entities.ServerException;
 import com.abhi.saarthi.cashflow.mappers.BudgetMapper;
 import com.abhi.saarthi.cashflow.model.BudgetSearchFilter;
 import com.abhi.saarthi.cashflow.repository.BudgetRepository;
+import com.abhi.saarthi.cashflow.repository.CategoryRepository;
 import com.abhi.saarthi.cashflow.repository.HouseholdRepository;
 import com.abhi.saarthi.cashflow.service.BudgetService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     private final BudgetRepository budgetRepository;
     private final HouseholdRepository householdRepository;
+    private final CategoryRepository categoryRepository;
     private final BudgetMapper budgetMapper;
 
     @Override
@@ -37,6 +39,8 @@ public class BudgetServiceImpl implements BudgetService {
             Budget budget = budgetMapper.toEntity(dto);
             budget.setHousehold(householdRepository.findByRefId(Long.parseLong(dto.getHouseholdRefId()))
                     .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getHouseholdRefId()))));
+            budget.setCategory(categoryRepository.findByRefId(Long.parseLong(dto.getCategoryRefId()))
+                    .orElse(categoryRepository.findByNameIgnoreCase("OTHERS")));
             return budget;
         }).toList();
         budgets = budgetRepository.saveAll(budgets);
@@ -54,6 +58,8 @@ public class BudgetServiceImpl implements BudgetService {
             budgetMapper.updateEntityFromDto(dto, budget);
             budget.setHousehold(householdRepository.findByRefId(Long.parseLong(dto.getHouseholdRefId()))
                     .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getHouseholdRefId()))));
+            budget.setCategory(categoryRepository.findByRefId(Long.parseLong(dto.getCategoryRefId()))
+                    .orElse(categoryRepository.findByNameIgnoreCase("OTHERS")));
             return budget;
         }).toList();
         budgets = budgetRepository.saveAll(budgets);

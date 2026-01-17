@@ -57,7 +57,7 @@ public class HouseholdController {
     }
 
     @PostMapping(value = "/household/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody HouseholdSearchFilter filter) {
+    public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody(required = false) HouseholdSearchFilter filter) {
         log.info("Received a request to search household with filter: {}", filter);
         List<HouseholdDTO> response = householdService.search(filter);
         log.info("Successfully found households: {}", response);

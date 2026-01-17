@@ -6,6 +6,7 @@ import com.abhi.saarthi.cashflow.model.CategorySearchFilter;
 import com.abhi.saarthi.cashflow.model.ResponseEntityBuilder;
 import com.abhi.saarthi.cashflow.model.RestApiResponse;
 import com.abhi.saarthi.cashflow.service.CategoryService;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,8 @@ public class CategoryController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
-    @GetMapping(value = "/category/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody CategorySearchFilter filter) {
+    @PostMapping(value = "/category/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody(required = false) CategorySearchFilter filter) {
         log.info("Received a request to search category with filter: {}", filter);
         List<CategoryDTO> response = categoryService.search(filter);
         log.info("Successfully found categories: {}", response);

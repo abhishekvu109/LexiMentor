@@ -78,13 +78,21 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDTO> search(CategorySearchFilter filter) {
         log.info("Searching for categories with filter: {}", filter);
+        if (filter == null || filter.isEmpty()) {
+            CategorySearchFilter defaultFilter = CategorySearchFilter.defaultFilter();
+            Sort sort = Sort.by(Sort.Direction.fromString(defaultFilter.getSortDir()), defaultFilter.getSortBy());
+            List<CategoryDTO> categories = categoryRepository.findAll(sort).stream()
+                    .map(categoryMapper::toDto).toList();
+            log.info("Found {} categories", categories.size());
+            return categories;
+        }
         Specification<Category> spec = Specification.unrestricted();
         spec = (StringUtils.isNotEmpty(filter.getUuid())) ? spec.and(((root, query, cb) -> cb.equal(root.get("uuid"), filter.getUuid()))) : spec;
         spec = (StringUtils.isNotEmpty(filter.getRefId())) ? spec.and(((root, query, cb) -> cb.equal(root.get("refId"), Long.parseLong(filter.getRefId())))) : spec;
         spec = (StringUtils.isNotEmpty(filter.getName())) ? spec.and(((root, query, cb) -> cb.like(root.get("name"), filter.getName()))) : spec;
         spec = (StringUtils.isNotEmpty(filter.getStatus())) ? spec.and(((root, query, cb) -> cb.equal(root.get("status"), Status.ApplicationStatus.getStatus(filter.getStatus())))) : spec;
         Sort sort = Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
-        List<CategoryDTO> categories = categoryRepository.findAll(spec,sort).stream()
+        List<CategoryDTO> categories = categoryRepository.findAll(spec, sort).stream()
                 .map(categoryMapper::toDto).toList();
         log.info("Found {} categories", categories.size());
         return categories;

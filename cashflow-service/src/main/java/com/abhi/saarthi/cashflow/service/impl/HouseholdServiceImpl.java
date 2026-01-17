@@ -111,6 +111,14 @@ public class HouseholdServiceImpl implements HouseholdService {
     @Transactional(readOnly = true)
     public List<HouseholdDTO> search(HouseholdSearchFilter filter) {
         log.info("Searching for households with filter: {}", filter);
+        if (filter == null || filter.isEmpty()) {
+            HouseholdSearchFilter defaultFilter = HouseholdSearchFilter.defaultFilter();
+            Sort sort = Sort.by(Sort.Direction.fromString(defaultFilter.getSortDir()), defaultFilter.getSortBy());
+            List<HouseholdDTO> households = householdRepository.findAll(sort).stream()
+                    .map(householdMapper::toDto).toList();
+            log.info("Found {} households", households.size());
+            return households;
+        }
         Specification<Household> specification = Specification.unrestricted();
         specification = (StringUtils.isNotEmpty(filter.getUser())) ? ((root, query, cb) -> cb.equal(root.get("members").get("user"), filter.getUser())) : specification;
         specification = specification.and(withName(filter.getName()));

@@ -23,7 +23,7 @@ public class Budget {
 
     private String uuid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "household_id", nullable = false)
     private Household household;
 
@@ -32,6 +32,10 @@ public class Budget {
 
     @Enumerated(EnumType.STRING)
     private Period period = Period.MONTHLY;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private Integer year;
 

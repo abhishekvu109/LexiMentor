@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSpecificationExecutor<Category> {
     Optional<Category> findByRefId(long refId);
+
+    Category findByNameIgnoreCase(String name);
 }
