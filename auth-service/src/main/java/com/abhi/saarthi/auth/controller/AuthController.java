@@ -34,6 +34,11 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
     private final UserService userService; // Injected UserService
 
+    @PostMapping(value = "/register",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> register(@RequestBody AppUser request) {
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_CODE, userService.save(request));
+    }
+
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> login(@RequestBody LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
