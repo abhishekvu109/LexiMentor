@@ -3,6 +3,7 @@ package com.abhi.saarthi.cashflow.entities;
 import com.abhi.saarthi.cashflow.constants.Period;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "budget")
 @Getter
 @Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,8 +21,10 @@ public class Budget {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "ref_id")
     private long refId;
 
+    @Column(name = "uuid")
     private String uuid;
 
     @ManyToOne
@@ -30,6 +34,7 @@ public class Budget {
     @Column(name = "amount")
     private double amount;
 
+    @Column(name = "period")
     @Enumerated(EnumType.STRING)
     private Period period = Period.MONTHLY;
 
@@ -37,11 +42,19 @@ public class Budget {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "year")
     private Integer year;
 
+    @Column(name = "status")
     private int status;
 
+    @Column(name = "month")
     private Integer month;          // 1-12 for monthly budgets
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "last_updated_at")
+    private LocalDateTime lastUpdatedAt;
 }

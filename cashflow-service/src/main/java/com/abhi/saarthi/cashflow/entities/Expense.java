@@ -47,12 +47,13 @@ public class Expense {
     private Category category;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type")
     private ExpenseType type = ExpenseType.ONE_TIME; // ONE_TIME, RECURRING
 
     @Column(name = "created_date")
     @Setter(AccessLevel.PRIVATE)
     @CreationTimestamp
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_date")
     @UpdateTimestamp

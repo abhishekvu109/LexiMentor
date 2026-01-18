@@ -22,14 +22,17 @@ public class Household {
     @Setter(AccessLevel.PRIVATE)
     private Long id;
 
+    @Column(name = "ref_id")
     private long refId;
 
+    @Column(name = "uuid")
     private String uuid;
 
-    @Column(nullable = false)
+    @Column(name = "name",nullable = false)
     private String name;            // "Abhishek & Priya Home", "The Smith Family", etc.
 
     @Enumerated
+    @Column(name = "currency")
     private Currency currency;        // default: "INR"
 
     @Column(updatable = false)
@@ -45,5 +48,6 @@ public class Household {
     @OneToMany(mappedBy = "household",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Budget> budgets;
 
+    @Column(name = "status")
     private int status;
 }

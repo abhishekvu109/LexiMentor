@@ -126,7 +126,9 @@ public class HouseholdServiceImpl implements HouseholdService {
         specification = specification.and(withStatus(filter.getStatus()));
         specification = specification.and(withUUID(filter.getUuid()));
         specification = specification.and(withRefId(filter.getRefId()));
-        Sort sort = Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
+        Sort sort = StringUtils.isAnyEmpty(filter.getSortBy(), filter.getSortDir())
+                ? Sort.by(Sort.Direction.fromString("asc"), "name")
+                : Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
         List<HouseholdDTO> households = householdRepository.findAll(specification, sort).stream()
                 .map(householdMapper::toDto).toList();
         log.info("Found {} households", households.size());

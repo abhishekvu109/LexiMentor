@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {KeyGeneratorUtil.class, HouseholdMemberMapper.class}, imports = KeyGeneratorUtil.class)
+@Mapper(componentModel = "spring", uses = {KeyGeneratorUtil.class, HouseholdMemberMapper.class, BudgetMapper.class, ExpenseMapper.class}, imports = KeyGeneratorUtil.class)
 public interface HouseholdMapper {
     @Mapping(target = "uuid", expression = "java(KeyGeneratorUtil.uuid())")
     @Mapping(target = "refId", expression = "java(KeyGeneratorUtil.refId())")
