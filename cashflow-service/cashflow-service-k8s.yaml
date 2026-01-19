@@ -36,18 +36,18 @@ spec:
             - name: SERVICE_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: auth-config
+                  name: cashflow-config
                   key: SERVICE_PORT
             - name: MYSQL_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: auth-config
+                  name: cashflow-config
                   key: MYSQL_HOST
             - name: MYSQL_PORT
               valueFrom:
                 configMapKeyRef:
                   key: MYSQL_PORT
-                  name: auth-config
+                  name: cashflow-config
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
@@ -62,7 +62,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: SERVICE_NAME
-                  name: auth-config
+                  name: cashflow-config
           imagePullPolicy: Always
           ports:
             - containerPort: 1515
