@@ -74,6 +74,7 @@ public class BudgetServiceImpl implements BudgetService {
         List<Budget> budgets = dtoList.stream().map(dto -> budgetRepository.findByRefId(Long.parseLong(dto.getRefId()))
                 .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object budget not found for refId : %s", dto.getRefId())))
         ).toList();
+        budgets.forEach(budget -> budget.getHousehold().getBudgets().remove(budget));
         budgetRepository.deleteAll(budgets);
         log.info("Successfully deleted budgets");
     }

@@ -18,6 +18,7 @@ public interface ExpenseMapper {
 
     @Mapping(target = "householdRefId", source = "household.refId")
     @Mapping(target = "categoryRefId", source = "category.refId")
+    @Mapping(target = "expenseDate",source = "expenseDate")
     ExpenseDTO toDto(Expense expense);
 
     void updateEntityFromDto(ExpenseDTO expenseDTO, @MappingTarget Expense expense);
