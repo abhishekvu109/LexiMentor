@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   data:
     mongodb:
       uri: mongodb://${MONGODB_USERNAME:mongoroot}:${MONGODB_PASSWORD:mongopass}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:cashflow}?authSource=admin
