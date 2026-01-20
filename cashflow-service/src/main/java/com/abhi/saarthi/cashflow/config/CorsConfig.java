@@ -24,26 +24,26 @@ public class CorsConfig {
 //        };
 //    }
 
-    @Bean
-    public CorsWebFilter corsWebFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-
-        // Option A: Development (temporary - less secure)
-        // config.addAllowedOrigin("*");
-
-        // Option B: Production / recommended
-        config.addAllowedOrigin("http://localhost:3000");         // ← your frontend
-        config.addAllowedOrigin("https://your-frontend-domain.com");
-        config.addAllowedOriginPattern("http://192.168.*.*:*");   // optional: local network
-
-        config.setAllowCredentials(true);                         // keep if using cookies/auth
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");                             // or list: GET, POST, PUT, ...
-        config.setMaxAge(3600L);                                  // cache preflight 1 hour
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);          // apply to everything
-
-        return new CorsWebFilter(source);
-    }
+//    @Bean
+//    public CorsWebFilter corsWebFilter() {
+//        CorsConfiguration config = new CorsConfiguration();
+//
+//        // Option A: Development (temporary - less secure)
+//        // config.addAllowedOrigin("*");
+//
+//        // Option B: Production / recommended
+//        config.addAllowedOrigin("http://localhost:3000");         // ← your frontend
+//        config.addAllowedOrigin("https://your-frontend-domain.com");
+//        config.addAllowedOriginPattern("http://192.168.*.*:*");   // optional: local network
+//
+//        config.setAllowCredentials(true);                         // keep if using cookies/auth
+//        config.addAllowedHeader("*");
+//        config.addAllowedMethod("*");                             // or list: GET, POST, PUT, ...
+//        config.setMaxAge(3600L);                                  // cache preflight 1 hour
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", config);          // apply to everything
+//
+//        return new CorsWebFilter(source);
+//    }
 }
