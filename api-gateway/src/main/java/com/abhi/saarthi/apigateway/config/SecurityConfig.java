@@ -38,7 +38,7 @@ public class SecurityConfig {
 //        config.addAllowedOrigin("https://your-frontend-domain.com");
 //        config.addAllowedOriginPattern("http://192.168.*.*:*");   // optional: local network
 
-        config.setAllowCredentials(true);                         // keep if using cookies/auth
+        config.setAllowCredentials(false);                         // keep if using cookies/auth
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");                             // or list: GET, POST, PUT, ...
         config.setMaxAge(3600L);                                  // cache preflight 1 hour
