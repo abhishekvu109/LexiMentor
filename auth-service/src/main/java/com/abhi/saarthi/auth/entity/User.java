@@ -1,6 +1,7 @@
 package com.abhi.saarthi.auth.entity;
 
 
+import com.abhi.saarthi.auth.constant.ProfileType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,6 +40,12 @@ public class User implements UserDetails {
     @Column(name = "role")
     private String role = "USER";
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles"
+            , joinColumns = @JoinColumn(name = "user_id")
+            , inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<UserRole> roles;
+
     @Column(name = "uuid", unique = true)
     private String uuid;
 
@@ -63,6 +71,10 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserProfile userProfile;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "profile_type")
+    private ProfileType profileType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

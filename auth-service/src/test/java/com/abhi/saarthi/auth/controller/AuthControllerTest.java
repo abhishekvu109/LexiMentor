@@ -5,9 +5,13 @@ import com.abhi.saarthi.auth.dto.LoginRequest;
 import com.abhi.saarthi.auth.dto.LogoutRequest;
 import com.abhi.saarthi.auth.dto.TokenRefreshRequest;
 import com.abhi.saarthi.auth.dto.AuthResponse; // Added import
+import com.abhi.saarthi.auth.dto.UserRoleDTO;
+import com.abhi.saarthi.auth.entity.UserRole;
 import com.abhi.saarthi.auth.model.RestApiResponse;
 import com.abhi.saarthi.auth.repository.RefreshTokenRepository;
 import com.abhi.saarthi.auth.repository.UserRepository;
+import com.abhi.saarthi.auth.repository.UserRoleRepository;
+import com.abhi.saarthi.auth.util.KeyGeneratorUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get; // Added import
@@ -41,16 +47,29 @@ class AuthControllerTest {
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
     @BeforeEach
     void setUp() {
         refreshTokenRepository.deleteAll();
         userRepository.deleteAll();
+        
+        if (userRoleRepository.findByNameIgnoreCase("USER").isEmpty()) {
+            UserRole userRole = UserRole.builder()
+                    .refId(KeyGeneratorUtil.refId())
+                    .uuid(KeyGeneratorUtil.uuid())
+                    .name("USER")
+                    .description("User Role")
+                    .build();
+            userRoleRepository.save(userRole);
+        }
     }
     
         @Test
         void testRegister() throws Exception {
-            AppUser user = new AppUser("testuser", "password", "ACTIVE", "USER");
-            mockMvc.perform(post("/api/auth/v1/user")
+            AppUser user = new AppUser("refid-test", "uuid-test", "testuser", "password", "ACTIVE", "USER", Set.of(UserRoleDTO.builder().refId("userrole-refid").uuid("userrole-uuid").name("USER").status("ACTIVE").description("User Role").build()));
+            mockMvc.perform(post("/api/auth/v1/register")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(user)))
                     .andExpect(status().isCreated())
@@ -59,8 +78,8 @@ class AuthControllerTest {
     
         @Test
         void testLogin() throws Exception {
-            AppUser user = new AppUser("testuser", "password", "ACTIVE", "USER");
-            mockMvc.perform(post("/api/auth/v1/user")
+            AppUser user = new AppUser("refid-test", "uuid-test", "testuser", "password", "ACTIVE", "USER", Set.of(UserRoleDTO.builder().refId("userrole-refid").uuid("userrole-uuid").name("USER").status("ACTIVE").description("User Role").build()));
+            mockMvc.perform(post("/api/auth/v1/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(user)));
     
@@ -76,8 +95,8 @@ class AuthControllerTest {
     
         @Test
         void testRefreshToken() throws Exception {
-            AppUser user = new AppUser("testuser", "password", "ACTIVE", "USER");
-            mockMvc.perform(post("/api/auth/v1/user")
+            AppUser user = new AppUser("refid-test", "uuid-test", "testuser", "password", "ACTIVE", "USER", Set.of(UserRoleDTO.builder().refId("userrole-refid").uuid("userrole-uuid").name("USER").status("ACTIVE").description("User Role").build()));
+            mockMvc.perform(post("/api/auth/v1/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(user)));
     
@@ -103,8 +122,8 @@ class AuthControllerTest {
     
         @Test
         void testLogout() throws Exception {
-            AppUser user = new AppUser("testuser", "password", "ACTIVE", "USER");
-            mockMvc.perform(post("/api/auth/v1/user")
+            AppUser user = new AppUser("refid-test", "uuid-test", "testuser", "password", "ACTIVE", "USER", Set.of(UserRoleDTO.builder().refId("userrole-refid").uuid("userrole-uuid").name("USER").status("ACTIVE").description("User Role").build()));
+            mockMvc.perform(post("/api/auth/v1/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(user)));
     
@@ -130,8 +149,8 @@ class AuthControllerTest {
         @Test
         void testValidateToken() throws Exception {
             // Register a user
-            AppUser user = new AppUser("testuser", "password", "ACTIVE", "USER");
-            mockMvc.perform(post("/api/auth/v1/user")
+            AppUser user = new AppUser("refid-test", "uuid-test", "testuser", "password", "ACTIVE", "USER", Set.of(UserRoleDTO.builder().refId("userrole-refid").uuid("userrole-uuid").name("USER").status("ACTIVE").description("User Role").build()));
+            mockMvc.perform(post("/api/auth/v1/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(user)));
 

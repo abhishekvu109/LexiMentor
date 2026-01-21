@@ -1,11 +1,13 @@
 package com.abhi.saarthi.auth.constant;
 
+import java.util.Set;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
 public class ApplicationConstants {
 
-
+    public static Set<String> ROLES = Set.of("CASHFLOW");
     public static final int STATUS_SUCCESS = 0;
     public static final int STATUS_FAILURE = 1;
 
