@@ -6,7 +6,9 @@ import com.abhi.saarthi.auth.dto.UserRoleDTO;
 import com.abhi.saarthi.auth.entity.User;
 import com.abhi.saarthi.auth.entity.UserRole;
 import com.abhi.saarthi.auth.util.KeyGeneratorUtil;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class ServiceUtil {
@@ -18,7 +20,10 @@ public class ServiceUtil {
                     .username(user.getUsername())
                     .status(Status.ApplicationStatus.getStatusStr(user.getStatus()))
                     .role(user.getRole())
-                    .roles(user.getRoles().stream().map(UserRoleServiceUtil::toDTO).collect(Collectors.toSet()))
+                    .roles((CollectionUtils.isNotEmpty(user.getRoles()))
+                            ? user.getRoles().stream().map(UserRoleServiceUtil::toDTO).collect(Collectors.toSet())
+                            : Collections.emptySet()
+                    )
                     .build();
         }
 

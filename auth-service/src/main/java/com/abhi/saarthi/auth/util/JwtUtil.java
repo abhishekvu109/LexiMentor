@@ -51,10 +51,14 @@ public class JwtUtil {
     }
 
     public String generateToken(String username) {
-        User user =userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist."));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist."));
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", this.getRolesByUsername(username));
-        claims.put("profile",user.getProfileType().name());
+        Set<UserRole> userRoles = this.getRolesByUsername(username);
+        if (CollectionUtils.isEmpty(userRoles)) {
+            throw new RuntimeException("User roles are not found.");
+        }
+        claims.put("roles", userRoles.stream().map(UserRole::getName).collect(Collectors.toList()));
+        claims.put("profile", user.getProfileType().name());
         return Jwts.builder()
                 .subject(username)
                 .claims(claims)

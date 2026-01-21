@@ -27,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,7 +51,10 @@ public class UserServiceImpl implements UserService {
                 .uuid(KeyGeneratorUtil.uuid())
                 .refId(KeyGeneratorUtil.refId())
                 .profileType(ProfileType.MEMBER)
-                .roles(request.roles().stream().map(roleDTO -> userRoleRepository.findByNameIgnoreCase(roleDTO.getName()).orElseThrow(() -> new RuntimeException("Invalid role name passed."))).collect(Collectors.toSet()))
+                .roles((CollectionUtils.isNotEmpty(request.roles()))
+                        ? request.roles().stream().map(roleDTO -> userRoleRepository.findByNameIgnoreCase(roleDTO.getName()).orElseThrow(() -> new RuntimeException("Invalid role name passed."))).collect(Collectors.toSet())
+                        : new HashSet<>(userRoleRepository.findByNameIn(ApplicationConstants.ROLES).orElseThrow(() -> new RuntimeException("Invalid role name passed.")))
+                )
                 .build();
         user = userRepository.save(user);
         return ServiceUtil.UserService.buildDTO(user);
