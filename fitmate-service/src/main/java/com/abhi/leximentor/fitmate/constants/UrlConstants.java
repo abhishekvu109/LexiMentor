@@ -35,6 +35,7 @@ public class UrlConstants {
 
     public static class RoutineUrl {
         public static final String ROUTINE_ADD = "/api/fitmate/routines/routine";
+        public static final String ROUTINE_GENERATE= "/api/fitmate/routines/routine/generate";
         public static final String ROUTINE_UPDATE = "/api/fitmate/routines/routine";
         public static final String ROUTINE_DELETE = "/api/fitmate/routines/routine";
         public static final String ROUTINE_GET_REF_ID = "/api/fitmate/routines/routine/{routineRefId}";

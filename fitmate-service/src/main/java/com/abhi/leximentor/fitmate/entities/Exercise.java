@@ -73,4 +73,10 @@ public class Exercise {
     )
     @Column(name = "equipment")
     private List<String> equipments;
+
+    @Column(name = "difficulty_level")
+    private int difficultyLevel;
+
+    @Column(name = "risk_level")
+    private int riskLevel;
 }

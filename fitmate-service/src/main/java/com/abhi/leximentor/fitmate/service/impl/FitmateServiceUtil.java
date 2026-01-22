@@ -1,7 +1,10 @@
 package com.abhi.leximentor.fitmate.service.impl;
 
 
+import com.abhi.leximentor.fitmate.constants.DifficultyLevel;
+import com.abhi.leximentor.fitmate.constants.RiskLevel;
 import com.abhi.leximentor.fitmate.constants.Status;
+import com.abhi.leximentor.fitmate.constants.Unit;
 import com.abhi.leximentor.fitmate.dto.*;
 import com.abhi.leximentor.fitmate.entities.*;
 import com.abhi.leximentor.fitmate.util.FitmateUtil;
@@ -46,7 +49,7 @@ public class FitmateServiceUtil {
                     .refId(KeyGeneratorUtil.refId())
                     .name(dto.getName())
                     .description(dto.getDescription())
-                    .unit(dto.getUnit())
+                    .unit(Unit.from(dto.getUnit()).getValue())
                     .status(Status.ApplicationStatus.getStatus(StringUtils.isNotEmpty(dto.getStatus()) ?
                             dto.getStatus() :
                             Status.ApplicationStatus.getStatusStr(Status.ApplicationStatus.ACTIVE)))
@@ -54,6 +57,8 @@ public class FitmateServiceUtil {
                     .targetBodyPart(bodyPart)
                     .targetMuscles(muscles)
                     .equipments(dto.getEquipments())
+                    .difficultyLevel(DifficultyLevel.parse(dto.getDifficultyLevel()).getScore())
+                    .riskLevel(RiskLevel.parse(dto.getRiskLevel()).getScore())
                     .build();
         }
 
@@ -72,6 +77,8 @@ public class FitmateServiceUtil {
                             entity.getTargetMuscles().stream().map(muscle -> MuscleUtil.buildDTO(muscle, entity.getTargetBodyPart())).toList()
                             : Collections.emptyList())
                     .equipments(entity.getEquipments())
+                    .difficultyLevel(DifficultyLevel.parse(entity.getDifficultyLevel()).toString())
+                    .riskLevel(RiskLevel.parse(entity.getRiskLevel()).toString())
                     .build();
         }
 
@@ -87,6 +94,8 @@ public class FitmateServiceUtil {
                     .training(TrainingMetadataUtil.buildDto(entity.getTraining()))
                     .bodyPart(BodyPartsUtil.buildDto(entity.getTargetBodyPart()))
                     .equipments(entity.getEquipments())
+                    .difficultyLevel(DifficultyLevel.parse(entity.getDifficultyLevel()).toString())
+                    .riskLevel(RiskLevel.parse(entity.getRiskLevel()).toString())
                     .targetMuscles(CollectionUtils.isNotEmpty(muscles) ? muscles.stream().map(muscle -> MuscleUtil.buildDTO(muscle, entity.getTargetBodyPart())).toList() : Collections.emptyList())
                     .build();
         }

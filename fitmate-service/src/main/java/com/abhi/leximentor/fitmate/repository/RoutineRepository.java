@@ -17,4 +17,6 @@ public interface RoutineRepository extends JpaRepository<Routine, Long>, JpaSpec
 
     List<Routine> findByRefIdIn(List<Long> refIds);
 
+    List<Routine> findAllByOrderByRoutineDateDesc();
+
 }
