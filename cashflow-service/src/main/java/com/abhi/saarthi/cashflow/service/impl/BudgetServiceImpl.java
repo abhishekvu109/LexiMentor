@@ -91,6 +91,14 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public List<BudgetDTO> search(BudgetSearchFilter filter) {
         log.info("Searching for budgets with filter: {}", filter);
+        if (filter == null || filter.isEmpty()) {
+            BudgetSearchFilter defaultFilter = BudgetSearchFilter.defaultFilter();
+            Sort sort = Sort.by(Sort.Direction.fromString(defaultFilter.getSortDir()), defaultFilter.getSortBy());
+            List<BudgetDTO> budgets = budgetRepository.findAll(sort).stream()
+                    .map(budgetMapper::toDto).toList();
+            log.info("Found {} budgets", budgets.size());
+            return budgets;
+        }
         Specification<Budget> spec = Specification.unrestricted();
         spec = (StringUtils.isNotEmpty(filter.getUuid())) ? spec.and((root, query, cb) -> cb.equal(root.get("uuid"), filter.getUuid())) : spec;
         spec = (StringUtils.isNotEmpty(filter.getRefId())) ? spec.and((root, query, cb) -> cb.equal(root.get("refId"), Long.parseLong(filter.getRefId()))) : spec;

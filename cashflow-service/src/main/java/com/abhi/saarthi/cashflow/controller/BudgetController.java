@@ -56,8 +56,8 @@ public class BudgetController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
-    @GetMapping(value = "/budget/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody BudgetSearchFilter filter) {
+    @PostMapping(value = "/budget/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody(required = false) BudgetSearchFilter filter) {
         log.info("Received a request to search budget with filter: {}", filter);
         List<BudgetDTO> response = budgetService.search(filter);
         log.info("Successfully found budgets: {}", response);

@@ -56,7 +56,7 @@ public class HouseholdMemberController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
-    @GetMapping(value = "/household-member/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/household-member/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody HouseholdMemberSearchFilter filter) {
         log.info("Received a request to search household member with filter: {}", filter);
         List<HouseholdMemberDTO> response = householdMemberService.search(filter);
