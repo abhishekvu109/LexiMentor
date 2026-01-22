@@ -26,7 +26,7 @@ public class Expense {
 
     private String uuid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "household_id", nullable = false)
     private Household household;
 
@@ -42,7 +42,7 @@ public class Expense {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 

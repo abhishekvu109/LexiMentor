@@ -125,9 +125,14 @@ public class ExpenseServiceImpl implements ExpenseService {
         if (StringUtils.isNotEmpty(filter.getExpenseType())) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("type"), filter.getExpenseType()));
         }
-
-        Sort sort = Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
-        List<ExpenseDTO> expenses = expenseRepository.findAll(spec, sort).stream()
+        if (!StringUtils.isAnyEmpty(filter.getSortDir(), filter.getSortBy())) {
+            Sort sort = Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
+            List<ExpenseDTO> expenses = expenseRepository.findAll(spec, sort).stream()
+                    .map(expenseMapper::toDto).toList();
+            log.info("Found {} expenses", expenses.size());
+            return expenses;
+        }
+        List<ExpenseDTO> expenses = expenseRepository.findAll(spec).stream()
                 .map(expenseMapper::toDto).toList();
         log.info("Found {} expenses", expenses.size());
         return expenses;
