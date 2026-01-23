@@ -42,11 +42,14 @@ public class Household {
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HouseholdMember> members;
 
-    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Expense> expenses;
 
-    @OneToMany(mappedBy = "household",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Budget> budgets;
+
+    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Deposit> deposits;
 
     @Column(name = "status")
     private int status;

@@ -20,4 +20,5 @@ public class HouseholdDTO {
     private List<HouseholdMemberDTO> members;
     private List<ExpenseDTO> expenses;
     private List<BudgetDTO> budgets;
+    private List<DepositDTO> deposits;
 }
