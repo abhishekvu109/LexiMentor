@@ -1,5 +1,6 @@
 package com.abhi.saarthi.cashflow.entities;
 
+import com.abhi.saarthi.cashflow.constants.ExpenseFor;
 import com.abhi.saarthi.cashflow.constants.ExpenseType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -58,4 +59,8 @@ public class Expense {
     @Column(name = "updated_date")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "expense_for")
+    private ExpenseFor expenseFor;
 }

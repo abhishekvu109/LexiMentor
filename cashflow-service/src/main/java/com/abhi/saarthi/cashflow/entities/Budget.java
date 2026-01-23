@@ -4,7 +4,9 @@ import com.abhi.saarthi.cashflow.constants.Period;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -51,10 +53,14 @@ public class Budget {
     @Column(name = "month")
     private Integer month;          // 1-12 for monthly budgets
 
+    @Column(name = "budget_date")
+    private LocalDate budgetDate;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "last_updated_at")
     private LocalDateTime lastUpdatedAt;
 }

@@ -3,6 +3,7 @@ package com.abhi.saarthi.cashflow.dto;
 import com.abhi.saarthi.cashflow.constants.Period;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -21,4 +22,5 @@ public class BudgetDTO {
     private int year;
     private int month;
     private LocalDateTime createdAt;
+    private LocalDate budgetDate;
 }
