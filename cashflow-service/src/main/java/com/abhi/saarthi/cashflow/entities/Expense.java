@@ -2,6 +2,7 @@ package com.abhi.saarthi.cashflow.entities;
 
 import com.abhi.saarthi.cashflow.constants.ExpenseFor;
 import com.abhi.saarthi.cashflow.constants.ExpenseType;
+import com.abhi.saarthi.cashflow.constants.PaymentMode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -63,4 +64,8 @@ public class Expense {
     @Enumerated(EnumType.STRING)
     @Column(name = "expense_for")
     private ExpenseFor expenseFor;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_mode")
+    private PaymentMode paymentMode;
 }
