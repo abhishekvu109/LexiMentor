@@ -45,12 +45,12 @@ public class RoutineServiceImpl implements RoutineService {
             if (exercise == null) {
                 throw new ServerException().new InternalError("The exercise object is not found.");
             }
-            Muscle muscle = muscleRepository.findByRefId(Long.parseLong(dto.getMuscle().getRefId()));
-            if (muscle == null) {
-                throw new ServerException().new InternalError("The muscle object is not found.");
-            }
+//            Muscle muscle = muscleRepository.findByRefId(Long.parseLong(dto.getMuscle().getRefId()));
+//            if (muscle == null) {
+//                throw new ServerException().new InternalError("The muscle object is not found.");
+//            }
             drill.setExercise(exercise);
-            drill.setMuscle(muscle);
+//            drill.setMuscle(muscle);
             drill.setRoutine(routine.getRefId());
             drills.add(drill);
         });
@@ -70,12 +70,12 @@ public class RoutineServiceImpl implements RoutineService {
             if (exercise == null) {
                 throw new ServerException().new InternalError("The exercise object is not found.");
             }
-            Muscle muscle = muscleRepository.findByName(dto.getMuscle().getName());
-            if (muscle == null) {
-                throw new ServerException().new InternalError("The muscle object is not found.");
-            }
+//            Muscle muscle = muscleRepository.findByName(dto.getMuscle().getName());
+//            if (muscle == null) {
+//                throw new ServerException().new InternalError("The muscle object is not found.");
+//            }
             drill.setExercise(exercise);
-            drill.setMuscle(muscle);
+//            drill.setMuscle(muscle);
             drill.setRoutine(routine.getRefId());
             drills.add(drill);
         });

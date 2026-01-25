@@ -38,9 +38,9 @@ public class Drill {
     @Column(name = "routine_id")
     private long routine;
 
-    @ManyToOne
-    @JoinColumn(name = "muscle_id")
-    private Muscle muscle;
+//    @ManyToOne
+//    @JoinColumn(name = "muscle_id")
+//    private Muscle muscle;
 
     @Column(name = "measurement_unit")
     private String measurementUnit;
