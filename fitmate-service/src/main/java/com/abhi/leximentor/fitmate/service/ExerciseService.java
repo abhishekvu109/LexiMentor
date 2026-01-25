@@ -1,6 +1,7 @@
 package com.abhi.leximentor.fitmate.service;
 
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
+import com.abhi.leximentor.fitmate.dto.filters.ExerciseSearchFilter;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,4 +45,6 @@ public interface ExerciseService {
     Optional<GridFsResource> findResource(long refId, String resourceId);
 
     Optional<GridFsResource> findResource(long refId, String resourceId, String placeholder);
+
+    List<ExerciseDTO> search(ExerciseSearchFilter filter);
 }

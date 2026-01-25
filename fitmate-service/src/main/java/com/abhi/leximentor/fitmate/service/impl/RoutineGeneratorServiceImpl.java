@@ -48,7 +48,7 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
     @Override
     @Transactional
     public RoutineDTO generateRoutine(String trainingType, List<String> targetBodyParts) {
-        if (StringUtils.isBlank(trainingType) || CollectionUtils.isEmpty(targetBodyParts)) {
+        if (StringUtils.isBlank(trainingType) && CollectionUtils.isEmpty(targetBodyParts)) {
             throw new ServerException().new InternalError("Training type and target body parts list are required.");
         }
 

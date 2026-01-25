@@ -60,4 +60,7 @@ public class Routine {
 
     @Column(name = "duration_in_minutes")
     private double durationInMinutes;
+
+    @Column(name = "username")
+    private String username;
 }

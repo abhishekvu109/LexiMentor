@@ -135,6 +135,7 @@ public class FitmateServiceUtil {
                     .training(training)
                     .drills(drills)
                     .burntCalories(dto.getBurntCalories())
+                    .username(dto.getUsername())
                     .durationInMinutes(dto.getDurationInMinutes())
                     .build();
         }
@@ -148,6 +149,7 @@ public class FitmateServiceUtil {
                     .status(Status.RoutineStatus.NOT_STARTED)
                     .training(training)
                     .burntCalories(dto.getBurntCalories())
+                    .username(dto.getUsername())
                     .durationInMinutes(dto.getDurationInMinutes())
                     .build();
         }
@@ -166,6 +168,7 @@ public class FitmateServiceUtil {
                     .durationInMinutes(entity.getDurationInMinutes())
                     .workoutDate(entity.getRoutineDate() == null ? "" : entity.getRoutineDate().toString())
                     .key(entity.getUuid())
+                    .username(entity.getUsername())
                     .build();
         }
 
@@ -181,6 +184,7 @@ public class FitmateServiceUtil {
                     .durationInMinutes(entity.getDurationInMinutes())
                     .workoutDate(entity.getRoutineDate() == null ? "" : entity.getRoutineDate().toString())
                     .key(entity.getUuid())
+                    .username(entity.getUsername())
                     .build();
         }
     }

@@ -4,6 +4,7 @@ import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.constants.Status;
 import com.abhi.leximentor.fitmate.constants.Unit;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
+import com.abhi.leximentor.fitmate.dto.filters.ExerciseSearchFilter;
 import com.abhi.leximentor.fitmate.entities.*;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.repository.*;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -340,5 +342,21 @@ public class ExerciseServiceImpl implements ExerciseService {
                     .orElseThrow(() -> new ServerException().new InternalError("Resource not found."));
         }
         return resourceService.find(fitmateResource.getResourceId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ExerciseDTO> search(ExerciseSearchFilter filter) {
+        if (filter == null || filter.isEmpty()) {
+            return exerciseRepository.findAll().stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
+        }
+        Specification<Exercise> spec = Specification.where(null);
+        spec = StringUtils.isNotEmpty(filter.getUuid()) ? spec.and((root, query, cb) -> cb.equal(root.get("uuid"), filter.getUuid())) : spec;
+        spec = StringUtils.isNotEmpty(filter.getRefId()) ? spec.and((root, query, cb) -> cb.equal(root.get("refId"), Long.parseLong(filter.getRefId()))) : spec;
+        spec = StringUtils.isNotEmpty(filter.getName()) ? spec.and((root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + filter.getName().toLowerCase() + "%")) : spec;
+        spec = StringUtils.isNotEmpty(filter.getUnit()) ? spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("unit")), filter.getUnit().toLowerCase())) : spec;
+        spec = StringUtils.isNotEmpty(filter.getTrainingRefId()) ? spec.and((root, query, cb) -> cb.equal(root.join("training").get("refId"), Long.parseLong(filter.getTrainingRefId()))) : spec;
+        spec = StringUtils.isNotEmpty(filter.getTargetBodyPartRefId()) ? spec.and((root, query, cb) -> cb.equal(root.join("targetBodyPart").get("refId"), Long.parseLong(filter.getTargetBodyPartRefId()))) : spec;
+        return exerciseRepository.findAll(spec).stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
     }
 }
