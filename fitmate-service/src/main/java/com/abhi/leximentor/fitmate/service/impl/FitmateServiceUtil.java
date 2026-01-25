@@ -259,7 +259,7 @@ public class FitmateServiceUtil {
                     .burntCalories(entity.getBurntCalories())
                     .notes(entity.getNotes())
                     .creationDate(entity.getCrtnDate())
-                    .muscle(MuscleUtil.buildDTO(entity.getMuscle(), entity.getExercise().getTargetBodyPart().getName()))
+//                    .muscle(MuscleUtil.buildDTO(entity.getMuscle(), entity.getExercise().getTargetBodyPart().getName()))
                     .build();
         }
     }

@@ -188,7 +188,7 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
                 .burntCalories(0)
                 .creationDate(LocalDateTime.now())
                 .notes("Auto-generated drill")
-                .muscle(muscle != null ? FitmateServiceUtil.MuscleUtil.buildDTO(muscle, exercise.getTargetBodyPart()) : null)
+//                .muscle(muscle != null ? FitmateServiceUtil.MuscleUtil.buildDTO(muscle, exercise.getTargetBodyPart()) : null)
                 .build();
     }
 
