@@ -35,3 +35,6 @@ logging:
   level:
     sql: debug
     root: debug
+
+resource:
+  path: D:/fitmate

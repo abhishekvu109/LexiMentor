@@ -10,20 +10,6 @@ public class UrlConstants {
         public static final String BODY_PARTS_GET_REF_ID = "/api/fitmate/bodyparts/bodypart/{bodyPartRefId}";
     }
 
-    public static class ExerciseUrl {
-        public static final String EXERCISE_ADD = "/api/fitmate/exercises/exercise";
-        public static final String EXERCISE_ADD_ALL = "/api/fitmate/exercises";
-        public static final String EXERCISE_DELETE_ALL = "/api/fitmate/exercises";
-        public static final String EXERCISE_UPDATE = "/api/fitmate/exercises/exercise";
-        public static final String EXERCISE_UPDATE_RESOURCES = "/api/fitmate/exercises/exercise/resources";
-        public static final String EXERCISE_GET_RESOURCES = "/api/fitmate/exercises/exercise/resources";
-        public static final String EXERCISE_GET_RESOURCE = "/api/fitmate/exercises/exercise/resources/resource";
-        public static final String EXERCISE_DELETE = "/api/fitmate/exercises/exercise";
-        public static final String EXERCISE_GET = "/api/fitmate/exercises/exercise";
-        public static final String EXERCISE_GET_ALL = "/api/fitmate/exercises";
-        public static final String EXERCISE_GET_REF_ID = "/api/fitmate/exercises/exercise/{exerciseRefId}";
-    }
-
     public static class TrainingMetadataUrl {
         public static final String TRAINING_METADATA_ADD = "/api/fitmate/trainings/training";
         public static final String TRAINING_METADATA_GET = "/api/fitmate/trainings/training";

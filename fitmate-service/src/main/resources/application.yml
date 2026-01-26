@@ -32,3 +32,6 @@ spring:
       enabled: true
 server:
   port: ${SERVICE_PORT:9393}
+
+resource:
+  path: D:/fitmate

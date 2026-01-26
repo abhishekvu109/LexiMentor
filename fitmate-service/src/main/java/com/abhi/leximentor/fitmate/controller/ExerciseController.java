@@ -3,7 +3,6 @@ package com.abhi.leximentor.fitmate.controller;
 
 import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
 import com.abhi.leximentor.fitmate.constants.LogConstants;
-import com.abhi.leximentor.fitmate.constants.UrlConstants;
 import com.abhi.leximentor.fitmate.dto.BodyPartsDTO;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
 import com.abhi.leximentor.fitmate.dto.TrainingDTO;
@@ -34,24 +33,25 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping("/api/fitmate/exercises")
 public class ExerciseController {
     private final ExerciseService exerciseService;
     private final TrainingService trainingService;
     private final BodyPartService bodyPartService;
 
-    @PostMapping(value = UrlConstants.ExerciseUrl.EXERCISE_ADD_ALL, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> addAll(@RequestBody List<ExerciseDTO> request) {
         List<ExerciseDTO> response = exerciseService.addAll(request);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
-    @DeleteMapping(value = UrlConstants.ExerciseUrl.EXERCISE_DELETE_ALL, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> deleteAll() {
         exerciseService.deleteAll();
         return ResponseEntityBuilder.getBuilder(HttpStatus.MOVED_PERMANENTLY).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "All exercises have been removed. ");
     }
 
-    @PostMapping(value = UrlConstants.ExerciseUrl.EXERCISE_ADD, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(value = "/exercise", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody ExerciseDTO request, @RequestParam(required = true) String trainingMetadataRefId, @RequestParam(required = true) String targetBodyPartName) {
         try {
             log.info("Received a request to create a single exercise. Training ID:{},Target body part:{}", trainingMetadataRefId, targetBodyPartName);
@@ -79,7 +79,7 @@ public class ExerciseController {
         }
     }
 
-    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/exercise/{exerciseRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> getByRefId(@PathVariable String exerciseRefId) {
         try {
             ExerciseDTO response = exerciseService.getByRefId(Long.parseLong(exerciseRefId));
@@ -92,7 +92,7 @@ public class ExerciseController {
         }
     }
 
-    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/exercise", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> getByTargetBodyPart(@RequestParam(required = false) String name, @RequestParam(required = false) String bodyPartRefId, @RequestParam(required = false) String trainingMetadataRefId) {
         try {
             List<ExerciseDTO> response = new LinkedList<>();
@@ -117,7 +117,7 @@ public class ExerciseController {
     }
 
 
-    @PutMapping(value = UrlConstants.ExerciseUrl.EXERCISE_UPDATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PutMapping(value = "/exercise", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> update(@RequestBody ExerciseDTO request) {
         try {
             ExerciseDTO response = exerciseService.update(request);
@@ -130,7 +130,7 @@ public class ExerciseController {
         }
     }
 
-    @DeleteMapping(value = UrlConstants.ExerciseUrl.EXERCISE_DELETE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @DeleteMapping(value = "/exercise", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> delete(@RequestBody List<ExerciseDTO> request) {
         log.info("Received a request to delete the exercise data : {}", request);
         exerciseService.deleteAll(request);
@@ -138,12 +138,12 @@ public class ExerciseController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.NO_CONTENT).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Deleted successfully");
     }
 
-    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET_ALL, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> findAll() {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, exerciseService.getAll());
     }
 
-    @PutMapping(value = UrlConstants.ExerciseUrl.EXERCISE_UPDATE_RESOURCES, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/exercise/resources", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> uploadResources(@RequestParam(name = "files") List<MultipartFile> files,
                                                                          @RequestParam(name = "refId") String refId,
                                                                          @RequestParam(name = "placeholder", required = false) String placeholder) {
@@ -152,13 +152,13 @@ public class ExerciseController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Successfully updated the resources.");
     }
 
-    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET_RESOURCES, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/exercise/resources", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> getResources(@RequestParam("refId") String refId) {
         List<Map<String, Object>> resources = exerciseService.findAllResources(Long.parseLong(refId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, resources);
     }
 
-    @GetMapping(value = UrlConstants.ExerciseUrl.EXERCISE_GET_RESOURCE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/exercise/resources/resource", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GridFsResource> getResource(@RequestParam("resourceId") String resourceId,
                                                       @RequestParam("refId") String refId,
                                                       @RequestParam(name = "placeholder", required = false) String placeholder) {
