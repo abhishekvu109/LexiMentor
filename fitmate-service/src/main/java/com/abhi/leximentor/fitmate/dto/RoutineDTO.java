@@ -23,4 +23,5 @@ public class RoutineDTO {
     private List<DrillDTO> drills;
     private double burntCalories;
     private double durationInMinutes;
+    private String username;
 }

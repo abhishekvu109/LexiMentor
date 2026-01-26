@@ -1,7 +1,7 @@
 package com.abhi.leximentor.fitmate.service;
 
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
-import com.abhi.leximentor.fitmate.dto.RoutineSearchFilter;
+import com.abhi.leximentor.fitmate.dto.filters.RoutineSearchFilter;
 
 import java.util.List;
 

@@ -7,6 +7,7 @@ import com.abhi.leximentor.fitmate.constants.UrlConstants;
 import com.abhi.leximentor.fitmate.dto.BodyPartsDTO;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
 import com.abhi.leximentor.fitmate.dto.TrainingDTO;
+import com.abhi.leximentor.fitmate.dto.filters.ExerciseSearchFilter;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
@@ -161,7 +162,7 @@ public class ExerciseController {
     public ResponseEntity<GridFsResource> getResource(@RequestParam("resourceId") String resourceId,
                                                       @RequestParam("refId") String refId,
                                                       @RequestParam(name = "placeholder", required = false) String placeholder) {
-        return exerciseService.findResource(Long.parseLong(refId), resourceId,placeholder)
+        return exerciseService.findResource(Long.parseLong(refId), resourceId, placeholder)
                 .map(resource -> ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(resource.getContentType()))
                         .header(HttpHeaders.CONTENT_DISPOSITION,
@@ -169,4 +170,8 @@ public class ExerciseController {
                         .body(resource)).orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping(value = "/api/fitmate/exercises/exercise/search", consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody(required = false) ExerciseSearchFilter filter) {
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, exerciseService.search(filter));
+    }
 }

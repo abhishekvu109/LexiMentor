@@ -4,7 +4,7 @@ import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.constants.Status;
 import com.abhi.leximentor.fitmate.dto.DrillDTO;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
-import com.abhi.leximentor.fitmate.dto.RoutineSearchFilter;
+import com.abhi.leximentor.fitmate.dto.filters.RoutineSearchFilter;
 import com.abhi.leximentor.fitmate.entities.*;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.repository.*;
@@ -149,15 +149,27 @@ public class RoutineServiceImpl implements RoutineService {
 
     @Override
     public List<RoutineDTO> search(RoutineSearchFilter filter) {
-        Specification<Routine> specification = Specification.where(null);
-        if (StringUtils.isNotEmpty(filter.getStatus())) {
-            specification = specification.and(((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), Status.RoutineStatus.toInt(filter.getStatus()))));
+        Specification<Routine> spec = Specification.where(null);
+        if (filter==null || filter.isEmpty()) {
+            RoutineSearchFilter defaultFilter = RoutineSearchFilter.defaultFilter();
+            Sort sort = Sort.by(Sort.Direction.fromString(defaultFilter.getSortDir()), defaultFilter.getSortBy());
+            return routineRepository.findAll(sort).stream()
+                    .map(routine -> {
+                        List<Drill> drills = drillRepository.findByRoutine(routine.getRefId());
+                        List<DrillDTO> dtoList = CollectionUtils.isEmpty(drills) ? Collections.emptyList() :
+                                drills.stream().map(FitmateServiceUtil.DrillUtil::buildDTO).toList();
+                        return FitmateServiceUtil.RoutineUtil.buildDto(routine, dtoList);
+                    }).toList();
         }
-        if (StringUtils.isNotEmpty(filter.getRefId())) {
-            specification = specification.and(((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("refId"), filter.getRefId())));
-        }
+        spec = StringUtils.isNotEmpty(filter.getUsername()) ? spec.and((root, query, cb) -> cb.equal(root.get("username"), filter.getUsername())) : spec;
+        spec = StringUtils.isNotEmpty(filter.getTrainingRefId()) ? spec.and((root, query, cb) -> cb.equal(root.join("training").get("refId"), Long.valueOf(filter.getUsername()))) : spec;
+        spec = StringUtils.isNotEmpty(filter.getRefId()) ? spec.and((root, query, cb) -> cb.equal(root.get("refId"), filter.getRefId())) : spec;
+        spec = StringUtils.isNotEmpty(filter.getUuid()) ? spec.and((root, query, cb) -> cb.equal(root.get("uuid"), filter.getUuid())) : spec;
+        spec = StringUtils.isNotEmpty(filter.getStatus()) ? spec.and((root, query, cb) -> cb.equal(root.get("status"), Status.RoutineStatus.toInt(filter.getStatus()))) : spec;
+        spec = filter.getRoutineDateFrom() != null ? spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("routineDate"), filter.getRoutineDateFrom())) : spec;
+        spec = filter.getRoutineDateTo() != null ? spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("routineDate"), filter.getRoutineDateTo())) : spec;
         Sort sort = Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
-        return routineRepository.findAll(specification, sort).stream()
+        return routineRepository.findAll(spec, sort).stream()
                 .map(routine -> {
                     List<Drill> drills = drillRepository.findByRoutine(routine.getRefId());
                     List<DrillDTO> dtoList = CollectionUtils.isEmpty(drills) ? Collections.emptyList() :
