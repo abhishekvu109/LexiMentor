@@ -102,6 +102,7 @@ public class BudgetServiceImpl implements BudgetService {
         Specification<Budget> spec = Specification.unrestricted();
         spec = (StringUtils.isNotEmpty(filter.getUuid())) ? spec.and((root, query, cb) -> cb.equal(root.get("uuid"), filter.getUuid())) : spec;
         spec = (StringUtils.isNotEmpty(filter.getRefId())) ? spec.and((root, query, cb) -> cb.equal(root.get("refId"), Long.parseLong(filter.getRefId()))) : spec;
+        spec = (StringUtils.isNotEmpty(filter.getHouseholdRefId())) ? spec.and((root, query, cb) -> cb.equal(root.join("household").get("refId"), Long.parseLong(filter.getHouseholdRefId()))) : spec;
         Sort sort = Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
         List<BudgetDTO> budgets = budgetRepository.findAll(spec, sort).stream()
                 .map(budgetMapper::toDto).toList();
