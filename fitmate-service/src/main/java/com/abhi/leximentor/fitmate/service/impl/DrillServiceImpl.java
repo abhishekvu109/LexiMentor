@@ -60,4 +60,14 @@ public class DrillServiceImpl implements DrillService {
         drill.setBurntCalories(drillDTO.getBurntCalories());
         return FitmateServiceUtil.DrillUtil.buildDTO(drillRepository.save(drill));
     }
+
+    @Override
+    @Transactional
+    public void delete(DrillDTO drillDTO) {
+        Drill drill = drillRepository.findByRefId(Long.parseLong(drillDTO.getRefId()));
+        if (drill == null) {
+            throw new ServerException().new EntityObjectNotFound("Drill object is not found.");
+        }
+        drillRepository.delete(drill);
+    }
 }
