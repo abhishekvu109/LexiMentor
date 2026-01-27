@@ -91,10 +91,18 @@ public class CategoryServiceImpl implements CategoryService {
         spec = (StringUtils.isNotEmpty(filter.getRefId())) ? spec.and(((root, query, cb) -> cb.equal(root.get("refId"), Long.parseLong(filter.getRefId())))) : spec;
         spec = (StringUtils.isNotEmpty(filter.getName())) ? spec.and(((root, query, cb) -> cb.like(root.get("name"), filter.getName()))) : spec;
         spec = (StringUtils.isNotEmpty(filter.getStatus())) ? spec.and(((root, query, cb) -> cb.equal(root.get("status"), Status.ApplicationStatus.getStatus(filter.getStatus())))) : spec;
-        Sort sort = Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
-        List<CategoryDTO> categories = categoryRepository.findAll(spec, sort).stream()
-                .map(categoryMapper::toDto).toList();
-        log.info("Found {} categories", categories.size());
-        return categories;
+        if (StringUtils.isAnyEmpty(filter.getSortDir(), filter.getSortBy())) {
+            List<CategoryDTO> categories = categoryRepository.findAll(spec).stream()
+                    .map(categoryMapper::toDto).toList();
+            log.info("Found {} categories", categories.size());
+            return categories;
+        } else {
+            Sort sort = Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
+            List<CategoryDTO> categories = categoryRepository.findAll(spec, sort).stream()
+                    .map(categoryMapper::toDto).toList();
+            log.info("Found {} categories", categories.size());
+            return categories;
+        }
+
     }
 }
