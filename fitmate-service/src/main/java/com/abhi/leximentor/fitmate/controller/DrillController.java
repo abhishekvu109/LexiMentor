@@ -36,4 +36,12 @@ public class DrillController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillService.update(dto));
     }
 
+    public static final String DRILL_UPDATE = "/api/fitmate/drills/drill";
+
+    @DeleteMapping(value = "/api/fitmate/drills/drill")
+    public @ResponseBody ResponseEntity<RestApiResponse> delete(@RequestBody(required = true) DrillDTO drillDTO){
+        drillService.delete(drillDTO);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Deleted Successfully.");
+    }
+
 }
