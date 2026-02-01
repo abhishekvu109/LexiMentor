@@ -15,4 +15,6 @@ public class ExerciseAnalyticsDTO {
     private int totalNumberOfTimesCompleted;
     private double monthlyAverage;
     private List<DrillDTO> lastFiveDrills;
+    private double maxMeasurement; // New field
+    private int maxRepetitions;    // New field
 }

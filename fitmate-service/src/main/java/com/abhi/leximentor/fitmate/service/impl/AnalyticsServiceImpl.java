@@ -3,6 +3,7 @@ package com.abhi.leximentor.fitmate.service.impl;
 import com.abhi.leximentor.fitmate.dto.AnalyticsDTO;
 import com.abhi.leximentor.fitmate.dto.DashboardSummaryDTO;
 import com.abhi.leximentor.fitmate.dto.DrillDTO;
+import com.abhi.leximentor.fitmate.dto.ExerciseFrequencyDTO;
 import com.abhi.leximentor.fitmate.dto.WorkoutTrendDTO;
 import com.abhi.leximentor.fitmate.entities.Drill;
 import com.abhi.leximentor.fitmate.entities.Exercise;
@@ -16,8 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,15 +62,23 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         // 3. Calculate BodyPartWorkoutVolume
         Map<String, Long> bodyPartWorkoutVolume = calculateBodyPartWorkoutVolume(userRoutines);
 
-        // 4. Calculate ExerciseAnalyticsDTOs (Placeholder for now)
-        // This would typically involve more complex aggregations per exercise
+        // 4. Calculate ExerciseAnalyticsDTOs
         Map<String, com.abhi.leximentor.fitmate.dto.ExerciseAnalyticsDTO> exerciseAnalytics = calculateExerciseAnalytics(userRoutines);
+
+        // 5. Calculate Most Frequent Exercises
+        List<ExerciseFrequencyDTO> mostFrequentExercises = calculateMostFrequentExercises(userRoutines);
+
+        // 6. Calculate Routine Distribution by Training Type
+        Map<String, Long> routineDistributionByTrainingType = calculateRoutineDistributionByTrainingType(userRoutines);
 
 
         return AnalyticsDTO.builder()
                 .summary(summary)
                 .workoutTrends(workoutTrends)
                 .bodyPartWorkoutVolume(bodyPartWorkoutVolume)
+                .exerciseAnalytics(exerciseAnalytics)
+                .mostFrequentExercises(mostFrequentExercises) // Populate new field
+                .routineDistributionByTrainingType(routineDistributionByTrainingType) // Populate new field
                 .build();
     }
 
@@ -76,11 +87,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         double totalWorkoutDurationMinutes = userRoutines.stream().mapToDouble(Routine::getDurationInMinutes).sum();
         double totalCaloriesBurnt = userRoutines.stream().mapToDouble(Routine::getBurntCalories).sum();
 
-        // To get unique exercises, we need to go through drills
         long totalUniqueExercises = userRoutines.stream()
                 .flatMap(routine -> routine.getDrills().stream())
                 .map(Drill::getExercise)
-                .map(Exercise::getName) // Assuming exercise name is unique enough for this purpose
+                .map(Exercise::getName)
                 .distinct()
                 .count();
 
@@ -110,7 +120,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                             .caloriesBurnt(caloriesBurnt)
                             .build();
                 })
-                .sorted((o1, o2) -> o1.getDate().compareTo(o2.getDate()))
+                .sorted(Comparator.comparing(WorkoutTrendDTO::getDate))
                 .collect(Collectors.toList());
     }
 
@@ -118,15 +128,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return userRoutines.stream()
                 .flatMap(routine -> routine.getDrills().stream())
                 .map(Drill::getExercise)
-                .map(exercise -> exercise.getTargetBodyPart().getName()) // Assuming targetBodyPart is always present
+                .map(exercise -> exercise.getTargetBodyPart().getName())
                 .collect(Collectors.groupingBy(bodyPartName -> bodyPartName, Collectors.counting()));
     }
 
     private Map<String, com.abhi.leximentor.fitmate.dto.ExerciseAnalyticsDTO> calculateExerciseAnalytics(List<Routine> userRoutines) {
-        // This is a more complex calculation that would involve:
-        // 1. Grouping drills by exercise
-        // 2. For each exercise, calculate total times completed, monthly average, and last five drills.
-        // For brevity, this is a placeholder. A full implementation would query DrillRepository based on exercise and user.
         return userRoutines.stream()
                 .flatMap(routine -> routine.getDrills().stream())
                 .collect(Collectors.groupingBy(drill -> drill.getExercise().getName(),
@@ -137,30 +143,58 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                         entry -> {
                             List<Drill> drillsForExercise = entry.getValue();
                             long totalNumberOfTimesCompleted = drillsForExercise.size();
-                            // Calculate monthly average (simplified for now)
+
                             double monthlyAverage = drillsForExercise.stream()
                                     .filter(drill -> drill.getCrtnDate().getMonth() == LocalDateTime.now().getMonth() &&
                                             drill.getCrtnDate().getYear() == LocalDateTime.now().getYear())
                                     .count();
-                            // Last five drills (simplified, needs proper sorting and limiting)
-                            List<com.abhi.leximentor.fitmate.dto.DrillDTO> lastFiveDrills = drillsForExercise.stream()
-                                    .sorted((d1, d2) -> d2.getCrtnDate().compareTo(d1.getCrtnDate())) // Most recent first
+
+                            List<DrillDTO> lastFiveDrills = drillsForExercise.stream()
+                                    .sorted(Comparator.comparing(Drill::getCrtnDate).reversed())
                                     .limit(5)
-                                    .map(this::convertToDrillDTO) // Assuming a conversion method
+                                    .map(FitmateServiceUtil.DrillUtil::buildDTO)
                                     .collect(Collectors.toList());
+
+                            // Calculate maxMeasurement and maxRepetitions
+                            Optional<Drill> maxMeasurementDrill = drillsForExercise.stream()
+                                    .max(Comparator.comparingDouble(Drill::getMeasurement));
+                            double maxMeasurement = maxMeasurementDrill.map(Drill::getMeasurement).orElse(0.0);
+
+                            Optional<Drill> maxRepetitionsDrill = drillsForExercise.stream()
+                                    .max(Comparator.comparingInt(Drill::getRepetition));
+                            int maxRepetitions = maxRepetitionsDrill.map(Drill::getRepetition).orElse(0);
 
                             return com.abhi.leximentor.fitmate.dto.ExerciseAnalyticsDTO.builder()
                                     .totalNumberOfTimesCompleted((int) totalNumberOfTimesCompleted)
                                     .monthlyAverage(monthlyAverage)
                                     .lastFiveDrills(lastFiveDrills)
+                                    .maxMeasurement(maxMeasurement)
+                                    .maxRepetitions(maxRepetitions)
                                     .build();
                         }
                 ));
     }
 
-    private DrillDTO convertToDrillDTO(Drill drill) {
-        // This is a helper method to convert Drill entity to DrillDTO
-        // A proper implementation would use a mapper (e.g., MapStruct)
-        return FitmateServiceUtil.DrillUtil.buildDTO(drill);
+    private List<ExerciseFrequencyDTO> calculateMostFrequentExercises(List<Routine> userRoutines) {
+        return userRoutines.stream()
+                .flatMap(routine -> routine.getDrills().stream())
+                .map(Drill::getExercise)
+                .map(Exercise::getName)
+                .collect(Collectors.groupingBy(exerciseName -> exerciseName, Collectors.counting()))
+                .entrySet().stream()
+                .map(entry -> ExerciseFrequencyDTO.builder()
+                        .exerciseName(entry.getKey())
+                        .frequency(entry.getValue())
+                        .build())
+                .sorted(Comparator.comparing(ExerciseFrequencyDTO::getFrequency).reversed())
+                .limit(10)
+                .collect(Collectors.toList());
+    }
+
+    private Map<String, Long> calculateRoutineDistributionByTrainingType(List<Routine> userRoutines) {
+        return userRoutines.stream()
+                .filter(routine -> routine.getTraining() != null)
+                .map(routine -> routine.getTraining().getName())
+                .collect(Collectors.groupingBy(trainingName -> trainingName, Collectors.counting()));
     }
 }
