@@ -19,5 +19,7 @@ public class AnalyticsDTO {
     private Map<String, ExerciseAnalyticsDTO> exerciseAnalytics; // Exercise name to ExerciseAnalyticsDTO
     private List<ExerciseFrequencyDTO> mostFrequentExercises; // New field
     private Map<String, Long> routineDistributionByTrainingType; // New field: Training name to count of routines
+    private Map<String, List<ExerciseProgressionDTO>> exerciseProgressions; // New field
+    private RoutineEfficiencyDTO routineEfficiency; // New field
     // Add more fields as needed for other analytics, e.g., muscle group analytics, routine performance
 }

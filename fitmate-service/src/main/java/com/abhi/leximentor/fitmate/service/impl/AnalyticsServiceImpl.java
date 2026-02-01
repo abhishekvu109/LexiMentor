@@ -4,6 +4,8 @@ import com.abhi.leximentor.fitmate.dto.AnalyticsDTO;
 import com.abhi.leximentor.fitmate.dto.DashboardSummaryDTO;
 import com.abhi.leximentor.fitmate.dto.DrillDTO;
 import com.abhi.leximentor.fitmate.dto.ExerciseFrequencyDTO;
+import com.abhi.leximentor.fitmate.dto.ExerciseProgressionDTO; // New import
+import com.abhi.leximentor.fitmate.dto.RoutineEfficiencyDTO;   // New import
 import com.abhi.leximentor.fitmate.dto.WorkoutTrendDTO;
 import com.abhi.leximentor.fitmate.entities.Drill;
 import com.abhi.leximentor.fitmate.entities.Exercise;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth; // New import
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -71,20 +74,30 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         // 6. Calculate Routine Distribution by Training Type
         Map<String, Long> routineDistributionByTrainingType = calculateRoutineDistributionByTrainingType(userRoutines);
 
+        // 7. Calculate Exercise Progressions
+        Map<String, List<ExerciseProgressionDTO>> exerciseProgressions = calculateExerciseProgressions(userRoutines);
+
+        // 8. Calculate Routine Efficiency
+        RoutineEfficiencyDTO routineEfficiency = calculateRoutineEfficiency(userRoutines);
+
 
         return AnalyticsDTO.builder()
                 .summary(summary)
                 .workoutTrends(workoutTrends)
                 .bodyPartWorkoutVolume(bodyPartWorkoutVolume)
-                .exerciseAnalytics(exerciseAnalytics)
-                .mostFrequentExercises(mostFrequentExercises) // Populate new field
-                .routineDistributionByTrainingType(routineDistributionByTrainingType) // Populate new field
+//                .exerciseAnalytics(exerciseAnalytics)
+                .mostFrequentExercises(mostFrequentExercises)
+                .routineDistributionByTrainingType(routineDistributionByTrainingType)
+                .exerciseProgressions(exerciseProgressions) // Populate new field
+                .routineEfficiency(routineEfficiency)     // Populate new field
                 .build();
     }
 
     private DashboardSummaryDTO calculateDashboardSummary(List<Routine> userRoutines) {
         long totalRoutinesCompleted = userRoutines.size();
-        double totalWorkoutDurationMinutes = userRoutines.stream().mapToDouble(Routine::getDurationInMinutes).sum();
+        double totalWorkoutDurationMinutes = userRoutines.stream()
+                .filter(routine -> routine.getDurationInMinutes() > 0) // Avoid division by zero or invalid data
+                .mapToDouble(Routine::getDurationInMinutes).sum();
         double totalCaloriesBurnt = userRoutines.stream().mapToDouble(Routine::getBurntCalories).sum();
 
         long totalUniqueExercises = userRoutines.stream()
@@ -111,7 +124,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                     LocalDate date = entry.getKey();
                     List<Routine> routinesOnDate = entry.getValue();
                     long routinesCompleted = routinesOnDate.size();
-                    double workoutDurationMinutes = routinesOnDate.stream().mapToDouble(Routine::getDurationInMinutes).sum();
+                    double workoutDurationMinutes = routinesOnDate.stream()
+                            .filter(routine -> routine.getDurationInMinutes() > 0) // Avoid division by zero or invalid data
+                            .mapToDouble(Routine::getDurationInMinutes).sum();
                     double caloriesBurnt = routinesOnDate.stream().mapToDouble(Routine::getBurntCalories).sum();
                     return WorkoutTrendDTO.builder()
                             .date(date)
@@ -155,7 +170,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                                     .map(FitmateServiceUtil.DrillUtil::buildDTO)
                                     .collect(Collectors.toList());
 
-                            // Calculate maxMeasurement and maxRepetitions
                             Optional<Drill> maxMeasurementDrill = drillsForExercise.stream()
                                     .max(Comparator.comparingDouble(Drill::getMeasurement));
                             double maxMeasurement = maxMeasurementDrill.map(Drill::getMeasurement).orElse(0.0);
@@ -196,5 +210,69 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                 .filter(routine -> routine.getTraining() != null)
                 .map(routine -> routine.getTraining().getName())
                 .collect(Collectors.groupingBy(trainingName -> trainingName, Collectors.counting()));
+    }
+
+    // New analytics methods below
+    private Map<String, List<ExerciseProgressionDTO>> calculateExerciseProgressions(List<Routine> userRoutines) {
+        return userRoutines.stream()
+                .flatMap(routine -> routine.getDrills().stream())
+                .collect(Collectors.groupingBy(drill -> drill.getExercise().getName(),
+                        Collectors.groupingBy(drill -> YearMonth.from(drill.getCrtnDate().toLocalDate()),
+                                Collectors.toList())))
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey, // Exercise Name
+                        entry -> entry.getValue().entrySet().stream() // Map of YearMonth to list of drills
+                                .map(monthEntry -> {
+                                    YearMonth yearMonth = monthEntry.getKey();
+                                    List<Drill> drillsInMonth = monthEntry.getValue();
+
+                                    double sumMeasurement = drillsInMonth.stream().mapToDouble(Drill::getMeasurement).sum();
+                                    double averageMeasurement = sumMeasurement / drillsInMonth.size();
+
+                                    Optional<Drill> maxMeasurementDrill = drillsInMonth.stream()
+                                            .max(Comparator.comparingDouble(Drill::getMeasurement));
+                                    double maxMeasurement = maxMeasurementDrill.map(Drill::getMeasurement).orElse(0.0);
+
+                                    double sumRepetitions = drillsInMonth.stream().mapToDouble(Drill::getRepetition).sum();
+                                    double averageRepetitions = sumRepetitions / drillsInMonth.size();
+
+                                    Optional<Drill> maxRepetitionsDrill = drillsInMonth.stream()
+                                            .max(Comparator.comparingInt(Drill::getRepetition));
+                                    int maxRepetitions = maxRepetitionsDrill.map(Drill::getRepetition).orElse(0);
+
+                                    return ExerciseProgressionDTO.builder()
+                                            .date(yearMonth.atDay(1)) // Use the first day of the month for the date
+                                            .averageMeasurement(averageMeasurement)
+                                            .maxMeasurement(maxMeasurement)
+                                            .averageRepetitions(averageRepetitions)
+                                            .maxRepetitions(maxRepetitions)
+                                            .build();
+                                })
+                                .sorted(Comparator.comparing(ExerciseProgressionDTO::getDate)) // Sort by date
+                                .collect(Collectors.toList())
+                ));
+    }
+
+    private RoutineEfficiencyDTO calculateRoutineEfficiency(List<Routine> userRoutines) {
+        double totalCalories = 0.0;
+        double totalDuration = 0.0;
+        long totalDrills = 0;
+
+        for (Routine routine : userRoutines) {
+            if (routine.getDurationInMinutes() > 0) { // Avoid division by zero
+                totalCalories += routine.getBurntCalories();
+                totalDuration += routine.getDurationInMinutes();
+                totalDrills += routine.getDrills().size();
+            }
+        }
+
+        double averageCaloriesPerMinute = totalDuration > 0 ? totalCalories / totalDuration : 0.0;
+        double averageDrillsPerMinute = totalDuration > 0 ? (double) totalDrills / totalDuration : 0.0;
+
+        return RoutineEfficiencyDTO.builder()
+                .averageCaloriesPerMinute(averageCaloriesPerMinute)
+                .averageDrillsPerMinute(averageDrillsPerMinute)
+                .build();
     }
 }
