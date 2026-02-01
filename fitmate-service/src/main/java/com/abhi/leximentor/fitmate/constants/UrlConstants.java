@@ -34,4 +34,9 @@ public class UrlConstants {
         public static final String DRILL_UPDATE = "/api/fitmate/drills/drill";
 
     }
+
+    public static class Analytics {
+        public static final String ANALYTICS_BASE_URI = "/api/fitmate/analytics";
+        public static final String ANALYTICS_OVERALL = "/overall";
+    }
 }

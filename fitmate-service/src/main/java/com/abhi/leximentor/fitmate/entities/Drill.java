@@ -38,6 +38,10 @@ public class Drill {
     @Column(name = "routine_id")
     private long routine;
 
+    @ManyToOne
+    @JoinColumn(name = "routine_id2")
+    private Routine routineObj;
+
 //    @ManyToOne
 //    @JoinColumn(name = "muscle_id")
 //    private Muscle muscle;
