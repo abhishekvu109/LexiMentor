@@ -3,6 +3,7 @@ package com.abhi.leximentor.fitmate.service.impl;
 import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.constants.Status;
 import com.abhi.leximentor.fitmate.constants.Unit;
+import com.abhi.leximentor.fitmate.dto.ExerciseAnalyticsDTO;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
 import com.abhi.leximentor.fitmate.dto.filters.ExerciseSearchFilter;
 import com.abhi.leximentor.fitmate.entities.*;
@@ -24,7 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -38,6 +41,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     private final MuscleRepository muscleRepository;
     private final ResourceService resourceService;
     private final FitmateResourceRepository fitmateResourceRepository;
+    private final DrillRepository drillRepository;
 
     @Override
     @Transactional
@@ -358,5 +362,21 @@ public class ExerciseServiceImpl implements ExerciseService {
         spec = StringUtils.isNotEmpty(filter.getTrainingRefId()) ? spec.and((root, query, cb) -> cb.equal(root.join("training").get("refId"), Long.parseLong(filter.getTrainingRefId()))) : spec;
         spec = StringUtils.isNotEmpty(filter.getTargetBodyPartRefId()) ? spec.and((root, query, cb) -> cb.equal(root.join("targetBodyPart").get("refId"), Long.parseLong(filter.getTargetBodyPartRefId()))) : spec;
         return exerciseRepository.findAll(spec).stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
+    }
+
+    @Override
+    public List<ExerciseDTO> getAllWithAnalytics() {
+        List<Exercise> exercises = exerciseRepository.findAll();
+        List<ExerciseDTO> dtoList = exercises.stream().map(FitmateServiceUtil.ExerciseUtil::buildDto).toList();
+        dtoList.forEach(dto -> {
+            ExerciseAnalyticsDTO exerciseAnalyticsDTO = ExerciseAnalyticsDTO.builder().build();
+            Exercise exercise = exerciseRepository.findByRefId(Long.parseLong(dto.getRefId()));
+            List<Drill> drills = drillRepository.findByExerciseOrderByCrtnDateDesc(exercise);
+            drills = drills.stream().filter(drill -> drill.getCrtnDate().isBefore(LocalDateTime.now().minusDays(5))).toList();
+            exerciseAnalyticsDTO.setLastFiveDrills(drills.stream().map(FitmateServiceUtil.DrillUtil::buildDTO).collect(Collectors.toList()));
+            exerciseAnalyticsDTO.setTotalNumberOfTimesCompleted(drills.size());
+            dto.setAnalyticsDTOList(exerciseAnalyticsDTO);
+        });
+        return dtoList;
     }
 }

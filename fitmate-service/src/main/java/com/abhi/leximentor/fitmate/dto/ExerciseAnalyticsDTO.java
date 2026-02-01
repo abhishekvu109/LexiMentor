@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.util.List;
+
 @Builder
 @ToString
 @EqualsAndHashCode
@@ -12,5 +14,5 @@ import lombok.ToString;
 public class ExerciseAnalyticsDTO {
     private int totalNumberOfTimesCompleted;
     private double monthlyAverage;
-    private double weeklyAverage;
+    private List<DrillDTO> lastFiveDrills;
 }
