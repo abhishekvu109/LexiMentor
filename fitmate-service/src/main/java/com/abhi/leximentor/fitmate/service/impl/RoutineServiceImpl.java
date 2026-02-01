@@ -45,13 +45,9 @@ public class RoutineServiceImpl implements RoutineService {
             if (exercise == null) {
                 throw new ServerException().new InternalError("The exercise object is not found.");
             }
-//            Muscle muscle = muscleRepository.findByRefId(Long.parseLong(dto.getMuscle().getRefId()));
-//            if (muscle == null) {
-//                throw new ServerException().new InternalError("The muscle object is not found.");
-//            }
             drill.setExercise(exercise);
-//            drill.setMuscle(muscle);
             drill.setRoutine(routine.getRefId());
+            drill.setRoutineObj(routine);
             drills.add(drill);
         });
         routine.setDrills(drills);
@@ -61,7 +57,7 @@ public class RoutineServiceImpl implements RoutineService {
     @Override
     @Transactional
     public RoutineDTO addByNames(RoutineDTO routineDTO) {
-        Training training = trainingRepository.findByName(routineDTO.getTraining().getName());
+        Training training = trainingRepository.findByNameIgnoreCase(routineDTO.getTraining().getName());
         Routine routine = FitmateServiceUtil.RoutineUtil.buildEntity(routineDTO, training);
         List<Drill> drills = new LinkedList<>();
         routineDTO.getDrills().forEach(dto -> {
@@ -70,13 +66,9 @@ public class RoutineServiceImpl implements RoutineService {
             if (exercise == null) {
                 throw new ServerException().new InternalError("The exercise object is not found.");
             }
-//            Muscle muscle = muscleRepository.findByName(dto.getMuscle().getName());
-//            if (muscle == null) {
-//                throw new ServerException().new InternalError("The muscle object is not found.");
-//            }
             drill.setExercise(exercise);
-//            drill.setMuscle(muscle);
             drill.setRoutine(routine.getRefId());
+            drill.setRoutineObj(routine);
             drills.add(drill);
         });
         routine.setDrills(drills);
@@ -125,6 +117,7 @@ public class RoutineServiceImpl implements RoutineService {
                 }
                 drill.setExercise(exercise);
                 drill.setRoutine(routine.getRefId());
+                drill.setRoutineObj(routine);
                 drills.add(drill);
             });
             routine.setDrills(drills);

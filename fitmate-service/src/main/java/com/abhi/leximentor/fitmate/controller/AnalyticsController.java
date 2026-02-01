@@ -36,4 +36,15 @@ public class AnalyticsController {
             return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Failed to fetch overall analytics.");
         }
     }
+
+
+    @GetMapping(value = "/exercise", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> getExerciseAnalytics(@RequestParam("username") String username) {
+        try {
+            return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, analyticsService.getExerciseAnalytics(username));
+        } catch (Exception e) {
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Failed to fetch overall analytics.");
+        }
+    }
+
 }

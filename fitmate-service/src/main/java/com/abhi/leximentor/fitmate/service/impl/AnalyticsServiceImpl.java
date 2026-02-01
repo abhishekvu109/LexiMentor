@@ -1,17 +1,12 @@
 package com.abhi.leximentor.fitmate.service.impl;
 
-import com.abhi.leximentor.fitmate.dto.AnalyticsDTO;
-import com.abhi.leximentor.fitmate.dto.DashboardSummaryDTO;
-import com.abhi.leximentor.fitmate.dto.DrillDTO;
-import com.abhi.leximentor.fitmate.dto.ExerciseFrequencyDTO;
-import com.abhi.leximentor.fitmate.dto.ExerciseProgressionDTO; // New import
-import com.abhi.leximentor.fitmate.dto.RoutineEfficiencyDTO;   // New import
-import com.abhi.leximentor.fitmate.dto.WorkoutTrendDTO;
+import com.abhi.leximentor.fitmate.dto.*;
 import com.abhi.leximentor.fitmate.entities.Drill;
 import com.abhi.leximentor.fitmate.entities.Exercise;
 import com.abhi.leximentor.fitmate.entities.Routine;
 import com.abhi.leximentor.fitmate.repository.*;
 import com.abhi.leximentor.fitmate.service.AnalyticsService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.YearMonth; // New import
+import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final RoutineRepository routineRepository;
@@ -37,16 +33,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     private final MuscleRepository muscleRepository;
     private final TrainingRepository trainingRepository;
 
-
-    @Autowired
-    public AnalyticsServiceImpl(RoutineRepository routineRepository, DrillRepository drillRepository, ExerciseRepository exerciseRepository, BodyPartsRepository bodyPartsRepository, MuscleRepository muscleRepository, TrainingRepository trainingRepository) {
-        this.routineRepository = routineRepository;
-        this.drillRepository = drillRepository;
-        this.exerciseRepository = exerciseRepository;
-        this.bodyPartsRepository = bodyPartsRepository;
-        this.muscleRepository = muscleRepository;
-        this.trainingRepository = trainingRepository;
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -85,7 +71,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                 .summary(summary)
                 .workoutTrends(workoutTrends)
                 .bodyPartWorkoutVolume(bodyPartWorkoutVolume)
-//                .exerciseAnalytics(exerciseAnalytics)
                 .mostFrequentExercises(mostFrequentExercises)
                 .routineDistributionByTrainingType(routineDistributionByTrainingType)
                 .exerciseProgressions(exerciseProgressions) // Populate new field
@@ -274,5 +259,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                 .averageCaloriesPerMinute(averageCaloriesPerMinute)
                 .averageDrillsPerMinute(averageDrillsPerMinute)
                 .build();
+    }
+
+    @Override
+    public Map<String, ExerciseAnalyticsDTO> getExerciseAnalytics(String username) {
+        log.info("Initiating overall analytics for user: {}", username);
+        List<Routine> userRoutines = routineRepository.findByUsername(username);
+        return calculateExerciseAnalytics(userRoutines);
     }
 }
