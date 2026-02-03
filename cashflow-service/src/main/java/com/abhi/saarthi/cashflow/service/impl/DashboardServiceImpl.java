@@ -59,7 +59,7 @@ public class DashboardServiceImpl implements DashboardService {
                 .sum();
 
         List<ExpenseDTO> transactionsLast30Days = expenses.stream()
-                .filter(expense -> expense.getExpenseDate() != null && expense.getExpenseDate().isBefore(LocalDate.now().minusDays(30)))
+                .filter(expense -> expense.getExpenseDate() != null && !expense.getExpenseDate().isBefore(LocalDate.now().minusDays(30)))
                 .map(expenseMapper::toDto)
                 .toList();
         long todayTransactions = transactionsLast30Days.stream().filter(expenseDTO -> expenseDTO.getExpenseDate() != null && expenseDTO.getExpenseDate().equals(LocalDate.now())).count();
