@@ -3,11 +3,18 @@ package com.abhi.saarthi.cashflow.service.impl;
 import com.abhi.saarthi.cashflow.constants.Currency;
 import com.abhi.saarthi.cashflow.constants.Status;
 import com.abhi.saarthi.cashflow.dto.HouseholdDTO;
+import com.abhi.saarthi.cashflow.dto.dashboard.household.BudgetVsActual;
+import com.abhi.saarthi.cashflow.dto.dashboard.household.HouseholdOverviewDTO;
+import com.abhi.saarthi.cashflow.entities.Budget;
+import com.abhi.saarthi.cashflow.entities.Deposit;
+import com.abhi.saarthi.cashflow.entities.Expense;
 import com.abhi.saarthi.cashflow.entities.Household;
 import com.abhi.saarthi.cashflow.exceptions.entities.ServerException;
 import com.abhi.saarthi.cashflow.mappers.HouseholdMapper;
 import com.abhi.saarthi.cashflow.model.HouseholdSearchFilter;
-import com.abhi.saarthi.cashflow.repository.HouseholdMemberRepository;
+import com.abhi.saarthi.cashflow.repository.BudgetRepository;
+import com.abhi.saarthi.cashflow.repository.DepositRepository;
+import com.abhi.saarthi.cashflow.repository.ExpenseRepository;
 import com.abhi.saarthi.cashflow.repository.HouseholdRepository;
 import com.abhi.saarthi.cashflow.service.HouseholdService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +26,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,7 +38,9 @@ import java.util.stream.Collectors;
 public class HouseholdServiceImpl implements HouseholdService {
     private final HouseholdRepository householdRepository;
     private final HouseholdMapper householdMapper;
-    private final HouseholdMemberRepository householdMemberRepository;
+    private final DepositRepository depositRepository;
+    private final ExpenseRepository expenseRepository;
+    private final BudgetRepository budgetRepository;
 
     private static Specification<Household> withRefId(String refId) {
         if (StringUtils.isNotEmpty(refId)) {
@@ -85,9 +97,7 @@ public class HouseholdServiceImpl implements HouseholdService {
     public List<HouseholdDTO> update(List<HouseholdDTO> householdDTOS) {
         log.info("Updating households: {}", householdDTOS);
         List<Household> households = householdDTOS.stream().map(dto -> {
-            Household household = householdRepository
-                    .findByRefId(Long.parseLong(dto.getRefId()))
-                    .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getRefId())));
+            Household household = householdRepository.findByRefId(Long.parseLong(dto.getRefId())).orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getRefId())));
             householdMapper.updateEntityFromDto(dto, household);
             return household;
         }).toList();
@@ -100,9 +110,7 @@ public class HouseholdServiceImpl implements HouseholdService {
     @Transactional
     public void delete(List<HouseholdDTO> householdDTOS) {
         log.info("Deleting households: {}", householdDTOS);
-        List<Household> households = householdDTOS.stream().map(dto -> householdRepository
-                .findByRefId(Long.parseLong(dto.getRefId()))
-                .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getRefId())))).toList();
+        List<Household> households = householdDTOS.stream().map(dto -> householdRepository.findByRefId(Long.parseLong(dto.getRefId())).orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getRefId())))).toList();
         householdRepository.deleteAll(households);
         log.info("Successfully deleted households");
     }
@@ -114,8 +122,7 @@ public class HouseholdServiceImpl implements HouseholdService {
         if (filter == null || filter.isEmpty()) {
             HouseholdSearchFilter defaultFilter = HouseholdSearchFilter.defaultFilter();
             Sort sort = Sort.by(Sort.Direction.fromString(defaultFilter.getSortDir()), defaultFilter.getSortBy());
-            List<HouseholdDTO> households = householdRepository.findAll(sort).stream()
-                    .map(householdMapper::toDto).toList();
+            List<HouseholdDTO> households = householdRepository.findAll(sort).stream().map(householdMapper::toDto).toList();
             log.info("Found {} households", households.size());
             return households;
         }
@@ -126,11 +133,8 @@ public class HouseholdServiceImpl implements HouseholdService {
         specification = specification.and(withStatus(filter.getStatus()));
         specification = specification.and(withUUID(filter.getUuid()));
         specification = specification.and(withRefId(filter.getRefId()));
-        Sort sort = StringUtils.isAnyEmpty(filter.getSortBy(), filter.getSortDir())
-                ? Sort.by(Sort.Direction.fromString("asc"), "name")
-                : Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
-        List<HouseholdDTO> households = householdRepository.findAll(specification, sort).stream()
-                .map(householdMapper::toDto).toList();
+        Sort sort = StringUtils.isAnyEmpty(filter.getSortBy(), filter.getSortDir()) ? Sort.by(Sort.Direction.fromString("asc"), "name") : Sort.by(Sort.Direction.fromString(filter.getSortDir()), filter.getSortBy());
+        List<HouseholdDTO> households = householdRepository.findAll(specification, sort).stream().map(householdMapper::toDto).toList();
         log.info("Found {} households", households.size());
         return households;
     }
@@ -139,10 +143,39 @@ public class HouseholdServiceImpl implements HouseholdService {
     @Transactional(readOnly = true)
     public HouseholdDTO findByRefId(long refId) {
         log.info("Finding household by refId: {}", refId);
-        Household household = householdRepository
-                .findByRefId(refId)
-                .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", refId)));
+        Household household = householdRepository.findByRefId(refId).orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", refId)));
         log.info("Found household: {}", household);
         return householdMapper.toDto(household);
+    }
+
+    @Override
+    public HouseholdOverviewDTO buildHouseholdOverview(String username, long householdRefId) {
+        Household household = householdRepository.findByRefId(householdRefId).orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Household is not found: %s", householdRefId)));
+        List<Deposit> deposits = depositRepository.findByHousehold(household);
+        List<Expense> expenses = expenseRepository.findByHousehold(household);
+        List<Budget> budgets = budgetRepository.findByHousehold(household);
+
+        double totalDeposits = deposits.stream().mapToDouble(Deposit::getAmount).sum();
+        double totalExpenses = expenses.stream().mapToDouble(Expense::getAmount).sum();
+        double budgetCurrentMonth = budgets.stream().filter(budget -> budget.getBudgetDate().getMonth() == LocalDate.now().getMonth() && budget.getBudgetDate().getYear() == LocalDate.now().getYear()).mapToDouble(Budget::getAmount).sum();
+        double availableBalance = totalDeposits - totalExpenses;
+        double totalSpentCurrentMonth = expenses.stream().filter(expense -> (expense.getExpenseDate().getMonth() == LocalDate.now().getMonth()) && (expense.getExpenseDate().getYear() == LocalDate.now().getYear())).mapToDouble(Expense::getAmount).sum();
+        double budgetLeftCurrentMonth = budgetCurrentMonth - totalSpentCurrentMonth;
+        Map<String, Double> budgetSumByCategory = budgets.stream().filter(budget -> budget.getCategory() != null && budget.getBudgetDate().getMonth() == LocalDate.now().getMonth() && budget.getBudgetDate().getYear() == LocalDate.now().getYear())
+                .collect(Collectors.groupingBy(budget -> budget.getCategory().getName(), Collectors.summingDouble(Budget::getAmount)));
+        Map<String, Double> expenseSumByCategory = expenses.stream().filter(expense -> expense.getCategory() != null && expense.getExpenseDate().getMonth() == LocalDate.now().getMonth() && expense.getExpenseDate().getYear() == LocalDate.now().getYear())
+                .collect(Collectors.groupingBy(expense -> expense.getCategory().getName(), Collectors.summingDouble(Expense::getAmount)));
+        Map<String, BudgetVsActual> budgetVsActual = new LinkedHashMap<>();
+        budgetSumByCategory.forEach((key, value) -> {
+            double expenseValue = expenseSumByCategory.containsKey(key) ? expenseSumByCategory.get(key) : 0;
+            budgetVsActual.put(key, BudgetVsActual.builder().budget(value).actual(expenseValue).build());
+        });
+        return HouseholdOverviewDTO.builder()
+                .availableBalance(availableBalance)
+                .totalSpent(totalSpentCurrentMonth)
+                .budgetLeft(budgetLeftCurrentMonth)
+                .budgetVsActual(budgetVsActual)
+                .spendingSplit(expenseSumByCategory)
+                .build();
     }
 }

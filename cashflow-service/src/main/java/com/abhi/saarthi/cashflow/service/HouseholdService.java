@@ -1,6 +1,7 @@
 package com.abhi.saarthi.cashflow.service;
 
 import com.abhi.saarthi.cashflow.dto.HouseholdDTO;
+import com.abhi.saarthi.cashflow.dto.dashboard.household.HouseholdOverviewDTO;
 import com.abhi.saarthi.cashflow.model.HouseholdSearchFilter;
 
 import java.util.List;
@@ -16,5 +17,7 @@ public interface HouseholdService {
     HouseholdDTO findByRefId(long refId);
 
     List<HouseholdDTO> search(HouseholdSearchFilter filter);
+
+    HouseholdOverviewDTO buildHouseholdOverview(String username, long householdRefId);
 
 }

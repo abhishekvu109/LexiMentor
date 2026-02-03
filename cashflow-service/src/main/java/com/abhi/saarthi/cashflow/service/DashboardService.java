@@ -1,7 +1,7 @@
 package com.abhi.saarthi.cashflow.service;
 
-import com.abhi.saarthi.cashflow.dto.DashboardOverviewResponse;
+import com.abhi.saarthi.cashflow.dto.dashboard.DashboardDTO;
 
 public interface DashboardService {
-    DashboardOverviewResponse buildDashboardOverview(String username);
+    DashboardDTO buildDashboardOverview(String username);
 }
