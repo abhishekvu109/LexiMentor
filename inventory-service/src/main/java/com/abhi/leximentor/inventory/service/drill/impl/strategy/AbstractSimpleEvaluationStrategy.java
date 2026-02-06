@@ -1,6 +1,5 @@
 package com.abhi.leximentor.inventory.service.drill.impl.strategy;
 
-import com.abhi.leximentor.inventory.constants.DrillTypes;
 import com.abhi.leximentor.inventory.constants.Status;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillEvaluationDTO;
@@ -17,6 +16,7 @@ import com.abhi.leximentor.inventory.repository.drill.DrillEvaluationRepository;
 import com.abhi.leximentor.inventory.repository.drill.DrillSetRepository;
 import com.abhi.leximentor.inventory.repository.inv.EvaluatorRepository;
 import com.abhi.leximentor.inventory.service.drill.impl.DrillServiceUtil;
+import com.abhi.leximentor.inventory.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -91,10 +91,26 @@ public abstract class AbstractSimpleEvaluationStrategy implements DrillEvaluatio
         List<DrillEvaluationDTO> saved = new LinkedList<>();
         for (DrillEvaluationDTO dto : dtos) {
             DrillChallengeScores scores = scoreRefMap.get(dto.getDrillChallengeScoresDTO().getRefId());
-            DrillEvaluation drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, scores);
+            DrillEvaluation drillEvaluation = this.getDrillEvaluation(dto, scores, evaluator);
             DrillEvaluation stored = drillEvaluationRepository.save(drillEvaluation);
             saved.add(DrillServiceUtil.DrillEvaluationUtil.buildDTO(stored, DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(stored.getDrillChallengeScores())));
         }
         return saved;
+    }
+
+    private DrillEvaluation getDrillEvaluation(DrillEvaluationDTO dto, DrillChallengeScores drillChallengeScores, Evaluator evaluator) {
+        List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(List.of(drillChallengeScores));
+        DrillEvaluation drillEvaluation;
+        if (CollectionUtil.isNotEmpty(drillEvaluations)) {
+            drillEvaluation = drillEvaluations.get(0);
+            drillEvaluation.setEvaluator(evaluator);
+            drillEvaluation.setEvaluationTime(dto.getEvaluationTime());
+            drillEvaluation.setConfidence(dto.getConfidence());
+            drillEvaluation.setDrillChallengeScores(drillChallengeScores);
+            drillEvaluation.setReason(dto.getReason());
+            return drillEvaluation;
+        } else {
+            return DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, drillChallengeScores);
+        }
     }
 }
