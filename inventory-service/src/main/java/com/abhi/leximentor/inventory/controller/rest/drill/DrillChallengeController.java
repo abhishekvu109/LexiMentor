@@ -38,9 +38,9 @@ public class DrillChallengeController {
     }
 
     @GetMapping(value = "/api/leximentor/drill/metadata/challenges/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> getAllChallengesByDrillRefId(@PathVariable String drillRefId) {
+    public ResponseEntity<RestApiResponse> getAllChallengesByDrillRefId(@PathVariable String drillRefId, @RequestParam String username) {
         log.info("Received a request to fetch all the list of challenges associated to the drill. {}", drillRefId);
-        List<DrillChallengeDTO> drillChallengeDTOList = drillChallengeService.getChallengesByDrillRefId(Long.parseLong(drillRefId));
+        List<DrillChallengeDTO> drillChallengeDTOList = drillChallengeService.getChallengesByDrillRefIdAndUsername(Long.parseLong(drillRefId),username);
         return drillChallengeDTOList != null ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillChallengeDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve challenges");
     }
 

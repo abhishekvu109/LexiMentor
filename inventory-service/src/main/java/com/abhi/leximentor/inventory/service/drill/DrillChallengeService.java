@@ -11,6 +11,7 @@ public interface DrillChallengeService {
     public DrillMetadataDTO addChallenges(DrillMetadataDTO drillMetadataDTO, DrillTypes drillTypes);
 
     public List<DrillChallengeDTO> getChallengesByDrillRefId(long drillRefId);
+    public List<DrillChallengeDTO> getChallengesByDrillRefIdAndUsername(long drillRefId,String username);
 
     public void deleteChallenge(long drillRefId);
 

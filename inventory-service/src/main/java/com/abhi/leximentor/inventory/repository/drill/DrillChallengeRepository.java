@@ -1,7 +1,6 @@
 package com.abhi.leximentor.inventory.repository.drill;
 
 import com.abhi.leximentor.inventory.constants.QueryConstants;
-import com.abhi.leximentor.inventory.dto.drill.DrillChallengeDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillMetadata;
 import jakarta.persistence.Tuple;
@@ -35,4 +34,5 @@ public interface DrillChallengeRepository extends JpaRepository<DrillChallenge, 
     @Query(value = QueryConstants.Analytics.DrillChallenge.GET_USER_DRILL_TYPE_PERFORMANCE)
     List<Tuple> findUserDrillTypePerformance(@Param("username") String username);
 
+    List<DrillChallenge> findByDrillIdAndUsernameIgnoreCase(DrillMetadata drillMetadata, String username);
 }

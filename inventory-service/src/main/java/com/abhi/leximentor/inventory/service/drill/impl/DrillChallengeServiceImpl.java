@@ -59,6 +59,16 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
     }
 
     @Override
+    public List<DrillChallengeDTO> getChallengesByDrillRefIdAndUsername(long drillRefId, String username) {
+        log.info("Fetching challenges by drillRefId={}", drillRefId);
+        DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
+        List<DrillChallenge> drillChallenges=drillChallengeRepository.findByDrillIdAndUsernameIgnoreCase(drillMetadata,username);
+        List<DrillChallengeDTO> response = CollectionUtil.isNotEmpty(drillChallenges) ? drillChallenges.stream().map(DrillServiceUtil.DrillChallengeUtil::buildDTO).toList() : new LinkedList<>();
+        log.info("Fetched challenges by drillRefId={}, count={}", drillRefId, response.size());
+        return response;
+    }
+
+    @Override
     public void deleteChallenge(long drillRefId) {
         log.info("Deleting challenge. drillRefId={}", drillRefId);
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(drillRefId);
