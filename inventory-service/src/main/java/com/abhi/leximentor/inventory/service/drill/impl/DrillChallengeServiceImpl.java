@@ -37,32 +37,43 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
     @Override
     @Transactional
     public DrillMetadataDTO addChallenges(DrillMetadataDTO drillMetadataDTO, DrillTypes drillTypes) {
+        log.info("Adding challenge. drillRefId={}, drillType={}", drillMetadataDTO == null ? null : drillMetadataDTO.getRefId(), drillTypes);
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(Long.parseLong(drillMetadataDTO.getRefId()));
         List<DrillChallenge> drillChallenges = drillMetadata.getDrillChallenges();
         if (CollectionUtil.isEmpty(drillMetadata.getDrillChallenges())) drillChallenges = new LinkedList<>();
         drillChallenges.add(DrillServiceUtil.DrillChallengeUtil.buildEntity(drillMetadata, drillTypes));
         drillMetadata.setDrillChallenges(drillChallenges);
         drillMetadata = drillMetadataRepository.save(drillMetadata);
-        return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+        DrillMetadataDTO response = DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+        log.info("Added challenge. drillRefId={}, totalChallenges={}", response.getRefId(), response.getDrillChallenges() == null ? 0 : response.getDrillChallenges().size());
+        return response;
     }
 
     @Override
     public List<DrillChallengeDTO> getChallengesByDrillRefId(long drillRefId) {
+        log.info("Fetching challenges by drillRefId={}", drillRefId);
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
-        return CollectionUtil.isNotEmpty(drillMetadata.getDrillChallenges()) ? drillMetadata.getDrillChallenges().stream().map(d -> DrillServiceUtil.DrillChallengeUtil.buildDTO(d)).collect(Collectors.toList()) : new LinkedList<>();
+        List<DrillChallengeDTO> response = CollectionUtil.isNotEmpty(drillMetadata.getDrillChallenges()) ? drillMetadata.getDrillChallenges().stream().map(d -> DrillServiceUtil.DrillChallengeUtil.buildDTO(d)).collect(Collectors.toList()) : new LinkedList<>();
+        log.info("Fetched challenges by drillRefId={}, count={}", drillRefId, response.size());
+        return response;
     }
 
     @Override
     public void deleteChallenge(long drillRefId) {
+        log.info("Deleting challenge. drillRefId={}", drillRefId);
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(drillRefId);
         List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(drillChallenge.getDrillChallengeScoresList());
         drillEvaluationRepository.deleteAll(drillEvaluations);
         drillChallengeRepository.delete(drillChallenge);
+        log.info("Deleted challenge. drillRefId={}", drillRefId);
     }
 
     @Override
     public List<EvaluatorDTO> getEvaluatorsByChallengeId(long challengeRefId) {
+        log.info("Fetching evaluators by challengeRefId={}", challengeRefId);
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(challengeRefId);
-        return evaluatorService.getByDrillType(drillChallenge.getDrillType());
+        List<EvaluatorDTO> response = evaluatorService.getByDrillType(drillChallenge.getDrillType());
+        log.info("Fetched evaluators by challengeRefId={}, count={}", challengeRefId, response.size());
+        return response;
     }
 }

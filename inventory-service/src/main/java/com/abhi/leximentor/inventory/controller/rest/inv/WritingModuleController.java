@@ -1,7 +1,6 @@
 package com.abhi.leximentor.inventory.controller.rest.inv;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
-import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.other.LlmWritingTopicDTO;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
@@ -23,8 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class WritingModuleController {
     private final WritingModuleService writingModuleService;
 
-    @PostMapping(value = UrlConstants.Inventory.WritingModule.GENERATE_TOPICS, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(value = "/api/leximentor/v1/module/writing/topics", produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> generateTopics(@Valid @RequestBody LlmWritingTopicDTO request) {
+        log.info("Writing topics requested. promptLength={}", request == null || request.getPrompt() == null ? 0 : request.getPrompt().length());
         LlmWritingTopicDTO response = writingModuleService.getTopics(request);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }

@@ -1,7 +1,6 @@
 package com.abhi.leximentor.inventory.controller.rest.inv;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
-import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.other.JobControllerDTO;
 import com.abhi.leximentor.inventory.log.JobExecutor;
 import com.abhi.leximentor.inventory.log.JobService;
@@ -31,8 +30,9 @@ public class JobController {
     private final LoadLoggingService loadLoggingService;
     private final WordService wordService;
 
-    @PostMapping(value = UrlConstants.Inventory.Job.JOB_CREATE, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/api/leximentor/jobs", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> createJob(@RequestBody JobControllerDTO dto) {
+        log.info("Job create requested. wordsCount={}", dto == null || dto.getWords() == null ? 0 : dto.getWords().size());
         String refId = service.createJob();
         JobDTO jobDTO = service.getJobByRefId(refId);
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
@@ -43,14 +43,16 @@ public class JobController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Job creation is in progress, JobId : " + jobDTO.getJobId());
     }
 
-    @GetMapping(value = UrlConstants.Inventory.Job.JOB_GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> getJobStatus(@RequestParam long jobId) {
+    @GetMapping(value = "/api/leximentor/jobs/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> getJobStatus(@PathVariable long jobId) {
+        log.info("Job status requested. jobId={}", jobId);
         JobDTO job = service.getJob(jobId);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, job);
     }
 
-    @PostMapping(value = UrlConstants.Inventory.Job.JOB_EXECUTE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/api/leximentor/jobs/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> executeJob(@PathVariable long jobId) {
+        log.info("Job execute requested. jobId={}", jobId);
         Map<Long, String> words = loadLoggingService.getWordsByJobId(jobId);
 //        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
 //            JobExecutor jobExecutor = new JobExecutor(20, wordService);

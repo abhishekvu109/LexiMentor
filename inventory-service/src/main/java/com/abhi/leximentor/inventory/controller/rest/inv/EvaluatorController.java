@@ -1,7 +1,6 @@
 package com.abhi.leximentor.inventory.controller.rest.inv;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
-import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.inv.EvaluatorDTO;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
@@ -21,27 +20,31 @@ import java.util.List;
 public class EvaluatorController {
     private final EvaluatorService evaluatorService;
 
-    @PostMapping(value = UrlConstants.Inventory.Evaluator.EVALUATOR_CREATE, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(value = "/api/leximentor/evaluators/evaluator", produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> createEvaluator(@RequestBody List<EvaluatorDTO> requests) {
+        log.info("Evaluator create requested. count={}", requests == null ? 0 : requests.size());
         List<EvaluatorDTO> evaluatorDTOS = evaluatorService.addAll(requests);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTOS);
     }
 
-    @GetMapping(value = UrlConstants.Inventory.Evaluator.EVALUATOR_GET_BY_NAME, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/api/leximentor/evaluators/evaluator/name/{name}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByName(@PathVariable String name) {
+        log.info("Evaluator get by name requested. name={}", name);
         EvaluatorDTO evaluatorDTO = evaluatorService.getByName(name);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTO);
     }
 
-    @GetMapping(value = UrlConstants.Inventory.Evaluator.EVALUATOR_GET_BY_DRILL_TYPE, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/api/leximentor/evaluators/evaluator/type/drill/{drillType}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByDrillType(@PathVariable String drillType) {
+        log.info("Evaluator get by drill type requested. drillType={}", drillType);
         List<EvaluatorDTO> evaluatorDTOS = evaluatorService.getByDrillType(drillType);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTOS);
     }
 
 
-    @GetMapping(value = UrlConstants.Inventory.Evaluator.EVALUATOR_GET_BY_REF, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/api/leximentor/evaluators/evaluator/id/{refId}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByRefId(@PathVariable long refId) {
+        log.info("Evaluator get by refId requested. refId={}", refId);
         EvaluatorDTO evaluatorDTO = evaluatorService.getByRefId(refId);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTO);
     }
