@@ -41,6 +41,9 @@ public class UrlConstants {
         public static class DrillAnalytics {
             public static final String DRILL_GET_ANALYTICS_DRILL_REF_ID = "/api/leximentor/analytics/drill/{drillRefId}";
             public static final String DRILL_GET_DRILL_CHALLENGE_METADATA_ANALYTICS = "/api/leximentor/analytics/drill/challenge/metadata";
+            public static final String DRILL_GET_DRILL_TYPE_SUMMARY = "/api/leximentor/analytics/drill/type/summary";
+            public static final String DRILL_GET_DRILL_TRENDS = "/api/leximentor/analytics/drill/trends";
+            public static final String DRILL_GET_USER_PERFORMANCE = "/api/leximentor/analytics/drill/user/performance";
         }
 
     }
@@ -80,5 +83,13 @@ public class UrlConstants {
 
     public static class NamedObject{
         public static final  String ADD_NAMED_OBJECT="/api/leximentor/v1/named/object";
+    }
+
+    public static class Analytics {
+        public static class Words {
+            public static final String WORDS_OVERVIEW = "/api/leximentor/analytics/words/overview";
+            public static final String WORDS_DISTRIBUTION = "/api/leximentor/analytics/words/distribution";
+            public static final String WORDS_DIFFICULTY = "/api/leximentor/analytics/words/difficulty";
+        }
     }
 }
