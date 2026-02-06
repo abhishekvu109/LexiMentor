@@ -32,6 +32,7 @@ public class WritingModuleServiceImpl implements WritingModuleService {
 
     @Override
     public LlmWritingTopicDTO getTopics(LlmWritingTopicDTO request) {
+        log.info("Writing topics generation started. subject={}, numOfTopic={}, exam={}", request == null ? null : request.getSubject(), request == null ? null : request.getNumOfTopic(), request == null ? null : request.getExam());
         loadModelServiceName();
         String prompt = LLMPromptBuilder.WritingModule.getTopicsPrompt(request.getSubject(), request.getNumOfTopic(), request.getExam());
         request.setPrompt(prompt);
@@ -53,7 +54,9 @@ public class WritingModuleServiceImpl implements WritingModuleService {
                 retry--;
             }
         }
-        return mapLlmResponseToObject(responseOutput);
+        LlmWritingTopicDTO response = mapLlmResponseToObject(responseOutput);
+        log.info("Writing topics generation completed. topicsCount={}", response == null || response.getTopics() == null ? 0 : response.getTopics().size());
+        return response;
     }
 
     private void loadModelServiceName() {

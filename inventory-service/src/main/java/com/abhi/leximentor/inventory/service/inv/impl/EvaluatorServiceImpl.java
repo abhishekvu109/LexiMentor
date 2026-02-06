@@ -24,32 +24,47 @@ public class EvaluatorServiceImpl implements EvaluatorService {
 
     @Override
     public EvaluatorDTO add(EvaluatorDTO dto) {
+        log.info("Adding evaluator. name={}, drillType={}", dto == null ? null : dto.getName(), dto == null ? null : dto.getDrillType());
         Evaluator evaluator = Evaluator.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).status(Status.ApplicationStatus.ACTIVE).drillType(DrillTypes.getType(dto.getDrillType()).name()).name(dto.getName()).build();
         evaluator = evaluatorRepository.save(evaluator);
-        return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
+        EvaluatorDTO response = EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
+        log.info("Added evaluator. refId={}", response.getRefId());
+        return response;
     }
 
     @Override
     public List<EvaluatorDTO> addAll(List<EvaluatorDTO> list) {
-        return list.stream().map(this::add).collect(Collectors.toList());
+        log.info("Adding evaluators. count={}", list == null ? 0 : list.size());
+        List<EvaluatorDTO> response = list.stream().map(this::add).collect(Collectors.toList());
+        log.info("Added evaluators. count={}", response.size());
+        return response;
     }
 
     @Override
     public EvaluatorDTO getByName(String name) {
+        log.info("Fetching evaluator by name={}", name);
         Evaluator evaluator = evaluatorRepository.findByName(name);
-        return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
+        EvaluatorDTO response = EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
+        log.info("Fetched evaluator by name={}", name);
+        return response;
 
     }
 
     @Override
     public EvaluatorDTO getByRefId(long refId) {
+        log.info("Fetching evaluator by refId={}", refId);
         Evaluator evaluator = evaluatorRepository.findByRefId(refId);
-        return EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
+        EvaluatorDTO response = EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getDrillType()).build();
+        log.info("Fetched evaluator by refId={}", refId);
+        return response;
     }
 
     @Override
     public List<EvaluatorDTO> getByDrillType(String drillType) {
+        log.info("Fetching evaluators by drillType={}", drillType);
         List<Evaluator> evaluators = evaluatorRepository.findByDrillType(drillType);
-        return evaluators.stream().map(evaluator -> EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getDrillType()).build()).collect(Collectors.toList());
+        List<EvaluatorDTO> response = evaluators.stream().map(evaluator -> EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCrtnDate()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getDrillType()).build()).collect(Collectors.toList());
+        log.info("Fetched evaluators by drillType. count={}", response.size());
+        return response;
     }
 }

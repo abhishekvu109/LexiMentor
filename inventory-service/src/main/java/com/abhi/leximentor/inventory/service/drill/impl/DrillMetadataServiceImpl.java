@@ -39,38 +39,51 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     @Override
     @Transactional
     public DrillMetadataDTO createDrillRandomly(int size) {
+        log.info("Creating drill randomly. size={}", size);
         if (size < ApplicationConstants.MIN_DRILL_SIZE)
             throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = wordMetadataRepository.findAllRandomlyInLimit(size);
-        return getEntity(size, wordMetadataList);
+        DrillMetadataDTO response = getEntity(size, wordMetadataList);
+        log.info("Created drill randomly. drillRefId={}", response.getRefId());
+        return response;
     }
 
     @Override
     public DrillMetadataDTO createDrillFromNewWords(int size) {
+        log.info("Creating drill from new words. size={}", size);
         if (size < ApplicationConstants.MIN_DRILL_SIZE)
             throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = wordMetadataRepository.findAllRandomlyNewWordsLimit(size);
-        return getEntity(size, wordMetadataList);
+        DrillMetadataDTO response = getEntity(size, wordMetadataList);
+        log.info("Created drill from new words. drillRefId={}", response.getRefId());
+        return response;
     }
 
     @Override
     public DrillMetadataDTO createDrillFromExistingWords(int size) {
+        log.info("Creating drill from existing words. size={}", size);
         if (size < ApplicationConstants.MIN_DRILL_SIZE)
             throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = wordMetadataRepository.findAllRandomlyExistingWordsLimit(size);
-        return getEntity(size, wordMetadataList);
+        DrillMetadataDTO response = getEntity(size, wordMetadataList);
+        log.info("Created drill from existing words. drillRefId={}", response.getRefId());
+        return response;
     }
 
     @Override
     public DrillMetadataDTO createDrillBySource(int size, String source, boolean isNewWords) {
+        log.info("Creating drill by source. size={}, source={}, isNewWords={}", size, source, isNewWords);
         if (size < ApplicationConstants.MIN_DRILL_SIZE)
             throw new IllegalArgumentException("The size of the drill should be at least 20");
         List<WordMetadata> wordMetadataList = (isNewWords) ? wordMetadataRepository.findAllRandomlyNewWordsFromSourceInLimit(size, source) : wordMetadataRepository.findAllRandomlyExistingWordsFromSourceInLimit(size, source);
-        return getEntity(size, wordMetadataList);
+        DrillMetadataDTO response = getEntity(size, wordMetadataList);
+        log.info("Created drill by source. drillRefId={}", response.getRefId());
+        return response;
     }
 
     @Override
     public List<DrillMetadataDTO> getDrills() {
+        log.info("Fetching drills");
         List<DrillMetadata> drillMetadataList = drillMetadataRepository.findAll();
         if (CollectionUtil.isNotEmpty(drillMetadataList))
             return drillMetadataList.stream().map(DrillServiceUtil.DrillMetadataUtil::buildDTO).toList();
@@ -78,14 +91,18 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
     }
 
     private DrillMetadataDTO getEntity(int size, List<WordMetadata> wordMetadataList) {
+        log.info("Building drill metadata entity. wordCount={}", wordMetadataList == null ? 0 : wordMetadataList.size());
         DrillMetadata drillMetadata = DrillServiceUtil.DrillMetadataUtil.buildEntity(wordMetadataList, applicationUtil);
         drillMetadata = drillMetadataRepository.save(drillMetadata);
-        return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+        DrillMetadataDTO response = DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+        log.info("Built drill metadata entity. refId={}", response.getRefId());
+        return response;
     }
 
     @Override
     @Transactional
     public void deleteByRefId(long refId) {
+        log.info("Deleting drill metadata. refId={}", refId);
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(refId);
         List<DrillSet> drillSetList = drillMetadata.getDrillSetList();
         List<DrillChallenge> drillChallenges = drillMetadata.getDrillChallenges();
@@ -102,14 +119,20 @@ public class DrillMetadataServiceImpl implements DrillMetadataService {
 
     @Override
     public DrillMetadataDTO getByRefId(long refId) {
+        log.info("Fetching drill metadata. refId={}", refId);
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(refId);
-        return DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+        DrillMetadataDTO response = DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
+        log.info("Fetched drill metadata. refId={}", refId);
+        return response;
     }
 
     @Override
     public Collection<String> getWordsInStrByDrillRefId(long drillRefId) {
+        log.info("Fetching words in drill. drillRefId={}", drillRefId);
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
-        return drillMetadata.getDrillSetList().stream().map(drillSet -> drillSet.getWordId().getWord()).toList();
+        Collection<String> response = drillMetadata.getDrillSetList().stream().map(drillSet -> drillSet.getWordId().getWord()).toList();
+        log.info("Fetched words in drill. drillRefId={}, count={}", drillRefId, response.size());
+        return response;
     }
 
     //    @Override

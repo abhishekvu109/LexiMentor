@@ -9,6 +9,7 @@ import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
 import com.abhi.leximentor.inventory.entities.drill.DrillEvaluation;
 import com.abhi.leximentor.inventory.entities.drill.DrillSet;
+import com.abhi.leximentor.inventory.entities.inv.Evaluator;
 import com.abhi.leximentor.inventory.entities.inv.Example;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
 import com.abhi.leximentor.inventory.exceptions.entities.ServerException;
@@ -35,7 +36,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -145,7 +145,7 @@ public class SentenceDrillEvaluator implements DrillEvaluator {
         return EvaluationResult.builder().isSuccess(true).result(drillEvaluationDTOS.stream().map(this::add).collect(Collectors.toList())).build();
     }
 
-    private String getPrompt(String word, String originalMeaning, String response,String exampleStr) {
+    private String getPrompt(String word, String originalMeaning, String response, String exampleStr) {
         return LLMPromptBuilder.EvaluationModule.getPromptForSentenceUsage(word, originalMeaning, response, exampleStr);
     }
 
@@ -164,10 +164,26 @@ public class SentenceDrillEvaluator implements DrillEvaluator {
     @Transactional
     public DrillEvaluationDTO add(DrillEvaluationDTO dto) {
         DrillChallengeScores drillChallengeScores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getDrillChallengeScoresDTO().getRefId()));
-        com.abhi.leximentor.inventory.entities.inv.Evaluator evaluator = evaluatorRepository.findByNameAndDrillType(dto.getEvaluator(), drillChallengeScores.getChallengeId().getDrillType());
-        DrillEvaluation drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, drillChallengeScores);
+        Evaluator evaluator = evaluatorRepository.findByNameAndDrillType(dto.getEvaluator(), drillChallengeScores.getChallengeId().getDrillType());
+        DrillEvaluation drillEvaluation = this.getDrillEvaluation(dto, drillChallengeScores, evaluator);
         drillEvaluation = drillEvaluationRepository.save(drillEvaluation);
         return DrillServiceUtil.DrillEvaluationUtil.buildDTO(drillEvaluation, DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(drillEvaluation.getDrillChallengeScores()));
+    }
+
+    private DrillEvaluation getDrillEvaluation(DrillEvaluationDTO dto, DrillChallengeScores drillChallengeScores, Evaluator evaluator) {
+        List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(List.of(drillChallengeScores));
+        DrillEvaluation drillEvaluation;
+        if (CollectionUtil.isNotEmpty(drillEvaluations)) {
+            drillEvaluation = drillEvaluations.get(0);
+            drillEvaluation.setEvaluator(evaluator);
+            drillEvaluation.setEvaluationTime(dto.getEvaluationTime());
+            drillEvaluation.setConfidence(dto.getConfidence());
+            drillEvaluation.setDrillChallengeScores(drillChallengeScores);
+            drillEvaluation.setReason(dto.getReason());
+            return drillEvaluation;
+        } else {
+            return DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, drillChallengeScores);
+        }
     }
 
 }

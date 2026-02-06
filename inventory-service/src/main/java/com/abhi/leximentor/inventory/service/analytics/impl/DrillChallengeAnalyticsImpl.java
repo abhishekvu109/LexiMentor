@@ -22,6 +22,7 @@ public class DrillChallengeAnalyticsImpl implements DrillChallengeAnalyticsServi
 
     @Override
     public List<DrillChallengeAnalyticsDTO> getDrillChallengeMetadataAnalytics() {
+        log.info("Building drill challenge metadata analytics");
         List<DrillChallengeAnalyticsDTO> drillChallengeAnalyticsDTOS = new LinkedList<>();
         drillChallengeRepository.findDrillAnalyticsGroupedByType().forEach(tuple -> {
             DrillChallengeAnalyticsDTO drillChallengeAnalyticsDTO = DrillChallengeAnalyticsDTO.builder().build();
@@ -35,6 +36,7 @@ public class DrillChallengeAnalyticsImpl implements DrillChallengeAnalyticsServi
             drillChallengeAnalyticsDTO.setTopNWorstPerformingDrills(drillChallengeRepository.findTop10ByDrillTypeOrderByDrillScoreAsc(drillType).stream().map(DrillServiceUtil.DrillChallengeUtil::buildDTO).toList());
             drillChallengeAnalyticsDTOS.add(drillChallengeAnalyticsDTO);
         });
+        log.info("Built drill challenge metadata analytics. count={}", drillChallengeAnalyticsDTOS.size());
         return drillChallengeAnalyticsDTOS;
     }
 }

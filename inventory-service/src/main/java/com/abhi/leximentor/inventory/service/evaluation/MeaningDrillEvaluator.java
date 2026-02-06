@@ -9,6 +9,7 @@ import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallengeScores;
 import com.abhi.leximentor.inventory.entities.drill.DrillEvaluation;
 import com.abhi.leximentor.inventory.entities.drill.DrillSet;
+import com.abhi.leximentor.inventory.entities.inv.Evaluator;
 import com.abhi.leximentor.inventory.entities.inv.WordMetadata;
 import com.abhi.leximentor.inventory.exceptions.entities.ServerException;
 import com.abhi.leximentor.inventory.model.EvaluationResult;
@@ -18,6 +19,7 @@ import com.abhi.leximentor.inventory.repository.drill.DrillEvaluationRepository;
 import com.abhi.leximentor.inventory.repository.drill.DrillSetRepository;
 import com.abhi.leximentor.inventory.repository.inv.EvaluatorRepository;
 import com.abhi.leximentor.inventory.service.drill.impl.DrillServiceUtil;
+import com.abhi.leximentor.inventory.util.CollectionUtil;
 import com.abhi.leximentor.inventory.util.LLMPromptBuilder;
 import com.abhi.llm.constants.ModelConstant;
 import com.abhi.llm.model.PromptRequest;
@@ -54,12 +56,12 @@ public class MeaningDrillEvaluator implements DrillEvaluator {
 
     private String EVALUATOR;
 
-    public MeaningDrillEvaluator init(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, DrillChallenge drillChallenge, String LLM_URL, String LLM_MODEL,String evaluator) {
+    public MeaningDrillEvaluator init(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, DrillChallenge drillChallenge, String LLM_URL, String LLM_MODEL, String evaluator) {
         this.drillChallengeScoresDTOS = drillChallengeScoresDTOS;
         this.drillChallenge = drillChallenge;
         this.LLM_URL = LLM_URL;
         this.LLM_MODEL = LLM_MODEL;
-        this.EVALUATOR=evaluator;
+        this.EVALUATOR = evaluator;
         return this;
     }
 
@@ -143,10 +145,26 @@ public class MeaningDrillEvaluator implements DrillEvaluator {
     @Transactional
     public DrillEvaluationDTO add(DrillEvaluationDTO dto) {
         DrillChallengeScores drillChallengeScores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getDrillChallengeScoresDTO().getRefId()));
-        com.abhi.leximentor.inventory.entities.inv.Evaluator evaluator = evaluatorRepository.findByNameAndDrillType(dto.getEvaluator(), drillChallengeScores.getChallengeId().getDrillType());
-        DrillEvaluation drillEvaluation = DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, drillChallengeScores);
+        Evaluator evaluator = evaluatorRepository.findByNameAndDrillType(dto.getEvaluator(), drillChallengeScores.getChallengeId().getDrillType());
+        DrillEvaluation drillEvaluation = this.getDrillEvaluation(dto,drillChallengeScores,evaluator);
         drillEvaluation = drillEvaluationRepository.save(drillEvaluation);
         return DrillServiceUtil.DrillEvaluationUtil.buildDTO(drillEvaluation, DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(drillEvaluation.getDrillChallengeScores()));
+    }
+
+    private DrillEvaluation getDrillEvaluation(DrillEvaluationDTO dto, DrillChallengeScores drillChallengeScores, Evaluator evaluator) {
+        List<DrillEvaluation> drillEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(List.of(drillChallengeScores));
+        DrillEvaluation drillEvaluation;
+        if (CollectionUtil.isNotEmpty(drillEvaluations)) {
+            drillEvaluation = drillEvaluations.get(0);
+            drillEvaluation.setEvaluator(evaluator);
+            drillEvaluation.setEvaluationTime(dto.getEvaluationTime());
+            drillEvaluation.setConfidence(dto.getConfidence());
+            drillEvaluation.setDrillChallengeScores(drillChallengeScores);
+            drillEvaluation.setReason(dto.getReason());
+            return drillEvaluation;
+        } else {
+            return DrillServiceUtil.DrillEvaluationUtil.buildEntity(dto, evaluator, drillChallengeScores);
+        }
     }
 
 }

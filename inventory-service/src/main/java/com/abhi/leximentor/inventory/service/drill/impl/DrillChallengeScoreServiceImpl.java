@@ -30,22 +30,29 @@ public class DrillChallengeScoreServiceImpl implements DrillChallengeScoreServic
 
     @Override
     public DrillChallengeScoresDTO createChallenge(DrillChallengeScoresDTO dto) {
+        log.info("Creating drill challenge score. challengeRefId={}, drillSetRefId={}", dto == null ? null : dto.getDrillChallengeRefId(), dto == null ? null : dto.getDrillSetRefId());
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(dto.getDrillChallengeRefId()));
         DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
         DrillTypes drillTypes = DrillTypes.getType(drillChallenge.getDrillType());
         DrillChallengeScores scores = DrillServiceUtil.DrillChallengeScoreUtil.buildEntity(drillChallenge, drillSet, drillTypes);
         scores = drillChallengeScoreRepository.save(scores);
-        return DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(scores);
+        DrillChallengeScoresDTO response = DrillServiceUtil.DrillChallengeScoreUtil.buildDTO(scores);
+        log.info("Created drill challenge score. refId={}", response.getRefId());
+        return response;
     }
 
     @Override
     public List<DrillChallengeScoresDTO> getByDrillChallengeId(DrillChallenge drillChallenge) {
+        log.info("Fetching drill challenge scores. challengeRefId={}", drillChallenge == null ? null : drillChallenge.getRefId());
         List<DrillChallengeScores> drillChallengeScores = drillChallengeScoreRepository.findByChallengeId(drillChallenge);
-        return drillChallengeScores.stream().map(DrillServiceUtil.DrillChallengeScoreUtil::buildDTO).collect(Collectors.toList());
+        List<DrillChallengeScoresDTO> response = drillChallengeScores.stream().map(DrillServiceUtil.DrillChallengeScoreUtil::buildDTO).collect(Collectors.toList());
+        log.info("Fetched drill challenge scores. count={}", response.size());
+        return response;
     }
 
     @Override
     public List<DrillChallengeScoresDTO> updateResponse(List<DrillChallengeScoresDTO> dtos) {
+        log.info("Updating drill challenge scores responses. count={}", dtos == null ? 0 : dtos.size());
         List<DrillChallengeScoresDTO> output = new LinkedList<>();
         if (CollectionUtil.isNotEmpty(dtos)) {
             DrillChallenge drillChallenge = null;
@@ -61,6 +68,7 @@ public class DrillChallengeScoreServiceImpl implements DrillChallengeScoreServic
             drillChallenge.setStatus(Status.DrillChallenge.COMPLETED);
             drillChallengeRepository.save(drillChallenge);
         }
+        log.info("Updated drill challenge scores responses. count={}", output.size());
         return output;
     }
 }

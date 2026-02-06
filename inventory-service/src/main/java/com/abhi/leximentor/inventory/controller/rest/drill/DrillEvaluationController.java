@@ -2,7 +2,6 @@ package com.abhi.leximentor.inventory.controller.rest.drill;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
 import com.abhi.leximentor.inventory.constants.Status;
-import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillEvaluationDTO;
 import com.abhi.leximentor.inventory.dto.drill.DrillReportResponseDTO;
@@ -33,7 +32,7 @@ public class DrillEvaluationController {
     private final DrillChallengeScoreService drillChallengeScoreService;
     private final DrillEvaluationService drillEvaluationService;
 
-    @PostMapping(value = UrlConstants.Drill.DrillEvaluation.DRILL_EVALUATE_BY_CHALLENGE_ID, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(value = "/api/leximentor/drill/metadata/challenges/challenge/{challengeId}/evaluate", consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> evaluateChallenge(@PathVariable String challengeId, @RequestParam String evaluator) {
         log.info("Received a request for the evaluation of the challenge {} using evaluator {}", challengeId, evaluator);
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(challengeId));
@@ -48,7 +47,7 @@ public class DrillEvaluationController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The job has been successfully submitted and the evaluation is progress.");
     }
 
-    @GetMapping(value = UrlConstants.Drill.DrillEvaluation.DRILL_GET_EVALUATION_RESULT_BY_CHALLENGE_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/api/leximentor/drill/metadata/challenges/challenge/{challengeId}/report", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getEvaluationReport(@PathVariable String challengeId) {
         log.info("Received a request to get the evaluation report for the challenge {}", challengeId);
         DrillReportResponseDTO reportResponseDTO = drillEvaluationService.getEvaluationReport(Long.parseLong(challengeId));

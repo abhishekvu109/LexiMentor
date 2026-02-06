@@ -14,9 +14,5 @@ public interface DrillEvaluationService {
 
     public List<DrillEvaluationDTO> evaluate(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, String evaluator,long challengeRefId);
 
-    public List<DrillEvaluationDTO> evaluateMeaning(List<DrillChallengeScoresDTO> drillChallengeScoresDTOS, DrillChallenge drillChallenge, String evaluator) throws Exception;
-
-    public void setUrl(String url);
-
     public DrillReportResponseDTO getEvaluationReport(long challengeRefId);
 }

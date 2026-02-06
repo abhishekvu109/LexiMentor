@@ -24,58 +24,87 @@ public class NamedObjectServiceImpl implements NamedObjectService {
 
     @Override
     public NamedObjectDTO add(NamedObjectDTO dto) {
-        return NamedObjectBuilder.buildDTO(namedObjectRepository.save(NamedObjectBuilder.buildEntity(dto)));
+        log.info("Adding named object. name={}", dto == null ? null : dto.getName());
+        NamedObjectDTO response = NamedObjectBuilder.buildDTO(namedObjectRepository.save(NamedObjectBuilder.buildEntity(dto)));
+        log.info("Added named object. refId={}", response.getRefId());
+        return response;
     }
 
     @Override
     public List<NamedObjectDTO> addAll(List<NamedObjectDTO> dtos) {
+        log.info("Adding named objects. count={}", dtos == null ? 0 : dtos.size());
         List<NamedObject> entities = dtos.stream().map(NamedObjectBuilder::buildEntity).toList();
         entities = namedObjectRepository.saveAll(entities);
-        return entities.stream().map(NamedObjectBuilder::buildDTO).toList();
+        List<NamedObjectDTO> response = entities.stream().map(NamedObjectBuilder::buildDTO).toList();
+        log.info("Added named objects. count={}", response.size());
+        return response;
     }
 
     @Override
     public List<NamedObjectDTO> find() {
-        return namedObjectRepository.findAll().stream().map(NamedObjectBuilder::buildDTO).toList();
+        log.info("Fetching all named objects");
+        List<NamedObjectDTO> response = namedObjectRepository.findAll().stream().map(NamedObjectBuilder::buildDTO).toList();
+        log.info("Fetched named objects. count={}", response.size());
+        return response;
     }
 
     @Override
     public NamedObjectDTO findByRefId(long refId) {
-        return NamedObjectBuilder.buildDTO(namedObjectRepository.findByRefId(refId));
+        log.info("Fetching named object by refId={}", refId);
+        NamedObjectDTO response = NamedObjectBuilder.buildDTO(namedObjectRepository.findByRefId(refId));
+        log.info("Fetched named object by refId={}", refId);
+        return response;
     }
 
     @Override
     public List<NamedObjectDTO> findByGenre(String genre) {
+        log.info("Fetching named objects by genre={}", genre);
         List<NamedObject> entities = namedObjectRepository.findByGenre(genre);
-        return entities.stream().map(NamedObjectBuilder::buildDTO).toList();
+        List<NamedObjectDTO> response = entities.stream().map(NamedObjectBuilder::buildDTO).toList();
+        log.info("Fetched named objects by genre. count={}", response.size());
+        return response;
     }
 
     @Override
     public List<NamedObjectDTO> findByAlias(String alias) {
+        log.info("Fetching named objects by alias={}", alias);
         List<NamedObject> entities = namedObjectRepository.findByAlias(alias);
-        return entities.stream().map(NamedObjectBuilder::buildDTO).toList();
+        List<NamedObjectDTO> response = entities.stream().map(NamedObjectBuilder::buildDTO).toList();
+        log.info("Fetched named objects by alias. count={}", response.size());
+        return response;
     }
 
     @Override
     public List<NamedObjectDTO> findByStatus(int status) {
+        log.info("Fetching named objects by status={}", status);
         List<NamedObject> entities = namedObjectRepository.findByStatus(status);
-        return entities.stream().map(NamedObjectBuilder::buildDTO).toList();
+        List<NamedObjectDTO> response = entities.stream().map(NamedObjectBuilder::buildDTO).toList();
+        log.info("Fetched named objects by status. count={}", response.size());
+        return response;
     }
 
     @Override
     public NamedObjectDTO findByName(String name) {
-        return NamedObjectBuilder.buildDTO(namedObjectRepository.findByName(name));
+        log.info("Fetching named object by name={}", name);
+        NamedObjectDTO response = NamedObjectBuilder.buildDTO(namedObjectRepository.findByName(name));
+        log.info("Fetched named object by name={}", name);
+        return response;
     }
 
     @Override
     public NamedObjectDTO updateStatus(NamedObject entity, int status) {
+        log.info("Updating named object status. refId={}, status={}", entity == null ? null : entity.getRefId(), status);
         entity.setStatus(status);
-        return NamedObjectBuilder.buildDTO(namedObjectRepository.save(entity));
+        NamedObjectDTO response = NamedObjectBuilder.buildDTO(namedObjectRepository.save(entity));
+        log.info("Updated named object status. refId={}, status={}", response.getRefId(), status);
+        return response;
     }
 
     @Override
     public void delete(NamedObjectDTO dto) {
+        log.info("Deleting named object. refId={}", dto == null ? null : dto.getRefId());
         namedObjectRepository.delete(namedObjectRepository.findByRefId(dto.getRefId()));
+        log.info("Deleted named object. refId={}", dto == null ? null : dto.getRefId());
     }
 
     public static class NamedObjectBuilder {

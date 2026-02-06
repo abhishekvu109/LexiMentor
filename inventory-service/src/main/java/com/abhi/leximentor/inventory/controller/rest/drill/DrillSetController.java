@@ -1,7 +1,6 @@
 package com.abhi.leximentor.inventory.controller.rest.drill;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
-import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.drill.DrillSetDTO;
 import com.abhi.leximentor.inventory.dto.inv.WordDTO;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
@@ -25,7 +24,7 @@ import java.util.List;
 public class DrillSetController {
     private final DrillSetService drillSetService;
 
-    @GetMapping(value = UrlConstants.Drill.DrillSet.DRILL_GET_DRILL_SET_BY_SET_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/api/leximentor/drill/metadata/sets/set/{drillSetRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getDrillSetBySetId(@PathVariable String drillSetRefId) {
         log.info("Received a request for getting a drill set using a drill set ref id {}", drillSetRefId);
         DrillSetDTO dto = drillSetService.getDrillSetByDrillSetId(Long.parseLong(drillSetRefId));
@@ -33,7 +32,7 @@ public class DrillSetController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 
-    @GetMapping(value = UrlConstants.Drill.DrillSet.DRILL_GET_DRILL_SETS_BY_DRILL_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/api/leximentor/drill/metadata/sets/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getDrillSetsByDrillId(@PathVariable String drillRefId) {
         log.info("Received a request to fetch the list of drill set list from the drill metadata id {}", drillRefId);
         List<DrillSetDTO> dto = drillSetService.getDrillSetsByDrillId(Long.parseLong(drillRefId));
@@ -41,7 +40,7 @@ public class DrillSetController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 
-    @GetMapping(value = UrlConstants.Drill.DrillSet.DRILL_GET_WORDS_BY_DRILL_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/api/leximentor/drill/metadata/sets/words/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getWordsByDrillId(@PathVariable String drillRefId) {
         log.info("Received a request to fetch the list of words in the drills from the drill metadata id {}", drillRefId);
         List<DrillSetDTO> dto = drillSetService.getDrillSetsByDrillId(Long.parseLong(drillRefId));
@@ -50,7 +49,7 @@ public class DrillSetController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, words);
     }
 
-    @GetMapping(value = UrlConstants.Drill.DrillSet.DRILL_GET_WORDS_DATA_BY_DRILL_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/api/leximentor/drill/metadata/sets/words/data/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getWordDataByDrillId(@PathVariable String drillRefId) {
         log.info("Received a request to fetch the list of words data in the drills from the drill metadata id {}", drillRefId);
         List<WordDTO> dto = drillSetService.getWordDataFromDrillId(Long.parseLong(drillRefId));

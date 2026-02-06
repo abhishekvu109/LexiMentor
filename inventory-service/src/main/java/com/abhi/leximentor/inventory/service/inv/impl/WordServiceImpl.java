@@ -45,18 +45,24 @@ public class WordServiceImpl implements WordService {
     @Override
     @Transactional
     public WordDTO add(WordDTO word) {
+        log.info("Adding word. word={}", word == null ? null : word.getWord());
         WordMetadata wordMetadata = InventoryServiceUtil.WordMetadataUtil.buildEntity(word, wordRepository, languageRepository);
         wordMetadata = wordRepository.save(wordMetadata);
-        return InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata);
+        WordDTO response = InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata);
+        log.info("Added word. refId={}", response.getRefId());
+        return response;
     }
 
     @Override
     @Transactional
     public Collection<WordDTO> addAll(Collection<WordDTO> words) {
+        log.info("Adding words. count={}", words == null ? 0 : words.size());
         Collection<WordMetadata> wordMetadataList = words.stream().map(d -> InventoryServiceUtil.WordMetadataUtil.buildEntity(d, wordRepository, languageRepository)).collect(Collectors.toList());
         wordMetadataList = wordRepository.saveAll(wordMetadataList);
         log.info("Data persisted. Total data: {}", wordMetadataList.size());
-        return wordMetadataList.stream().map(InventoryServiceUtil.WordMetadataUtil::buildDTO).collect(Collectors.toList());
+        Collection<WordDTO> response = wordMetadataList.stream().map(InventoryServiceUtil.WordMetadataUtil::buildDTO).collect(Collectors.toList());
+        log.info("Added words. count={}", response.size());
+        return response;
     }
 
     @Override
@@ -71,8 +77,11 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public WordDTO get(long wordId) {
+        log.info("Fetching word by refId={}", wordId);
         WordMetadata wordMetadata = wordRepository.findByRefId(wordId);
-        return InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata);
+        WordDTO response = InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata);
+        log.info("Fetched word by refId={}", wordId);
+        return response;
     }
 
     @Override
@@ -107,6 +116,7 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public Set<String> getUniqueSourcesByWordRefId(long wordRefId) {
+        log.info("Fetching unique sources. wordRefId={}", wordRefId);
         WordMetadata wordMetadata = wordRepository.findByRefId(wordRefId);
         Set<String> sources = new HashSet<>();
         sources.add(wordMetadata.getSource());
@@ -120,11 +130,13 @@ public class WordServiceImpl implements WordService {
         sources.addAll(meanSources);
         sources.addAll(posSources);
         sources.addAll(exampleSources);
+        log.info("Fetched unique sources. wordRefId={}, count={}", wordRefId, sources.size());
         return sources;
     }
 
     @Override
     public WordDTO getWordByWordRefIdAndSource(String source, long wordRefId) {
+        log.info("Fetching word by refId and source. wordRefId={}, source={}", wordRefId, source);
         WordMetadata wordMetadata = wordRepository.findByRefId(wordRefId);
         WordDTO wordDTO = InventoryServiceUtil.WordMetadataUtil.buildDTO(wordMetadata);
         List<SynonymDTO> synonyms = wordMetadata.getSynonyms().stream().filter(syn -> syn.getSource().equalsIgnoreCase(source)).toList().stream().map(InventoryServiceUtil.SynonymUtil::buildDTO).toList();
@@ -137,11 +149,13 @@ public class WordServiceImpl implements WordService {
         wordDTO.setMeanings(meanings);
         wordDTO.setPartsOfSpeeches(posS);
         wordDTO.setExamples(examples);
+        log.info("Fetched word by refId and source. wordRefId={}, source={}", wordRefId, source);
         return wordDTO;
     }
 
     @Override
     public WordDTO generateWordMetadataFromLLM(String word) {
+        log.info("Generating word metadata from LLM. word={}", word);
         loadModelServiceName();
         log.info("Found the URl of the writewise service: {}", URL);
         LinkedList<String> requestWords = new LinkedList<>();
@@ -170,7 +184,9 @@ public class WordServiceImpl implements WordService {
         if (StringUtils.isNotEmpty(responseOutput.getResponse())) {
             String jsonResponse = this.extractJsonFromResponse(responseOutput.getResponse());
             log.info("Extracted the JSON inside the <response> marker : {}", jsonResponse);
-            return generateObjectFromTheJson(jsonResponse);
+            WordDTO dto = generateObjectFromTheJson(jsonResponse);
+            log.info("Generated word metadata from LLM. word={}", word);
+            return dto;
         } else {
             log.error("The response is null : {}", responseOutput.getResponse());
             return null;

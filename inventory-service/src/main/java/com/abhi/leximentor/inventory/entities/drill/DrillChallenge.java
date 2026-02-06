@@ -60,4 +60,7 @@ public class DrillChallenge {
 
     @Column(name = "evaluation_status")
     private int evaluationStatus;
+
+    @Column(name = "username")
+    private String username;
 }

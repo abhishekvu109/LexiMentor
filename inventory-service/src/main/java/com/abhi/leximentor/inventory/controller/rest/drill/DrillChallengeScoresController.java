@@ -1,7 +1,6 @@
 package com.abhi.leximentor.inventory.controller.rest.drill;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
-import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.drill.DrillChallengeScoresDTO;
 import com.abhi.leximentor.inventory.entities.drill.DrillChallenge;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
@@ -25,7 +24,7 @@ public class DrillChallengeScoresController {
     private final DrillChallengeScoreService drillChallengeScoreService;
     private final DrillChallengeRepository drillChallengeRepository;
 
-    @PutMapping(value = UrlConstants.Drill.DrillChallengeScores.DRILL_UPDATE_CHALLENGE_SCORES_BY_CHALLENGE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/api/leximentor/drill/metadata/challenges/challenge/{challengeId}/scores", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> submitResponse(@PathVariable String challengeId, @RequestBody List<DrillChallengeScoresDTO> request) {
         log.info("Received a request to update the user response for questions : {}", request);
         List<DrillChallengeScoresDTO> response = drillChallengeScoreService.updateResponse(request);
@@ -33,7 +32,7 @@ public class DrillChallengeScoresController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
-    @GetMapping(value = UrlConstants.Drill.DrillChallengeScores.DRILL_GET_CHALLENGE_SCORES_BY_CHALLENGE_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/api/leximentor/drill/metadata/challenges/challenge/{challengeId}/scores", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getChallengeScoresByChallengeId(@PathVariable String challengeId) {
         log.info("Received a request to fetch the list of drill challenge scores from the drill challenge using drill challenge id {}", challengeId);
         DrillChallenge drillChallenge = drillChallengeRepository.findByRefId(Long.parseLong(challengeId));
