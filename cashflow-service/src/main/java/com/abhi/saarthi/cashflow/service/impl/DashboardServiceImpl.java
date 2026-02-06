@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -59,8 +60,9 @@ public class DashboardServiceImpl implements DashboardService {
                 .sum();
 
         List<ExpenseDTO> transactionsLast30Days = expenses.stream()
-                .filter(expense -> expense.getExpenseDate() != null && expense.getExpenseDate().isBefore(LocalDate.now().minusDays(30)))
+                .filter(expense -> expense.getExpenseDate() != null && !expense.getExpenseDate().isBefore(LocalDate.now().minusDays(30)))
                 .map(expenseMapper::toDto)
+                .sorted(Comparator.comparing(ExpenseDTO::getExpenseDate).reversed())
                 .toList();
         long todayTransactions = transactionsLast30Days.stream().filter(expenseDTO -> expenseDTO.getExpenseDate() != null && expenseDTO.getExpenseDate().equals(LocalDate.now())).count();
         List<SpendingTrendDTO> spendingTrendDTOS = transactionsLast30Days.stream().map(expenseDTO -> SpendingTrendDTO.builder().amount(expenseDTO.getAmount()).transactionDate(expenseDTO.getExpenseDate()).build()).toList();
