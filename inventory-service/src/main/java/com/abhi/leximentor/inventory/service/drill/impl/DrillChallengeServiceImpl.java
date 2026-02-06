@@ -45,7 +45,7 @@ public class DrillChallengeServiceImpl implements DrillChallengeService {
         drillMetadata.setDrillChallenges(drillChallenges);
         drillMetadata = drillMetadataRepository.save(drillMetadata);
         DrillMetadataDTO response = DrillServiceUtil.DrillMetadataUtil.buildDTO(drillMetadata);
-        log.info("Added challenge. drillRefId={}, totalChallenges={}", response.getRefId(), response.getDrillChallenges() == null ? 0 : response.getDrillChallenges().size());
+        log.info("Added challenge. drillRefId={}, totalChallenges={}", response.getRefId(), response.getDrillChallengeDTOList() == null ? 0 : response.getDrillChallengeDTOList().size());
         return response;
     }
 
