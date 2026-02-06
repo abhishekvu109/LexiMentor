@@ -36,7 +36,7 @@ public class AnalyticsFacadeImpl implements AnalyticsFacade {
         AnalyticsRequest request = AnalyticsRequest.builder()
                 .type(AnalyticsType.DRILL_CHALLENGE)
                 .build();
-        return strategyRegistry.execute(AnalyticsType.DRILL_CHALLENGE, request, List.class);
+        return strategyRegistry.executeList(AnalyticsType.DRILL_CHALLENGE, request, DrillChallengeAnalyticsDTO.class);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class AnalyticsFacadeImpl implements AnalyticsFacade {
         AnalyticsRequest request = AnalyticsRequest.builder()
                 .type(AnalyticsType.DRILL_TYPE_SUMMARY)
                 .build();
-        return strategyRegistry.execute(AnalyticsType.DRILL_TYPE_SUMMARY, request, List.class);
+        return strategyRegistry.executeList(AnalyticsType.DRILL_TYPE_SUMMARY, request, DrillTypePerformanceDTO.class);
     }
 
     @Override
@@ -89,6 +89,6 @@ public class AnalyticsFacadeImpl implements AnalyticsFacade {
                 .type(AnalyticsType.WORD_DIFFICULTY)
                 .topN(topN)
                 .build();
-        return strategyRegistry.execute(AnalyticsType.WORD_DIFFICULTY, request, List.class);
+        return strategyRegistry.executeList(AnalyticsType.WORD_DIFFICULTY, request, WordDifficultyDTO.class);
     }
 }

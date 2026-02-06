@@ -38,4 +38,53 @@ public class AnalyticsStrategyRegistry {
         Object result = strategy.execute(request);
         return responseType.cast(result);
     }
+
+    public <T> java.util.List<T> executeList(AnalyticsType type, AnalyticsRequest request, Class<T> elementType) {
+        AnalyticsStrategy<?> strategy = strategies.get(type);
+        if (strategy == null) {
+            throw new ServerException().new InternalError("No analytics strategy registered for type: " + type);
+        }
+        Object result = strategy.execute(request);
+        if (!(result instanceof java.util.List<?> list)) {
+            throw new ServerException().new InternalError("Expected list response for type: " + type);
+        }
+        java.util.List<T> typed = new java.util.ArrayList<>(list.size());
+        for (Object item : list) {
+            typed.add(elementType.cast(item));
+        }
+        return typed;
+    }
+
+    public <K, V> java.util.Map<K, V> executeMap(AnalyticsType type, AnalyticsRequest request, Class<K> keyType, Class<V> valueType) {
+        AnalyticsStrategy<?> strategy = strategies.get(type);
+        if (strategy == null) {
+            throw new ServerException().new InternalError("No analytics strategy registered for type: " + type);
+        }
+        Object result = strategy.execute(request);
+        if (!(result instanceof java.util.Map<?, ?> map)) {
+            throw new ServerException().new InternalError("Expected map response for type: " + type);
+        }
+        java.util.Map<K, V> typed = new java.util.LinkedHashMap<>();
+        for (java.util.Map.Entry<?, ?> entry : map.entrySet()) {
+            typed.put(keyType.cast(entry.getKey()), valueType.cast(entry.getValue()));
+        }
+        return typed;
+    }
+
+    public <T> org.springframework.data.domain.Page<T> executePage(AnalyticsType type, AnalyticsRequest request, Class<T> elementType) {
+        AnalyticsStrategy<?> strategy = strategies.get(type);
+        if (strategy == null) {
+            throw new ServerException().new InternalError("No analytics strategy registered for type: " + type);
+        }
+        Object result = strategy.execute(request);
+        if (!(result instanceof org.springframework.data.domain.Page<?> page)) {
+            throw new ServerException().new InternalError("Expected page response for type: " + type);
+        }
+        for (Object item : page.getContent()) {
+            elementType.cast(item);
+        }
+        @SuppressWarnings("unchecked")
+        org.springframework.data.domain.Page<T> typed = (org.springframework.data.domain.Page<T>) page;
+        return typed;
+    }
 }
