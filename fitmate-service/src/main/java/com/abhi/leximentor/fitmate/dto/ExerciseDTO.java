@@ -26,4 +26,5 @@ public class ExerciseDTO {
     private BodyPartsDTO bodyPart;
     private List<MuscleDTO> targetMuscles;
     private List<String> equipments;
+    private ExerciseAnalyticsDTO analyticsDTOList;
 }

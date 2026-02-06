@@ -3,6 +3,7 @@ package com.abhi.leximentor.fitmate.controller;
 import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
 import com.abhi.leximentor.fitmate.constants.UrlConstants;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
+import com.abhi.leximentor.fitmate.dto.RoutineGenerationDTO;
 import com.abhi.leximentor.fitmate.dto.filters.RoutineSearchFilter;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
@@ -57,11 +58,8 @@ public class RoutineController {
     }
 
     @PostMapping(value = "/generate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> generateRoutine(@RequestBody Map<String, Object> request) {
-        String trainingType = (String) request.get("trainingType");
-        @SuppressWarnings("unchecked")
-        List<String> targetBodyParts = (List<String>) request.get("targetBodyParts");
-        RoutineDTO response = generateRoutine.generateRoutine(trainingType, targetBodyParts);
+    public @ResponseBody ResponseEntity<RestApiResponse> generateRoutine(@RequestBody RoutineGenerationDTO request) {
+        RoutineDTO response = generateRoutine.generateRoutine(request);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 

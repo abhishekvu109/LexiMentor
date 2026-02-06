@@ -35,3 +35,6 @@ server:
 logging:
   level:
     org.springframework.boot.context.config: DEBUG
+
+resource:
+  path: D:/fitmate

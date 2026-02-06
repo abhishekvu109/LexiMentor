@@ -24,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ResourceServiceImpl implements ResourceService {
 
-    @Value("${resource-path}")
+    @Value("${resource.path}")
     private String BASE_DIR;
 
     private final GridFsTemplate gridFsTemplate;

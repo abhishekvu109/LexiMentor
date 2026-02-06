@@ -21,6 +21,7 @@ public interface ExerciseService {
     List<ExerciseDTO> getAllByRefId(List<Long> refIds);
 
     List<ExerciseDTO> getAll();
+    List<ExerciseDTO> getAllWithAnalytics();
 
     List<ExerciseDTO> getAllByTrainingMetadataRefId(long trainingMetadatRefId);
 

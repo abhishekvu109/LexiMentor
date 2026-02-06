@@ -4,6 +4,7 @@ import com.abhi.leximentor.fitmate.constants.MeasurementUnit;
 import com.abhi.leximentor.fitmate.constants.Status;
 import com.abhi.leximentor.fitmate.dto.DrillDTO;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
+import com.abhi.leximentor.fitmate.dto.RoutineGenerationDTO;
 import com.abhi.leximentor.fitmate.entities.*;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.repository.*;
@@ -47,9 +48,12 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
 
     @Override
     @Transactional
-    public RoutineDTO generateRoutine(String trainingType, List<String> targetBodyParts) {
-        if (StringUtils.isBlank(trainingType) && CollectionUtils.isEmpty(targetBodyParts)) {
-            throw new ServerException().new InternalError("Training type and target body parts list are required.");
+    public RoutineDTO generateRoutine(RoutineGenerationDTO dto) {
+        String trainingType = dto.getTrainingType();
+        List<String> targetBodyParts = dto.getTargetBodyParts();
+        String username = dto.getUsername();
+        if (StringUtils.isAnyEmpty(trainingType, username) && CollectionUtils.isEmpty(targetBodyParts)) {
+            throw new ServerException().new InternalError("Training type, username and target body parts list are required.");
         }
 
         // Normalize list (uppercase, trim)
@@ -83,7 +87,7 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
         }
 
         // Step 4: Check neglected status (per body part or average for full body)
-        Map<BodyPart, Boolean> neglectedMap = buildNeglectedMap(relevantBodyParts, isFullBody);
+        Map<BodyPart, Boolean> neglectedMap = buildNeglectedMap(relevantBodyParts, isFullBody,username);
 
         // Step 5: Calculate staleness and select balanced exercises
         List<Exercise> selectedExercises = selectBalancedExercises(exercises, neglectedMap, isFullBody, relevantBodyParts);
@@ -125,9 +129,9 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
     }
 
 
-    private Map<BodyPart, Boolean> buildNeglectedMap(List<BodyPart> bodyParts, boolean isFullBody) {
+    private Map<BodyPart, Boolean> buildNeglectedMap(List<BodyPart> bodyParts, boolean isFullBody,String username) {
         Map<BodyPart, Boolean> neglectedMap = new HashMap<>();
-        List<Routine> recentRoutines = routineRepository.findAllByOrderByRoutineDateDesc();
+        List<Routine> recentRoutines = routineRepository.findByUsernameOrderByRoutineDateDesc(username);
         for (BodyPart bp : bodyParts) {
             boolean neglected = isBodyPartNeglected(bp, recentRoutines);
             neglectedMap.put(bp, neglected);

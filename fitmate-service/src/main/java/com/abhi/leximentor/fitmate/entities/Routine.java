@@ -49,7 +49,7 @@ public class Routine {
     @JoinColumn(name = "training_id")
     private Training training;
 
-    @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "routineObj", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Drill> drills;
 
     @Column(name = "routine_date")
