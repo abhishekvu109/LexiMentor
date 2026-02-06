@@ -23,4 +23,5 @@ public class DrillChallengeDTO {
     private List<DrillChallengeScoresDTO> drillChallengeScoresDTOList;
     private String status;
     private String evaluationStatus;
+    private String username;
 }

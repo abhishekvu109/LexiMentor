@@ -30,17 +30,17 @@ public class DrillChallengeController {
     private final DrillChallengeService drillChallengeService;
 
     @PostMapping(value = "/api/leximentor/drill/metadata/challenges/challenge", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> addChallenges(@RequestParam String drillId, @RequestParam String drillType) {
+    public ResponseEntity<RestApiResponse> addChallenges(@RequestParam String drillId, @RequestParam String drillType, @RequestParam String username) {
         log.info("Received a request to add a {} challenge to a drill id {}.", drillType, drillId);
         DrillMetadataDTO drillMetadataDTO = drillMetadataService.getByRefId(Long.parseLong(drillId));
-        drillMetadataDTO = drillChallengeService.addChallenges(drillMetadataDTO, DrillTypes.getType(drillType));
+        drillMetadataDTO = drillChallengeService.addChallenges(drillMetadataDTO, DrillTypes.getType(drillType), username);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillMetadataDTO);
     }
 
     @GetMapping(value = "/api/leximentor/drill/metadata/challenges/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getAllChallengesByDrillRefId(@PathVariable String drillRefId, @RequestParam String username) {
         log.info("Received a request to fetch all the list of challenges associated to the drill. {}", drillRefId);
-        List<DrillChallengeDTO> drillChallengeDTOList = drillChallengeService.getChallengesByDrillRefIdAndUsername(Long.parseLong(drillRefId),username);
+        List<DrillChallengeDTO> drillChallengeDTOList = drillChallengeService.getChallengesByDrillRefIdAndUsername(Long.parseLong(drillRefId), username);
         return drillChallengeDTOList != null ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillChallengeDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve challenges");
     }
 

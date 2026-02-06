@@ -8,7 +8,7 @@ import com.abhi.leximentor.inventory.dto.inv.EvaluatorDTO;
 import java.util.List;
 
 public interface DrillChallengeService {
-    public DrillMetadataDTO addChallenges(DrillMetadataDTO drillMetadataDTO, DrillTypes drillTypes);
+    public DrillMetadataDTO addChallenges(DrillMetadataDTO drillMetadataDTO, DrillTypes drillTypes, String username);
 
     public List<DrillChallengeDTO> getChallengesByDrillRefId(long drillRefId);
     public List<DrillChallengeDTO> getChallengesByDrillRefIdAndUsername(long drillRefId,String username);
