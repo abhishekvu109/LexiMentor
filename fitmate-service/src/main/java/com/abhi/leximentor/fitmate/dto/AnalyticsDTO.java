@@ -18,7 +18,17 @@ public class AnalyticsDTO {
     private Map<String, Long> bodyPartWorkoutVolume; // BodyPart name to total drills
     private List<ExerciseFrequencyDTO> mostFrequentExercises; // New field
     private Map<String, Long> routineDistributionByTrainingType; // New field: Training name to count of routines
+    private Map<String, ExerciseAnalyticsDTO> exerciseAnalytics;
     private Map<String, List<ExerciseProgressionDTO>> exerciseProgressions; // New field
     private RoutineEfficiencyDTO routineEfficiency; // New field
-    // Add more fields as needed for other analytics, e.g., muscle group analytics, routine performance
+    private ActivityConsistencyDTO activityConsistency;
+    private CaloriesDurationDTO caloriesDuration;
+    private TrainingAdherenceDTO trainingAdherence;
+    private List<ExercisePerformanceDTO> exercisePerformance;
+    private MuscleBodyPartFocusDTO muscleBodyPartFocus;
+    private EquipmentUsageDTO equipmentUsage;
+    private DifficultyRiskMixDTO difficultyRiskMix;
+    private RoutineStructureDTO routineStructure;
+    private PersonalRecordsDTO personalRecords;
+    private ExerciseLibraryInsightsDTO exerciseLibraryInsights;
 }
