@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -22,4 +23,5 @@ public interface RoutineRepository extends JpaRepository<Routine, Long>, JpaSpec
 
     List<Routine> findByUsername(String username);
 
+    List<Routine> findByUsernameAndRoutineDateBetween(String username, LocalDate startDate, LocalDate endDate);
 }
