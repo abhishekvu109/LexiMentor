@@ -1,6 +1,7 @@
 package com.abhi.leximentor.fitmate.service;
 
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
+import com.abhi.leximentor.fitmate.dto.RoutineDrillLog;
 import com.abhi.leximentor.fitmate.dto.filters.RoutineSearchFilter;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface RoutineService {
     void deleteAll(List<RoutineDTO> routineDTOS);
 
     List<RoutineDTO> search(RoutineSearchFilter filter);
+
+    List<RoutineDrillLog> findRoutineDrillLog(String username);
 }

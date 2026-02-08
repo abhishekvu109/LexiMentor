@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -67,6 +66,11 @@ public class RoutineController {
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody(required = false) RoutineSearchFilter filter) {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, routineService.search(filter));
+    }
+
+    @GetMapping(value = "/log", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> getLog(@RequestParam String username) {
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, routineService.findRoutineDrillLog(username));
     }
 
 }
