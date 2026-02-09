@@ -19,6 +19,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping("/api/fitmate/drills/drill")
 public class DrillController {
 
     private final DrillService drillService;
@@ -31,14 +32,12 @@ public class DrillController {
     }
 
 
-    @PutMapping(value = UrlConstants.Drill.DRILL_UPDATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> update(@RequestBody DrillDTO dto) {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillService.update(dto));
     }
 
-    public static final String DRILL_UPDATE = "/api/fitmate/drills/drill";
-
-    @DeleteMapping(value = "/api/fitmate/drills/drill")
+    @DeleteMapping
     public @ResponseBody ResponseEntity<RestApiResponse> delete(@RequestBody(required = true) DrillDTO drillDTO){
         drillService.delete(drillDTO);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Deleted Successfully.");

@@ -13,5 +13,8 @@ public interface DrillService {
     List<DrillDTO> findByExerciseNameOrderByCrtnDate(String exerciseName);
 
     DrillDTO update(DrillDTO drillDTO);
+
     void delete(DrillDTO drillDTO);
+
+    DrillDTO add(DrillDTO dto);
 }
