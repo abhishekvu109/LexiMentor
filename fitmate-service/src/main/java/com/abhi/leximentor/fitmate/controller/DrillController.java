@@ -38,9 +38,14 @@ public class DrillController {
     }
 
     @DeleteMapping
-    public @ResponseBody ResponseEntity<RestApiResponse> delete(@RequestBody(required = true) DrillDTO drillDTO){
+    public @ResponseBody ResponseEntity<RestApiResponse> delete(@RequestBody(required = true) DrillDTO drillDTO) {
         drillService.delete(drillDTO);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Deleted Successfully.");
+    }
+
+    @PostMapping
+    public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody DrillDTO drillDTO) {
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillService.add(drillDTO));
     }
 
 }

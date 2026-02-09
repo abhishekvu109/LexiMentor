@@ -72,6 +72,14 @@ public class DrillServiceImpl implements DrillService {
         if (drill == null) {
             throw new ServerException().new EntityObjectNotFound("Drill object is not found.");
         }
+        Routine routine = drill.getRoutineObj();
+        if (routine == null && drill.getRoutine() > 0) {
+            routine = routineRepository.findByRefId(drill.getRoutine());
+        }
+        if (routine != null && routine.getDrills() != null) {
+            routine.getDrills().removeIf(existing -> existing.getRefId() == drill.getRefId());
+            routineRepository.save(routine);
+        }
         drillRepository.delete(drill);
     }
 
