@@ -86,16 +86,18 @@ public class DrillServiceImpl implements DrillService {
     @Override
     @Transactional
     public DrillDTO add(DrillDTO dto) {
-        if (StringUtils.isEmpty(dto.getRoutine())) {
-            throw new ServerException().new InternalError("Routine can't be empty");
+        if (StringUtils.isAnyEmpty(dto.getRoutine(), dto.getExercise().getRefId())) {
+            throw new ServerException().new InternalError("Routine/Exercise can't be empty");
         }
         Routine routine = routineRepository.findByRefId(Long.parseLong(dto.getRoutine()));
         if (routine == null) {
             throw new ServerException().new EntityObjectNotFound("Routine object is not found");
         }
         Drill drill = FitmateServiceUtil.DrillUtil.buildEntity(dto);
+        Exercise exercise = exerciseRepository.findByRefId(Long.parseLong(dto.getExercise().getRefId()));
         drill.setRoutineObj(routine);
         drill.setRoutine(routine.getRefId());
+        drill.setExercise(exercise);
         drill = drillRepository.save(drill);
         return FitmateServiceUtil.DrillUtil.buildDTO(drill);
     }
