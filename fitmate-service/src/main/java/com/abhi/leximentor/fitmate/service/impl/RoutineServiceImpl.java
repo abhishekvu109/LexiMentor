@@ -111,8 +111,11 @@ public class RoutineServiceImpl implements RoutineService {
         routine.setStatus(Status.RoutineStatus.toInt(routineDTO.getStatus()));
         routine.setDurationInMinutes(routineDTO.getDurationInMinutes());
         routine.setBurntCalories(routineDTO.getBurntCalories());
-        List<Drill> drills = new LinkedList<>();
-        if (CollectionUtils.isNotEmpty(routineDTO.getDrills())) {
+        if (routineDTO.getDrills() != null) {
+            List<Drill> existing = drillRepository.findByRoutine(routine.getRefId());
+            List<Drill> drills = new LinkedList<>();
+
+            // Build new list from DTO (update existing or create new)
             routineDTO.getDrills().forEach(dto -> {
                 Drill drill = StringUtils.isNotEmpty(dto.getRefId())
                         ? drillRepository.findByRefId(Long.parseLong(dto.getRefId()))
@@ -126,6 +129,19 @@ public class RoutineServiceImpl implements RoutineService {
                 drill.setRoutineObj(routine);
                 drills.add(drill);
             });
+
+            // Remove drills that are not present in the DTO
+            List<Long> incomingRefIds = routineDTO.getDrills().stream()
+                    .filter(dto -> StringUtils.isNotBlank(dto.getRefId()))
+                    .map(dto -> Long.parseLong(dto.getRefId()))
+                    .toList();
+            List<Drill> toRemove = existing.stream()
+                    .filter(drill -> !incomingRefIds.contains(drill.getRefId()))
+                    .toList();
+            if (!toRemove.isEmpty()) {
+                drillRepository.deleteAll(toRemove);
+            }
+
             routine.setDrills(drills);
         }
         return FitmateServiceUtil.RoutineUtil.buildDto(routineRepository.save(routine));
