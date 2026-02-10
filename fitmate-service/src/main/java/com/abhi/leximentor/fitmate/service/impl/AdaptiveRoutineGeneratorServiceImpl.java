@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -105,6 +106,14 @@ public class AdaptiveRoutineGeneratorServiceImpl implements RoutineGeneratorServ
                 isFullBody,
                 trainingType
         );
+        selectedExercises = selectedExercises.stream()
+                .sorted(Comparator.comparing(
+                        exercise -> {
+                            BodyPart bodyPart = exercise.getTargetBodyPart();
+                            return bodyPart != null ? bodyPart.getName() : null;
+                        },
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)))
+                .toList();
 
         List<DrillDTO> drillDtos = selectedExercises.stream()
                 .map(exercise -> buildAdaptiveDrill(exercise, trainingType, history))
