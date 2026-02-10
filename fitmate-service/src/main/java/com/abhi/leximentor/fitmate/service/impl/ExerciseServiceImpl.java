@@ -150,11 +150,17 @@ public class ExerciseServiceImpl implements ExerciseService {
         List<Exercise> exercises = exerciseRepository.findByRefIdIn(exerciseRefIds);
         log.info("Fetched all the exercise data from the database: {}", exercises);
         exercises.forEach(exercise -> {
-            exercise.setEquipments(Collections.emptyList());
-            exercise.setResources(Collections.emptyList());
-            exercise.setTargetMuscles(Collections.emptyList());
+            if (exercise.getEquipments() != null) {
+                exercise.getEquipments().clear();
+            }
+            if (exercise.getResources() != null) {
+                exercise.getResources().clear();
+            }
+            if (exercise.getTargetMuscles() != null) {
+                exercise.getTargetMuscles().clear();
+            }
         });
-        exerciseRepository.saveAll(exercises);
+        exerciseRepository.saveAllAndFlush(exercises);
         exerciseRepository.deleteAll(exercises);
     }
 
