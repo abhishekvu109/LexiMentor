@@ -343,13 +343,16 @@ public class ExerciseServiceImpl implements ExerciseService {
                     .stream()
                     .filter(resource -> StringUtils.equals(resourceId, resource.getResourceId()))
                     .findAny()
-                    .orElseThrow(() -> new ServerException().new InternalError("Resource not found."));
+                    .orElse(null);
         } else {
             fitmateResource = exercise.getResources()
                     .stream()
                     .filter(resource -> StringUtils.equalsIgnoreCase(placeholder, resource.getPlaceholder()))
                     .findAny()
-                    .orElseThrow(() -> new ServerException().new InternalError("Resource not found."));
+                    .orElse(null);
+        }
+        if (fitmateResource == null) {
+            return Optional.empty();
         }
         return resourceService.find(fitmateResource.getResourceId());
     }
