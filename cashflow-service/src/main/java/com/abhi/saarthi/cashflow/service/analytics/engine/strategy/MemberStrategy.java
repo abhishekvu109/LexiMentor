@@ -1,18 +1,12 @@
 package com.abhi.saarthi.cashflow.service.analytics.engine.strategy;
 
 import com.abhi.saarthi.cashflow.constants.AnalyticsType;
-import com.abhi.saarthi.cashflow.entities.Expense;
 import com.abhi.saarthi.cashflow.model.ExpenseAnalyticsContext;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.abhi.saarthi.cashflow.model.Metric;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MemberStrategy implements AnalyticsStrategy {
 
     @Override
@@ -22,6 +16,8 @@ public class MemberStrategy implements AnalyticsStrategy {
 
     @Override
     public void compute(ExpenseAnalyticsContext context) {
-
+        if (MapUtils.isNotEmpty(context.getMemberTotals())) {
+            context.getMetrics().add(new Metric("MEMBER_TOTAL", context.getMemberTotals()));
+        }
     }
 }

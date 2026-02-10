@@ -12,10 +12,16 @@ public class ExpenseAnalyticsContext {
 
     private List<Expense> expenses = new ArrayList<>();
 
+    private double totalAmount;
+    private long transactionCount;
+
     private Map<String, Double> categoryTotals = new HashMap<>();
     private Map<LocalDate, Double> dailyTotals = new HashMap<>();
     private Map<YearMonth, Double> monthlyTotals = new HashMap<>();
     private Map<String, Double> memberTotals = new HashMap<>();
+
+    private Map<String, Long> categoryCounts = new HashMap<>();
+    private Map<String, Long> memberCounts = new HashMap<>();
 
     private List<Metric> metrics = new ArrayList<>();
     private List<Insight> insights = new ArrayList<>();

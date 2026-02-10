@@ -21,7 +21,15 @@ public class AnalyticsRequest {
     private Set<AnalyticsType> analyticsTypes;
 
     public static Set<AnalyticsType> defaultAnalyticsTypes() {
-        return Set.of(AnalyticsType.ANOMALY, AnalyticsType.CATEGORY, AnalyticsType.TIME_SERIES, AnalyticsType.BUDGET, AnalyticsType.FORECAST, AnalyticsType.PERIOD_COMPARISON);
+        return Set.of(
+                AnalyticsType.ANOMALY,
+                AnalyticsType.CATEGORY,
+                AnalyticsType.MEMBER,
+                AnalyticsType.TIME_SERIES,
+                AnalyticsType.BUDGET,
+                AnalyticsType.FORECAST,
+                AnalyticsType.PERIOD_COMPARISON
+        );
     }
 
     public boolean requires(AnalyticsType type) {

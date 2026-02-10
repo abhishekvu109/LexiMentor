@@ -19,8 +19,5 @@ public class CategoryAndMemberStrategy implements AnalyticsStrategy {
         if (MapUtils.isNotEmpty(context.getCategoryTotals())) {
             context.getMetrics().add(new Metric("CATEGORY_TOTAL", context.getCategoryTotals()));
         }
-        if(MapUtils.isNotEmpty(context.getMemberTotals())){
-            context.getMetrics().add(new Metric("MEMBER_TOTAL", context.getMemberTotals()));
-        }
     }
 }
