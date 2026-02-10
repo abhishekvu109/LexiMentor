@@ -160,7 +160,7 @@ public class ExerciseServiceImpl implements ExerciseService {
                 exercise.getTargetMuscles().clear();
             }
         });
-        exerciseRepository.saveAllAndFlush(exercises);
+//        exerciseRepository.saveAllAndFlush(exercises);
         exerciseRepository.deleteAll(exercises);
     }
 
