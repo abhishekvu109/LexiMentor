@@ -1,7 +1,10 @@
 package com.abhi.leximentor.fitmate.service.impl;
 
+import com.abhi.leximentor.fitmate.constants.Status;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
+import com.abhi.leximentor.fitmate.dto.RoutineDrillExportDTO;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
+import com.abhi.leximentor.fitmate.entities.Drill;
 import com.abhi.leximentor.fitmate.entities.Exercise;
 import com.abhi.leximentor.fitmate.entities.Routine;
 import com.abhi.leximentor.fitmate.repository.ExerciseRepository;
@@ -18,6 +21,9 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -108,6 +114,84 @@ public class ExportServiceImpl implements ExportService {
             }
             return null;
         });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public StreamingResponseBody exportRoutineDrills(String format, String username, LocalDate fromDate, LocalDate toDate) {
+        return outputStream -> transactionTemplate.execute(status -> {
+            try {
+                List<Routine> routines = routineRepository.findByUsernameAndRoutineDateBetween(username, fromDate, toDate);
+                List<RoutineDrillExportDTO> rows = routines.stream()
+                        .flatMap(routine -> {
+                            List<Drill> drills = routine.getDrills() == null ? Collections.emptyList() : routine.getDrills();
+                            return drills.stream().map(drill -> buildRoutineDrillExportRow(routine, drill));
+                        })
+                        .toList();
+
+                if ("csv".equalsIgnoreCase(format)) {
+                    try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream))) {
+                        writer.println("Username,RoutineRefID,WorkoutDate,RoutineStatus,TrainingName,RoutineBurntCalories,RoutineDurationInMinutes,DrillRefID,ExerciseName,DrillMeasurementUnit,DrillMeasurement,DrillUnit,DrillRepetition,DrillBurntCalories,DrillNotes");
+                        rows.forEach(row -> writer.printf("%s,%s,%s,%s,%s,%.2f,%.2f,%s,%s,%s,%.2f,%s,%d,%.2f,%s%n",
+                                csv(row.getUsername()),
+                                csv(row.getRoutineRefId()),
+                                csv(row.getWorkoutDate() == null ? "" : row.getWorkoutDate().toString()),
+                                csv(row.getRoutineStatus()),
+                                csv(row.getTrainingName()),
+                                row.getRoutineBurntCalories(),
+                                row.getRoutineDurationInMinutes(),
+                                csv(row.getDrillRefId()),
+                                csv(row.getExerciseName()),
+                                csv(row.getDrillMeasurementUnit()),
+                                row.getDrillMeasurement(),
+                                csv(row.getDrillUnit()),
+                                row.getDrillRepetition(),
+                                row.getDrillBurntCalories(),
+                                csv(row.getDrillNotes())));
+                        writer.flush();
+                    }
+                } else {
+                    try (SequenceWriter sequenceWriter = objectMapper.writer().writeValues(outputStream)) {
+                        sequenceWriter.init(true);
+                        rows.forEach(row -> {
+                            try {
+                                sequenceWriter.write(row);
+                            } catch (Exception e) {
+                                log.error("Error writing routine drill to JSON stream", e);
+                            }
+                        });
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Error during routine drill export", e);
+            }
+            return null;
+        });
+    }
+
+    private RoutineDrillExportDTO buildRoutineDrillExportRow(Routine routine, Drill drill) {
+        return RoutineDrillExportDTO.builder()
+                .username(routine.getUsername())
+                .routineRefId(String.valueOf(routine.getRefId()))
+                .workoutDate(routine.getRoutineDate())
+                .routineStatus(Status.RoutineStatus.toString(routine.getStatus()))
+                .trainingName(routine.getTraining() != null ? routine.getTraining().getName() : "")
+                .routineBurntCalories(routine.getBurntCalories())
+                .routineDurationInMinutes(routine.getDurationInMinutes())
+                .drillRefId(String.valueOf(drill.getRefId()))
+                .exerciseName(drill.getExercise() != null ? drill.getExercise().getName() : "")
+                .drillMeasurementUnit(drill.getMeasurementUnit())
+                .drillMeasurement(drill.getMeasurement())
+                .drillUnit(drill.getUnit())
+                .drillRepetition(drill.getRepetition())
+                .drillBurntCalories(drill.getBurntCalories())
+                .drillNotes(drill.getNotes())
+                .build();
+    }
+
+    private String csv(String value) {
+        String safe = value == null ? "" : value;
+        return "\"" + safe.replace("\"", "\"\"") + "\"";
     }
 
 }
