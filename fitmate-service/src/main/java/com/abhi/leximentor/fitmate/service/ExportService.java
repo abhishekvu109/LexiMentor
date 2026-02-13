@@ -10,4 +10,6 @@ public interface ExportService {
     StreamingResponseBody exportRoutines(String format);
 
     StreamingResponseBody exportRoutineDrills(String format, String username, LocalDate fromDate, LocalDate toDate);
+
+    StreamingResponseBody exportNutrition(String format, String username, LocalDate fromDate, LocalDate toDate);
 }
