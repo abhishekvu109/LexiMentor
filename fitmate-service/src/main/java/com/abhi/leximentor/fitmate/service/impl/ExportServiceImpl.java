@@ -1,12 +1,15 @@
 package com.abhi.leximentor.fitmate.service.impl;
 
 import com.abhi.leximentor.fitmate.constants.Status;
+import com.abhi.leximentor.fitmate.dto.FoodEntryDTO;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
 import com.abhi.leximentor.fitmate.dto.RoutineDrillExportDTO;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
+import com.abhi.leximentor.fitmate.entities.FoodEntry;
 import com.abhi.leximentor.fitmate.entities.Drill;
 import com.abhi.leximentor.fitmate.entities.Exercise;
 import com.abhi.leximentor.fitmate.entities.Routine;
+import com.abhi.leximentor.fitmate.repository.FoodEntryRepository;
 import com.abhi.leximentor.fitmate.repository.ExerciseRepository;
 import com.abhi.leximentor.fitmate.repository.RoutineRepository;
 import com.abhi.leximentor.fitmate.service.ExportService;
@@ -33,6 +36,7 @@ public class ExportServiceImpl implements ExportService {
 
     private final ExerciseRepository exerciseRepository;
     private final RoutineRepository routineRepository;
+    private final FoodEntryRepository foodEntryRepository;
     private final ObjectMapper objectMapper;
     private final TransactionTemplate transactionTemplate;
 
@@ -169,6 +173,59 @@ public class ExportServiceImpl implements ExportService {
         });
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public StreamingResponseBody exportNutrition(String format, String username, LocalDate fromDate, LocalDate toDate) {
+        return outputStream -> transactionTemplate.execute(status -> {
+            try {
+                List<FoodEntryDTO> rows = foodEntryRepository
+                        .findByUsernameAndEntryDateBetweenOrderByEntryDateAscEntryTimeAsc(username, fromDate, toDate)
+                        .stream()
+                        .map(this::toFoodEntryDTO)
+                        .toList();
+
+                if ("csv".equalsIgnoreCase(format)) {
+                    try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream))) {
+                        writer.println("Username,RefID,EntryDate,EntryTime,MealType,FoodName,ServingQty,ServingUnit,Calories,Protein,Carbs,Fat,Fiber,Sugar,Sodium,SourceType,Notes");
+                        rows.forEach(row -> writer.printf("%s,%s,%s,%s,%s,%s,%.2f,%s,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%s,%s%n",
+                                csv(row.getUsername()),
+                                csv(row.getRefId()),
+                                csv(row.getEntryDate() == null ? "" : row.getEntryDate().toString()),
+                                csv(row.getEntryTime() == null ? "" : row.getEntryTime().toString()),
+                                csv(row.getMealType()),
+                                csv(row.getFoodName()),
+                                row.getServingQty(),
+                                csv(row.getServingUnit()),
+                                row.getCalories(),
+                                row.getProtein(),
+                                row.getCarbs(),
+                                row.getFat(),
+                                row.getFiber(),
+                                row.getSugar(),
+                                row.getSodium(),
+                                csv(row.getSourceType()),
+                                csv(row.getNotes())));
+                        writer.flush();
+                    }
+                } else {
+                    try (SequenceWriter sequenceWriter = objectMapper.writer().writeValues(outputStream)) {
+                        sequenceWriter.init(true);
+                        rows.forEach(row -> {
+                            try {
+                                sequenceWriter.write(row);
+                            } catch (Exception e) {
+                                log.error("Error writing nutrition row to JSON stream", e);
+                            }
+                        });
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Error during nutrition export", e);
+            }
+            return null;
+        });
+    }
+
     private RoutineDrillExportDTO buildRoutineDrillExportRow(Routine routine, Drill drill) {
         return RoutineDrillExportDTO.builder()
                 .username(routine.getUsername())
@@ -192,6 +249,30 @@ public class ExportServiceImpl implements ExportService {
     private String csv(String value) {
         String safe = value == null ? "" : value;
         return "\"" + safe.replace("\"", "\"\"") + "\"";
+    }
+
+    private FoodEntryDTO toFoodEntryDTO(FoodEntry entry) {
+        return FoodEntryDTO.builder()
+                .refId(String.valueOf(entry.getRefId()))
+                .username(entry.getUsername())
+                .entryDate(entry.getEntryDate())
+                .entryTime(entry.getEntryTime())
+                .mealType(entry.getMealType())
+                .foodName(entry.getFoodName())
+                .servingQty(entry.getServingQty())
+                .servingUnit(entry.getServingUnit())
+                .calories(entry.getCalories())
+                .protein(entry.getProtein())
+                .carbs(entry.getCarbs())
+                .fat(entry.getFat())
+                .fiber(entry.getFiber())
+                .sugar(entry.getSugar())
+                .sodium(entry.getSodium())
+                .sourceType(entry.getSourceType())
+                .notes(entry.getNotes())
+                .crtnDate(entry.getCrtnDate())
+                .lastUpdDate(entry.getLastUpdDate())
+                .build();
     }
 
 }

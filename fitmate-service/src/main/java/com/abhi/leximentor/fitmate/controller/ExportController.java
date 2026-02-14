@@ -50,6 +50,12 @@ public class ExportController {
             }
             filename = type + "_" + username + "_" + fromDate + "_to_" + toDate;
             responseBody = exportService.exportRoutineDrills(format, username.trim(), fromDate, toDate);
+        } else if (StringUtils.equalsIgnoreCase("nutrition",type)) {
+            if (username == null || username.isBlank() || fromDate == null || toDate == null || fromDate.isAfter(toDate)) {
+                return ResponseEntity.badRequest().build();
+            }
+            filename = type + "_" + username + "_" + fromDate + "_to_" + toDate;
+            responseBody = exportService.exportNutrition(format, username.trim(), fromDate, toDate);
         } else {
             return ResponseEntity.badRequest().build();
         }
