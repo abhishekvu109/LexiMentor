@@ -15,6 +15,8 @@ public interface NutritionService {
 
     FoodEntryDTO addEntry(FoodEntryDTO foodEntryDTO);
 
+    List<FoodEntryDTO> addEntries(List<FoodEntryDTO> foodEntryDTOS);
+
     FoodEntryDTO updateEntry(String username, long refId, FoodEntryDTO foodEntryDTO);
 
     void deleteEntry(String username, long refId);

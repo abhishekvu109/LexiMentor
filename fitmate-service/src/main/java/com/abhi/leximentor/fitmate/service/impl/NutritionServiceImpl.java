@@ -90,6 +90,15 @@ public class NutritionServiceImpl implements NutritionService {
 
     @Override
     @Transactional
+    public List<FoodEntryDTO> addEntries(List<FoodEntryDTO> foodEntryDTOS) {
+        if (foodEntryDTOS == null || foodEntryDTOS.isEmpty()) {
+            throw new IllegalArgumentException("entries payload is required");
+        }
+        return foodEntryDTOS.stream().map(this::addEntry).toList();
+    }
+
+    @Override
+    @Transactional
     public FoodEntryDTO updateEntry(String username, long refId, FoodEntryDTO foodEntryDTO) {
         if (StringUtils.isBlank(username)) {
             throw new IllegalArgumentException("username is required");

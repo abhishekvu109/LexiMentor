@@ -1,8 +1,11 @@
 package com.abhi.leximentor.fitmate.controller;
 
 import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
+import com.abhi.leximentor.fitmate.dto.NutritionAiBatchRequestDTO;
+import com.abhi.leximentor.fitmate.dto.NutritionAiBatchStatusDTO;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
+import com.abhi.leximentor.fitmate.service.NutritionAiBatchService;
 import com.abhi.leximentor.fitmate.service.NutritionService;
 import com.abhi.leximentor.fitmate.dto.FoodEntryDTO;
 import com.abhi.leximentor.fitmate.dto.NutritionDailySummaryDTO;
@@ -25,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class NutritionController {
     private final NutritionService nutritionService;
+    private final NutritionAiBatchService nutritionAiBatchService;
 
     @PostMapping(value = "/goals", consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> upsertGoal(@RequestBody NutritionGoalDTO request) {
@@ -69,6 +73,22 @@ public class NutritionController {
                     .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, ex.getMessage());
         } catch (Exception ex) {
             log.error("Failed to add food entry", ex);
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+        }
+    }
+
+    @PostMapping(value = "/entries/batch", consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> addEntries(@RequestBody List<FoodEntryDTO> request) {
+        try {
+            List<FoodEntryDTO> response = nutritionService.addEntries(request);
+            return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED)
+                    .successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntityBuilder.getBuilder(HttpStatus.BAD_REQUEST)
+                    .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, ex.getMessage());
+        } catch (Exception ex) {
+            log.error("Failed to add food entries", ex);
             return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR)
                     .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
         }
@@ -158,6 +178,39 @@ public class NutritionController {
                     .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, ex.getMessage());
         } catch (Exception ex) {
             log.error("Failed to fetch nutrition trends", ex);
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+        }
+    }
+
+    @PostMapping(value = "/ai/batch-estimate", consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> submitAiBatchEstimate(@RequestBody NutritionAiBatchRequestDTO request) {
+        try {
+            NutritionAiBatchStatusDTO response = nutritionAiBatchService.submit(request);
+            return ResponseEntityBuilder.getBuilder(HttpStatus.ACCEPTED)
+                    .successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntityBuilder.getBuilder(HttpStatus.BAD_REQUEST)
+                    .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, ex.getMessage());
+        } catch (Exception ex) {
+            log.error("Failed to submit AI batch estimate request", ex);
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
+        }
+    }
+
+    @GetMapping(value = "/ai/batch-estimate/{requestId}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getAiBatchEstimate(@PathVariable String requestId,
+                                                                             @RequestParam String username) {
+        try {
+            NutritionAiBatchStatusDTO response = nutritionAiBatchService.getStatus(requestId, username);
+            return ResponseEntityBuilder.getBuilder(HttpStatus.OK)
+                    .successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntityBuilder.getBuilder(HttpStatus.BAD_REQUEST)
+                    .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, ex.getMessage());
+        } catch (Exception ex) {
+            log.error("Failed to fetch AI batch estimate status", ex);
             return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR)
                     .errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
         }

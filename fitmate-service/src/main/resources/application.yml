@@ -35,3 +35,9 @@ server:
 
 resource:
   path: D:/fitmate
+
+fitmate:
+  ai:
+    ollama:
+      url: ${OLLAMA_URL:http://192.168.1.90:11434/api/generate}
+      model: ${OLLAMA_MODEL:ministral-3:8b}
