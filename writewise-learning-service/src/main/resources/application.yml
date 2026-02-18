@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: dev
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:async-jobs-schema.sql
   data:
     mongodb:
       uri: mongodb://${MONGODB_USERNAME:mongoroot}:${MONGODB_PASSWORD:mongopass}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:writewise}?authSource=admin
@@ -32,3 +36,10 @@ server:
 logging:
   level:
     org.springframework.boot.context.config: DEBUG
+
+async:
+  jobs:
+    store-type: jdbc
+    table-name: async_jobs
+    api-enabled: true
+    api-base-path: /api/writewise/async-jobs
