@@ -1,0 +1,59 @@
+package com.abhi.leximentor.leximentor.entities.drill;
+
+import com.abhi.leximentor.leximentor.entities.NamedObject;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString(exclude = {"drillSetList", "drillChallenges"})
+@Entity
+@Table(name = "drill_metadata")
+public class DrillMetadata {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "drill_id")
+    private long id;
+
+    @Column(name = "ref_id", unique = true, nullable = false)
+    private long refId;
+
+    @Column(name = "uuid", unique = true, nullable = false)
+    private String uuid;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "status")
+    private int status;
+
+    @CreationTimestamp
+    @Column(name = "crtn_date")
+    private LocalDateTime crtnDate;
+
+    @UpdateTimestamp
+    @Column(name = "last_upd_date")
+    private LocalDateTime lastUpdDate;
+
+    @Column(name = "overall_score")
+    private double overallScore;
+
+    @OneToMany(mappedBy = "drillId", cascade = CascadeType.ALL)
+    private List<DrillSet> drillSetList;
+
+    @OneToMany(mappedBy = "drillId", cascade = CascadeType.ALL)
+    private List<Challenge> challenges;
+
+    @Column(name = "drill_name")
+    private String drillname;
+
+    @OneToOne
+    private NamedObject namedObject;
+}

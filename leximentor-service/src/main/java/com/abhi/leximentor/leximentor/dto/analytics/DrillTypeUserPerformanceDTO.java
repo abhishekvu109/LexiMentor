@@ -1,0 +1,19 @@
+package com.abhi.leximentor.leximentor.dto.analytics;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@Builder
+@EqualsAndHashCode
+@Data
+@ToString
+@AllArgsConstructor
+public class DrillTypeUserPerformanceDTO {
+    private String drillType;
+    private long drillCount;
+    private double avgScore;
+    private double passRate;
+}
