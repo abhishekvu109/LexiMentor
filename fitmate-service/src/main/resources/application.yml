@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: dev
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:async-jobs-schema.sql
   data:
     mongodb:
       uri: mongodb://${MONGODB_USERNAME:mongoroot}:${MONGODB_PASSWORD:mongopass}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:fitmate}?authSource=admin
@@ -41,3 +45,10 @@ fitmate:
     ollama:
       url: ${OLLAMA_URL:http://192.168.1.90:11434/api/generate}
       model: ${OLLAMA_MODEL:ministral-3:3b}
+
+async:
+  jobs:
+    store-type: jdbc
+    table-name: async_jobs
+    api-enabled: true
+    api-base-path: /api/fitmate/async-jobs

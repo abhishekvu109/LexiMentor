@@ -42,3 +42,10 @@ leximentor:
     writewise:
       service:
         base-url: http://leximentor-util-service-k8s.default.svc.cluster.local:4545/api/
+
+async:
+  jobs:
+    store-type: jdbc
+    table-name: async_jobs
+    api-enabled: true
+    api-base-path: /api/leximentor/async-jobs

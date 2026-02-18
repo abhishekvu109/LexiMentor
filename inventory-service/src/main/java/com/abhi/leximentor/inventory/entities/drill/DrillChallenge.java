@@ -61,6 +61,9 @@ public class DrillChallenge {
     @Column(name = "evaluation_status")
     private int evaluationStatus;
 
+    @Column(name = "evaluation_job_id")
+    private String evaluationJobId;
+
     @Column(name = "username")
     private String username;
 }

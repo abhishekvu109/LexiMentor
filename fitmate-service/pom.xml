@@ -59,6 +59,11 @@
             <artifactId>leximentor-llm-util</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.abhi.platform</groupId>
+            <artifactId>async-job-spring-boot-starter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
