@@ -13,28 +13,25 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString(exclude = {"drillId","wordId"})
+@ToString(exclude = {"drill","word"})
 public class DrillSet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "drill_set_id")
+    @Column(name = "id")
     private long id;
 
-    @Column(name = "ref_id", nullable = false, unique = true)
-    private long refId;
-
-    @Column(name = "uuid", nullable = false, unique = true)
-    private String uuid;
+    @Column(name = "key", nullable = false, unique = true)
+    private String key;
 
     @ManyToOne
-    @JoinColumn(name = "drill_metadata_id")
-    private DrillMetadata drillId;
+    @JoinColumn(name = "drill_id")
+    private Drill drill;
 
     @CreationTimestamp
-    @Column(name = "crtn_date")
-    private LocalDateTime crtndate;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "word_id")
-    private WordMetadata wordId;
+    private WordMetadata word;
 }

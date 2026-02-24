@@ -2,7 +2,7 @@ package com.abhi.leximentor.leximentor.service.analytics.impl;
 
 import com.abhi.leximentor.leximentor.dto.analytics.DrillChallengeAnalyticsDTO;
 import com.abhi.leximentor.leximentor.mapper.DrillDomainMapper;
-import com.abhi.leximentor.leximentor.repository.drill.DrillChallengeRepository;
+import com.abhi.leximentor.leximentor.repository.drill.ChallengeRepository;
 import com.abhi.leximentor.leximentor.service.analytics.DrillChallengeAnalyticsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +18,14 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DrillChallengeAnalyticsImpl implements DrillChallengeAnalyticsService {
-    private final DrillChallengeRepository drillChallengeRepository;
+    private final ChallengeRepository challengeRepository;
     private final DrillDomainMapper drillDomainMapper;
 
     @Override
     public List<DrillChallengeAnalyticsDTO> getDrillChallengeMetadataAnalytics() {
         log.info("Building drill challenge metadata analytics");
         List<DrillChallengeAnalyticsDTO> drillChallengeAnalyticsDTOS = new LinkedList<>();
-        drillChallengeRepository.findDrillAnalyticsGroupedByType().forEach(tuple -> {
+        challengeRepository.findDrillAnalyticsGroupedByType().forEach(tuple -> {
             DrillChallengeAnalyticsDTO drillChallengeAnalyticsDTO = DrillChallengeAnalyticsDTO.builder().build();
             String drillType = tuple.get("drillType", String.class);
             drillChallengeAnalyticsDTO.setDrillType(drillType);
@@ -33,8 +33,8 @@ public class DrillChallengeAnalyticsImpl implements DrillChallengeAnalyticsServi
             drillChallengeAnalyticsDTO.setAvgScore(tuple.get("avgScore", Double.class));
             drillChallengeAnalyticsDTO.setHighestScore(tuple.get("highestScore", Double.class));
             drillChallengeAnalyticsDTO.setLowestScore(tuple.get("lowestScore", Double.class));
-            drillChallengeAnalyticsDTO.setTopNBestPerformingDrills(drillChallengeRepository.findTop10ByChallengeTypeOrderByScoreDesc(drillType).stream().map(drillDomainMapper::toDto).toList());
-            drillChallengeAnalyticsDTO.setTopNWorstPerformingDrills(drillChallengeRepository.findTop10ByChallengeTypeOrderByScoreAsc(drillType).stream().map(drillDomainMapper::toDto).toList());
+            drillChallengeAnalyticsDTO.setTopNBestPerformingDrills(challengeRepository.findTop10ByChallengeTypeOrderByScoreDesc(drillType).stream().map(drillDomainMapper::toDto).toList());
+            drillChallengeAnalyticsDTO.setTopNWorstPerformingDrills(challengeRepository.findTop10ByChallengeTypeOrderByScoreAsc(drillType).stream().map(drillDomainMapper::toDto).toList());
             drillChallengeAnalyticsDTOS.add(drillChallengeAnalyticsDTO);
         });
         log.info("Built drill challenge metadata analytics. count={}", drillChallengeAnalyticsDTOS.size());

@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class LanguageDTO {
-    private String refId;
+    private String key;
     private String language;
     private String status;
 }

@@ -1,7 +1,7 @@
 package com.abhi.leximentor.leximentor.service.analytics.engine.strategy;
 
 import com.abhi.leximentor.leximentor.dto.analytics.WordDifficultyDTO;
-import com.abhi.leximentor.leximentor.repository.drill.DrillChallengeScoreRepository;
+import com.abhi.leximentor.leximentor.repository.drill.ChallengeScoreRepository;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsRequest;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsStrategy;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsType;
@@ -17,7 +17,7 @@ import java.util.List;
 public class WordDifficultyStrategy implements AnalyticsStrategy<List<WordDifficultyDTO>> {
     private static final int DEFAULT_TOP_N = 20;
 
-    private final DrillChallengeScoreRepository drillChallengeScoreRepository;
+    private final ChallengeScoreRepository challengeScoreRepository;
 
     @Override
     public AnalyticsType getType() {
@@ -28,7 +28,7 @@ public class WordDifficultyStrategy implements AnalyticsStrategy<List<WordDiffic
     public List<WordDifficultyDTO> execute(AnalyticsRequest request) {
         int topN = request.getTopN() == null ? DEFAULT_TOP_N : request.getTopN();
 
-        List<Object[]> rows = drillChallengeScoreRepository.findWordDifficultyHeatmap(topN);
+        List<Object[]> rows = challengeScoreRepository.findWordDifficultyHeatmap(topN);
         List<WordDifficultyDTO> results = new LinkedList<>();
         for (Object[] row : rows) {
             long wordRefId = row[0] == null ? 0L : ((Number) row[0]).longValue();

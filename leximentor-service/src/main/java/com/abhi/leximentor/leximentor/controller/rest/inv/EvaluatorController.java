@@ -17,24 +17,25 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping({"/api/v1/leximentor/evaluators", "/api/leximentor/evaluators/evaluator"})
 public class EvaluatorController {
     private final EvaluatorService evaluatorService;
 
-    @PostMapping(value = "/api/leximentor/evaluators/evaluator", produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> createEvaluator(@RequestBody List<EvaluatorDTO> requests) {
         log.info("Evaluator create requested. count={}", requests == null ? 0 : requests.size());
         List<EvaluatorDTO> evaluatorDTOS = evaluatorService.addAll(requests);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTOS);
     }
 
-    @GetMapping(value = "/api/leximentor/evaluators/evaluator/name/{name}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/name/{name}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByName(@PathVariable String name) {
         log.info("Evaluator get by name requested. name={}", name);
         EvaluatorDTO evaluatorDTO = evaluatorService.getByName(name);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTO);
     }
 
-    @GetMapping(value = "/api/leximentor/evaluators/evaluator/type/drill/{drillType}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = {"/drill-types/{drillType}", "/type/drill/{drillType}"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByDrillType(@PathVariable String drillType) {
         log.info("Evaluator get by drill type requested. drillType={}", drillType);
         List<EvaluatorDTO> evaluatorDTOS = evaluatorService.getByDrillType(drillType);
@@ -42,7 +43,7 @@ public class EvaluatorController {
     }
 
 
-    @GetMapping(value = "/api/leximentor/evaluators/evaluator/id/{refId}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = {"/{refId}", "/id/{refId}"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByRefId(@PathVariable long refId) {
         log.info("Evaluator get by refId requested. refId={}", refId);
         EvaluatorDTO evaluatorDTO = evaluatorService.getByRefId(refId);

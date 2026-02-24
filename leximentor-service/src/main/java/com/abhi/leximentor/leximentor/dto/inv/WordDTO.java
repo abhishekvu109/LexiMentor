@@ -14,12 +14,12 @@ import java.util.Collection;
 @ToString
 public class WordDTO {
 
-    private String refId;
+    private String key;
     private String word;
     private String source;
     private String language;
-    private LocalDate crtnDate;
-    private LocalDate lastUpdDate;
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
 
     @NotEmpty(message = "Cannot be null")
     @NotBlank(message = "cannot be blank")

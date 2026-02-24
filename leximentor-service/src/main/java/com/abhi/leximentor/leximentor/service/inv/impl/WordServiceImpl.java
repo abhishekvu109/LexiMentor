@@ -15,14 +15,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileUrlResource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -195,13 +194,15 @@ public class WordServiceImpl implements WordService {
     }
 
     private void loadModelServiceName() {
-        try {
-            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
-            log.info("Successfully found the llm topic address: {}", properties.getProperty(WRITEWISE_LLM));
-            setURL(properties.getProperty(WRITEWISE_LLM));
-        } catch (IOException ex) {
-            log.error(ex.getMessage());
+        YamlPropertiesFactoryBean yamlFactory = new YamlPropertiesFactoryBean();
+        yamlFactory.setResources(new ClassPathResource("application.yaml"));
+        Properties properties = yamlFactory.getObject();
+        if (properties == null) {
+            log.error("Unable to load configuration from application.yaml");
+            return;
         }
+        log.info("Successfully found the llm topic address: {}", properties.getProperty(WRITEWISE_LLM));
+        setURL(properties.getProperty(WRITEWISE_LLM));
     }
 
     private String extractJsonFromResponse(String response) {

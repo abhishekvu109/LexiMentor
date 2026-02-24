@@ -2,7 +2,7 @@ package com.abhi.leximentor.leximentor.service.analytics.engine.strategy;
 
 import com.abhi.leximentor.leximentor.dto.analytics.DrillAnalyticsDTO;
 import com.abhi.leximentor.leximentor.mapper.InventoryDomainMapper;
-import com.abhi.leximentor.leximentor.repository.drill.DrillMetadataRepository;
+import com.abhi.leximentor.leximentor.repository.drill.DrillRepository;
 import com.abhi.leximentor.leximentor.service.analytics.engine.*;
 import com.abhi.leximentor.leximentor.service.analytics.engine.context.DrillAnalyticsContext;
 import com.abhi.leximentor.leximentor.service.analytics.engine.handler.drill.*;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class DrillAnalyticsStrategy implements AnalyticsStrategy<DrillAnalyticsDTO> {
     private static final int DEFAULT_TOP_N = 10;
 
-    private final DrillMetadataRepository drillMetadataRepository;
+    private final DrillRepository drillRepository;
     private final InventoryDomainMapper inventoryDomainMapper;
 
     @Override
@@ -37,7 +37,7 @@ public class DrillAnalyticsStrategy implements AnalyticsStrategy<DrillAnalyticsD
     }
 
     private AnalyticsPipeline<DrillAnalyticsContext> buildPipeline() {
-        DrillMetadataLoadHandler metadataLoadHandler = new DrillMetadataLoadHandler(drillMetadataRepository);
+        DrillMetadataLoadHandler metadataLoadHandler = new DrillMetadataLoadHandler(drillRepository);
         DrillCountWordsHandler countWordsHandler = new DrillCountWordsHandler();
         DrillAvgScoreHandler avgScoreHandler = new DrillAvgScoreHandler();
         DrillSuccessRateHandler successRateHandler = new DrillSuccessRateHandler();

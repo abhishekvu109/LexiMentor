@@ -3,28 +3,29 @@ package com.abhi.leximentor.leximentor.entities.drill;
 import com.abhi.leximentor.leximentor.entities.inv.Evaluator;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString(exclude = {"evaluator", "drillChallengeScores"})
+@ToString(exclude = {"evaluator", "challengeScores"})
 @Entity
 @Table(name = "challenge_evaluation")
 public class ChallengeEvaluation {
 
     @Id
-    @Column(name = "challenge_evaluation_id", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @Column(name = "ref_id", unique = true, nullable = false)
-    private long refId;
 
-    @Column(name = "uuid")
-    private String uuid;
+    @Column(name = "key")
+    private String key;
 
     @ManyToOne
     @JoinColumn(name = "challenge_score_id")
@@ -42,4 +43,8 @@ public class ChallengeEvaluation {
 
     @Column(name = "reason", length = 5000)
     private String reason;
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }

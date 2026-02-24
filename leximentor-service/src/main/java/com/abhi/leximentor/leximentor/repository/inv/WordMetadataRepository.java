@@ -7,30 +7,31 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WordMetadataRepository extends JpaRepository<WordMetadata, Long> {
-    public WordMetadata findByRefId(long refId);
+    Optional<WordMetadata> findByKey(String key);
 
     @Query(value = QueryConstants.Inventory.WordMetadata.FIND_BY_WORD, nativeQuery = true)
-    public WordMetadata findByWord(String word);
+    Optional<WordMetadata> findByWord(String word);
 
-    public List<WordMetadata> findByRefIdIn(List<Long> refIds);
+    List<WordMetadata> findByKeyIn(List<String> keys);
 
     @Query(value = QueryConstants.Inventory.WordMetadata.GET_WORD_RANDOMLY_IN_LIMIT, nativeQuery = true)
-    public List<WordMetadata> findAllRandomlyInLimit(int limit);
+    List<WordMetadata> findAllRandomlyInLimit(int limit);
 
     @Query(value = QueryConstants.Inventory.WordMetadata.GET_NEW_WORD_IN_LIMIT, nativeQuery = true)
-    public List<WordMetadata> findAllRandomlyNewWordsLimit(int limit);
+    List<WordMetadata> findAllRandomlyNewWordsLimit(int limit);
 
     @Query(value = QueryConstants.Inventory.WordMetadata.GET_EXISTING_WORD_IN_LIMIT, nativeQuery = true)
-    public List<WordMetadata> findAllRandomlyExistingWordsLimit(int limit);
+    List<WordMetadata> findAllRandomlyExistingWordsLimit(int limit);
 
 
     @Query(value = QueryConstants.Inventory.WordMetadata.GET_EXISTING_WORD_BY_SOURCE_LIMIT, nativeQuery = true)
-    public List<WordMetadata> findAllRandomlyExistingWordsFromSourceInLimit(int limit, String source);
+    List<WordMetadata> findAllRandomlyExistingWordsFromSourceInLimit(int limit, String source);
 
     @Query(value = QueryConstants.Inventory.WordMetadata.GET_NEW_WORD_BY_SOURCE_LIMIT, nativeQuery = true)
-    public List<WordMetadata> findAllRandomlyNewWordsFromSourceInLimit(int limit, String source);
+    List<WordMetadata> findAllRandomlyNewWordsFromSourceInLimit(int limit, String source);
 
     @Query(value = QueryConstants.Inventory.WordMetadata.GET_COUNT_OF_WORDS_BY_POS, nativeQuery = true)
     int findCountOfWordsByPos(@Param("pos") String pos);

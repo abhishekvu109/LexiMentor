@@ -8,8 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChallengeEvaluationDTO {
-    private long refId;
-    private ChallengeScoresDTO ChallengeScoresDTO;
+    private long key;
+    private ChallengeScoresDTO challengeScoresDTO;
     private String evaluator;
     private double confidence;
     private String reason;

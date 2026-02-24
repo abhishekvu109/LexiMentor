@@ -27,7 +27,7 @@ public class InventoryDomainMapper {
     }
 
     public SynonymDTO toDto(Synonym synonym) {
-        return SynonymDTO.builder().refId(String.valueOf(synonym.getRefId())).wordRefId(String.valueOf(synonym.getWordId().getRefId())).word(synonym.getWordId().getWord()).synonym(synonym.getSynonym()).source(synonym.getSource()).build();
+        return SynonymDTO.builder().refId(String.valueOf(synonym.getRefId())).wordRefId(String.valueOf(synonym.getWord().getRefId())).word(synonym.getWord().getWord()).synonym(synonym.getSynonym()).source(synonym.getSource()).build();
     }
 
     public Antonym toEntity(AntonymDTO dto, WordMetadata wordMetadata) {
@@ -35,7 +35,7 @@ public class InventoryDomainMapper {
     }
 
     public AntonymDTO toDto(Antonym antonym) {
-        return AntonymDTO.builder().refId(String.valueOf(antonym.getRefId())).word(antonym.getWordId().getWord()).antonym(antonym.getAntonym()).source(antonym.getSource()).build();
+        return AntonymDTO.builder().refId(String.valueOf(antonym.getRefId())).word(antonym.getWord().getWord()).antonym(antonym.getAntonym()).source(antonym.getSource()).build();
     }
 
     public Meaning toEntity(MeaningDTO dto, WordMetadata wordMetadata) {
@@ -43,7 +43,7 @@ public class InventoryDomainMapper {
     }
 
     public MeaningDTO toDto(Meaning meaning) {
-        return MeaningDTO.builder().refId(String.valueOf(meaning.getRefId())).wordRefId(String.valueOf(meaning.getWordId().getRefId())).word(meaning.getWordId().getWord()).source(meaning.getSource()).meaning(meaning.getDefinition()).build();
+        return MeaningDTO.builder().refId(String.valueOf(meaning.getRefId())).wordRefId(String.valueOf(meaning.getWord().getRefId())).word(meaning.getWord().getWord()).source(meaning.getSource()).meaning(meaning.getDefinition()).build();
     }
 
     public Example toEntity(ExampleDTO dto, WordMetadata wordMetadata) {
@@ -59,7 +59,7 @@ public class InventoryDomainMapper {
     }
 
     public PartsOfSpeechDTO toDto(PartsOfSpeech partsOfSpeech) {
-        return PartsOfSpeechDTO.builder().wordRefId(String.valueOf(partsOfSpeech.getWordId().getRefId())).word(partsOfSpeech.getWordId().getWord()).pos(partsOfSpeech.getPos()).source(partsOfSpeech.getSource()).build();
+        return PartsOfSpeechDTO.builder().wordRefId(String.valueOf(partsOfSpeech.getWord().getRefId())).word(partsOfSpeech.getWord().getWord()).pos(partsOfSpeech.getPos()).source(partsOfSpeech.getSource()).build();
     }
 
     public WordMetadata toEntity(WordDTO dto) {
@@ -71,7 +71,7 @@ public class InventoryDomainMapper {
     }
 
     public WordDTO toDto(WordMetadata wordMetadata) {
-        return WordDTO.builder().refId(String.valueOf(wordMetadata.getRefId())).word(wordMetadata.getWord()).localMeaning(wordMetadata.getLocalMeaning()).mnemonic(wordMetadata.getMnemonic()).language(wordMetadata.getLanguage().getLanguage()).crtnDate(wordMetadata.getCrtnDate().toLocalDate()).lastUpdDate(wordMetadata.getLastUpdDate().toLocalDate()).pos(wordMetadata.getPos()).status(Status.ApplicationStatus.getStatusStr(wordMetadata.getStatus())).pronunciation(wordMetadata.getPronunciation()).partsOfSpeeches(CollectionUtil.isNotEmpty(wordMetadata.getPartsOfSpeeches()) ? wordMetadata.getPartsOfSpeeches().stream().map(this::toDto).collect(Collectors.toList()) : null).meanings(CollectionUtil.isNotEmpty(wordMetadata.getMeanings()) ? wordMetadata.getMeanings().stream().map(this::toDto).collect(Collectors.toList()) : null).synonyms(CollectionUtil.isNotEmpty(wordMetadata.getSynonyms()) ? wordMetadata.getSynonyms().stream().map(this::toDto).collect(Collectors.toList()) : null).antonyms(CollectionUtil.isNotEmpty(wordMetadata.getAntonyms()) ? wordMetadata.getAntonyms().stream().map(this::toDto).collect(Collectors.toList()) : null).examples(CollectionUtil.isNotEmpty(wordMetadata.getExamples()) ? wordMetadata.getExamples().stream().map(this::toDto).collect(Collectors.toList()) : null).category(wordMetadata.getCategory()).source(wordMetadata.getSource()).build();
+        return WordDTO.builder().refId(String.valueOf(wordMetadata.getRefId())).word(wordMetadata.getWord()).localMeaning(wordMetadata.getLocalMeaning()).mnemonic(wordMetadata.getMnemonic()).language(wordMetadata.getLanguage().getLanguage()).crtnDate(wordMetadata.getCreatedAt().toLocalDate()).lastUpdDate(wordMetadata.getUpdatedAt().toLocalDate()).pos(wordMetadata.getPos()).status(Status.ApplicationStatus.getStatusStr(wordMetadata.getStatus())).pronunciation(wordMetadata.getPronunciation()).partsOfSpeeches(CollectionUtil.isNotEmpty(wordMetadata.getPartsOfSpeeches()) ? wordMetadata.getPartsOfSpeeches().stream().map(this::toDto).collect(Collectors.toList()) : null).meanings(CollectionUtil.isNotEmpty(wordMetadata.getMeanings()) ? wordMetadata.getMeanings().stream().map(this::toDto).collect(Collectors.toList()) : null).synonyms(CollectionUtil.isNotEmpty(wordMetadata.getSynonyms()) ? wordMetadata.getSynonyms().stream().map(this::toDto).collect(Collectors.toList()) : null).antonyms(CollectionUtil.isNotEmpty(wordMetadata.getAntonyms()) ? wordMetadata.getAntonyms().stream().map(this::toDto).collect(Collectors.toList()) : null).examples(CollectionUtil.isNotEmpty(wordMetadata.getExamples()) ? wordMetadata.getExamples().stream().map(this::toDto).collect(Collectors.toList()) : null).category(wordMetadata.getCategory()).source(wordMetadata.getSource()).build();
     }
 
     private WordMetadata buildNewObject(WordDTO dto) {

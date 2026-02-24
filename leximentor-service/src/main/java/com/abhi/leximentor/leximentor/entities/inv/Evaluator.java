@@ -1,5 +1,6 @@
 package com.abhi.leximentor.leximentor.entities.inv;
 
+import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,36 +15,34 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(name = "inv_evaluator")
+@Table(name = "evaluator")
 public class Evaluator {
     @Id
-    @Column(name = "evaluator_id", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @Column(name = "ref_id", nullable = false, unique = true)
-    private long refId;
-
-    @Column(name = "uuid", nullable = false, unique = true)
-    private String uuid;
+    @Column(name = "key", nullable = false, unique = true)
+    private String key;
 
     @Column(name = "name")
     private String name;
 
     @CreationTimestamp
-    @Column(name = "crtn_date")
+    @Column(name = "created_at")
     @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime crtnDate;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "last_upd_date")
+    @Column(name = "updated_at")
     @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime lastUpdDate;
+    private LocalDateTime updatedAt;
 
     @Column(name = "status")
     private int status;
 
-    @Column(name = "drill_type")
-    private String drillType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "challenge_type")
+    private ChallengeType challengeType;
 }

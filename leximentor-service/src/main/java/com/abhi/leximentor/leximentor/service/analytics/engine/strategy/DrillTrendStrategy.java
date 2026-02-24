@@ -2,7 +2,7 @@ package com.abhi.leximentor.leximentor.service.analytics.engine.strategy;
 
 import com.abhi.leximentor.leximentor.dto.analytics.DrillTrendPointDTO;
 import com.abhi.leximentor.leximentor.dto.analytics.DrillTrendsDTO;
-import com.abhi.leximentor.leximentor.repository.drill.DrillChallengeRepository;
+import com.abhi.leximentor.leximentor.repository.drill.ChallengeRepository;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsRequest;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsStrategy;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsType;
@@ -20,7 +20,7 @@ import java.util.List;
 public class DrillTrendStrategy implements AnalyticsStrategy<DrillTrendsDTO> {
     private static final int DEFAULT_DAYS = 30;
 
-    private final DrillChallengeRepository drillChallengeRepository;
+    private final ChallengeRepository challengeRepository;
 
     @Override
     public AnalyticsType getType() {
@@ -33,7 +33,7 @@ public class DrillTrendStrategy implements AnalyticsStrategy<DrillTrendsDTO> {
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusDays(Math.max(days - 1, 0));
 
-        List<Object[]> rows = drillChallengeRepository.findDrillTrends(fromDate, request.getUsername());
+        List<Object[]> rows = challengeRepository.findDrillTrends(fromDate, request.getUsername());
         List<DrillTrendPointDTO> points = new LinkedList<>();
         for (Object[] row : rows) {
             LocalDate date = row[0] instanceof Date ? ((Date) row[0]).toLocalDate() : LocalDate.parse(String.valueOf(row[0]));

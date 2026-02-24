@@ -1,7 +1,7 @@
 package com.abhi.leximentor.leximentor.service.base;
 
 import com.abhi.leximentor.leximentor.exceptions.entities.InvalidDTOException;
-import com.abhi.leximentor.leximentor.exceptions.entities.ServerException;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,7 +11,7 @@ public abstract class AbstractApplicationService {
 
     protected <T> T requireEntity(T entity, String message) {
         if (entity == null) {
-            throw new ServerException().new EntityObjectNotFound(message);
+            throw new EntityNotFoundException(message);
         }
         return entity;
     }

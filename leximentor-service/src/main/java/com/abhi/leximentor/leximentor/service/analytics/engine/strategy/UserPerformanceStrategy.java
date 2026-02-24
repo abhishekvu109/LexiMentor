@@ -3,7 +3,7 @@ package com.abhi.leximentor.leximentor.service.analytics.engine.strategy;
 import com.abhi.leximentor.leximentor.dto.analytics.DrillTypeUserPerformanceDTO;
 import com.abhi.leximentor.leximentor.dto.analytics.UserPerformanceDTO;
 import com.abhi.leximentor.leximentor.exceptions.entities.ServerException;
-import com.abhi.leximentor.leximentor.repository.drill.DrillChallengeRepository;
+import com.abhi.leximentor.leximentor.repository.drill.ChallengeRepository;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsRequest;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsStrategy;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsType;
@@ -20,7 +20,7 @@ import java.util.List;
 public class UserPerformanceStrategy implements AnalyticsStrategy<UserPerformanceDTO> {
     private static final int DEFAULT_TOP_N = 3;
 
-    private final DrillChallengeRepository drillChallengeRepository;
+    private final ChallengeRepository challengeRepository;
 
     @Override
     public AnalyticsType getType() {
@@ -36,7 +36,7 @@ public class UserPerformanceStrategy implements AnalyticsStrategy<UserPerformanc
         int topN = request.getTopN() == null ? DEFAULT_TOP_N : request.getTopN();
 
         List<DrillTypeUserPerformanceDTO> rows = new LinkedList<>();
-        drillChallengeRepository.findUserDrillTypePerformance(request.getUsername()).forEach(tuple -> {
+        challengeRepository.findUserDrillTypePerformance(request.getUsername()).forEach(tuple -> {
             String drillType = tuple.get("drillType", String.class);
             long drillCount = tuple.get("drillCount", Long.class);
             double avgScore = tuple.get("avgScore", Double.class);

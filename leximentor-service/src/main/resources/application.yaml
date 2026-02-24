@@ -1,8 +1,8 @@
 spring:
   application:
     name: leximentor-service
-  profiles:
-    active: prod
+#  profiles:
+#    active: prod
   sql:
     init:
       mode: always
@@ -54,3 +54,11 @@ async:
     table-name: async_jobs
     api-enabled: true
     api-base-path: /api/leximentor/async-jobs
+
+ollama-llm-based-evaluator: http://llm-service-k8s.default.svc.cluster.local:6565/api/v1/llm/evaluation/meaning/
+llama-llm-based-evaluator: http://llm-service-k8s.default.svc.cluster.local:6565/api/v1/llm/evaluation/meaning/
+writewise-llm-service: http://leximentor-util-service-k8s.default.svc.cluster.local:4545/api/
+ollama-llm-writing-module-topics: http://192.168.1.90:31434/api/v2/llm/text
+model-name: ministral-3:3b
+nltk: http://localhost:5000/api/v1/nltk
+datamuse: http://localhost:5000/api/v1/datamuse

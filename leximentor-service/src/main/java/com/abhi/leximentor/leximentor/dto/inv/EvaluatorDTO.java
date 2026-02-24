@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @Data
 @ToString
 public class EvaluatorDTO {
-    private long refId;
+    private long key;
     private String name;
-    private LocalDateTime crtnDate;
+    private LocalDateTime createdAt;
     private String status;
-    private String drillType;
+    private String challengeType;
 }

@@ -1,6 +1,6 @@
 package com.abhi.leximentor.leximentor.service.analytics;
 
-import com.abhi.leximentor.leximentor.constants.DrillTypes;
+import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import com.abhi.leximentor.leximentor.dto.analytics.DrillAnalyticsDTO;
 import com.abhi.leximentor.leximentor.dto.inv.WordDTO;
 
@@ -16,11 +16,11 @@ public interface DrillAnalyticsService {
 
     public double getAvgDrillScore(long drillRefId);
 
-    public double getAvgDrillScoreByType(long drillRefId, DrillTypes drillTypes);
+    public double getAvgDrillScoreByType(long drillRefId, ChallengeType challengeType);
 
-    public Map<DrillTypes, Integer> getCountOfDrillTypesPerDrill(long drillRefId);
+    public Map<ChallengeType, Integer> getCountOfDrillTypesPerDrill(long drillRefId);
 
-    public Map<DrillTypes, Double> getAvgDrillScoreOfAllDrills(long drillRefId);
+    public Map<ChallengeType, Double> getAvgDrillScoreOfAllDrills(long drillRefId);
 
     public int getCountOfChallengesInADrill(long drillRefId);
 

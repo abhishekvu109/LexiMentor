@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,10 +20,11 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping({"/api/v1/leximentor/named-objects", "/api/leximentor/v1/named/object"})
 public class NamedObjectController {
     private final NamedObjectService namedObjectService;
 
-    @PostMapping(value = "/api/leximentor/v1/named/object", produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public ResponseEntity<RestApiResponse> addAll(@RequestBody List<NamedObjectDTO> dtos) {
         log.info("NamedObject create requested. count={}", dtos == null ? 0 : dtos.size());
         List<NamedObjectDTO> response = namedObjectService.addAll(dtos);

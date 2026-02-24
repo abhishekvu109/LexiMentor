@@ -13,16 +13,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping({"/api/v1/leximentor/writing/topics", "/api/leximentor/v1/module/writing/topics"})
 public class WritingModuleController {
     private final WritingModuleService writingModuleService;
 
-    @PostMapping(value = "/api/leximentor/v1/module/writing/topics", produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> generateTopics(@Valid @RequestBody LlmWritingTopicDTO request) {
         log.info("Writing topics requested. promptLength={}", request == null || request.getPrompt() == null ? 0 : request.getPrompt().length());
         LlmWritingTopicDTO response = writingModuleService.getTopics(request);

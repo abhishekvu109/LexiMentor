@@ -11,9 +11,9 @@ import com.abhi.leximentor.leximentor.entities.inv.Evaluator;
 import com.abhi.leximentor.leximentor.entities.inv.WordMetadata;
 import com.abhi.leximentor.leximentor.exceptions.entities.ServerException;
 import com.abhi.leximentor.leximentor.mapper.DrillDomainMapper;
-import com.abhi.leximentor.leximentor.repository.drill.DrillChallengeRepository;
-import com.abhi.leximentor.leximentor.repository.drill.DrillChallengeScoreRepository;
-import com.abhi.leximentor.leximentor.repository.drill.DrillEvaluationRepository;
+import com.abhi.leximentor.leximentor.repository.drill.ChallengeRepository;
+import com.abhi.leximentor.leximentor.repository.drill.ChallengeScoreRepository;
+import com.abhi.leximentor.leximentor.repository.drill.ChallengeEvaluationRepository;
 import com.abhi.leximentor.leximentor.repository.drill.DrillSetRepository;
 import com.abhi.leximentor.leximentor.repository.inv.EvaluatorRepository;
 import com.abhi.leximentor.leximentor.util.CollectionUtil;
@@ -30,10 +30,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public abstract class AbstractSimpleEvaluationStrategy implements DrillEvaluationStrategy {
     private final DrillSetRepository drillSetRepository;
-    private final DrillChallengeScoreRepository drillChallengeScoreRepository;
-    private final DrillChallengeRepository drillChallengeRepository;
+    private final ChallengeScoreRepository challengeScoreRepository;
+    private final ChallengeRepository challengeRepository;
     private final EvaluatorRepository evaluatorRepository;
-    private final DrillEvaluationRepository drillEvaluationRepository;
+    private final ChallengeEvaluationRepository challengeEvaluationRepository;
     @Autowired
     protected DrillDomainMapper drillDomainMapper;
 
@@ -56,12 +56,12 @@ public abstract class AbstractSimpleEvaluationStrategy implements DrillEvaluatio
                 .orElseThrow(() -> new ServerException().new InternalError("No evaluator found for drill type: " + getType().name()));
 
         for (ChallengeScoresDTO dto : ChallengeScoresDTOS) {
-            ChallengeScores scores = drillChallengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+            ChallengeScores scores = challengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
             DrillSet drillSet = null;
             WordMetadata wordMetadata = null;
             if (requiresWordMetadata()) {
                 drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
-                wordMetadata = drillSet.getWordId();
+                wordMetadata = drillSet.getWord();
             }
 
             boolean correct = isCorrect(dto, scores, drillSet, wordMetadata);
@@ -78,14 +78,14 @@ public abstract class AbstractSimpleEvaluationStrategy implements DrillEvaluatio
                     .build());
         }
 
-        drillChallengeScoreRepository.saveAll(challengeScores);
+        challengeScoreRepository.saveAll(challengeScores);
         challenge.setTotalCorrect(totalCorrect);
         challenge.setTotalWrong(totalIncorrect);
         challenge.setStatus(Status.DrillChallenge.EVALUATED);
         challenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
         challenge.setScore(drillDomainMapper.score(totalCorrect, totalIncorrect));
         challenge.setPass(drillDomainMapper.isPass(challenge.getScore()));
-        drillChallengeRepository.save(challenge);
+        challengeRepository.save(challenge);
 
         return persistEvaluations(ChallengeEvaluationDTOS, evaluator, scoreRefMap);
     }
@@ -95,14 +95,14 @@ public abstract class AbstractSimpleEvaluationStrategy implements DrillEvaluatio
         for (ChallengeEvaluationDTO dto : dtos) {
             ChallengeScores scores = scoreRefMap.get(dto.getChallengeScoresDTO().getRefId());
             ChallengeEvaluation challengeEvaluation = this.getDrillEvaluation(dto, scores, evaluator);
-            ChallengeEvaluation stored = drillEvaluationRepository.save(challengeEvaluation);
+            ChallengeEvaluation stored = challengeEvaluationRepository.save(challengeEvaluation);
             saved.add(drillDomainMapper.toDto(stored, drillDomainMapper.toDto(stored.getChallengeScores())));
         }
         return saved;
     }
 
     private ChallengeEvaluation getDrillEvaluation(ChallengeEvaluationDTO dto, ChallengeScores challengeScores, Evaluator evaluator) {
-        List<ChallengeEvaluation> challengeEvaluations = drillEvaluationRepository.findByDrillChallengeScoresIn(List.of(challengeScores));
+        List<ChallengeEvaluation> challengeEvaluations = challengeEvaluationRepository.findByDrillChallengeScoresIn(List.of(challengeScores));
         ChallengeEvaluation challengeEvaluation;
         if (CollectionUtil.isNotEmpty(challengeEvaluations)) {
             challengeEvaluation = challengeEvaluations.get(0);

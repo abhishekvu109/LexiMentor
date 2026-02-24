@@ -1,6 +1,6 @@
 package com.abhi.leximentor.leximentor.service.drill.impl.strategy;
 
-import com.abhi.leximentor.leximentor.constants.DrillTypes;
+import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import com.abhi.leximentor.leximentor.exceptions.entities.ServerException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.Map;
 @Slf4j
 @Component
 public class DrillEvaluationStrategyRegistry {
-    private final Map<DrillTypes, DrillEvaluationStrategy> strategies = new EnumMap<>(DrillTypes.class);
+    private final Map<ChallengeType, DrillEvaluationStrategy> strategies = new EnumMap<>(ChallengeType.class);
 
     @Autowired
     public DrillEvaluationStrategyRegistry(List<DrillEvaluationStrategy> strategies) {
@@ -22,7 +22,7 @@ public class DrillEvaluationStrategyRegistry {
         }
     }
 
-    public DrillEvaluationStrategy getStrategy(DrillTypes type) {
+    public DrillEvaluationStrategy getStrategy(ChallengeType type) {
         DrillEvaluationStrategy strategy = strategies.get(type);
         if (strategy == null) {
             throw new ServerException().new InternalError("No evaluation strategy registered for type: " + type);
@@ -30,7 +30,7 @@ public class DrillEvaluationStrategyRegistry {
         return strategy;
     }
 
-    public DrillEvaluationStrategy getStrategyOrDefault(DrillTypes type, DrillTypes defaultType) {
+    public DrillEvaluationStrategy getStrategyOrDefault(ChallengeType type, ChallengeType defaultType) {
         DrillEvaluationStrategy strategy = strategies.get(type);
         if (strategy != null) {
             return strategy;

@@ -1,5 +1,6 @@
 package com.abhi.leximentor.leximentor.entities.drill;
 
+import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,25 +12,22 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"drillId", "drillChallengeScoresList"})
+@ToString(exclude = {"drill", "challengeScoresList"})
 @Entity
 @Table(name = "challenge")
 public class Challenge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "challenge_id")
+    @Column(name = "id")
     private long id;
 
-    @Column(name = "ref_id")
-    private long refId;
-
-    @Column(name = "uuid")
-    private String uuid;
+    @Column(name = "key")
+    private String key;
 
     @ManyToOne
     @JoinColumn(name = "drill_id")
-    private DrillMetadata drillId;
+    private Drill drill;
 
     @Column(name = "score")
     private double score;
@@ -43,15 +41,16 @@ public class Challenge {
     @Column(name = "total_wrong")
     private int totalWrong;
 
-    @Column(name = "crtn_date")
+    @Column(name = "created_at")
     @CreationTimestamp
-    private LocalDateTime crtnDate;
+    private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "challengeId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
     private List<ChallengeScores> challengeScoresList;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "challenge_type")
-    private String challengeType;
+    private ChallengeType challengeType;
 
     @Column(name = "status")
     private int status;

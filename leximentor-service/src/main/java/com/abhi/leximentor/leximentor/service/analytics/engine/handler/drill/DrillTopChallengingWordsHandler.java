@@ -26,14 +26,14 @@ public class DrillTopChallengingWordsHandler extends BaseAnalyticsHandler<DrillA
     @Override
     public void handle(DrillAnalyticsContext context) {
         int topN = context.getTopN();
-        if (topN <= 0 || CollectionUtil.isEmpty(context.getDrillMetadata().getChallenges())) {
+        if (topN <= 0 || CollectionUtil.isEmpty(context.getDrill().getChallenges())) {
             context.getBuilder().topChallengingWordsInTheDrill(List.of());
             next(context);
             return;
         }
 
         Map<WordMetadata, Integer> wrongCounts = new HashMap<>();
-        for (Challenge challenge : context.getDrillMetadata().getChallenges()) {
+        for (Challenge challenge : context.getDrill().getChallenges()) {
             if (CollectionUtil.isEmpty(challenge.getChallengeScoresList())) {
                 continue;
             }
@@ -41,11 +41,11 @@ public class DrillTopChallengingWordsHandler extends BaseAnalyticsHandler<DrillA
                 if (score == null || score.isCorrect()) {
                     continue;
                 }
-                DrillSet drillSet = score.getDrillSetId();
-                if (drillSet == null || drillSet.getWordId() == null) {
+                DrillSet drillSet = score.getDrillSet();
+                if (drillSet == null || drillSet.getWord() == null) {
                     continue;
                 }
-                WordMetadata word = drillSet.getWordId();
+                WordMetadata word = drillSet.getWord();
                 wrongCounts.merge(word, 1, Integer::sum);
             }
         }

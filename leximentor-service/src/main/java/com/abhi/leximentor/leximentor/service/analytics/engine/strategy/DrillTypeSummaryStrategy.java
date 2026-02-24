@@ -1,7 +1,7 @@
 package com.abhi.leximentor.leximentor.service.analytics.engine.strategy;
 
 import com.abhi.leximentor.leximentor.dto.analytics.DrillTypePerformanceDTO;
-import com.abhi.leximentor.leximentor.repository.drill.DrillChallengeRepository;
+import com.abhi.leximentor.leximentor.repository.drill.ChallengeRepository;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsRequest;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsStrategy;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsType;
@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DrillTypeSummaryStrategy implements AnalyticsStrategy<List<DrillTypePerformanceDTO>> {
-    private final DrillChallengeRepository drillChallengeRepository;
+    private final ChallengeRepository challengeRepository;
 
     @Override
     public AnalyticsType getType() {
@@ -25,7 +25,7 @@ public class DrillTypeSummaryStrategy implements AnalyticsStrategy<List<DrillTyp
     @Override
     public List<DrillTypePerformanceDTO> execute(AnalyticsRequest request) {
         List<DrillTypePerformanceDTO> results = new LinkedList<>();
-        drillChallengeRepository.findDrillTypePerformance().forEach(tuple -> {
+        challengeRepository.findDrillTypePerformance().forEach(tuple -> {
             String drillType = tuple.get("drillType", String.class);
             long drillCount = tuple.get("drillCount", Long.class);
             double avgScore = tuple.get("avgScore", Double.class);

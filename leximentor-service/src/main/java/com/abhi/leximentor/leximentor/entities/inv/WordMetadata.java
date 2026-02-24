@@ -20,17 +20,13 @@ import java.util.List;
 public class WordMetadata {
 
     @Id
-    @Column(name = "word_id", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private long id;
 
-
-    @Column(name = "uuid")
-    private String uuid;
-
-    @Column(name = "ref_id")
-    private long refId;
+    @Column(name = "key")
+    private String key;
 
     @Column(name = "word", nullable = false)
     private String word;
@@ -51,15 +47,15 @@ public class WordMetadata {
     @Column(name = "category")
     private String category;
 
-    @Column(name = "crtn_date")
+    @Column(name = "created_at")
     @CreationTimestamp
     @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime crtnDate;
+    private LocalDateTime createdAt;
 
-    @Column(name = "last_upd_date")
+    @Column(name = "updated_at")
     @UpdateTimestamp
     @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime lastUpdDate;
+    private LocalDateTime updatedAt;
 
     @Column(name = "status")
     private int status;
@@ -70,18 +66,18 @@ public class WordMetadata {
     @Column(name = "local_meaning")
     private String localMeaning;
 
-    @OneToMany(mappedBy = "wordId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     private List<Synonym> synonyms;
 
-    @OneToMany(mappedBy = "wordId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     private List<Antonym> antonyms;
 
-    @OneToMany(mappedBy = "wordId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     private List<Meaning> meanings;
 
-    @OneToMany(mappedBy = "wordId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     private List<Example> examples;
 
-    @OneToMany(mappedBy = "wordId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     private List<PartsOfSpeech> partsOfSpeeches;
 }

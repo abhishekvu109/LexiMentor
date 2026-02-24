@@ -12,15 +12,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChallengeDTO {
-    private String refId;
-    private String drillType;
-    private String drillRefId;
+    private String key;
+    private String challengeType;
+    private String drillKey;
     private double drillScore;
     private boolean isPass;
     private int totalCorrect;
     private int totalWrong;
-    private LocalDateTime crtnDate;
-    private List<ChallengeScoresDTO> ChallengeScoresDTOList;
+    private LocalDateTime createdAt;
+    private List<ChallengeScoresDTO> challengeScoresDTOList;
     private String status;
     private String evaluationStatus;
     private String username;

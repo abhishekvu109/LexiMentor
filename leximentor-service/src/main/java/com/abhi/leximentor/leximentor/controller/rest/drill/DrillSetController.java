@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,10 +22,11 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping({"/api/v1/leximentor/drill-sets", "/api/leximentor/drill/set"})
 public class DrillSetController {
     private final DrillSetService drillSetService;
 
-    @GetMapping(value = "/api/leximentor/drill/metadata/sets/set/{drillSetRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{drillSetRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getDrillSetBySetId(@PathVariable String drillSetRefId) {
         log.info("Received a request for getting a drill set using a drill set ref id {}", drillSetRefId);
         DrillSetDTO dto = drillSetService.getDrillSetByDrillSetId(Long.parseLong(drillSetRefId));
@@ -32,15 +34,7 @@ public class DrillSetController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 
-    @GetMapping(value = "/api/leximentor/drill/metadata/sets/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> getDrillSetsByDrillId(@PathVariable String drillRefId) {
-        log.info("Received a request to fetch the list of drill set list from the drill metadata id {}", drillRefId);
-        List<DrillSetDTO> dto = drillSetService.getDrillSetsByDrillId(Long.parseLong(drillRefId));
-        log.info("Successfully fetched all the drill set list from the drill-ref-id {} of size {}", drillRefId, dto.size());
-        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
-    }
-
-    @GetMapping(value = "/api/leximentor/drill/metadata/sets/words/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {"/by-drill/{drillRefId}/words", "/get-words/{drillRefId}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getWordsByDrillId(@PathVariable String drillRefId) {
         log.info("Received a request to fetch the list of words in the drills from the drill metadata id {}", drillRefId);
         List<DrillSetDTO> dto = drillSetService.getDrillSetsByDrillId(Long.parseLong(drillRefId));
@@ -49,11 +43,19 @@ public class DrillSetController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, words);
     }
 
-    @GetMapping(value = "/api/leximentor/drill/metadata/sets/words/data/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {"/by-drill/{drillRefId}/word-data", "/api/leximentor/drill/metadata/sets/words/data/{drillRefId}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getWordDataByDrillId(@PathVariable String drillRefId) {
         log.info("Received a request to fetch the list of words data in the drills from the drill metadata id {}", drillRefId);
         List<WordDTO> dto = drillSetService.getWordDataFromDrillId(Long.parseLong(drillRefId));
         log.info("Successfully fetched all the word list from the drill-ref-id {} of size {}", drillRefId, dto.size());
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
+    }
+
+    @GetMapping(value = {"/by-drill/{drillRefId}", "/api/leximentor/drill/metadata/sets/{drillRefId}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> getDrillSetsByDrillId(@PathVariable String drillRefId) {
+        log.info("Received a request to fetch the list of drill set list from the drill metadata id {}", drillRefId);
+        List<DrillSetDTO> dto = drillSetService.getDrillSetsByDrillId(Long.parseLong(drillRefId));
+        log.info("Successfully fetched all the drill set list from the drill-ref-id {} of size {}", drillRefId, dto.size());
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 }

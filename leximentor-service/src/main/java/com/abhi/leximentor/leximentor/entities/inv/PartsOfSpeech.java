@@ -9,26 +9,23 @@ import java.time.LocalDateTime;
 
 @Builder
 @Data
-@ToString(exclude = {"wordId"})
+@ToString(exclude = {"word"})
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "inv_parts_of_speech")
+@Table(name = "parts_of_speech")
 public class PartsOfSpeech {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
-    @Column(name = "uuid", unique = true)
-    private String uuid;
-
-    @Column(name = "ref_id")
-    private long refId;
+    @Column(name = "key", unique = true)
+    private String key;
 
     @ManyToOne
     @JoinColumn(name = "word_id")
-    private WordMetadata wordId;
+    private WordMetadata word;
 
     @Column(name = "source")
     private String source;
@@ -37,11 +34,11 @@ public class PartsOfSpeech {
     private String pos;
 
     @CreationTimestamp
-    @Column(name = "crtn_date")
-    private LocalDateTime crtnDate;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "last_upd_date")
-    private LocalDateTime lastUpdDate;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
 }

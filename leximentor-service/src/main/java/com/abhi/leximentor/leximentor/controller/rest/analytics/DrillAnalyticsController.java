@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping("/api/leximentor/analytics/drill")
+@RequestMapping({"/api/v1/leximentor/analytics/drills", "/api/leximentor/analytics/drill"})
 public class DrillAnalyticsController {
     private final AnalyticsFacade analyticsFacade;
 
@@ -33,14 +33,14 @@ public class DrillAnalyticsController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
-    @GetMapping(value = "/challenge/metadata", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = {"/challenges/summary", "/challenge/metadata"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public ResponseEntity<RestApiResponse> getDrillOverallChallengeAnalytics() {
         log.info("Drill challenge metadata analytics requested");
         List<DrillChallengeAnalyticsDTO> drillChallengeAnalyticsDTOList = analyticsFacade.getDrillChallengeAnalytics();
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillChallengeAnalyticsDTOList);
     }
 
-    @GetMapping(value = "/type/summary", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = {"/types/summary", "/type/summary"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public ResponseEntity<RestApiResponse> getDrillTypeSummary() {
         log.info("Drill type summary requested");
         List<DrillTypePerformanceDTO> summary = analyticsFacade.getDrillTypeSummary();
@@ -55,7 +55,7 @@ public class DrillAnalyticsController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, trends);
     }
 
-    @GetMapping(value = "/user/performance", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = {"/users/performance", "/user/performance"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public ResponseEntity<RestApiResponse> getUserPerformance(@RequestParam(name = "username") String username,
                                                               @RequestParam(name = "topN", required = false, defaultValue = "3") int topN) {
         log.info("User performance requested. username={}, topN={}", username, topN);

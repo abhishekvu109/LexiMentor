@@ -9,13 +9,12 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileUrlResource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,13 +59,15 @@ public class WritingModuleServiceImpl implements WritingModuleService {
     }
 
     private void loadModelServiceName() {
-        try {
-            Properties properties = PropertiesLoaderUtils.loadProperties(new FileUrlResource("application.properties"));
-            log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
-            setUrl(properties.getProperty(LLM_TOPIC));
-        } catch (IOException ex) {
-            log.error(ex.getMessage());
+        YamlPropertiesFactoryBean yamlFactory = new YamlPropertiesFactoryBean();
+        yamlFactory.setResources(new ClassPathResource("application.yaml"));
+        Properties properties = yamlFactory.getObject();
+        if (properties == null) {
+            log.error("Unable to load configuration from application.yaml");
+            return;
         }
+        log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
+        setUrl(properties.getProperty(LLM_TOPIC));
     }
 
     private String extractJsonFromResponse(String response) {

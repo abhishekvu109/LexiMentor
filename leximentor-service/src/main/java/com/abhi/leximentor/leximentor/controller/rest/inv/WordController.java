@@ -20,10 +20,11 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping({"/api/v1/leximentor/words", "/api/leximentor/inventory/words"})
 public class WordController {
     private final WordService wordService;
 
-    @PostMapping(value = "/api/leximentor/inventory/words", produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> addWord(@Valid @RequestBody Collection<WordDTO> dto) {
         log.info("Add words requested. count={}", dto == null ? 0 : dto.size());
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
@@ -35,7 +36,7 @@ public class WordController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "You request has been submitted and is in process");
     }
 
-    @PostMapping(value = "/api/leximentor/inventory/words/generate", produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(value = {"/metadata:generate", "/generate"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> generateWordMetadataFromLLM(@RequestBody Collection<String> words) {
         log.info("Generate word metadata requested. count={}", words == null ? 0 : words.size());
         Collection<WordDTO> response=new LinkedList<>();
@@ -48,21 +49,21 @@ public class WordController {
                 : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Something is wrong");
     }
 
-    @GetMapping(value = "/api/leximentor/inventory/words/{wordRefId}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/{wordRefId}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByWordRefId(@PathVariable String wordRefId) {
         log.info("Get word by refId requested. wordRefId={}", wordRefId);
         WordDTO dto = wordService.get(Long.parseLong(wordRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 
-    @GetMapping(value = "/api/leximentor/inventory/words/{wordRefId}/sources", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/{wordRefId}/sources", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getSourcesByWordRefId(@PathVariable String wordRefId) {
         log.info("Get sources by word refId requested. wordRefId={}", wordRefId);
         Set<String> dto = wordService.getUniqueSourcesByWordRefId(Long.parseLong(wordRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 
-    @GetMapping(value = "/api/leximentor/inventory/words/{wordRefId}/sources/{source}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/{wordRefId}/sources/{source}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getWordByWordRefIdAndSource(@PathVariable String wordRefId, @PathVariable String source) {
         log.info("Get word by refId and source requested. wordRefId={}, source={}", wordRefId, source);
         WordDTO dto = wordService.getWordByWordRefIdAndSource(source, Long.parseLong(wordRefId));

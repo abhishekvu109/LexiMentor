@@ -1,6 +1,6 @@
 package com.abhi.leximentor.leximentor.dto.other;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 
 @Data

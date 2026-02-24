@@ -9,8 +9,8 @@ import lombok.ToString;
 @ToString
 public class PartsOfSpeechDTO {
     private String pos;
-    private String refId;
-    private String wordRefId;
+    private String key;
+    private String wordKey;
     private String word;
     private String source;
 }

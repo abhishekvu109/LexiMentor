@@ -5,9 +5,9 @@ import com.abhi.asyncjobs.retry.ExponentialBackoffRetryPolicy;
 import com.abhi.leximentor.leximentor.dto.drill.ChallengeEvaluationJobPayload;
 import com.abhi.leximentor.leximentor.dto.drill.ChallengeScoresDTO;
 import com.abhi.leximentor.leximentor.entities.drill.Challenge;
-import com.abhi.leximentor.leximentor.repository.drill.DrillChallengeRepository;
-import com.abhi.leximentor.leximentor.service.drill.DrillChallengeScoreService;
-import com.abhi.leximentor.leximentor.service.drill.DrillEvaluationService;
+import com.abhi.leximentor.leximentor.repository.drill.ChallengeRepository;
+import com.abhi.leximentor.leximentor.service.drill.ChallengeScoreService;
+import com.abhi.leximentor.leximentor.service.drill.ChallengeEvaluationService;
 import com.abhi.asyncjobs.starter.registration.AsyncJobRegistration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +21,9 @@ public class AsyncJobsRegistrationConfig {
 
     @Bean
     public AsyncJobRegistration inventoryAsyncJobRegistration(
-        DrillChallengeRepository drillChallengeRepository,
-        DrillChallengeScoreService drillChallengeScoreService,
-        DrillEvaluationService drillEvaluationService
+        ChallengeRepository challengeRepository,
+        ChallengeScoreService challengeScoreService,
+        ChallengeEvaluationService challengeEvaluationService
     ) {
         return jobClient -> {
             jobClient.register(
@@ -46,9 +46,9 @@ public class AsyncJobsRegistrationConfig {
             jobClient.register(
                 JobDefinition.builder("leximentor.drill.challenge.evaluate", ChallengeEvaluationJobPayload.class, ctx -> {
                         ChallengeEvaluationJobPayload payload = ctx.payload();
-                        Challenge challenge = drillChallengeRepository.findByRefId(payload.getChallengeRefId());
-                        List<ChallengeScoresDTO> scores = drillChallengeScoreService.getByDrillChallengeId(challenge);
-                        drillEvaluationService.evaluate(scores, payload.getEvaluator(), payload.getChallengeRefId());
+                        Challenge challenge = challengeRepository.findByRefId(payload.getChallengeRefId());
+                        List<ChallengeScoresDTO> scores = challengeScoreService.getByDrillChallengeId(challenge);
+                        challengeEvaluationService.evaluate(scores, payload.getEvaluator(), payload.getChallengeRefId());
                         return Map.of(
                             "jobId", ctx.jobId(),
                             "challengeRefId", payload.getChallengeRefId(),

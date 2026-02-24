@@ -6,11 +6,10 @@ import com.abhi.leximentor.leximentor.dto.inv.WordDTO;
 import java.util.List;
 
 public interface DrillSetService {
-    public DrillSetDTO getDrillSetByRefId(long refId);
+    DrillSetDTO getDrillSetByKey(String drillSetKey);
 
-    public DrillSetDTO getDrillSetByDrillSetId(long drillSetId);
 
-    public List<DrillSetDTO> getDrillSetsByDrillId(long drillRefId);
+    List<DrillSetDTO> getDrillSetsByDrillId(String drillKey);
 
-    public List<WordDTO> getWordDataFromDrillId(long drillRefId);
+    List<WordDTO> getWordDataFromDrillId(String drillKey);
 }

@@ -1,5 +1,6 @@
 package com.abhi.leximentor.leximentor.repository.inv;
 
+import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import com.abhi.leximentor.leximentor.entities.inv.Evaluator;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,12 +9,13 @@ import java.util.List;
 
 @Repository
 public interface EvaluatorRepository extends JpaRepository<Evaluator, Long> {
-    public Evaluator findByName(String name);
+    Evaluator findByName(String name);
 
-    public Evaluator findByNameAndDrillType(String name, String drillType);
+    Evaluator findByNameAndChallengeType(String name, ChallengeType challengeType);
 
-    public Evaluator findByRefId(long refId);
+    Evaluator findByKey(String key);
 
-    public List<Evaluator> findByDrillType(String drillType);
-    public List<Evaluator> findByDrillTypeIgnoreCase(String drillType);
+    List<Evaluator> findByChallengeType(ChallengeType challengeType);
+
+    List<Evaluator> findByChallengeTypeIgnoreCase(ChallengeType challengeType);
 }

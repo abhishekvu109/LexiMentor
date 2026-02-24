@@ -1,13 +1,14 @@
 package com.abhi.leximentor.leximentor.controller.rest.drill;
 
 import com.abhi.leximentor.leximentor.constants.ApplicationConstants;
-import com.abhi.leximentor.leximentor.dto.drill.DrillMetadataDTO;
+import com.abhi.leximentor.leximentor.dto.drill.DrillDTO;
 import com.abhi.leximentor.leximentor.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.leximentor.model.rest.RestApiResponse;
-import com.abhi.leximentor.leximentor.service.drill.DrillMetadataService;
+import com.abhi.leximentor.leximentor.service.drill.DrillService;
 import com.abhi.leximentor.leximentor.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,52 +21,54 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping({"/api/v1/leximentor/drills", "/api/leximentor/drill"})
 public class DrillMetadataController {
-    private final DrillMetadataService drillMetadataService;
+    private final DrillService drillService;
 
     /*
     Added the new drill for the Random words.
      */
-    @PostMapping(value = "/api/leximentor/drill/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> drillAdd(@RequestParam int limit, @RequestParam boolean isNewWords) {
-        log.info("Received a request for creating new drill from new words: Limit:{}, New words:{}", limit, isNewWords);
-        DrillMetadataDTO dto = (isNewWords) ? drillMetadataService.createDrillFromNewWords(limit) : drillMetadataService.createDrillFromExistingWords(limit);
-        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
+    @PostMapping
+    public @ResponseBody ResponseEntity<RestApiResponse> drillAdd(@RequestParam int limit, @RequestParam boolean isNewWords, @RequestParam(required = false) String sourceName) {
+        if (StringUtils.isNotEmpty(sourceName)) {
+            log.info("Received a request for creating new drill by source. sourceName={}, limit={}, isNewWords={}", sourceName, limit, isNewWords);
+            DrillDTO dto = drillService.createDrillBySource(limit, sourceName, isNewWords);
+            return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
+        } else {
+            log.info("Received a request for creating new drill from new words: Limit:{}, New words:{}", limit, isNewWords);
+            DrillDTO dto = (isNewWords) ? drillService.createDrillFromNewWords(limit) : drillService.createDrillFromExistingWords(limit);
+            return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
+        }
     }
 
-    @PostMapping(value = "/api/leximentor/drill/metadata/source/{sourceName}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> newDrillBySourceRandomly(@RequestParam int limit, @RequestParam boolean isNewWords, @PathVariable String sourceName) {
-        log.info("Received a request for creating new drill by source. sourceName={}, limit={}, isNewWords={}", sourceName, limit, isNewWords);
-        DrillMetadataDTO dto = drillMetadataService.createDrillBySource(limit, sourceName, isNewWords);
-        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
-    }
-
-    @DeleteMapping(value = "/api/leximentor/drill/metadata/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> deleteDrillMetadataByRefId(@PathVariable String drillRefId) {
         log.info("Delete drill metadata requested. drillRefId={}", drillRefId);
-        drillMetadataService.deleteByRefId(Long.parseLong(drillRefId));
+        drillService.deleteByRefId(Long.parseLong(drillRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.NO_CONTENT).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The data has been removed successfully.");
     }
 
-    @GetMapping(value = "/api/leximentor/drill/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public ResponseEntity<RestApiResponse> getAllDrills() {
         log.info("Get all drills requested");
-        List<DrillMetadataDTO> drillMetadataDTOList = drillMetadataService.getDrills();
-        return drillMetadataDTOList != null ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillMetadataDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve drills");
+        List<DrillDTO> drillDTOList = drillService.getDrills();
+        return drillDTOList != null ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve drills");
     }
 
-    @GetMapping(value = "/api/leximentor/drill/metadata/words/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {"/{drillRefId}/words", "/get-words/{drillRefId}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse> getWordsByDrillRefId(@PathVariable String drillRefId) {
         log.info("Received a request to get the words in a drill by drillRefId: {}", drillRefId);
-        Collection<String> words = drillMetadataService.getWordsInStrByDrillRefId(Long.parseLong(drillRefId));
+        Collection<String> words = drillService.getWordsInStrByDrillRefId(Long.parseLong(drillRefId));
         return CollectionUtil.isNotEmpty(words) ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, words) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve words in the drills");
     }
 
-    @PostMapping(value = "/api/leximentor/drill/metadata/assign-name/{drillRefId}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(value = {"/{drillRefId}/name-assignment", "/assign-name/{drillRefId}"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> assignNameToDrill(@PathVariable String drillRefId) {
         log.info("Assign name requested. drillRefId={}", drillRefId);
-        DrillMetadataDTO response = drillMetadataService.assignDrillName(Long.parseLong(drillRefId));
+        DrillDTO response = drillService.assignDrillName(Long.parseLong(drillRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
+
+
 
 }

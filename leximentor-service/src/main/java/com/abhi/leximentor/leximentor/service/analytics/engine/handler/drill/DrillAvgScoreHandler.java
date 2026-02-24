@@ -8,13 +8,13 @@ import com.abhi.leximentor.leximentor.util.CollectionUtil;
 public class DrillAvgScoreHandler extends BaseAnalyticsHandler<DrillAnalyticsContext> {
     @Override
     public void handle(DrillAnalyticsContext context) {
-        if (CollectionUtil.isEmpty(context.getDrillMetadata().getChallenges())) {
+        if (CollectionUtil.isEmpty(context.getDrill().getChallenges())) {
             context.getBuilder().avgDrillScore(0.0);
             next(context);
             return;
         }
 
-        double average = context.getDrillMetadata().getChallenges().stream()
+        double average = context.getDrill().getChallenges().stream()
                 .mapToDouble(Challenge::getScore)
                 .average()
                 .orElse(0.0);

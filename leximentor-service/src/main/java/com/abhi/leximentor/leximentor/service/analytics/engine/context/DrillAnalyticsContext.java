@@ -1,7 +1,7 @@
 package com.abhi.leximentor.leximentor.service.analytics.engine.context;
 
 import com.abhi.leximentor.leximentor.dto.analytics.DrillAnalyticsDTO;
-import com.abhi.leximentor.leximentor.entities.drill.DrillMetadata;
+import com.abhi.leximentor.leximentor.entities.drill.Drill;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,6 +10,6 @@ import lombok.Data;
 public class DrillAnalyticsContext {
     private long drillRefId;
     private int topN;
-    private DrillMetadata drillMetadata;
+    private Drill drill;
     private DrillAnalyticsDTO.DrillAnalyticsDTOBuilder builder;
 }

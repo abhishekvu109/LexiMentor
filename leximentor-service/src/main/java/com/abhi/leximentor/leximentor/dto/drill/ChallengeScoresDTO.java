@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChallengeScoresDTO {
-    private String refId;
-    private String drillChallengeRefId;
-    private String drillSetRefId;
+    private String key;
+    private String challengeKey;
+    private String drillSetKey;
     private boolean isCorrect;
     private String response;
     private String question;
-    private LocalDateTime crtnDate;
+    private LocalDateTime createdAt;
     private String description;
 }

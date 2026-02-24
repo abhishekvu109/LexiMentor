@@ -7,9 +7,9 @@ import com.abhi.leximentor.leximentor.util.CollectionUtil;
 public class DrillCountChallengesHandler extends BaseAnalyticsHandler<DrillAnalyticsContext> {
     @Override
     public void handle(DrillAnalyticsContext context) {
-        int count = CollectionUtil.isEmpty(context.getDrillMetadata().getChallenges())
+        int count = CollectionUtil.isEmpty(context.getDrill().getChallenges())
                 ? 0
-                : context.getDrillMetadata().getChallenges().size();
+                : context.getDrill().getChallenges().size();
         context.getBuilder().countOfChallenges(count);
         next(context);
     }

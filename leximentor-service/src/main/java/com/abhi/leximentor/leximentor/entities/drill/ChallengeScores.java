@@ -11,29 +11,26 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"challengeId","drillSetId"})
+@ToString(exclude = {"challenge","drillSet"})
 @Entity
 @Table(name = "challenge_score")
 public class ChallengeScores {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "challenge_score_id")
+    @Column(name = "id")
     private long id;
 
-    @Column(name = "ref_id")
-    private long refId;
-
-    @Column(name = "uuid")
-    private String uuid;
+    @Column(name = "key")
+    private String key;
 
     @ManyToOne
     @JoinColumn(name = "challenge_id")
-    private Challenge challengeId;
+    private Challenge challenge;
 
     @ManyToOne
     @JoinColumn(name = "drill_set_id")
-    private DrillSet drillSetId;
+    private DrillSet drillSet;
 
     @Column(name = "is_correct")
     private boolean isCorrect;
@@ -45,9 +42,9 @@ public class ChallengeScores {
     private String response;
 
     @CreationTimestamp
-    @Column(name = "crtn_date")
-    private LocalDateTime crtnDate;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @Column(name = "description", length = 5000)
-    private String Description;
+    private String description;
 }

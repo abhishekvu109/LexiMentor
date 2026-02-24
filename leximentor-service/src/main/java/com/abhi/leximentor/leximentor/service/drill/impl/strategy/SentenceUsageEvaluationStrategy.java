@@ -1,6 +1,6 @@
 package com.abhi.leximentor.leximentor.service.drill.impl.strategy;
 
-import com.abhi.leximentor.leximentor.constants.DrillTypes;
+import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import com.abhi.leximentor.leximentor.dto.drill.ChallengeScoresDTO;
 import com.abhi.leximentor.leximentor.dto.drill.ChallengeEvaluationDTO;
 import com.abhi.leximentor.leximentor.entities.drill.Challenge;
@@ -17,8 +17,8 @@ public class SentenceUsageEvaluationStrategy implements DrillEvaluationStrategy 
     private final SentenceDrillEvaluator sentenceDrillEvaluator;
 
     @Override
-    public DrillTypes getType() {
-        return DrillTypes.SENTENCE_USAGE;
+    public ChallengeType getType() {
+        return ChallengeType.SENTENCE_USAGE;
     }
 
     @Override

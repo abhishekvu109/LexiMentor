@@ -24,7 +24,7 @@ Findings (Ordered by Severity)
    Files:
     - src/main/java/com/abhi/leximentor/inventory/entities/drill/DrillMetadata.java
     - src/main/java/com/abhi/leximentor/inventory/entities/drill/DrillChallenge.java
-      Improvement: rename fields for clarity, or introduce consistent naming conventions (e.g., drillMetadata).
+      Improvement: rename fields for clarity, or introduce consistent naming conventions (e.g., drill).
 5. DTO construction is heavy and tightly coupled to entities
    InventoryServiceUtil.WordMetadataUtil.buildDTO(...) maps large graphs and is reused by analytics. This can be costly and risks lazy-loading exceptions.
    Files:
@@ -45,7 +45,7 @@ Architectural Improvements I’d Make Next
 3. Repository APIs for analytics
    Create AnalyticsRepository interfaces with native queries for all analytics. Keep service layer orchestration only.
 4. Normalize naming and object relationships
-   Clean up drillId vs drillMetadata, name vs drillname. These inconsistencies create confusion and bug risk.
+   Clean up drillId vs drill, name vs drillname. These inconsistencies create confusion and bug risk.
 5. Add missing tests
    Minimal tests that should exist:
     - Analytics queries return expected aggregates (integration tests with test DB)

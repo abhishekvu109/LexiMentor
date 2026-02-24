@@ -46,10 +46,10 @@ public class NamedObject {
     private String tags; // Comma-separated tags like "Greek,Warrior,Olympus"
 
     @CreationTimestamp
-    @Column(name = "crtn_date")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "last_upd_date")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }

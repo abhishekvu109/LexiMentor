@@ -1,30 +1,13 @@
 package com.abhi.leximentor.leximentor.dto.drill;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@Data
+@NoArgsConstructor
 public class ChallengeEvaluationJobPayload {
-    private long challengeRefId;
+    private long challengeKey;
     private String evaluator;
-
-    public ChallengeEvaluationJobPayload() {
-    }
-
-    public ChallengeEvaluationJobPayload(long challengeRefId, String evaluator) {
-        this.challengeRefId = challengeRefId;
-        this.evaluator = evaluator;
-    }
-
-    public long getChallengeRefId() {
-        return challengeRefId;
-    }
-
-    public void setChallengeRefId(long challengeRefId) {
-        this.challengeRefId = challengeRefId;
-    }
-
-    public String getEvaluator() {
-        return evaluator;
-    }
-
-    public void setEvaluator(String evaluator) {
-        this.evaluator = evaluator;
-    }
 }

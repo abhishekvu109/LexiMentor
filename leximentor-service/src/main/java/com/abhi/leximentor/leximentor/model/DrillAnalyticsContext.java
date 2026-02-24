@@ -1,6 +1,6 @@
 package com.abhi.leximentor.leximentor.model;
 
-import com.abhi.leximentor.leximentor.entities.drill.DrillMetadata;
+import com.abhi.leximentor.leximentor.entities.drill.Drill;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +14,7 @@ import java.util.Map;
 @EqualsAndHashCode
 @ToString
 public class DrillAnalyticsContext {
-    private DrillMetadata drillMetadata;
+    private Drill drill;
     // Count of challenges group by challenge name
     private Map<String, Long> challengeGroup;
     // Average challenge score
@@ -22,7 +22,7 @@ public class DrillAnalyticsContext {
     private Map<String, Double> wordDifficultScore;
 
 
-    private List<DrillMetadata> drillMetadataList;
+    private List<Drill> drillList;
     private Map<String, Double> topDifficultWordByAvgScore;
 
 }

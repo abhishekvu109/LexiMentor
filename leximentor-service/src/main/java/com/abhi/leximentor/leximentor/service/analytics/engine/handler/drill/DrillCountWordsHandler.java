@@ -7,9 +7,9 @@ import com.abhi.leximentor.leximentor.util.CollectionUtil;
 public class DrillCountWordsHandler extends BaseAnalyticsHandler<DrillAnalyticsContext> {
     @Override
     public void handle(DrillAnalyticsContext context) {
-        int count = CollectionUtil.isEmpty(context.getDrillMetadata().getDrillSetList())
+        int count = CollectionUtil.isEmpty(context.getDrill().getDrillSetList())
                 ? 0
-                : context.getDrillMetadata().getDrillSetList().size();
+                : context.getDrill().getDrillSetList().size();
         context.getBuilder().countOfWordsLearned(count);
         next(context);
     }

@@ -12,29 +12,23 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString(exclude = {"wordId"})
+@ToString(exclude = {"word"})
 @Entity
-@Table(name = "inv_synonym")
+@Table(name = "synonym")
 public class Synonym {
 
     @Id
-    @Column(name = "synonym_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @Column(name = "uuid")
-    private String uuid;
-
-    @Column(name = "ref_id")
-    private long refId;
+    @Column(name = "key")
+    private String key;
 
     @ManyToOne
     @JoinColumn(name = "word_id", nullable = false)
-    private WordMetadata wordId;
-
-    @Column(name = "synonym_word_id")
-    private long synonymWordId;
+    private WordMetadata word;
 
     @Column(name = "source")
     private String source;
@@ -42,13 +36,13 @@ public class Synonym {
     @Column(name = "synonym")
     private String synonym;
 
-    @Column(name = "crtn_date")
+    @Column(name = "created_at")
     @CreationTimestamp
     @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime crtnDate;
+    private LocalDateTime createdAt;
 
-    @Column(name = "last_upd_date")
+    @Column(name = "updated_at")
     @UpdateTimestamp
     @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime lastUpdDate;
+    private LocalDateTime updatedAt;
 }

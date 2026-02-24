@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class CategoryDTO {
-    private String refId;
+    private String key;
     private String category;
     private String source;
 
