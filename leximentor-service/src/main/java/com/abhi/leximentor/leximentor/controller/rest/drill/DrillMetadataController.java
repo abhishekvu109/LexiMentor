@@ -41,10 +41,10 @@ public class DrillMetadataController {
         }
     }
 
-    @DeleteMapping(value = "/{drillRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> deleteDrillMetadataByRefId(@PathVariable String drillRefId) {
-        log.info("Delete drill metadata requested. drillRefId={}", drillRefId);
-        drillService.deleteByRefId(Long.parseLong(drillRefId));
+    @DeleteMapping(value = "/{drillKey}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> deleteDrillMetadataByKey(@PathVariable String drillKey) {
+        log.info("Delete drill metadata requested. drillKey={}", drillKey);
+        drillService.deleteByKey(drillKey);
         return ResponseEntityBuilder.getBuilder(HttpStatus.NO_CONTENT).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The data has been removed successfully.");
     }
 
@@ -55,17 +55,17 @@ public class DrillMetadataController {
         return drillDTOList != null ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillDTOList) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve drills");
     }
 
-    @GetMapping(value = {"/{drillRefId}/words", "/get-words/{drillRefId}"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> getWordsByDrillRefId(@PathVariable String drillRefId) {
-        log.info("Received a request to get the words in a drill by drillRefId: {}", drillRefId);
-        Collection<String> words = drillService.getWordsInStrByDrillRefId(Long.parseLong(drillRefId));
+    @GetMapping(value = {"/{drillKey}/words", "/get-words/{drillKey}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> getWordsByDrillKey(@PathVariable String drillKey) {
+        log.info("Received a request to get words in drill by key: {}", drillKey);
+        Collection<String> words = drillService.getWordsInStrByDrillKey(drillKey);
         return CollectionUtil.isNotEmpty(words) ? ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, words) : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve words in the drills");
     }
 
-    @PostMapping(value = {"/{drillRefId}/name-assignment", "/assign-name/{drillRefId}"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> assignNameToDrill(@PathVariable String drillRefId) {
-        log.info("Assign name requested. drillRefId={}", drillRefId);
-        DrillDTO response = drillService.assignDrillName(Long.parseLong(drillRefId));
+    @PostMapping(value = {"/{drillKey}/name-assignment", "/assign-name/{drillKey}"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> assignNameToDrill(@PathVariable String drillKey) {
+        log.info("Assign name requested. drillKey={}", drillKey);
+        DrillDTO response = drillService.assignDrillName(drillKey);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 

@@ -1,6 +1,7 @@
 package com.abhi.leximentor.leximentor.repository.drill;
 
 import com.abhi.leximentor.leximentor.constants.QueryConstants;
+import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import com.abhi.leximentor.leximentor.entities.drill.Challenge;
 import com.abhi.leximentor.leximentor.entities.drill.Drill;
 import jakarta.persistence.Tuple;
@@ -32,4 +33,8 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long>, Jpa
     List<Tuple> findUserDrillTypePerformance(@Param("username") String username);
 
     List<Challenge> findByDrillAndUsernameIgnoreCase(Drill drill, String username);
+
+    List<Challenge> findTop10ByChallengeTypeOrderByScoreDesc(ChallengeType challengeType);
+
+    List<Challenge> findTop10ByChallengeTypeOrderByScoreAsc(ChallengeType challengeType);
 }

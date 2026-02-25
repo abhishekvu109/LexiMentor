@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,21 +33,22 @@ public class ChallengeScoreServiceImpl implements ChallengeScoreService {
 
     @Override
     public ChallengeScoresDTO createChallenge(ChallengeScoresDTO dto) {
-        log.info("Creating drill challenge score. challengeRefId={}, drillSetRefId={}", dto == null ? null : dto.getDrillChallengeRefId(), dto == null ? null : dto.getDrillSetRefId());
-        Challenge challenge = challengeRepository.findByRefId(Long.parseLong(dto.getDrillChallengeRefId()));
-        DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
-        ChallengeType challengeType = ChallengeType.of(challenge.getChallengeType());
+        log.info("Creating drill challenge score. challengeKey={}, drillSetKey={}", dto == null ? null : dto.getChallengeKey(), dto == null ? null : dto.getDrillSetKey());
+        Challenge challenge = challengeRepository.findByKey(dto.getChallengeKey());
+        DrillSet drillSet = drillSetRepository.findByKey(dto.getDrillSetKey())
+                .orElseThrow(() -> new EntityNotFoundException("Drill set not found for key: " + dto.getDrillSetKey()));
+        ChallengeType challengeType = challenge.getChallengeType();
         ChallengeScores scores = drillDomainMapper.toEntity(challenge, drillSet, challengeType);
         scores = challengeScoreRepository.save(scores);
         ChallengeScoresDTO response = drillDomainMapper.toDto(scores);
-        log.info("Created drill challenge score. refId={}", response.getRefId());
+        log.info("Created drill challenge score. key={}", response.getKey());
         return response;
     }
 
     @Override
     public List<ChallengeScoresDTO> getByDrillChallengeId(Challenge challenge) {
-        log.info("Fetching drill challenge scores. challengeRefId={}", challenge == null ? null : challenge.getRefId());
-        List<ChallengeScores> challengeScores = challengeScoreRepository.findByChallengeId(challenge);
+        log.info("Fetching drill challenge scores. challengeKey={}", challenge == null ? null : challenge.getKey());
+        List<ChallengeScores> challengeScores = challengeScoreRepository.findByChallenge(challenge);
         List<ChallengeScoresDTO> response = challengeScores.stream().map(drillDomainMapper::toDto).collect(Collectors.toList());
         log.info("Fetched drill challenge scores. count={}", response.size());
         return response;
@@ -59,9 +61,10 @@ public class ChallengeScoreServiceImpl implements ChallengeScoreService {
         if (CollectionUtil.isNotEmpty(dtos)) {
             Challenge challenge = null;
             for (ChallengeScoresDTO dto : dtos) {
-                challenge = (challenge == null) ? challengeRepository.findByRefId(Long.parseLong(dto.getDrillChallengeRefId())) : challenge;
-                DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
-                ChallengeScores drillChallengeScore = challengeScoreRepository.findByDrillSetIdAndChallengeId(drillSet, challenge);
+                challenge = (challenge == null) ? challengeRepository.findByKey(dto.getChallengeKey()) : challenge;
+                DrillSet drillSet = drillSetRepository.findByKey(dto.getDrillSetKey())
+                        .orElseThrow(() -> new EntityNotFoundException("Drill set not found for key: " + dto.getDrillSetKey()));
+                ChallengeScores drillChallengeScore = challengeScoreRepository.findByDrillSetAndChallenge(drillSet, challenge);
                 drillChallengeScore.setResponse(dto.getResponse());
                 drillChallengeScore.setCorrect(dto.isCorrect());
                 drillChallengeScore = challengeScoreRepository.save(drillChallengeScore);

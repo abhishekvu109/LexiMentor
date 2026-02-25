@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ChallengeEvaluationJobPayload {
-    private long challengeKey;
+    private String challengeKey;
     private String evaluator;
 }

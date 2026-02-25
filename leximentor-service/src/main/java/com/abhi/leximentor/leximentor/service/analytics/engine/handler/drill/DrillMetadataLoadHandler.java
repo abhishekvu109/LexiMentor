@@ -15,9 +15,9 @@ public class DrillMetadataLoadHandler extends BaseAnalyticsHandler<DrillAnalytic
 
     @Override
     public void handle(DrillAnalyticsContext context) {
-        Drill drill = drillRepository.findByRefId(context.getDrillRefId());
+        Drill drill = drillRepository.findByKey(context.getDrillKey()).orElse(null);
         if (drill == null) {
-            throw new ServerException().new EntityObjectNotFound("Drill not found for refId: " + context.getDrillRefId());
+            throw new ServerException().new EntityObjectNotFound("Drill not found for key: " + context.getDrillKey());
         }
         context.setDrill(drill);
         next(context);

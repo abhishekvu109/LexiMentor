@@ -46,12 +46,12 @@ public class AsyncJobsRegistrationConfig {
             jobClient.register(
                 JobDefinition.builder("leximentor.drill.challenge.evaluate", ChallengeEvaluationJobPayload.class, ctx -> {
                         ChallengeEvaluationJobPayload payload = ctx.payload();
-                        Challenge challenge = challengeRepository.findByRefId(payload.getChallengeRefId());
+                        Challenge challenge = challengeRepository.findByKey(payload.getChallengeKey());
                         List<ChallengeScoresDTO> scores = challengeScoreService.getByDrillChallengeId(challenge);
-                        challengeEvaluationService.evaluate(scores, payload.getEvaluator(), payload.getChallengeRefId());
+                        challengeEvaluationService.evaluate(scores, payload.getEvaluator(), payload.getChallengeKey());
                         return Map.of(
                             "jobId", ctx.jobId(),
-                            "challengeRefId", payload.getChallengeRefId(),
+                            "challengeKey", payload.getChallengeKey(),
                             "evaluator", payload.getEvaluator(),
                             "evaluatedQuestions", scores.size()
                         );

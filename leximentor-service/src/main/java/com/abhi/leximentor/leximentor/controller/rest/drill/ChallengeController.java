@@ -33,24 +33,24 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping(value = {"", "/challenge"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> addChallenges(@RequestParam String drillId, @RequestParam String drillType, @RequestParam String username) {
-        log.info("Received a request to add a {} challenge to a drill id {}.", drillType, drillId);
-        DrillDTO drillDTO = drillService.getByRefId(Long.parseLong(drillId));
+    public ResponseEntity<RestApiResponse> addChallenges(@RequestParam String drillKey, @RequestParam String drillType, @RequestParam String username) {
+        log.info("Received a request to add a {} challenge to drill key {}.", drillType, drillKey);
+        DrillDTO drillDTO = drillService.getByKey(drillKey);
         drillDTO = challengeService.addChallenges(drillDTO, ChallengeType.of(drillType), username);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drillDTO);
     }
 
-    @GetMapping(value = "/{challengeRefId}/evaluators", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> getEvaluatorsByChallengeRefIdPath(@PathVariable String challengeRefId) {
-        log.info("Received a request to fetch all the evaluators for the challenge. {}", challengeRefId);
-        List<EvaluatorDTO> evaluatorDTOS = challengeService.getEvaluatorsByChallengeId(Long.parseLong(challengeRefId));
+    @GetMapping(value = "/{challengeKey}/evaluators", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> getEvaluatorsByChallengeKey(@PathVariable String challengeKey) {
+        log.info("Received a request to fetch all evaluators for challenge key {}", challengeKey);
+        List<EvaluatorDTO> evaluatorDTOS = challengeService.getEvaluatorsByChallengeKey(challengeKey);
         return CollectionUtil.isEmpty(evaluatorDTOS) ? ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Unable to retrieve evaluators") : ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTOS);
     }
 
-    @DeleteMapping(value = "/{challengeRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse> deleteChallengeByDrillRefId(@PathVariable String challengeRefId) {
-        log.info("Received a request to delete a challenge. Challenge ID: {}", challengeRefId);
-        challengeService.deleteChallenge(Long.parseLong(challengeRefId));
+    @DeleteMapping(value = "/{challengeKey}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestApiResponse> deleteChallengeByKey(@PathVariable String challengeKey) {
+        log.info("Received a request to delete challenge key {}", challengeKey);
+        challengeService.deleteChallenge(challengeKey);
         return ResponseEntityBuilder.getBuilder(HttpStatus.NO_CONTENT).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "The Challenge has been removed successfully.");
     }
 

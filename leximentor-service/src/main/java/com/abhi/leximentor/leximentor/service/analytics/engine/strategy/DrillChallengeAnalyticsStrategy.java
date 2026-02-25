@@ -1,6 +1,7 @@
 package com.abhi.leximentor.leximentor.service.analytics.engine.strategy;
 
 import com.abhi.leximentor.leximentor.dto.analytics.DrillChallengeAnalyticsDTO;
+import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import com.abhi.leximentor.leximentor.mapper.DrillDomainMapper;
 import com.abhi.leximentor.leximentor.repository.drill.ChallengeRepository;
 import com.abhi.leximentor.leximentor.service.analytics.engine.AnalyticsRequest;
@@ -35,8 +36,14 @@ public class DrillChallengeAnalyticsStrategy implements AnalyticsStrategy<List<D
             drillChallengeAnalyticsDTO.setAvgScore(tuple.get("avgScore", Double.class));
             drillChallengeAnalyticsDTO.setHighestScore(tuple.get("highestScore", Double.class));
             drillChallengeAnalyticsDTO.setLowestScore(tuple.get("lowestScore", Double.class));
-            drillChallengeAnalyticsDTO.setTopNBestPerformingDrills(challengeRepository.findTop10ByChallengeTypeOrderByScoreDesc(drillType).stream().map(drillDomainMapper::toDto).toList());
-            drillChallengeAnalyticsDTO.setTopNWorstPerformingDrills(challengeRepository.findTop10ByChallengeTypeOrderByScoreAsc(drillType).stream().map(drillDomainMapper::toDto).toList());
+            ChallengeType challengeType;
+            try {
+                challengeType = ChallengeType.valueOf(drillType);
+            } catch (IllegalArgumentException ex) {
+                challengeType = ChallengeType.of(drillType);
+            }
+            drillChallengeAnalyticsDTO.setTopNBestPerformingDrills(challengeRepository.findTop10ByChallengeTypeOrderByScoreDesc(challengeType).stream().map(drillDomainMapper::toDto).toList());
+            drillChallengeAnalyticsDTO.setTopNWorstPerformingDrills(challengeRepository.findTop10ByChallengeTypeOrderByScoreAsc(challengeType).stream().map(drillDomainMapper::toDto).toList());
             drillChallengeAnalyticsDTOS.add(drillChallengeAnalyticsDTO);
         });
         return drillChallengeAnalyticsDTOS;

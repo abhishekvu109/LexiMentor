@@ -49,7 +49,7 @@ public class WordServiceImpl implements WordService {
         WordMetadata wordMetadata = inventoryDomainMapper.toEntity(word);
         wordMetadata = wordRepository.save(wordMetadata);
         WordDTO response = inventoryDomainMapper.toDto(wordMetadata);
-        log.info("Added word. refId={}", response.getRefId());
+        log.info("Added word. key={}", response.getKey());
         return response;
     }
 
@@ -76,11 +76,13 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public WordDTO get(long wordId) {
-        log.info("Fetching word by refId={}", wordId);
-        WordMetadata wordMetadata = wordRepository.findByRefId(wordId);
+    public WordDTO getByKey(String wordKey) {
+        log.info("Fetching word by key={}", wordKey);
+        WordMetadata wordMetadata = wordRepository.findByKey(wordKey).orElseThrow(
+                () -> new ServerException().new EntityObjectNotFound("Word metadata not found for key: " + wordKey)
+        );
         WordDTO response = inventoryDomainMapper.toDto(wordMetadata);
-        log.info("Fetched word by refId={}", wordId);
+        log.info("Fetched word by key={}", wordKey);
         return response;
     }
 
@@ -115,9 +117,11 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public Set<String> getUniqueSourcesByWordRefId(long wordRefId) {
-        log.info("Fetching unique sources. wordRefId={}", wordRefId);
-        WordMetadata wordMetadata = wordRepository.findByRefId(wordRefId);
+    public Set<String> getUniqueSourcesByWordKey(String wordKey) {
+        log.info("Fetching unique sources. wordKey={}", wordKey);
+        WordMetadata wordMetadata = wordRepository.findByKey(wordKey).orElseThrow(
+                () -> new ServerException().new EntityObjectNotFound("Word metadata not found for key: " + wordKey)
+        );
         Set<String> sources = new HashSet<>();
         sources.add(wordMetadata.getSource());
         Set<String> synSources = wordMetadata.getSynonyms().stream().map(Synonym::getSource).collect(Collectors.toSet());
@@ -130,14 +134,16 @@ public class WordServiceImpl implements WordService {
         sources.addAll(meanSources);
         sources.addAll(posSources);
         sources.addAll(exampleSources);
-        log.info("Fetched unique sources. wordRefId={}, count={}", wordRefId, sources.size());
+        log.info("Fetched unique sources. wordKey={}, count={}", wordKey, sources.size());
         return sources;
     }
 
     @Override
-    public WordDTO getWordByWordRefIdAndSource(String source, long wordRefId) {
-        log.info("Fetching word by refId and source. wordRefId={}, source={}", wordRefId, source);
-        WordMetadata wordMetadata = wordRepository.findByRefId(wordRefId);
+    public WordDTO getWordByWordKeyAndSource(String source, String wordKey) {
+        log.info("Fetching word by key and source. wordKey={}, source={}", wordKey, source);
+        WordMetadata wordMetadata = wordRepository.findByKey(wordKey).orElseThrow(
+                () -> new ServerException().new EntityObjectNotFound("Word metadata not found for key: " + wordKey)
+        );
         WordDTO wordDTO = inventoryDomainMapper.toDto(wordMetadata);
         List<SynonymDTO> synonyms = wordMetadata.getSynonyms().stream().filter(syn -> syn.getSource().equalsIgnoreCase(source)).toList().stream().map(inventoryDomainMapper::toDto).toList();
         List<AntonymDTO> antonyms = wordMetadata.getAntonyms().stream().filter(ant -> ant.getSource().equalsIgnoreCase(source)).toList().stream().map(inventoryDomainMapper::toDto).toList();
@@ -149,7 +155,7 @@ public class WordServiceImpl implements WordService {
         wordDTO.setMeanings(meanings);
         wordDTO.setPartsOfSpeeches(posS);
         wordDTO.setExamples(examples);
-        log.info("Fetched word by refId and source. wordRefId={}, source={}", wordRefId, source);
+        log.info("Fetched word by key and source. wordKey={}, source={}", wordKey, source);
         return wordDTO;
     }
 

@@ -24,15 +24,15 @@ public class AnalyticsFacadeImpl implements AnalyticsFacade {
     private final AnalyticsStrategyRegistry strategyRegistry;
 
     @Override
-    public DrillAnalyticsDTO getDrillAnalytics(long drillRefId, int topN) {
-        log.info("Drill analytics requested. drillRefId={}, topN={}", drillRefId, topN);
+    public DrillAnalyticsDTO getDrillAnalytics(String drillKey, int topN) {
+        log.info("Drill analytics requested. drillKey={}, topN={}", drillKey, topN);
         AnalyticsRequest request = AnalyticsRequest.builder()
                 .type(AnalyticsType.DRILL)
-                .drillRefId(drillRefId)
+                .drillKey(drillKey)
                 .topN(topN)
                 .build();
         DrillAnalyticsDTO response = strategyRegistry.execute(AnalyticsType.DRILL, request, DrillAnalyticsDTO.class);
-        log.info("Drill analytics completed. drillRefId={}", drillRefId);
+        log.info("Drill analytics completed. drillKey={}", drillKey);
         return response;
     }
 

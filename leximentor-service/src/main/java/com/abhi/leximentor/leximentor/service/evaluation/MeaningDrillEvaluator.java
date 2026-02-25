@@ -79,7 +79,7 @@ public class MeaningDrillEvaluator implements DrillEvaluator {
         int totalIncorrect = 0;
         for (ChallengeScoresDTO dto : this.ChallengeScoresDTOS) {
             if (StringUtils.isNotEmpty(dto.getResponse())) {
-                DrillSet drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
+                DrillSet drillSet = drillSetRepository.findByKey(dto.getDrillSetKey()).orElse(null);
                 WordMetadata wordMetadata = drillSet.getWord();
                 String prompt = getPrompt(wordMetadata.getWord(), wordMetadata.getMeanings().get(0).getDefinition(), dto.getResponse());
                 log.info("Successfully formatted the prompt : {}", prompt);
@@ -94,23 +94,23 @@ public class MeaningDrillEvaluator implements DrillEvaluator {
                         LlamaModelDTO.builder().correct(false).explanation("Response was empty").confidence(100).build();
                 llamaModelDTO = llamaModelDTO == null ? LlamaModelDTO.getDefaultInstance() : llamaModelDTO;
                 log.info("The evaluator service has returned a response : {}", llamaModelDTO);
-                ChallengeScores scores = challengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+                ChallengeScores scores = challengeScoreRepository.findByKey(dto.getKey());
                 challenge = (challenge == null) ? scores.getChallenge() : challenge;
                 scores.setCorrect(llamaModelDTO.isCorrect());
                 totalCorrect += llamaModelDTO.isCorrect() ? 1 : 0;
                 log.info("Total correct in the challenge: {}", totalCorrect);
                 totalIncorrect += llamaModelDTO.isCorrect() ? 0 : 1;
                 challengeScores.add(scores);
-                ChallengeEvaluationDTOS.add(ChallengeEvaluationDTO.builder().ChallengeScoresDTO(dto).reason(llamaModelDTO.getExplanation()).confidence(llamaModelDTO.getConfidence()).evaluator(EVALUATOR).build());
+                ChallengeEvaluationDTOS.add(ChallengeEvaluationDTO.builder().challengeScoresDTO(dto).reason(llamaModelDTO.getExplanation()).confidence(llamaModelDTO.getConfidence()).evaluator(EVALUATOR).build());
             } else {
                 log.info("The user has not put a response.");
-                ChallengeScores scores = challengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+                ChallengeScores scores = challengeScoreRepository.findByKey(dto.getKey());
                 challenge = (challenge == null) ? scores.getChallenge() : challenge;
                 scores.setCorrect(false);
                 totalCorrect += 0;
                 totalIncorrect += 1;
                 challengeScores.add(scores);
-                ChallengeEvaluationDTOS.add(ChallengeEvaluationDTO.builder().ChallengeScoresDTO(dto).reason("Response was empty").confidence(100).evaluator(EVALUATOR).build());
+                ChallengeEvaluationDTOS.add(ChallengeEvaluationDTO.builder().challengeScoresDTO(dto).reason("Response was empty").confidence(100).evaluator(EVALUATOR).build());
             }
 
         }
@@ -145,15 +145,15 @@ public class MeaningDrillEvaluator implements DrillEvaluator {
 
     @Transactional
     public ChallengeEvaluationDTO add(ChallengeEvaluationDTO dto) {
-        ChallengeScores challengeScores = challengeScoreRepository.findByRefId(Long.parseLong(dto.getChallengeScoresDTO().getRefId()));
-        Evaluator evaluator = evaluatorRepository.findByNameAndDrillType(dto.getEvaluator(), challengeScores.getChallenge().getChallengeType());
+        ChallengeScores challengeScores = challengeScoreRepository.findByKey(dto.getChallengeScoresDTO().getKey());
+        Evaluator evaluator = evaluatorRepository.findByNameAndChallengeType(dto.getEvaluator(), challengeScores.getChallenge().getChallengeType());
         ChallengeEvaluation challengeEvaluation = this.getDrillEvaluation(dto, challengeScores,evaluator);
         challengeEvaluation = challengeEvaluationRepository.save(challengeEvaluation);
         return drillDomainMapper.toDto(challengeEvaluation, drillDomainMapper.toDto(challengeEvaluation.getChallengeScores()));
     }
 
     private ChallengeEvaluation getDrillEvaluation(ChallengeEvaluationDTO dto, ChallengeScores challengeScores, Evaluator evaluator) {
-        List<ChallengeEvaluation> challengeEvaluations = challengeEvaluationRepository.findByDrillChallengeScoresIn(List.of(challengeScores));
+        List<ChallengeEvaluation> challengeEvaluations = challengeEvaluationRepository.findByChallengeScoresIn(List.of(challengeScores));
         ChallengeEvaluation challengeEvaluation;
         if (CollectionUtil.isNotEmpty(challengeEvaluations)) {
             challengeEvaluation = challengeEvaluations.get(0);

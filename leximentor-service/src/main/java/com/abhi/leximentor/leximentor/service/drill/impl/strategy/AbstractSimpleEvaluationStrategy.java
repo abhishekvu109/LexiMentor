@@ -46,21 +46,21 @@ public abstract class AbstractSimpleEvaluationStrategy implements DrillEvaluatio
     @Override
     public List<ChallengeEvaluationDTO> evaluate(List<ChallengeScoresDTO> ChallengeScoresDTOS, Challenge challenge, String evaluatorName) {
         log.info("Initiated the {} evaluation.", getType().name());
-        List<ChallengeEvaluationDTO> ChallengeEvaluationDTOS = new LinkedList<>();
+        List<ChallengeEvaluationDTO> challengeEvaluationDTOS = new LinkedList<>();
         List<ChallengeScores> challengeScores = new LinkedList<>();
         Map<String, ChallengeScores> scoreRefMap = new HashMap<>();
         int totalCorrect = 0;
         int totalIncorrect = 0;
 
-        Evaluator evaluator = evaluatorRepository.findByDrillType(getType().name()).stream().findFirst()
+        Evaluator evaluator = evaluatorRepository.findByChallengeType(getType()).stream().findFirst()
                 .orElseThrow(() -> new ServerException().new InternalError("No evaluator found for drill type: " + getType().name()));
 
         for (ChallengeScoresDTO dto : ChallengeScoresDTOS) {
-            ChallengeScores scores = challengeScoreRepository.findByRefId(Long.parseLong(dto.getRefId()));
+            ChallengeScores scores = challengeScoreRepository.findByKey(dto.getKey());
             DrillSet drillSet = null;
             WordMetadata wordMetadata = null;
             if (requiresWordMetadata()) {
-                drillSet = drillSetRepository.findByRefId(Long.parseLong(dto.getDrillSetRefId()));
+                drillSet = drillSetRepository.findByKey(dto.getDrillSetKey()).orElse(null);
                 wordMetadata = drillSet.getWord();
             }
 
@@ -69,9 +69,9 @@ public abstract class AbstractSimpleEvaluationStrategy implements DrillEvaluatio
             totalCorrect += correct ? 1 : 0;
             totalIncorrect += correct ? 0 : 1;
             challengeScores.add(scores);
-            scoreRefMap.put(dto.getRefId(), scores);
-            ChallengeEvaluationDTOS.add(ChallengeEvaluationDTO.builder()
-                    .ChallengeScoresDTO(dto)
+            scoreRefMap.put(dto.getKey(), scores);
+            challengeEvaluationDTOS.add(ChallengeEvaluationDTO.builder()
+                    .challengeScoresDTO(dto)
                     .reason(correct ? "The match is found." : "The match is not found.")
                     .confidence(100)
                     .evaluator(evaluator.getName())
@@ -87,13 +87,13 @@ public abstract class AbstractSimpleEvaluationStrategy implements DrillEvaluatio
         challenge.setPass(drillDomainMapper.isPass(challenge.getScore()));
         challengeRepository.save(challenge);
 
-        return persistEvaluations(ChallengeEvaluationDTOS, evaluator, scoreRefMap);
+        return persistEvaluations(challengeEvaluationDTOS, evaluator, scoreRefMap);
     }
 
     private List<ChallengeEvaluationDTO> persistEvaluations(List<ChallengeEvaluationDTO> dtos, Evaluator evaluator, Map<String, ChallengeScores> scoreRefMap) {
         List<ChallengeEvaluationDTO> saved = new LinkedList<>();
         for (ChallengeEvaluationDTO dto : dtos) {
-            ChallengeScores scores = scoreRefMap.get(dto.getChallengeScoresDTO().getRefId());
+            ChallengeScores scores = scoreRefMap.get(dto.getChallengeScoresDTO().getKey());
             ChallengeEvaluation challengeEvaluation = this.getDrillEvaluation(dto, scores, evaluator);
             ChallengeEvaluation stored = challengeEvaluationRepository.save(challengeEvaluation);
             saved.add(drillDomainMapper.toDto(stored, drillDomainMapper.toDto(stored.getChallengeScores())));
@@ -102,7 +102,7 @@ public abstract class AbstractSimpleEvaluationStrategy implements DrillEvaluatio
     }
 
     private ChallengeEvaluation getDrillEvaluation(ChallengeEvaluationDTO dto, ChallengeScores challengeScores, Evaluator evaluator) {
-        List<ChallengeEvaluation> challengeEvaluations = challengeEvaluationRepository.findByDrillChallengeScoresIn(List.of(challengeScores));
+        List<ChallengeEvaluation> challengeEvaluations = challengeEvaluationRepository.findByChallengeScoresIn(List.of(challengeScores));
         ChallengeEvaluation challengeEvaluation;
         if (CollectionUtil.isNotEmpty(challengeEvaluations)) {
             challengeEvaluation = challengeEvaluations.get(0);

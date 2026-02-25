@@ -3,13 +3,13 @@ package com.abhi.leximentor.leximentor.service.analytics.impl;
 import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import com.abhi.leximentor.leximentor.dto.analytics.DrillAnalyticsDTO;
 import com.abhi.leximentor.leximentor.dto.inv.WordDTO;
+import com.abhi.leximentor.leximentor.entities.drill.Drill;
 import com.abhi.leximentor.leximentor.entities.drill.Challenge;
 import com.abhi.leximentor.leximentor.exceptions.entities.ServerException;
 import com.abhi.leximentor.leximentor.repository.drill.DrillRepository;
 import com.abhi.leximentor.leximentor.service.analytics.DrillAnalyticsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +24,21 @@ import java.util.stream.Collectors;
 public class DrillAnalyticsServiceImpl implements DrillAnalyticsService {
     private final DrillRepository drillRepository;
 
-    @Override
-    public int getCountOfWordsLearned(long drillRefId) {
-        log.info("Calculating count of words learned. drillRefId={}", drillRefId);
-        return drillRepository.findByRefId(drillRefId).getDrillSetList().size();
+    private Drill getDrillByKey(String drillKey) {
+        return drillRepository.findByKey(drillKey)
+                .orElseThrow(() -> new ServerException().new EntityObjectNotFound("Drill not found for key: " + drillKey));
     }
 
     @Override
-    public double getDrillSuccessInPercentage(long drillRefId) {
-        log.info("Calculating drill success percentage. drillRefId={}", drillRefId);
-        var challenges = drillRepository.findByRefId(drillRefId)
-                .getChallenges();
+    public int getCountOfWordsLearned(String drillKey) {
+        log.info("Calculating count of words learned. drillKey={}", drillKey);
+        return getDrillByKey(drillKey).getDrillSetList().size();
+    }
+
+    @Override
+    public double getDrillSuccessInPercentage(String drillKey) {
+        log.info("Calculating drill success percentage. drillKey={}", drillKey);
+        var challenges = getDrillByKey(drillKey).getChallenges();
 
         if (challenges == null || challenges.isEmpty()) {
             return 0.0;
@@ -54,9 +58,9 @@ public class DrillAnalyticsServiceImpl implements DrillAnalyticsService {
     }
 
     @Override
-    public double getAvgDrillScore(long drillRefId) {
-        log.info("Calculating avg drill score. drillRefId={}", drillRefId);
-        OptionalDouble optionalDouble = drillRepository.findByRefId(drillRefId).getChallenges().stream().mapToDouble(Challenge::getScore).average();
+    public double getAvgDrillScore(String drillKey) {
+        log.info("Calculating avg drill score. drillKey={}", drillKey);
+        OptionalDouble optionalDouble = getDrillByKey(drillKey).getChallenges().stream().mapToDouble(Challenge::getScore).average();
         if (optionalDouble.isPresent()) {
             return Math.round(optionalDouble.getAsDouble() * 100.0) / 100.0;
         } else {
@@ -65,42 +69,45 @@ public class DrillAnalyticsServiceImpl implements DrillAnalyticsService {
     }
 
     @Override
-    public double getAvgDrillScoreByType(long drillRefId, ChallengeType challengeType) {
-        log.info("Calculating avg drill score by type. drillRefId={}, drillType={}", drillRefId, challengeType);
-        OptionalDouble optionalDouble = drillRepository.findByRefId(drillRefId).getChallenges().stream().filter(drillChallenge -> StringUtils.equalsIgnoreCase(drillChallenge.getChallengeType(), challengeType.name())).mapToDouble(Challenge::getScore).average();
+    public double getAvgDrillScoreByType(String drillKey, ChallengeType challengeType) {
+        log.info("Calculating avg drill score by type. drillKey={}, drillType={}", drillKey, challengeType);
+        OptionalDouble optionalDouble = getDrillByKey(drillKey).getChallenges().stream()
+                .filter(drillChallenge -> drillChallenge.getChallengeType() == challengeType)
+                .mapToDouble(Challenge::getScore)
+                .average();
         if (optionalDouble.isPresent()) return optionalDouble.getAsDouble();
         else throw new ServerException().new InternalError("Unable to compute.");
     }
 
     @Override
-    public Map<ChallengeType, Integer> getCountOfDrillTypesPerDrill(long drillRefId) {
-        log.info("Calculating drill type counts. drillRefId={}", drillRefId);
-        return drillRepository.findByRefId(drillRefId).getChallenges().stream().collect(Collectors.groupingBy(challenge -> ChallengeType.of(challenge.getChallengeType()), Collectors.summingInt(challenge -> 1) // Summing integers instead of using `counting()` and conversion
+    public Map<ChallengeType, Integer> getCountOfDrillTypesPerDrill(String drillKey) {
+        log.info("Calculating drill type counts. drillKey={}", drillKey);
+        return getDrillByKey(drillKey).getChallenges().stream().collect(Collectors.groupingBy(Challenge::getChallengeType, Collectors.summingInt(challenge -> 1) // Summing integers instead of using `counting()` and conversion
         ));
     }
 
     @Override
-    public Map<ChallengeType, Double> getAvgDrillScoreOfAllDrills(long drillRefId) {
-        log.info("Calculating avg drill score across types. drillRefId={}", drillRefId);
-        return drillRepository.findByRefId(drillRefId).getChallenges().stream().collect(Collectors.groupingBy(challenge -> ChallengeType.of(challenge.getChallengeType()), Collectors.averagingDouble(Challenge::getScore) // Summing integers instead of using `counting()` and conversion
+    public Map<ChallengeType, Double> getAvgDrillScoreOfAllDrills(String drillKey) {
+        log.info("Calculating avg drill score across types. drillKey={}", drillKey);
+        return getDrillByKey(drillKey).getChallenges().stream().collect(Collectors.groupingBy(Challenge::getChallengeType, Collectors.averagingDouble(Challenge::getScore) // Summing integers instead of using `counting()` and conversion
         ));
     }
 
     @Override
-    public int getCountOfChallengesInADrill(long drillRefId) {
-        log.info("Calculating count of challenges. drillRefId={}", drillRefId);
-        return drillRepository.findByRefId(drillRefId).getChallenges().size();
+    public int getCountOfChallengesInADrill(String drillKey) {
+        log.info("Calculating count of challenges. drillKey={}", drillKey);
+        return getDrillByKey(drillKey).getChallenges().size();
     }
 
     @Override
-    public DrillAnalyticsDTO getDrillAnalyticsData(long drillRefId) {
-        log.info("Building drill analytics DTO. drillRefId={}", drillRefId);
+    public DrillAnalyticsDTO getDrillAnalyticsData(String drillKey) {
+        log.info("Building drill analytics DTO. drillKey={}", drillKey);
         return DrillAnalyticsDTO.builder()
-                .countOfWordsLearned(this.getCountOfWordsLearned(drillRefId))
-                .avgDrillScore(this.getAvgDrillScore(drillRefId))
-                .drillSuccessInPercentage(this.getDrillSuccessInPercentage(drillRefId))
+                .countOfWordsLearned(this.getCountOfWordsLearned(drillKey))
+                .avgDrillScore(this.getAvgDrillScore(drillKey))
+                .drillSuccessInPercentage(this.getDrillSuccessInPercentage(drillKey))
                 .topChallengingWordsInTheDrill(this.getTopNChallengingWordsInTheDrill(10))
-                .countOfChallenges(this.getCountOfChallengesInADrill(drillRefId))
+                .countOfChallenges(this.getCountOfChallengesInADrill(drillKey))
                 .build();
     }
 }

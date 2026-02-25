@@ -12,7 +12,7 @@ import com.abhi.leximentor.leximentor.dto.analytics.WordAnalyticsDTO;
 import java.util.List;
 
 public interface AnalyticsFacade {
-    DrillAnalyticsDTO getDrillAnalytics(long drillRefId, int topN);
+    DrillAnalyticsDTO getDrillAnalytics(String drillKey, int topN);
 
     List<DrillChallengeAnalyticsDTO> getDrillChallengeAnalytics();
 

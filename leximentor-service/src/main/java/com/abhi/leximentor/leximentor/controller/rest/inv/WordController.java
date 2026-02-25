@@ -49,24 +49,24 @@ public class WordController {
                 : ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Something is wrong");
     }
 
-    @GetMapping(value = "/{wordRefId}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getByWordRefId(@PathVariable String wordRefId) {
-        log.info("Get word by refId requested. wordRefId={}", wordRefId);
-        WordDTO dto = wordService.get(Long.parseLong(wordRefId));
+    @GetMapping(value = "/{wordKey}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getByWordKey(@PathVariable String wordKey) {
+        log.info("Get word by key requested. wordKey={}", wordKey);
+        WordDTO dto = wordService.getByKey(wordKey);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 
-    @GetMapping(value = "/{wordRefId}/sources", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getSourcesByWordRefId(@PathVariable String wordRefId) {
-        log.info("Get sources by word refId requested. wordRefId={}", wordRefId);
-        Set<String> dto = wordService.getUniqueSourcesByWordRefId(Long.parseLong(wordRefId));
+    @GetMapping(value = "/{wordKey}/sources", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getSourcesByWordKey(@PathVariable String wordKey) {
+        log.info("Get sources by word key requested. wordKey={}", wordKey);
+        Set<String> dto = wordService.getUniqueSourcesByWordKey(wordKey);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 
-    @GetMapping(value = "/{wordRefId}/sources/{source}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getWordByWordRefIdAndSource(@PathVariable String wordRefId, @PathVariable String source) {
-        log.info("Get word by refId and source requested. wordRefId={}, source={}", wordRefId, source);
-        WordDTO dto = wordService.getWordByWordRefIdAndSource(source, Long.parseLong(wordRefId));
+    @GetMapping(value = "/{wordKey}/sources/{source}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getWordByWordKeyAndSource(@PathVariable String wordKey, @PathVariable String source) {
+        log.info("Get word by key and source requested. wordKey={}, source={}", wordKey, source);
+        WordDTO dto = wordService.getWordByWordKeyAndSource(source, wordKey);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, dto);
     }
 

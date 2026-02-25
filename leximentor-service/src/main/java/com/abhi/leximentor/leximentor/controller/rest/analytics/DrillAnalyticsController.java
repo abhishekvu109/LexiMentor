@@ -25,11 +25,11 @@ import java.util.List;
 public class DrillAnalyticsController {
     private final AnalyticsFacade analyticsFacade;
 
-    @GetMapping(value = "/{drillRefId}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public ResponseEntity<RestApiResponse> getDrillAnalyticsData(@PathVariable String drillRefId,
+    @GetMapping(value = "/{drillKey}", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public ResponseEntity<RestApiResponse> getDrillAnalyticsData(@PathVariable String drillKey,
                                                                  @RequestParam(name = "topN", required = false, defaultValue = "10") int topN) {
-        log.info("Drill analytics requested. drillRefId={}, topN={}", drillRefId, topN);
-        DrillAnalyticsDTO response = analyticsFacade.getDrillAnalytics(Long.parseLong(drillRefId), topN);
+        log.info("Drill analytics requested. drillKey={}, topN={}", drillKey, topN);
+        DrillAnalyticsDTO response = analyticsFacade.getDrillAnalytics(drillKey, topN);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 

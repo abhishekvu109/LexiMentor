@@ -11,7 +11,7 @@ public interface ChallengeEvaluationService {
 
     public List<ChallengeEvaluationDTO> addAll(List<ChallengeEvaluationDTO> dtos);
 
-    public List<ChallengeEvaluationDTO> evaluate(List<ChallengeScoresDTO> ChallengeScoresDTOS, String evaluator,long challengeRefId);
+    public List<ChallengeEvaluationDTO> evaluate(List<ChallengeScoresDTO> challengeScoresDTOS, String evaluator, String challengeKey);
 
-    public ChallengeReportResponseDTO getEvaluationReport(long challengeRefId);
+    public ChallengeReportResponseDTO getEvaluationReport(String challengeKey);
 }

@@ -14,7 +14,7 @@ public interface WordService {
 
     public Collection<WordDTO> getAll();
 
-    public WordDTO get(long wordId);
+    public WordDTO getByKey(String wordKey);
 
     public Collection<WordDTO> get(String word);
 
@@ -28,9 +28,9 @@ public interface WordService {
 
     public boolean removeAll(Collection<WordDTO> words);
 
-    public Set<String> getUniqueSourcesByWordRefId(long wordRefId);
+    public Set<String> getUniqueSourcesByWordKey(String wordKey);
 
-    public WordDTO getWordByWordRefIdAndSource(String source, long wordRefId);
+    public WordDTO getWordByWordKeyAndSource(String source, String wordKey);
 
     public WordDTO generateWordMetadataFromLLM(String word);
 }

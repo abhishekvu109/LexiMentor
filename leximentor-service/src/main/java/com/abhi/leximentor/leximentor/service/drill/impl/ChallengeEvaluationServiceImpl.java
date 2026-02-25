@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,13 +41,13 @@ public class ChallengeEvaluationServiceImpl implements ChallengeEvaluationServic
     @Override
     @Transactional
     public ChallengeEvaluationDTO add(ChallengeEvaluationDTO dto) {
-        log.info("Adding drill evaluation. scoreRefId={}", dto == null || dto.getChallengeScoresDTO() == null ? null : dto.getChallengeScoresDTO().getRefId());
-        ChallengeScores challengeScores = challengeScoreRepository.findByRefId(Long.parseLong(dto.getChallengeScoresDTO().getRefId()));
-        Evaluator evaluator = evaluatorRepository.findByNameAndDrillType(dto.getEvaluator(), challengeScores.getChallenge().getChallengeType());
+        log.info("Adding drill evaluation. scoreKey={}", dto == null || dto.getChallengeScoresDTO() == null ? null : dto.getChallengeScoresDTO().getKey());
+        ChallengeScores challengeScores = challengeScoreRepository.findByKey(dto.getChallengeScoresDTO().getKey());
+        Evaluator evaluator = evaluatorRepository.findByNameAndChallengeType(dto.getEvaluator(), challengeScores.getChallenge().getChallengeType());
         ChallengeEvaluation challengeEvaluation = drillDomainMapper.toEntity(dto, evaluator, challengeScores);
         challengeEvaluation = challengeEvaluationRepository.save(challengeEvaluation);
         ChallengeEvaluationDTO response = drillDomainMapper.toDto(challengeEvaluation, drillDomainMapper.toDto(challengeEvaluation.getChallengeScores()));
-        log.info("Added drill evaluation. evalRefId={}", response.getRefId());
+        log.info("Added drill evaluation. evalKey={}", response.getKey());
         return response;
     }
 
@@ -62,40 +61,49 @@ public class ChallengeEvaluationServiceImpl implements ChallengeEvaluationServic
     }
 
     @Override
-    public ChallengeReportResponseDTO getEvaluationReport(long challengeRefId) {
-        log.info("Fetching evaluation report. challengeRefId={}", challengeRefId);
-        Challenge challenge = challengeRepository.findByRefId(challengeRefId);
-        List<ChallengeScoresDTO> ChallengeScoresDTOS = challenge.getChallengeScoresList().stream().map(drillDomainMapper::toDto).toList();
-        List<ChallengeEvaluationDTO> ChallengeEvaluationDTOS = challengeEvaluationRepository.findByDrillChallengeScoresIn(challenge.getChallengeScoresList()).stream().map(evaluation -> drillDomainMapper.toDto(evaluation, drillDomainMapper.toDto(evaluation.getChallengeScores()))).toList();
-        ChallengeReportResponseDTO response = ChallengeReportResponseDTO.builder().challengeRefId(String.valueOf(challenge.getRefId())).evaluator(ChallengeEvaluationDTOS.get(0).getEvaluator()).drillType(challenge.getChallengeType()).ChallengeEvaluationDTOS(ChallengeEvaluationDTOS).totalCorrect(challenge.getTotalCorrect()).totalIncorrect(challenge.getTotalWrong()).score(challenge.getScore()).isPassed(challenge.isPass()).build();
-        log.info("Fetched evaluation report. challengeRefId={}, evaluations={}", challengeRefId, ChallengeEvaluationDTOS.size());
+    public ChallengeReportResponseDTO getEvaluationReport(String challengeKey) {
+        log.info("Fetching evaluation report. challengeKey={}", challengeKey);
+        Challenge challenge = challengeRepository.findByKey(challengeKey);
+        List<ChallengeEvaluationDTO> challengeEvaluationDTOS = challengeEvaluationRepository.findByChallengeScoresIn(challenge.getChallengeScoresList())
+                .stream()
+                .map(evaluation -> drillDomainMapper.toDto(evaluation, drillDomainMapper.toDto(evaluation.getChallengeScores())))
+                .toList();
+        ChallengeReportResponseDTO response = ChallengeReportResponseDTO.builder()
+                .challengeKey(challenge.getKey())
+                .evaluator(challengeEvaluationDTOS.isEmpty() ? null : challengeEvaluationDTOS.get(0).getEvaluator())
+                .challengeType(challenge.getChallengeType().name())
+                .challengeEvaluationDTOS(challengeEvaluationDTOS)
+                .totalCorrect(challenge.getTotalCorrect())
+                .totalIncorrect(challenge.getTotalWrong())
+                .score(challenge.getScore())
+                .isPassed(challenge.isPass())
+                .build();
+        log.info("Fetched evaluation report. challengeKey={}, evaluations={}", challengeKey, challengeEvaluationDTOS.size());
         return response;
     }
     @Override
     @Transactional
-    public List<ChallengeEvaluationDTO> evaluate(List<ChallengeScoresDTO> ChallengeScoresDTOS, String evaluator, long challengeRefId) {
-        log.info("Evaluation requested. challengeRefId={}, evaluator={}, scoresCount={}", challengeRefId, evaluator, ChallengeScoresDTOS == null ? 0 : ChallengeScoresDTOS.size());
-        Challenge challenge = challengeRepository.findByRefId(challengeRefId);
-        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-            challenge.setEvaluationStatus(Status.DrillChallenge.IN_PROGRESS);
-            challengeRepository.save(challenge);
-        });
+    public List<ChallengeEvaluationDTO> evaluate(List<ChallengeScoresDTO> challengeScoresDTOS, String evaluator, String challengeKey) {
+        log.info("Evaluation requested. challengeKey={}, evaluator={}, scoresCount={}", challengeKey, evaluator, challengeScoresDTOS == null ? 0 : challengeScoresDTOS.size());
+        Challenge challenge = challengeRepository.findByKey(challengeKey);
+        challenge.setEvaluationStatus(Status.DrillChallenge.IN_PROGRESS);
+        challengeRepository.save(challenge);
         try {
-            List<ChallengeEvaluationDTO> ChallengeEvaluationDTOS;
+            List<ChallengeEvaluationDTO> challengeEvaluationDTOS;
             ChallengeType drillType;
             try {
-                drillType = ChallengeType.valueOf(challenge.getChallengeType());
+                drillType = challenge.getChallengeType();
             } catch (Exception ex) {
                 drillType = ChallengeType.LEARN_MEANING;
             }
 
             DrillEvaluationStrategy strategy = drillEvaluationStrategyRegistry.getStrategyOrDefault(drillType, ChallengeType.LEARN_MEANING);
 
-            ChallengeEvaluationDTOS = strategy.evaluate(ChallengeScoresDTOS, challenge, evaluator);
+            challengeEvaluationDTOS = strategy.evaluate(challengeScoresDTOS, challenge, evaluator);
             challenge.setEvaluationStatus(Status.DrillChallenge.COMPLETED);
             challengeRepository.save(challenge);
-            log.info("Evaluation completed. challengeRefId={}, evaluations={}", challengeRefId, ChallengeEvaluationDTOS.size());
-            return ChallengeEvaluationDTOS;
+            log.info("Evaluation completed. challengeKey={}, evaluations={}", challengeKey, challengeEvaluationDTOS.size());
+            return challengeEvaluationDTOS;
         } catch (Exception ex) {
             challenge.setEvaluationStatus(Status.DrillChallenge.NOT_INITIATED);
             challengeRepository.save(challenge);

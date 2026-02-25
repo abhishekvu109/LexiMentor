@@ -27,7 +27,7 @@ public class DrillAnalyticsStrategy implements AnalyticsStrategy<DrillAnalyticsD
     public DrillAnalyticsDTO execute(AnalyticsRequest request) {
         int topN = request.getTopN() == null ? DEFAULT_TOP_N : request.getTopN();
         DrillAnalyticsContext context = DrillAnalyticsContext.builder()
-                .drillRefId(request.getDrillRefId())
+                .drillKey(request.getDrillKey())
                 .topN(topN)
                 .builder(DrillAnalyticsDTO.builder())
                 .build();

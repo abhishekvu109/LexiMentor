@@ -10,9 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 @ToString
 @Data
 public class ChallengeSearchFilter {
-    private String uuid;
-    private String refId;
-    private String drillId;
+    private String key;
+    private String drillKey;
     private String challengeType;
     private String status;
     private String evaluationStatus;

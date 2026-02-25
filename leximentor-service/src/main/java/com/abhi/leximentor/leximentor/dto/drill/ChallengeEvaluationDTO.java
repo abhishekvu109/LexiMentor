@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChallengeEvaluationDTO {
-    private long key;
+    private String key;
     private ChallengeScoresDTO challengeScoresDTO;
     private String evaluator;
     private double confidence;

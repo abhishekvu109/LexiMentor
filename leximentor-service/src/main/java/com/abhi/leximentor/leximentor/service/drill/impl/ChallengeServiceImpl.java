@@ -66,38 +66,38 @@ public class ChallengeServiceImpl extends AbstractApplicationService implements 
     @Override
     public List<ChallengeDTO> getChallengesByDrillKey(String drillKey) {
         log.info("Fetching challenges by drill Key={}", drillKey);
-        Drill drill = requireEntity(drillRepository.findByKey(drillRefId), "Drill metadata not found for refId: " + drillRefId);
+        Drill drill = requireEntity(drillRepository.findByKey(drillKey).orElse(null), "Drill metadata not found for key: " + drillKey);
         List<ChallengeDTO> response = CollectionUtil.isNotEmpty(drill.getChallenges()) ? drill.getChallenges().stream().map(drillDomainMapper::toDto).collect(Collectors.toList()) : new LinkedList<>();
-        log.info("Fetched challenges by drillRefId={}, count={}", drillRefId, response.size());
+        log.info("Fetched challenges by drillKey={}, count={}", drillKey, response.size());
         return response;
     }
 
     @Override
-    public List<ChallengeDTO> getChallengesByDrillRefIdAndUsername(long drillRefId, String username) {
-        log.info("Fetching challenges by drillRefId={}", drillRefId);
-        Drill drill = requireEntity(drillRepository.findByRefId(drillRefId), "Drill metadata not found for refId: " + drillRefId);
-        List<Challenge> challenges = challengeRepository.findByDrillIdAndUsernameIgnoreCase(drill, username);
+    public List<ChallengeDTO> getChallengesByDrillKeyAndUsername(String drillKey, String username) {
+        log.info("Fetching challenges by drillRefId={}", drillKey);
+        Drill drill = requireEntity(drillRepository.findByKey(drillKey).orElse(null), "Drill metadata not found for refId: " + drillKey);
+        List<Challenge> challenges = challengeRepository.findByDrillAndUsernameIgnoreCase(drill, username);
         List<ChallengeDTO> response = CollectionUtil.isNotEmpty(challenges) ? challenges.stream().map(drillDomainMapper::toDto).toList() : new LinkedList<>();
-        log.info("Fetched challenges by drillRefId={}, count={}", drillRefId, response.size());
+        log.info("Fetched challenges by drillRefId={}, count={}", drillKey, response.size());
         return response;
     }
 
     @Override
-    public void deleteChallenge(long drillRefId) {
-        log.info("Deleting challenge. drillRefId={}", drillRefId);
-        Challenge challenge = requireEntity(challengeRepository.findByRefId(drillRefId), "Drill challenge not found for refId: " + drillRefId);
-        List<ChallengeEvaluation> challengeEvaluations = challengeEvaluationRepository.findByDrillChallengeScoresIn(challenge.getChallengeScoresList());
+    public void deleteChallenge(String drillKey) {
+        log.info("Deleting challenge. drillRefId={}", drillKey);
+        Challenge challenge = requireEntity(challengeRepository.findByKey(drillKey), "Drill challenge not found for refId: " + drillKey);
+        List<ChallengeEvaluation> challengeEvaluations = challengeEvaluationRepository.findByChallengeScoresIn(challenge.getChallengeScoresList());
         challengeEvaluationRepository.deleteAll(challengeEvaluations);
         challengeRepository.delete(challenge);
-        log.info("Deleted challenge. drillRefId={}", drillRefId);
+        log.info("Deleted challenge. drillRefId={}", drillKey);
     }
 
     @Override
-    public List<EvaluatorDTO> getEvaluatorsByChallengeId(long challengeRefId) {
-        log.info("Fetching evaluators by challengeRefId={}", challengeRefId);
-        Challenge challenge = requireEntity(challengeRepository.findByRefId(challengeRefId), "Drill challenge not found for refId: " + challengeRefId);
+    public List<EvaluatorDTO> getEvaluatorsByChallengeKey(String challengeKey) {
+        log.info("Fetching evaluators by challengeRefId={}", challengeKey);
+        Challenge challenge = requireEntity(challengeRepository.findByKey(challengeKey), "Drill challenge not found for refId: " + challengeKey);
         List<EvaluatorDTO> response = evaluatorService.getByDrillType(challenge.getChallengeType());
-        log.info("Fetched evaluators by challengeRefId={}, count={}", challengeRefId, response.size());
+        log.info("Fetched evaluators by challengeRefId={}, count={}", challengeKey, response.size());
         return response;
     }
 
@@ -114,7 +114,7 @@ public class ChallengeServiceImpl extends AbstractApplicationService implements 
         String username = filter.getUsername().trim().toLowerCase();
         Specification<Challenge> spec = Specification.where(null);
         spec = spec.and(((root, query, cb) -> cb.equal(cb.lower(root.get("username")), username)));
-        spec = StringUtils.isNotEmpty(filter.getUuid()) ? spec.and(((root, query, cb) -> cb.equal(root.get("uuid"), filter.getUuid()))) : spec;
+        spec = StringUtils.isNotEmpty(filter.getKey()) ? spec.and(((root, query, cb) -> cb.equal(root.get("key"), filter.getKey()))) : spec;
         if (StringUtils.isNotBlank(filter.getStatus())) {
             if (!StringUtils.equalsAnyIgnoreCase(filter.getStatus(), Status.ApplicationStatus.ACTIVE_STR, Status.ApplicationStatus.INACTIVE_STR)) {
                 throw new InvalidDTOException("status must be either ACTIVE or INACTIVE.");
@@ -125,16 +125,12 @@ public class ChallengeServiceImpl extends AbstractApplicationService implements 
             int evaluationStatus = EvaluationStatus.of(filter.getEvaluationStatus());
             spec = spec.and(((root, query, cb) -> cb.equal(root.get("evaluationStatus"), evaluationStatus)));
         }
-        if (StringUtils.isNotBlank(filter.getRefId())) {
-            long refId = parseRefId(filter.getRefId(), "refId");
-            spec = spec.and(((root, query, cb) -> cb.equal(root.get("refId"), refId)));
-        }
-        if (StringUtils.isNotBlank(filter.getDrillId())) {
-            long drillId = parseRefId(filter.getDrillId(), "drillId");
-            spec = spec.and(((root, query, cb) -> cb.equal(root.join("drillId").get("refId"), drillId)));
+        if (StringUtils.isNotBlank(filter.getDrillKey())) {
+            String drillKey = filter.getDrillKey();
+            spec = spec.and(((root, query, cb) -> cb.equal(root.join("drillKey").get("key"), drillKey)));
         }
         if (StringUtils.isNotBlank(filter.getChallengeType())) {
-            String challengeType = filter.getChallengeType().trim().toLowerCase();
+            ChallengeType challengeType = ChallengeType.of(filter.getChallengeType().trim().toLowerCase());
             spec = spec.and(((root, query, cb) -> cb.equal(cb.lower(root.get("challengeType")), challengeType)));
         }
         if (filter.getScoreFrom() != null && filter.getScoreTo() != null) {
@@ -155,4 +151,6 @@ public class ChallengeServiceImpl extends AbstractApplicationService implements 
         List<Challenge> challenges = challengeRepository.findAll(spec, sort);
         return Optional.of(challenges.stream().map(drillDomainMapper::toDto).toList());
     }
+
+
 }

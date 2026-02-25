@@ -24,11 +24,22 @@ public class EvaluatorServiceImpl implements EvaluatorService {
 
     @Override
     public EvaluatorDTO add(EvaluatorDTO dto) {
-        log.info("Adding evaluator. name={}, drillType={}", dto == null ? null : dto.getName(), dto == null ? null : dto.getDrillType());
-        Evaluator evaluator = Evaluator.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).status(Status.ApplicationStatus.ACTIVE).drillType(ChallengeType.of(dto.getDrillType()).name()).name(dto.getName()).build();
+        log.info("Adding evaluator. name={}, challengeType={}", dto == null ? null : dto.getName(), dto == null ? null : dto.getChallengeType());
+        Evaluator evaluator = Evaluator.builder()
+                .key(KeyGeneratorUtil.uuid())
+                .status(Status.ApplicationStatus.ACTIVE)
+                .challengeType(ChallengeType.of(dto.getChallengeType()))
+                .name(dto.getName())
+                .build();
         evaluator = evaluatorRepository.save(evaluator);
-        EvaluatorDTO response = EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCreatedAt()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getChallengeType()).build();
-        log.info("Added evaluator. refId={}", response.getRefId());
+        EvaluatorDTO response = EvaluatorDTO.builder()
+                .key(evaluator.getKey())
+                .createdAt(evaluator.getCreatedAt())
+                .name(evaluator.getName())
+                .status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus()))
+                .challengeType(evaluator.getChallengeType().name())
+                .build();
+        log.info("Added evaluator. key={}", response.getKey());
         return response;
     }
 
@@ -44,27 +55,47 @@ public class EvaluatorServiceImpl implements EvaluatorService {
     public EvaluatorDTO getByName(String name) {
         log.info("Fetching evaluator by name={}", name);
         Evaluator evaluator = evaluatorRepository.findByName(name);
-        EvaluatorDTO response = EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCreatedAt()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getChallengeType()).build();
+        EvaluatorDTO response = EvaluatorDTO.builder()
+                .key(evaluator.getKey())
+                .createdAt(evaluator.getCreatedAt())
+                .name(evaluator.getName())
+                .status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus()))
+                .challengeType(evaluator.getChallengeType().name())
+                .build();
         log.info("Fetched evaluator by name={}", name);
         return response;
 
     }
 
     @Override
-    public EvaluatorDTO getByRefId(long refId) {
-        log.info("Fetching evaluator by refId={}", refId);
-        Evaluator evaluator = evaluatorRepository.findByRefId(refId);
-        EvaluatorDTO response = EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCreatedAt()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getChallengeType()).build();
-        log.info("Fetched evaluator by refId={}", refId);
+    public EvaluatorDTO getByKey(String key) {
+        log.info("Fetching evaluator by key={}", key);
+        Evaluator evaluator = evaluatorRepository.findByKey(key);
+        EvaluatorDTO response = EvaluatorDTO.builder()
+                .key(evaluator.getKey())
+                .createdAt(evaluator.getCreatedAt())
+                .name(evaluator.getName())
+                .status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus()))
+                .challengeType(evaluator.getChallengeType().name())
+                .build();
+        log.info("Fetched evaluator by key={}", key);
         return response;
     }
 
     @Override
-    public List<EvaluatorDTO> getByDrillType(String drillType) {
-        log.info("Fetching evaluators by drillType={}", drillType);
-        List<Evaluator> evaluators = evaluatorRepository.findByDrillType(drillType);
-        List<EvaluatorDTO> response = evaluators.stream().map(evaluator -> EvaluatorDTO.builder().refId(evaluator.getRefId()).crtnDate(evaluator.getCreatedAt()).name(evaluator.getName()).status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus())).drillType(evaluator.getChallengeType()).build()).collect(Collectors.toList());
-        log.info("Fetched evaluators by drillType. count={}", response.size());
+    public List<EvaluatorDTO> getByDrillType(ChallengeType challengeType) {
+        log.info("Fetching evaluators by challengeType={}", challengeType);
+        List<Evaluator> evaluators = evaluatorRepository.findByChallengeType(challengeType);
+        List<EvaluatorDTO> response = evaluators.stream()
+                .map(evaluator -> EvaluatorDTO.builder()
+                        .key(evaluator.getKey())
+                        .createdAt(evaluator.getCreatedAt())
+                        .name(evaluator.getName())
+                        .status(Status.ApplicationStatus.getStatusStr(evaluator.getStatus()))
+                        .challengeType(evaluator.getChallengeType().name())
+                        .build())
+                .collect(Collectors.toList());
+        log.info("Fetched evaluators by challengeType. count={}", response.size());
         return response;
     }
 }

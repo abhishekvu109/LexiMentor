@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @ToString
 public class EvaluatorDTO {
-    private long key;
+    private String key;
     private String name;
     private LocalDateTime createdAt;
     private String status;

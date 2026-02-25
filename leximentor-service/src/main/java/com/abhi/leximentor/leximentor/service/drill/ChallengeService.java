@@ -13,11 +13,11 @@ public interface ChallengeService {
     DrillDTO addChallenges(DrillDTO drillDTO, ChallengeType challengeType, String username);
 
     List<ChallengeDTO> getChallengesByDrillKey(String drillKey);
-    List<ChallengeDTO> getChallengesByDrillRefIdAndUsername(long drillRefId,String username);
+    List<ChallengeDTO> getChallengesByDrillKeyAndUsername(String drillKey,String username);
 
-    void deleteChallenge(long drillRefId);
+    void deleteChallenge(String drillKey);
 
-    List<EvaluatorDTO> getEvaluatorsByChallengeId(long challengeRefId);
+    List<EvaluatorDTO> getEvaluatorsByChallengeKey(String challengeKey);
 
     Optional<List<ChallengeDTO>> search(ChallengeSearchFilter filter);
 }

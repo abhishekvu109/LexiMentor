@@ -20,10 +20,18 @@ public class LanguageServiceImpl implements LanguageService {
     @Override
     public LanguageDTO add(LanguageDTO dto) {
         log.info("Adding language. language={}", dto == null ? null : dto.getLanguage());
-        Language language = Language.builder().uuid(KeyGeneratorUtil.uuid()).refId(KeyGeneratorUtil.refId()).language(dto.getLanguage()).status(Status.ApplicationStatus.ACTIVE).build();
+        Language language = Language.builder()
+                .key(KeyGeneratorUtil.uuid())
+                .language(dto.getLanguage())
+                .status(Status.ApplicationStatus.ACTIVE)
+                .build();
         language = languageRepository.save(language);
-        LanguageDTO response = LanguageDTO.builder().refId(String.valueOf(language.getRefId())).status(Status.ApplicationStatus.getStatusStr(language.getStatus())).language(language.getLanguage()).build();
-        log.info("Added language. refId={}", response.getRefId());
+        LanguageDTO response = LanguageDTO.builder()
+                .key(language.getKey())
+                .status(Status.ApplicationStatus.getStatusStr(language.getStatus()))
+                .language(language.getLanguage())
+                .build();
+        log.info("Added language. key={}", response.getKey());
         return response;
     }
 
@@ -31,7 +39,11 @@ public class LanguageServiceImpl implements LanguageService {
     public LanguageDTO get(String language) {
         log.info("Fetching language. language={}", language);
         Language entityLang = languageRepository.findByLanguage(language);
-        LanguageDTO response = LanguageDTO.builder().refId(String.valueOf(entityLang.getRefId())).status(Status.ApplicationStatus.getStatusStr(entityLang.getStatus())).language(entityLang.getLanguage()).build();
+        LanguageDTO response = LanguageDTO.builder()
+                .key(entityLang.getKey())
+                .status(Status.ApplicationStatus.getStatusStr(entityLang.getStatus()))
+                .language(entityLang.getLanguage())
+                .build();
         log.info("Fetched language. language={}", language);
         return response;
     }

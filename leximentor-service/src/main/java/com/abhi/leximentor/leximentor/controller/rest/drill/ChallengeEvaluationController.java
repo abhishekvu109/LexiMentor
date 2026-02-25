@@ -37,13 +37,12 @@ public class ChallengeEvaluationController {
     @PostMapping(value = {"/{challengeId}/evaluations", "/{challengeId}/evaluate"}, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> evaluateChallenge(@PathVariable String challengeId, @RequestParam String evaluator) {
         log.info("Received a request for the evaluation of the challenge {} using evaluator {}", challengeId, evaluator);
-        Challenge challenge = challengeRepository.findByRefId(Long.parseLong(challengeId));
+        Challenge challenge = challengeRepository.findByKey(challengeId);
         if (challenge == null) {
             return ResponseEntityBuilder.getBuilder(HttpStatus.NOT_FOUND)
                     .errorResponse(REQUEST_FAILURE_CODE, "Challenge not found.");
         }
         log.info("Successfully fetched the drill challenge objects using the challenge id {},{}", challengeId, challenge);
-        long challengeRefId = Long.parseLong(challengeId);
         String idempotencyKey = "leximentor.drill.challenge.evaluate:" + challengeId;
         Optional<JobSnapshot> existingActive = findActiveByIdempotencyKey("leximentor.drill.challenge.evaluate", idempotencyKey);
 
@@ -55,7 +54,7 @@ public class ChallengeEvaluationController {
         } else {
             jobId = jobClient.submit(com.abhi.asyncjobs.model.JobRequest.of(
                     "leximentor.drill.challenge.evaluate",
-                    new ChallengeEvaluationJobPayload(challengeRefId, evaluator),
+                    new ChallengeEvaluationJobPayload(challengeId, evaluator),
                     Map.of(
                             "challengeId", challengeId,
                             "evaluator", evaluator,
@@ -85,7 +84,7 @@ public class ChallengeEvaluationController {
 
     @GetMapping(value = {"/{challengeId}/evaluations/status", "/{challengeId}/evaluation-status"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getEvaluationStatusByChallenge(@PathVariable String challengeId) {
-        Challenge challenge = challengeRepository.findByRefId(Long.parseLong(challengeId));
+        Challenge challenge = challengeRepository.findByKey(challengeId);
         if (challenge == null || challenge.getEvaluationJobId() == null || challenge.getEvaluationJobId().isBlank()) {
             return ResponseEntityBuilder.getBuilder(HttpStatus.NOT_FOUND)
                     .errorResponse(REQUEST_FAILURE_CODE, "No async job found for this challenge.");
@@ -110,7 +109,7 @@ public class ChallengeEvaluationController {
     @GetMapping(value = {"/{challengeId}/evaluations/report", "/{challengeId}/report"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getEvaluationReport(@PathVariable String challengeId) {
         log.info("Received a request to get the evaluation report for the challenge {}", challengeId);
-        ChallengeReportResponseDTO reportResponseDTO = challengeEvaluationService.getEvaluationReport(Long.parseLong(challengeId));
+        ChallengeReportResponseDTO reportResponseDTO = challengeEvaluationService.getEvaluationReport(challengeId);
         log.info("Found the report for the challenge id {},{}", challengeId, reportResponseDTO);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, reportResponseDTO);
     }

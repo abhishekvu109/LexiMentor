@@ -1,6 +1,7 @@
 package com.abhi.leximentor.leximentor.controller.rest.inv;
 
 import com.abhi.leximentor.leximentor.constants.ApplicationConstants;
+import com.abhi.leximentor.leximentor.constants.ChallengeType;
 import com.abhi.leximentor.leximentor.dto.inv.EvaluatorDTO;
 import com.abhi.leximentor.leximentor.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.leximentor.model.rest.RestApiResponse;
@@ -38,15 +39,15 @@ public class EvaluatorController {
     @GetMapping(value = {"/drill-types/{drillType}", "/type/drill/{drillType}"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getByDrillType(@PathVariable String drillType) {
         log.info("Evaluator get by drill type requested. drillType={}", drillType);
-        List<EvaluatorDTO> evaluatorDTOS = evaluatorService.getByDrillType(drillType);
+        List<EvaluatorDTO> evaluatorDTOS = evaluatorService.getByDrillType(ChallengeType.of(drillType));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTOS);
     }
 
 
-    @GetMapping(value = {"/{refId}", "/id/{refId}"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getByRefId(@PathVariable long refId) {
-        log.info("Evaluator get by refId requested. refId={}", refId);
-        EvaluatorDTO evaluatorDTO = evaluatorService.getByRefId(refId);
+    @GetMapping(value = {"/{key}", "/id/{key}"}, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> getByKey(@PathVariable String key) {
+        log.info("Evaluator get by key requested. key={}", key);
+        EvaluatorDTO evaluatorDTO = evaluatorService.getByKey(key);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, evaluatorDTO);
     }
 }

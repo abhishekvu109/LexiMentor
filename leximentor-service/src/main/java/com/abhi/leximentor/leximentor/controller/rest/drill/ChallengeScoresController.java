@@ -36,7 +36,7 @@ public class ChallengeScoresController {
     @GetMapping(value = "/{challengeId}/scores", produces = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> getChallengeScoresByChallengeId(@PathVariable String challengeId) {
         log.info("Received a request to fetch the list of drill challenge scores from the drill challenge using drill challenge id {}", challengeId);
-        Challenge challenge = challengeRepository.findByRefId(Long.parseLong(challengeId));
+        Challenge challenge = challengeRepository.findByKey(challengeId);
         log.info("Found the drill challenge object");
         List<ChallengeScoresDTO> ChallengeScoresDTOS = challengeScoreService.getByDrillChallengeId(challenge);
         log.info("Found {} drill challenge scores objects", ChallengeScoresDTOS.size());

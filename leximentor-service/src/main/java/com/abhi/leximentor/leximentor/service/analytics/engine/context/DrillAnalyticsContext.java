@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class DrillAnalyticsContext {
-    private long drillRefId;
+    private String drillKey;
     private int topN;
     private Drill drill;
     private DrillAnalyticsDTO.DrillAnalyticsDTOBuilder builder;

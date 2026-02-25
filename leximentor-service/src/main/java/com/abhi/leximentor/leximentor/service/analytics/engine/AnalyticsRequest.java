@@ -9,7 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class AnalyticsRequest {
     private AnalyticsType type;
-    private Long drillRefId;
+    private String drillKey;
     private Integer topN;
     private Integer days;
     private String username;

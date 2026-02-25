@@ -8,22 +8,22 @@ import java.util.List;
 import java.util.Map;
 
 public interface DrillAnalyticsService {
-    public int getCountOfWordsLearned(long drillRefId);
+    public int getCountOfWordsLearned(String drillKey);
 
-    public double getDrillSuccessInPercentage(long drillRefId);
+    public double getDrillSuccessInPercentage(String drillKey);
 
     public List<WordDTO> getTopNChallengingWordsInTheDrill(int N);
 
-    public double getAvgDrillScore(long drillRefId);
+    public double getAvgDrillScore(String drillKey);
 
-    public double getAvgDrillScoreByType(long drillRefId, ChallengeType challengeType);
+    public double getAvgDrillScoreByType(String drillKey, ChallengeType challengeType);
 
-    public Map<ChallengeType, Integer> getCountOfDrillTypesPerDrill(long drillRefId);
+    public Map<ChallengeType, Integer> getCountOfDrillTypesPerDrill(String drillKey);
 
-    public Map<ChallengeType, Double> getAvgDrillScoreOfAllDrills(long drillRefId);
+    public Map<ChallengeType, Double> getAvgDrillScoreOfAllDrills(String drillKey);
 
-    public int getCountOfChallengesInADrill(long drillRefId);
+    public int getCountOfChallengesInADrill(String drillKey);
 
-    public DrillAnalyticsDTO getDrillAnalyticsData(long drillRefId);
+    public DrillAnalyticsDTO getDrillAnalyticsData(String drillKey);
 
 }
