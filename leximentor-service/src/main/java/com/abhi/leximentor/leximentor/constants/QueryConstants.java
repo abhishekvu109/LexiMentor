@@ -18,7 +18,7 @@ public class QueryConstants {
             public static final String GET_EXISTING_WORD_IN_LIMIT = "SELECT a.* FROM inv_word_metadata a where a.id in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
             public static final String GET_EXISTING_WORD_BY_SOURCE_LIMIT = "SELECT a.* FROM inv_word_metadata a where a.source=:source and a.id in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
             public static final String GET_NEW_WORD_BY_SOURCE_LIMIT = "SELECT a.* FROM inv_word_metadata a where a.source=:source and a.id not in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
-            public static final String GET_COUNT_OF_WORDS_BY_POS = "SELECT count(*) FROM inv_parts_of_speech a WHERE a.pos=:pos";
+            public static final String GET_COUNT_OF_WORDS_BY_POS = "SELECT count(*) FROM parts_of_speech a WHERE a.pos=:pos";
             public static final String GET_SOURCE_DISTRIBUTION = "SELECT source, COUNT(*) FROM inv_word_metadata GROUP BY source";
             public static final String GET_CATEGORY_DISTRIBUTION = "SELECT category, COUNT(*) FROM inv_word_metadata GROUP BY category";
             public static final String GET_UNUSED_WORD_COUNT = "SELECT COUNT(*) FROM inv_word_metadata a WHERE a.id NOT IN (SELECT DISTINCT b.word_id FROM drill_set b)";
@@ -31,7 +31,7 @@ public class QueryConstants {
         public static class Challenge {
             public static final String GET_CHALLENGE_METADATA = """
                     SELECT dc.challengeType AS challengeType,
-                           COUNT(dc) AS challengeCount,
+                           COUNT(dc) AS drillCount,
                            AVG(dc.score) AS avgScore,
                            MIN(dc.score) AS lowestScore,
                            MAX(dc.score) AS highestScore
@@ -41,7 +41,7 @@ public class QueryConstants {
 
             public static final String GET_DRILL_TYPE_PERFORMANCE = """
                     SELECT dc.challengeType AS challengeType,
-                           COUNT(dc) AS challengeCount,
+                           COUNT(dc) AS drillCount,
                            AVG(dc.score) AS avgScore,
                            SUM(CASE WHEN dc.isPass = true THEN 1 ELSE 0 END) AS passCount
                     FROM Challenge dc
@@ -76,7 +76,7 @@ public class QueryConstants {
                     SELECT wm.key AS wordKey,
                            wm.word AS word,
                            COUNT(*) AS wrongCount
-                    FROM drill_challenge_score dcs
+                    FROM challenge_score dcs
                              INNER JOIN drill_set ds ON dcs.drill_set_id = ds.id
                              INNER JOIN inv_word_metadata wm ON ds.word_id = wm.id
                     WHERE dcs.is_correct = false
