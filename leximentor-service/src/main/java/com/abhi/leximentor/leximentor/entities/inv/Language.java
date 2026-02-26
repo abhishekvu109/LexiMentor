@@ -22,13 +22,13 @@ public class Language {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "key")
+    @Column(name = "`key`",unique = true)
     private String key;
 
     @Column(name = "source")
     private String source;
 
-    @Column(name = "langauge")
+    @Column(name = "language")
     private String language;
 
     @Column(name = "status")
@@ -44,3 +44,4 @@ public class Language {
     @Setter(AccessLevel.PRIVATE)
     private LocalDateTime updatedAt;
 }
+

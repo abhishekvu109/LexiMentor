@@ -22,7 +22,7 @@ public class Drill {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "key", unique = true, nullable = false)
+    @Column(name = "`key`", unique = true, nullable = false)
     private String key;
 
     @Column(name = "name")
@@ -54,3 +54,4 @@ public class Drill {
     @OneToOne
     private NamedObject namedObject;
 }
+

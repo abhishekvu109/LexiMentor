@@ -20,7 +20,7 @@ public class DrillSet {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "key", nullable = false, unique = true)
+    @Column(name = "`key`", nullable = false, unique = true)
     private String key;
 
     @ManyToOne
@@ -35,3 +35,4 @@ public class DrillSet {
     @JoinColumn(name = "word_id")
     private WordMetadata word;
 }
+

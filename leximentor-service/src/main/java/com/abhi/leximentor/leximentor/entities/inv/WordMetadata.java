@@ -16,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString(exclude = {"language", "synonyms", "antonyms", "meanings", "examples", "partsOfSpeeches"})
 @Entity
-@Table(name = "inv_word_metadata")
+@Table(name = "word_metadata")
 public class WordMetadata {
 
     @Id
@@ -25,7 +25,7 @@ public class WordMetadata {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @Column(name = "key")
+    @Column(name = "`key`",unique = true)
     private String key;
 
     @Column(name = "word", nullable = false)
@@ -81,3 +81,4 @@ public class WordMetadata {
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     private List<PartsOfSpeech> partsOfSpeeches;
 }
+

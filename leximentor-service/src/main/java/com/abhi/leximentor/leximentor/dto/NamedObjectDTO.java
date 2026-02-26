@@ -10,7 +10,7 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class NamedObjectDTO {
-    private long refId;
+    private String key;
     private String name;
     private String genre;
     private String subGenre;

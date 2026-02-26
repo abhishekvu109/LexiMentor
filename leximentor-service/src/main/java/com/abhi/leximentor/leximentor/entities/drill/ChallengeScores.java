@@ -21,7 +21,7 @@ public class ChallengeScores {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "key")
+    @Column(name = "`key`")
     private String key;
 
     @ManyToOne
@@ -48,3 +48,4 @@ public class ChallengeScores {
     @Column(name = "description", length = 5000)
     private String description;
 }
+

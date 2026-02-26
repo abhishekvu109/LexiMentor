@@ -17,5 +17,4 @@ public interface EvaluatorRepository extends JpaRepository<Evaluator, Long> {
 
     List<Evaluator> findByChallengeType(ChallengeType challengeType);
 
-    List<Evaluator> findByChallengeTypeIgnoreCase(ChallengeType challengeType);
 }

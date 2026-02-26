@@ -81,9 +81,8 @@ public class InventoryDomainMapper {
 
     public Example toEntity(ExampleDTO dto, WordMetadata wordMetadata) {
         return Example.builder()
-                .wordId(wordMetadata)
-                .refId(KeyGeneratorUtil.refId())
-                .uuid(KeyGeneratorUtil.uuid())
+                .word(wordMetadata)
+                .key(KeyGeneratorUtil.uuid())
                 .example(dto.getExample())
                 .source(dto.getSource())
                 .build();
@@ -91,9 +90,9 @@ public class InventoryDomainMapper {
 
     public ExampleDTO toDto(Example example) {
         return ExampleDTO.builder()
-                .key(String.valueOf(example.getRefId()))
-                .word(example.getWordId().getWord())
-                .wordKey(example.getWordId().getKey())
+                .key(example.getKey())
+                .word(example.getWord().getWord())
+                .wordKey(example.getWord().getKey())
                 .example(example.getExample())
                 .source(example.getSource())
                 .build();

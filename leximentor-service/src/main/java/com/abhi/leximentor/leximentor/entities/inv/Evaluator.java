@@ -23,7 +23,7 @@ public class Evaluator {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @Column(name = "key", nullable = false, unique = true)
+    @Column(name = "`key`", nullable = false, unique = true)
     private String key;
 
     @Column(name = "name")
@@ -46,3 +46,4 @@ public class Evaluator {
     @Column(name = "challenge_type")
     private ChallengeType challengeType;
 }
+

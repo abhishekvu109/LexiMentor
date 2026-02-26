@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface NamedObjectRepository extends JpaRepository<NamedObject, Long> {
-    NamedObject findByRefId(long refId);
+    NamedObject findByKey(String key);
 
     NamedObject findByName(String name);
 

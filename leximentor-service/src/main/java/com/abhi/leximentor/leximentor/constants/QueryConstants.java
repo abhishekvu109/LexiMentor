@@ -2,26 +2,26 @@ package com.abhi.leximentor.leximentor.constants;
 
 public class QueryConstants {
     public static class Inventory {
-        public static final String WORD_METADATA = "inv_word_metadata";
+        public static final String WORD_METADATA = "word_metadata";
 
         public static class WordMetadata {
-            public static final String FIND_BY_WORD = "SELECT * FROM inv_word_metadata WHERE upper(trim(word)) = :word";
-            public static final String GET_WORD_RANDOMLY_IN_LIMIT = "SELECT * FROM inv_word_metadata ORDER BY RAND() LIMIT :limit";
+            public static final String FIND_BY_WORD = "SELECT * FROM word_metadata WHERE upper(trim(word)) = :word";
+            public static final String GET_WORD_RANDOMLY_IN_LIMIT = "SELECT * FROM word_metadata ORDER BY RAND() LIMIT :limit";
             public static final String GET_NEW_WORD_IN_LIMIT = """
                      SELECT a.*
-                     FROM   inv_word_metadata a
+                     FROM   word_metadata a
                      WHERE  a.id NOT IN (SELECT DISTINCT( b.word_id )
                                               FROM   drill_set b)
                      ORDER  BY Rand()
                      LIMIT  :limit
                     """;
-            public static final String GET_EXISTING_WORD_IN_LIMIT = "SELECT a.* FROM inv_word_metadata a where a.id in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
-            public static final String GET_EXISTING_WORD_BY_SOURCE_LIMIT = "SELECT a.* FROM inv_word_metadata a where a.source=:source and a.id in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
-            public static final String GET_NEW_WORD_BY_SOURCE_LIMIT = "SELECT a.* FROM inv_word_metadata a where a.source=:source and a.id not in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
+            public static final String GET_EXISTING_WORD_IN_LIMIT = "SELECT a.* FROM word_metadata a where a.id in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
+            public static final String GET_EXISTING_WORD_BY_SOURCE_LIMIT = "SELECT a.* FROM word_metadata a where a.source=:source and a.id in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
+            public static final String GET_NEW_WORD_BY_SOURCE_LIMIT = "SELECT a.* FROM word_metadata a where a.source=:source and a.id not in (select distinct(b.word_id) from drill_set b) order by RAND() LIMIT :limit";
             public static final String GET_COUNT_OF_WORDS_BY_POS = "SELECT count(*) FROM parts_of_speech a WHERE a.pos=:pos";
-            public static final String GET_SOURCE_DISTRIBUTION = "SELECT source, COUNT(*) FROM inv_word_metadata GROUP BY source";
-            public static final String GET_CATEGORY_DISTRIBUTION = "SELECT category, COUNT(*) FROM inv_word_metadata GROUP BY category";
-            public static final String GET_UNUSED_WORD_COUNT = "SELECT COUNT(*) FROM inv_word_metadata a WHERE a.id NOT IN (SELECT DISTINCT b.word_id FROM drill_set b)";
+            public static final String GET_SOURCE_DISTRIBUTION = "SELECT source, COUNT(*) FROM word_metadata GROUP BY source";
+            public static final String GET_CATEGORY_DISTRIBUTION = "SELECT category, COUNT(*) FROM word_metadata GROUP BY category";
+            public static final String GET_UNUSED_WORD_COUNT = "SELECT COUNT(*) FROM word_metadata a WHERE a.id NOT IN (SELECT DISTINCT b.word_id FROM drill_set b)";
 
         }
 
@@ -73,14 +73,14 @@ public class QueryConstants {
 
         public static class WordDifficulty {
             public static final String GET_WORD_DIFFICULTY_HEATMAP = """
-                    SELECT wm.key AS wordKey,
+                    SELECT wm.`key` AS wordKey,
                            wm.word AS word,
                            COUNT(*) AS wrongCount
                     FROM challenge_score dcs
                              INNER JOIN drill_set ds ON dcs.drill_set_id = ds.id
-                             INNER JOIN inv_word_metadata wm ON ds.word_id = wm.id
+                             INNER JOIN word_metadata wm ON ds.word_id = wm.id
                     WHERE dcs.is_correct = false
-                    GROUP BY wm.key, wm.word
+                    GROUP BY wm.`key`, wm.word
                     ORDER BY wrongCount DESC
                     LIMIT :limit
                     """;
@@ -93,3 +93,4 @@ public class QueryConstants {
                 """;
     }
 }
+

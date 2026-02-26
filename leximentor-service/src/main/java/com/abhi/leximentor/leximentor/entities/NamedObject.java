@@ -21,8 +21,8 @@ public class NamedObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ref_id", unique = true, nullable = false)
-    private long refId;
+    @Column(name = "`key`",unique = true)
+    private String key;
 
     @Column(nullable = false, unique = true, length = 100)
     private String name;

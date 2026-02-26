@@ -20,7 +20,7 @@ public class PartsOfSpeech {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "key", unique = true)
+    @Column(name = "`key`", unique = true)
     private String key;
 
     @ManyToOne
@@ -42,3 +42,4 @@ public class PartsOfSpeech {
     private LocalDateTime updatedAt;
 
 }
+

@@ -17,7 +17,7 @@ public class NamedObjectMapper implements EntityMapper<NamedObjectDTO, NamedObje
             return null;
         }
         return NamedObjectDTO.builder()
-                .refId(entity.getRefId())
+                .key(entity.getKey())
                 .name(entity.getName())
                 .description(entity.getDescription())
                 .aliases(JsonListValueMapper.fromStorage(entity.getAlias()))
@@ -34,7 +34,7 @@ public class NamedObjectMapper implements EntityMapper<NamedObjectDTO, NamedObje
             return null;
         }
         return NamedObject.builder()
-                .refId(KeyGeneratorUtil.refId())
+                .key(KeyGeneratorUtil.uuid())
                 .name(dto.getName())
                 .alias(JsonListValueMapper.toStorage(dto.getAliases()))
                 .tags(JsonListValueMapper.toStorage(dto.getTags()))

@@ -21,7 +21,7 @@ public class Antonym {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "key")
+    @Column(name = "`key`",unique = true)
     private String key;
 
     @Column(name = "source")
@@ -44,3 +44,4 @@ public class Antonym {
     @Setter(AccessLevel.PRIVATE)
     private LocalDateTime updatedAt;
 }
+

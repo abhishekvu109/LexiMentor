@@ -19,7 +19,7 @@ spring:
   datasource:
     username: ${MYSQL_USER:abhishek}
     password: ${MYSQL_PASSWORD:abhishek}
-    url: jdbc:mysql://${MYSQL_HOST:192.168.1.90}:${MYSQL_PORT:31124}/${MYSQL_DATABASE:abhishek}
+    url: jdbc:mysql://${MYSQL_HOST:192.168.1.90}:${MYSQL_PORT:31124}/${MYSQL_DATABASE:leximentor}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       idle-timeout: 600000

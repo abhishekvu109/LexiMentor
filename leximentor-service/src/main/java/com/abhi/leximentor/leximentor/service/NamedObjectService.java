@@ -13,7 +13,7 @@ public interface NamedObjectService {
 
     List<NamedObjectDTO> find();
 
-    NamedObjectDTO findByRefId(long refId);
+    NamedObjectDTO findByKey(String key);
 
     List<NamedObjectDTO> findByGenre(String genre);
 

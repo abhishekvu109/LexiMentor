@@ -23,7 +23,7 @@ public class NamedObjectServiceImpl extends AbstractApplicationService implement
     public NamedObjectDTO add(NamedObjectDTO dto) {
         log.info("Adding named object. name={}", dto == null ? null : dto.getName());
         NamedObjectDTO response = namedObjectMapper.toDto(namedObjectRepository.save(namedObjectMapper.toEntity(dto)));
-        log.info("Added named object. refId={}", response.getRefId());
+        log.info("Added named object. key={}", response.getKey());
         return response;
     }
 
@@ -46,11 +46,11 @@ public class NamedObjectServiceImpl extends AbstractApplicationService implement
     }
 
     @Override
-    public NamedObjectDTO findByRefId(long refId) {
-        log.info("Fetching named object by refId={}", refId);
-        NamedObject namedObject = requireEntity(namedObjectRepository.findByRefId(refId), "Named object not found for refId: " + refId);
+    public NamedObjectDTO findByKey(String key) {
+        log.info("Fetching named object by key={}", key);
+        NamedObject namedObject = requireEntity(namedObjectRepository.findByKey(key), "Named object not found for refId: " + key);
         NamedObjectDTO response = namedObjectMapper.toDto(namedObject);
-        log.info("Fetched named object by refId={}", refId);
+        log.info("Fetched named object by key={}", key);
         return response;
     }
 
@@ -92,18 +92,20 @@ public class NamedObjectServiceImpl extends AbstractApplicationService implement
 
     @Override
     public NamedObjectDTO updateStatus(NamedObject entity, int status) {
-        log.info("Updating named object status. refId={}, status={}", entity == null ? null : entity.getRefId(), status);
+        log.info("Updating named object status. key={}, status={}", entity == null ? null : entity.getKey(), status);
         entity.setStatus(status);
         NamedObjectDTO response = namedObjectMapper.toDto(namedObjectRepository.save(entity));
-        log.info("Updated named object status. refId={}, status={}", response.getRefId(), status);
+        log.info("Updated named object status. refId={}, status={}", response.getKey(), status);
         return response;
     }
 
     @Override
     public void delete(NamedObjectDTO dto) {
-        log.info("Deleting named object. refId={}", dto == null ? null : dto.getRefId());
-        NamedObject namedObject = requireEntity(namedObjectRepository.findByRefId(dto.getRefId()), "Named object not found for refId: " + dto.getRefId());
+        log.info("Deleting named object. key={}", dto == null ? null : dto.getKey());
+        NamedObject namedObject = requireEntity(namedObjectRepository.findByKey(dto.getKey()), "Named object not found for refId: " + dto.getKey());
         namedObjectRepository.delete(namedObject);
-        log.info("Deleted named object. refId={}", dto == null ? null : dto.getRefId());
+        log.info("Deleted named object. refId={}", dto.getKey());
     }
+
+
 }

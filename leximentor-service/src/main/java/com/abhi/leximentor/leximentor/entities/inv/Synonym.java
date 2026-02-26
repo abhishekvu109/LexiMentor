@@ -23,7 +23,7 @@ public class Synonym {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @Column(name = "key")
+    @Column(name = "`key`",unique = true)
     private String key;
 
     @ManyToOne
@@ -46,3 +46,4 @@ public class Synonym {
     @Setter(AccessLevel.PRIVATE)
     private LocalDateTime updatedAt;
 }
+

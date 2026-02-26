@@ -12,38 +12,35 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @EqualsAndHashCode
-@ToString(exclude = {"wordId"})
+@ToString(exclude = {"word"})
 @Entity
-@Table(name = "inv_example")
+@Table(name = "example")
 public class Example {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "uuid")
-    private String uuid;
-
-    @Column(name = "ref_id")
-    private long refId;
+    @Column(name = "`key`",unique = true)
+    private String key;
 
     @Column(name = "source")
     private String source;
 
     @ManyToOne
-    @JoinColumn(name = "word_id")
-    private WordMetadata wordId;
+    @JoinColumn(name = "word_id",nullable = false)
+    private WordMetadata word;
 
     @Column(name = "example", length = 5000)
     private String example;
 
-    @Column(name = "crtn_date")
+    @Column(name = "created_at")
     @CreationTimestamp
     @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime crtnDate;
+    private LocalDateTime createdAt;
 
-    @Column(name = "last_upd_date")
+    @Column(name = "updated_at")
     @UpdateTimestamp
     @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime lastUpdDate;
+    private LocalDateTime updatedAt;
 }

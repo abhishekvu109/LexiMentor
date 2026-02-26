@@ -22,7 +22,7 @@ public class Challenge {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "key")
+    @Column(name = "`key`",unique = true)
     private String key;
 
     @ManyToOne
@@ -64,3 +64,4 @@ public class Challenge {
     @Column(name = "username")
     private String username;
 }
+

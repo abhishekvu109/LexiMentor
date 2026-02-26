@@ -3,6 +3,7 @@ package com.abhi.leximentor.leximentor.mapper;
 import com.abhi.leximentor.leximentor.constants.Status;
 import com.abhi.leximentor.leximentor.dto.NamedObjectDTO;
 import com.abhi.leximentor.leximentor.entities.NamedObject;
+import com.abhi.leximentor.leximentor.util.KeyGeneratorUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -27,7 +28,7 @@ class NamedObjectMapperTest {
         NamedObject entity = mapper.toEntity(dto);
 
         assertNotNull(entity);
-        assertTrue(entity.getRefId() > 0L);
+        assertNotNull(entity.getKey());
         assertEquals("name1", entity.getName());
         assertEquals("[\"a1\",\"a2\"]", entity.getAlias());
         assertEquals("[\"t1\",\"t2\"]", entity.getTags());
@@ -37,7 +38,7 @@ class NamedObjectMapperTest {
     @Test
     void toDto_shouldMapEntityToDto() {
         NamedObject entity = NamedObject.builder()
-                .refId(101L)
+                .key(KeyGeneratorUtil.uuid())
                 .name("name2")
                 .genre("genre2")
                 .subGenre("sub2")
@@ -50,7 +51,7 @@ class NamedObjectMapperTest {
         NamedObjectDTO dto = mapper.toDto(entity);
 
         assertNotNull(dto);
-        assertEquals(101L, dto.getRefId());
+        assertNotNull(dto.getKey());
         assertEquals("name2", dto.getName());
         assertEquals(List.of("\"a1\"", "\"a2\""), dto.getAliases());
         assertEquals(List.of("\"t1\"", "\"t2\""), dto.getTags());
