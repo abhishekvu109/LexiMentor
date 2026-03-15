@@ -7,6 +7,8 @@ import com.abhi.leximentor.fitmate.dto.RoutineDTO;
 import com.abhi.leximentor.fitmate.dto.RoutineGenerationDTO;
 import com.abhi.leximentor.fitmate.entities.*;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
+import com.abhi.leximentor.fitmate.mapper.ExerciseMapper;
+import com.abhi.leximentor.fitmate.mapper.TrainingMapper;
 import com.abhi.leximentor.fitmate.repository.*;
 import com.abhi.leximentor.fitmate.service.RoutineGeneratorService;
 import jakarta.transaction.Transactional;
@@ -34,6 +36,8 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
     private final TrainingRepository trainingRepository;
     private final BodyPartsRepository bodyPartsRepository;
     private final ExerciseRepository exerciseRepository;
+    private final TrainingMapper trainingMapper;
+    private final ExerciseMapper exerciseMapper;
 
     private static final int MIN_EXERCISES_PER_ROUTINE = 8;      // Increased from 5
     private static final int MAX_EXERCISES_PER_ROUTINE = 12;     // New upper cap
@@ -109,7 +113,7 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
                 .description(description)
                 .status(Status.RoutineStatus.toString(Status.RoutineStatus.NOT_STARTED))
                 .workoutDate(LocalDate.now().toString())
-                .training(FitmateServiceUtil.TrainingMetadataUtil.buildDto(training))
+                .training(trainingMapper.toDto(training))
                 .drills(drillDtos)
                 .burntCalories(0)
                 .durationInMinutes(0)
@@ -184,7 +188,7 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
         Muscle muscle = exercise.getTargetMuscles().isEmpty() ? null : exercise.getTargetMuscles().get(0);
 
         return DrillDTO.builder()
-                .exercise(FitmateServiceUtil.ExerciseUtil.buildDto(exercise))
+                .exercise(exerciseMapper.toDto(exercise))
                 .measurementUnit(unit)
                 .measurement(measurement)
                 .unit(scale)
