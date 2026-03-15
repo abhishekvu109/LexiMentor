@@ -67,3 +67,5 @@ surefire-reports/
 dist/
 dump.rdb
 
+
+fitmate-service/.claude/

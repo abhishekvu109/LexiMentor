@@ -39,4 +39,9 @@ public class UrlConstants {
         public static final String ANALYTICS_BASE_URI = "/api/fitmate/analytics";
         public static final String ANALYTICS_OVERALL = "/overall";
     }
+
+    public static class Recommendation {
+        public static final String BASE_URL = "/api/fitmate/recommendations";
+        public static final String RECOMMEND = "/recommend";
+    }
 }
