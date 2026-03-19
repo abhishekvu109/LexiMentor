@@ -1,9 +1,7 @@
 package com.abhi.leximentor.fitmate.service;
 
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
-import com.abhi.leximentor.fitmate.dto.PagedResponse;
 import com.abhi.leximentor.fitmate.dto.filters.ExerciseSearchFilter;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,9 +21,6 @@ public interface ExerciseService {
     List<ExerciseDTO> getAllByRefId(List<Long> refIds);
 
     List<ExerciseDTO> getAll();
-
-    PagedResponse<ExerciseDTO> getAll(Pageable pageable);
-
     List<ExerciseDTO> getAllWithAnalytics();
 
     List<ExerciseDTO> getAllByTrainingMetadataRefId(long trainingMetadatRefId);
@@ -53,6 +48,4 @@ public interface ExerciseService {
     Optional<GridFsResource> findResource(long refId, String resourceId, String placeholder);
 
     List<ExerciseDTO> search(ExerciseSearchFilter filter);
-
-    PagedResponse<ExerciseDTO> search(ExerciseSearchFilter filter, Pageable pageable);
 }

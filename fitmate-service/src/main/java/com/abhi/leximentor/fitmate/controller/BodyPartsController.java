@@ -4,7 +4,6 @@ import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
 import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.constants.UrlConstants;
 import com.abhi.leximentor.fitmate.dto.BodyPartsDTO;
-import com.abhi.leximentor.fitmate.dto.PagedResponse;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,12 +57,13 @@ public class BodyPartsController {
     }
 
     @GetMapping(value = UrlConstants.BodyPartsUrl.BODY_PARTS_GET_ALL, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> getAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+    public @ResponseBody ResponseEntity<RestApiResponse> getAll() {
         try {
-            PagedResponse<BodyPartsDTO> response = bodyPartService.getAll(PageRequest.of(page, size));
-            return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+            List<BodyPartsDTO> response = bodyPartService.getAll();
+            if (response != null) {
+                return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+            }
+            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
         } catch (Exception ex) {
             throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
         }

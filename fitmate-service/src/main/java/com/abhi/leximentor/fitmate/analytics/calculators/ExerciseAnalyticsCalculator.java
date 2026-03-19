@@ -6,9 +6,7 @@ import com.abhi.leximentor.fitmate.dto.AnalyticsDTO;
 import com.abhi.leximentor.fitmate.dto.DrillDTO;
 import com.abhi.leximentor.fitmate.dto.ExerciseAnalyticsDTO;
 import com.abhi.leximentor.fitmate.entities.Drill;
-import com.abhi.leximentor.fitmate.mapper.DrillMapper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.abhi.leximentor.fitmate.service.impl.FitmateServiceUtil;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -19,10 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ExerciseAnalyticsCalculator implements AnalyticsCalculator {
-
-    private final DrillMapper drillMapper;
     @Override
     public void apply(AnalyticsContext context, AnalyticsDTO.AnalyticsDTOBuilder builder) {
         Map<String, ExerciseAnalyticsDTO> exerciseAnalytics = context.getDrillsByExerciseName().entrySet().stream()
@@ -46,7 +41,7 @@ public class ExerciseAnalyticsCalculator implements AnalyticsCalculator {
         List<DrillDTO> lastFiveDrills = drillsForExercise.stream()
                 .sorted(Comparator.comparing(Drill::getCrtnDate, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
                 .limit(5)
-                .map(drillMapper::toDto)
+                .map(FitmateServiceUtil.DrillUtil::buildDTO)
                 .collect(Collectors.toList());
 
         Optional<Drill> maxMeasurementDrill = drillsForExercise.stream()

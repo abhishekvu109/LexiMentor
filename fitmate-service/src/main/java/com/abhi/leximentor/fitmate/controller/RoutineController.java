@@ -2,7 +2,6 @@ package com.abhi.leximentor.fitmate.controller;
 
 import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
 import com.abhi.leximentor.fitmate.constants.UrlConstants;
-import com.abhi.leximentor.fitmate.dto.PagedResponse;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
 import com.abhi.leximentor.fitmate.dto.RoutineGenerationDTO;
 import com.abhi.leximentor.fitmate.dto.filters.RoutineSearchFilter;
@@ -13,7 +12,6 @@ import com.abhi.leximentor.fitmate.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,11 +39,8 @@ public class RoutineController {
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> get(
-            @ModelAttribute RoutineSearchFilter filter,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        PagedResponse<RoutineDTO> result = routineService.search(filter, PageRequest.of(page, size));
+    public @ResponseBody ResponseEntity<RestApiResponse> get(@ModelAttribute RoutineSearchFilter filter) {
+        List<RoutineDTO> result = routineService.search(filter);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, result);
     }
 
@@ -69,12 +64,8 @@ public class RoutineController {
 
 
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> search(
-            @RequestBody(required = false) RoutineSearchFilter filter,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        PagedResponse<RoutineDTO> response = routineService.search(filter, PageRequest.of(page, size));
-        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+    public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody(required = false) RoutineSearchFilter filter) {
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, routineService.search(filter));
     }
 
     @GetMapping(value = "/log", produces = MediaType.APPLICATION_JSON_VALUE)

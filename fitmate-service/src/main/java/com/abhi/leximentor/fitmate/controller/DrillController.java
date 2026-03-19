@@ -3,14 +3,12 @@ package com.abhi.leximentor.fitmate.controller;
 import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
 import com.abhi.leximentor.fitmate.constants.UrlConstants;
 import com.abhi.leximentor.fitmate.dto.DrillDTO;
-import com.abhi.leximentor.fitmate.dto.PagedResponse;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
 import com.abhi.leximentor.fitmate.service.DrillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +26,8 @@ public class DrillController {
 
 
     @GetMapping(value = UrlConstants.Drill.DRILL_FIND_BY_EXERCISE_NAME, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> findByExerciseName(
-            @PathVariable String exerciseName,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        PagedResponse<DrillDTO> drills = drillService.findByExerciseNameOrderByCrtnDate(exerciseName, PageRequest.of(page, size));
+    public @ResponseBody ResponseEntity<RestApiResponse> findByExerciseName(@PathVariable String exerciseName) {
+        List<DrillDTO> drills = drillService.findByExerciseNameOrderByCrtnDate(exerciseName);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, drills);
     }
 

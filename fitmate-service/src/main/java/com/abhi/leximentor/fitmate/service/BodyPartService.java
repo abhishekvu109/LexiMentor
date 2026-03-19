@@ -1,8 +1,6 @@
 package com.abhi.leximentor.fitmate.service;
 
 import com.abhi.leximentor.fitmate.dto.BodyPartsDTO;
-import com.abhi.leximentor.fitmate.dto.PagedResponse;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,8 +12,6 @@ public interface BodyPartService {
     List<BodyPartsDTO> getAllByRefId(List<Long> refIds);
 
     List<BodyPartsDTO> getAll();
-
-    PagedResponse<BodyPartsDTO> getAll(Pageable pageable);
 
     BodyPartsDTO getByName(String name);
 
