@@ -11,6 +11,8 @@ import com.abhi.leximentor.fitmate.entities.Exercise;
 import com.abhi.leximentor.fitmate.entities.Routine;
 import com.abhi.leximentor.fitmate.entities.Training;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
+import com.abhi.leximentor.fitmate.mapper.ExerciseMapper;
+import com.abhi.leximentor.fitmate.mapper.TrainingMapper;
 import com.abhi.leximentor.fitmate.repository.BodyPartsRepository;
 import com.abhi.leximentor.fitmate.repository.ExerciseRepository;
 import com.abhi.leximentor.fitmate.repository.RoutineRepository;
@@ -52,6 +54,8 @@ public class AdaptiveRoutineGeneratorServiceImpl implements RoutineGeneratorServ
     private final TrainingRepository trainingRepository;
     private final BodyPartsRepository bodyPartsRepository;
     private final ExerciseRepository exerciseRepository;
+    private final TrainingMapper trainingMapper;
+    private final ExerciseMapper exerciseMapper;
 
     private static final int MIN_EXERCISES = 6;
     private static final int MAX_EXERCISES = 12;
@@ -125,7 +129,7 @@ public class AdaptiveRoutineGeneratorServiceImpl implements RoutineGeneratorServ
                 .description(description)
                 .status(Status.RoutineStatus.toString(Status.RoutineStatus.NOT_STARTED))
                 .workoutDate(LocalDate.now().toString())
-                .training(FitmateServiceUtil.TrainingMetadataUtil.buildDto(training))
+                .training(trainingMapper.toDto(training))
                 .drills(drillDtos)
                 .burntCalories(0)
                 .durationInMinutes(0)
@@ -408,7 +412,7 @@ public class AdaptiveRoutineGeneratorServiceImpl implements RoutineGeneratorServ
 
         DrillPlan plan = buildPlan(unitType, drillHistory);
         return DrillDTO.builder()
-                .exercise(FitmateServiceUtil.ExerciseUtil.buildDto(exercise))
+                .exercise(exerciseMapper.toDto(exercise))
                 .measurementUnit(measurementUnit)
                 .measurement(plan.measurement)
                 .unit(unitScale)
