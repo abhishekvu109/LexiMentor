@@ -9,8 +9,6 @@ import com.abhi.leximentor.fitmate.entities.FoodEntry;
 import com.abhi.leximentor.fitmate.entities.Drill;
 import com.abhi.leximentor.fitmate.entities.Exercise;
 import com.abhi.leximentor.fitmate.entities.Routine;
-import com.abhi.leximentor.fitmate.mapper.ExerciseMapper;
-import com.abhi.leximentor.fitmate.mapper.RoutineMapper;
 import com.abhi.leximentor.fitmate.repository.FoodEntryRepository;
 import com.abhi.leximentor.fitmate.repository.ExerciseRepository;
 import com.abhi.leximentor.fitmate.repository.RoutineRepository;
@@ -41,8 +39,6 @@ public class ExportServiceImpl implements ExportService {
     private final FoodEntryRepository foodEntryRepository;
     private final ObjectMapper objectMapper;
     private final TransactionTemplate transactionTemplate;
-    private final ExerciseMapper exerciseMapper;
-    private final RoutineMapper routineMapper;
 
     @Override
     @Transactional
@@ -54,7 +50,7 @@ public class ExportServiceImpl implements ExportService {
                     try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream))) {
                         writer.println("RefID,Name,Description,Unit,Status,BodyPart");
                         exerciseStream.forEach(exercise -> {
-                            ExerciseDTO dto = exerciseMapper.toDto(exercise);
+                            ExerciseDTO dto = FitmateServiceUtil.ExerciseUtil.buildDto(exercise);
                             writer.printf("%s,\"%s\",\"%s\",%s,%s,%s%n",
                                     dto.getRefId(),
                                     dto.getName(),
@@ -70,7 +66,7 @@ public class ExportServiceImpl implements ExportService {
                         sequenceWriter.init(true);
                         exerciseStream.forEach(exercise -> {
                             try {
-                                sequenceWriter.write(exerciseMapper.toDto(exercise));
+                                sequenceWriter.write(FitmateServiceUtil.ExerciseUtil.buildDto(exercise));
                             } catch (Exception e) {
                                 log.error("Error writing exercise to JSON stream", e);
                             }
@@ -94,7 +90,7 @@ public class ExportServiceImpl implements ExportService {
                     try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream))) {
                         writer.println("RefID,WorkoutDate,Description,Status,BurntCalories,DurationMinutes");
                         routineStream.forEach(routine -> {
-                            RoutineDTO dto = routineMapper.toDto(routine);
+                            RoutineDTO dto = FitmateServiceUtil.RoutineUtil.buildDto(routine);
                             writer.printf("%s,%s,\"%s\",%s,%.2f,%.2f%n",
                                     dto.getRefId(),
                                     dto.getWorkoutDate(),
@@ -110,7 +106,7 @@ public class ExportServiceImpl implements ExportService {
                         sequenceWriter.init(true);
                         routineStream.forEach(routine -> {
                             try {
-                                sequenceWriter.write(routineMapper.toDto(routine));
+                                sequenceWriter.write(FitmateServiceUtil.RoutineUtil.buildDto(routine));
                             } catch (Exception e) {
                                 log.error("Error writing routine to JSON stream", e);
                             }

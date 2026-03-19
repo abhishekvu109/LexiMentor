@@ -52,39 +52,3 @@ async:
     table-name: async_jobs
     api-enabled: true
     api-base-path: /api/fitmate/async-jobs
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Resilience4j Circuit Breaker — NutritionAiEstimator (Ollama HTTP calls)
-#
-# Rationale: Ollama runs locally on 192.168.1.90 and can be:
-#   - Unreachable (host down / network issue)
-#   - Extremely slow (5B model, CPU inference can exceed 30s)
-#   - Returning malformed responses under load
-#
-# Strategy (COUNT_BASED sliding window over last 10 calls):
-#   - Open when ≥ 50 % of calls fail  OR  ≥ 80 % are "slow" (> 30 s)
-#   - Wait 60 s in OPEN state before allowing a probe (HALF-OPEN)
-#   - Allow 3 test calls in HALF-OPEN; close if they succeed, reopen if they fail
-# ──────────────────────────────────────────────────────────────────────────────
-resilience4j:
-  circuitbreaker:
-    instances:
-      nutritionAiEstimator:
-        # Use the last 10 calls to compute failure / slow-call rates
-        sliding-window-type: COUNT_BASED
-        sliding-window-size: 10
-        # Trip open when ≥ 50 % of the window are failures
-        failure-rate-threshold: 50
-        # Also trip open when ≥ 80 % of calls exceed the slow-call threshold
-        slow-call-rate-threshold: 80
-        # Ollama can be slow — only flag a call as "slow" above 30 s
-        slow-call-duration-threshold: 30s
-        # Stay OPEN for 60 s, then automatically transition to HALF-OPEN
-        wait-duration-in-open-state: 60s
-        automatic-transition-from-open-to-half-open-enabled: true
-        # Allow 3 test calls through in HALF-OPEN to decide if service recovered
-        permitted-number-of-calls-in-half-open-state: 3
-        # Minimum calls before the CB starts computing rates (avoids false trips)
-        minimum-number-of-calls: 5
-        # Expose circuit state on /actuator/health
-        register-health-indicator: true
