@@ -4,10 +4,7 @@ import com.abhi.leximentor.fitmate.dto.rec.ExerciseRecommendationDTO;
 import com.abhi.leximentor.fitmate.dto.rec.RecommendationDTO;
 import com.abhi.leximentor.fitmate.dto.rec.RecommendationRequestDTO;
 import com.abhi.leximentor.fitmate.dto.rec.ml.*;
-import com.abhi.leximentor.fitmate.entities.BodyPart;
-import com.abhi.leximentor.fitmate.entities.Drill;
-import com.abhi.leximentor.fitmate.entities.Exercise;
-import com.abhi.leximentor.fitmate.entities.Training;
+import com.abhi.leximentor.fitmate.entities.*;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
 import com.abhi.leximentor.fitmate.mapper.ExerciseMapper;
 import com.abhi.leximentor.fitmate.repository.BodyPartsRepository;
@@ -285,7 +282,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         Map<Long, List<Drill>> history = new HashMap<>();
         for (Exercise ex : candidates) {
             history.put(ex.getRefId(),
-                    drillRepository.findByUsernameAndExerciseOrderByRoutineDateDesc(username, ex));
+                    drillRepository.findByUsernameAndExerciseOrderByRoutineDateDesc(username, ex.getId()));
         }
         return history;
     }
@@ -307,8 +304,9 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     private int computeDaysSinceLastDone(List<Drill> history) {
         if (history.isEmpty()) return 999;
-        LocalDate lastDate = history.get(0).getRoutineObj().getRoutineDate();
-        return (int) ChronoUnit.DAYS.between(lastDate, LocalDate.now());
+        Routine routineObj = history.get(0).getRoutineObj();
+        if (routineObj == null || routineObj.getRoutineDate() == null) return 999;
+        return (int) ChronoUnit.DAYS.between(routineObj.getRoutineDate(), LocalDate.now());
     }
 
     private double computeNeglectScore(int daysSince) {

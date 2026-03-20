@@ -5,6 +5,7 @@ import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
 import com.abhi.leximentor.fitmate.constants.LogConstants;
 import com.abhi.leximentor.fitmate.dto.BodyPartsDTO;
 import com.abhi.leximentor.fitmate.dto.ExerciseDTO;
+import com.abhi.leximentor.fitmate.dto.PagedResponse;
 import com.abhi.leximentor.fitmate.dto.TrainingDTO;
 import com.abhi.leximentor.fitmate.dto.filters.ExerciseSearchFilter;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -139,8 +141,11 @@ public class ExerciseController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<RestApiResponse> findAll() {
-        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, exerciseService.getAll());
+    public @ResponseBody ResponseEntity<RestApiResponse> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        PagedResponse<ExerciseDTO> response = exerciseService.getAll(PageRequest.of(page, size));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
     @PutMapping(value = "/exercise/resources", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -170,8 +175,12 @@ public class ExerciseController {
                         .body(resource)).orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping(value = "/api/fitmate/exercises/exercise/search", consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> search(@RequestBody(required = false) ExerciseSearchFilter filter) {
-        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, exerciseService.search(filter));
+    @PostMapping(value = "/exercise/search", consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    public @ResponseBody ResponseEntity<RestApiResponse> search(
+            @RequestBody(required = false) ExerciseSearchFilter filter,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        PagedResponse<ExerciseDTO> response = exerciseService.search(filter, PageRequest.of(page, size));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 }

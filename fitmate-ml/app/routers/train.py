@@ -56,8 +56,15 @@ def trigger_training(request: TrainRequest = TrainRequest(), db: Session = Depen
     if request.model in ("predictor", "all"):
         labels = generate_progression_labels(raw)
         perf_features = build_performance_features(raw)
-        # Merge labels into features for supervised training
-        merged = perf_features.merge(labels, on=["username", "exercise_ref_id"], how="inner")
+        # Merge labels into features for supervised training.
+        # perf_features and labels both contain last_weight / last_reps; drop
+        # them from perf_features first so pandas doesn't rename them to
+        # last_weight_x / last_weight_y — the per-pair versions in labels are
+        # the correct training context.
+        perf_extra = perf_features.drop(
+            columns=["last_weight", "last_reps"], errors="ignore"
+        )
+        merged = labels.merge(perf_extra, on=["username", "exercise_ref_id"], how="inner")
         if not merged.empty:
             result = predictor.train(merged)
             trained.append("performance_predictor")

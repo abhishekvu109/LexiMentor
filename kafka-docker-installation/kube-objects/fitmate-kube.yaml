@@ -10,7 +10,7 @@ data:
   MYSQL_HOST: "mysql-service-k8s.default.svc.cluster.local"
   MYSQL_PORT: "3306"
   SERVICE_NAME: "fitmate-service-k8s.default.svc.cluster.local"
-
+  ML_SERVICE_URL: "http://fitmate-ml-service-k8s.default.svc.cluster.local:8001"
 
 ---
 
@@ -62,6 +62,11 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: SERVICE_NAME
+                  name: fitmate-config
+            - name: ML_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ML_SERVICE_URL
                   name: fitmate-config
           imagePullPolicy: Always
           ports:

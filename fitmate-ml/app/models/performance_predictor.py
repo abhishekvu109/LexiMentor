@@ -23,6 +23,7 @@ from sklearn.metrics import mean_absolute_error
 from xgboost import XGBRegressor
 
 from app.config import settings
+from app.features.data_cleaning import TRAINING_TYPE_MAP, DEFAULT_TRAINING_TYPE_ENCODED
 
 PERF_FEATURES = [
     "last_weight",
@@ -31,6 +32,7 @@ PERF_FEATURES = [
     "days_since_last_session",
     "trend_slope",
     "sessions_this_week",
+    "training_type_encoded",   # 0=ENDURANCE, 1=HYPERTROPHY, 2=STRENGTH
 ]
 
 WEIGHT_MODEL_PATH = os.path.join(settings.model_dir, "weight_predictor.pkl")
@@ -100,29 +102,34 @@ class PerformancePredictor:
         self.weight_model = XGBRegressor(**xgb_params)
         self.reps_model = XGBRegressor(**xgb_params)
 
-        mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
-        mlflow.set_experiment(settings.mlflow_experiment_name)
+        # ── Core training (always runs) ────────────────────────────────────────
+        self.weight_model.fit(X_train_s, yw_train)
+        mae_w = mean_absolute_error(yw_val, self.weight_model.predict(X_val_s))
+        logger.info(f"Weight predictor MAE={mae_w:.2f} kg")
 
-        run_ids = {}
-        with mlflow.start_run(run_name="weight_predictor") as run:
-            self.weight_model.fit(X_train_s, yw_train)
-            mae_w = mean_absolute_error(yw_val, self.weight_model.predict(X_val_s))
-            mlflow.log_metric("val_mae_weight", mae_w)
-            logger.info(f"Weight predictor MAE={mae_w:.2f} kg")
-            run_ids["weight_predictor"] = run.info.run_id
-
-        with mlflow.start_run(run_name="reps_predictor") as run:
-            self.reps_model.fit(X_train_s, yr_train)
-            mae_r = mean_absolute_error(yr_val, self.reps_model.predict(X_val_s))
-            mlflow.log_metric("val_mae_reps", mae_r)
-            logger.info(f"Reps predictor MAE={mae_r:.2f} reps")
-            run_ids["reps_predictor"] = run.info.run_id
+        self.reps_model.fit(X_train_s, yr_train)
+        mae_r = mean_absolute_error(yr_val, self.reps_model.predict(X_val_s))
+        logger.info(f"Reps predictor MAE={mae_r:.2f} reps")
 
         os.makedirs(settings.model_dir, exist_ok=True)
         joblib.dump(self.weight_model, WEIGHT_MODEL_PATH)
         joblib.dump(self.reps_model, REPS_MODEL_PATH)
         joblib.dump(self.scaler, SCALER_PATH)
         self._loaded = True
+
+        # ── MLflow logging (optional — skipped when server is unavailable) ────
+        run_ids = {}
+        try:
+            mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
+            mlflow.set_experiment(settings.mlflow_experiment_name)
+            with mlflow.start_run(run_name="weight_predictor") as run:
+                mlflow.log_metric("val_mae_weight", mae_w)
+                run_ids["weight_predictor"] = run.info.run_id
+            with mlflow.start_run(run_name="reps_predictor") as run:
+                mlflow.log_metric("val_mae_reps", mae_r)
+                run_ids["reps_predictor"] = run.info.run_id
+        except Exception as mlflow_err:
+            logger.warning(f"MLflow logging skipped — {mlflow_err}")
 
         return {"mae_weight": mae_w, "mae_reps": mae_r, "run_ids": run_ids}
 
@@ -132,6 +139,18 @@ class PerformancePredictor:
         """Returns (predicted_weights, predicted_reps) arrays."""
         if not self.is_ready():
             raise RuntimeError("PerformancePredictor not loaded — call /train first")
+        df = df.copy()
+        # Encode training_type string → int if the caller passed the raw string
+        # (inference path) rather than the pre-encoded int (training path).
+        if "training_type_encoded" not in df.columns:
+            df["training_type_encoded"] = (
+                df.get("training_type", pd.Series(dtype=str))
+                  .str.strip()
+                  .str.upper()
+                  .map(TRAINING_TYPE_MAP)
+                  .fillna(DEFAULT_TRAINING_TYPE_ENCODED)
+                  .astype(int)
+            )
         X = df[PERF_FEATURES].fillna(0)
         X_scaled = self.scaler.transform(X)
         weights = self.weight_model.predict(X_scaled)

@@ -9,7 +9,7 @@ data:
   SERVICE_PORT: "8001"
   DB_HOST: "mysql-service-k8s.default.svc.cluster.local"
   DB_PORT: "3306"
-  DB_NAME: "fitmate"
+  DB_NAME: "abhishek"
   MLFLOW_TRACKING_URI: "http://localhost:5000"
   MLFLOW_EXPERIMENT_NAME: "fitmate-recommendation"
   MODEL_DIR: "/app/artefacts"

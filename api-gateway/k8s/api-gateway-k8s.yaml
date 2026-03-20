@@ -43,6 +43,12 @@ data:
               uri: http://auth-service-k8s.default.svc.cluster.local:4848/api/auth/
               predicates:
                 - Path=/api/auth/**
+            - id: fitmate-ml-service
+              uri: http://fitmate-ml-service-k8s.default.svc.cluster.local:8001
+              predicates:
+                - Path=/api/fitmate-ml/**
+              filters:
+                - StripPrefix=2
     management:
       endpoints:
         web:

@@ -97,22 +97,29 @@ class ExerciseRanker:
             random_state=42,
         )
 
-        mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
-        mlflow.set_experiment(settings.mlflow_experiment_name)
+        # ── Core training (always runs) ────────────────────────────────────────
+        self.model.fit(X_scaled, y)
+        train_score = float(self.model.score(X_scaled, y))
+        logger.info(f"ExerciseRanker trained — R²={train_score:.4f}")
 
-        with mlflow.start_run(run_name="exercise_ranker") as run:
-            self.model.fit(X_scaled, y)
-            train_score = float(self.model.score(X_scaled, y))
-            mlflow.log_param("n_estimators", 200)
-            mlflow.log_metric("train_r2", train_score)
-            logger.info(f"ExerciseRanker trained — R²={train_score:.4f}")
+        os.makedirs(settings.model_dir, exist_ok=True)
+        joblib.dump(self.model, MODEL_PATH)
+        joblib.dump(self.scaler, SCALER_PATH)
+        self._loaded = True
 
-            os.makedirs(settings.model_dir, exist_ok=True)
-            joblib.dump(self.model, MODEL_PATH)
-            joblib.dump(self.scaler, SCALER_PATH)
-            self._loaded = True
+        # ── MLflow logging (optional — skipped when server is unavailable) ────
+        mlflow_run_id = ""
+        try:
+            mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
+            mlflow.set_experiment(settings.mlflow_experiment_name)
+            with mlflow.start_run(run_name="exercise_ranker") as run:
+                mlflow.log_param("n_estimators", 200)
+                mlflow.log_metric("train_r2", train_score)
+                mlflow_run_id = run.info.run_id
+        except Exception as mlflow_err:
+            logger.warning(f"MLflow logging skipped — {mlflow_err}")
 
-            return {"r2": train_score, "mlflow_run_id": run.info.run_id}
+        return {"r2": train_score, "mlflow_run_id": mlflow_run_id}
 
     # ── Inference ─────────────────────────────────────────────────────────────
 

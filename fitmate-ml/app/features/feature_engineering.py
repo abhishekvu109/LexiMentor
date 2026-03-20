@@ -12,8 +12,11 @@ Tables used:
 import pandas as pd
 import numpy as np
 from datetime import date, timedelta
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from loguru import logger
+
+from app.features.data_cleaning import clean_raw_drills
 
 
 # ── Raw data extraction ───────────────────────────────────────────────────────
@@ -28,26 +31,29 @@ DRILL_QUERY = """
         r.ref_id          AS routine_ref_id,
         r.routine_date,
         r.username,
+        t.name            AS training_type,
         e.ref_id          AS exercise_ref_id,
         e.name            AS exercise_name,
         e.difficulty_level,
         e.unit            AS exercise_unit,
         e.target_body_part AS body_part_ref_id
-    FROM fitmate_routine_drill d
-    JOIN fitmate_routine       r ON d.routine     = r.ref_id
-    JOIN fitmate_exercise      e ON d.exercise_id = e.id
+    FROM fitmate_routine_drill      d
+    JOIN fitmate_routine            r ON d.routine_id2  = r.id
+    JOIN fitmate_training_metadata  t ON r.training_id  = t.id
+    JOIN fitmate_exercise           e ON d.exercise_id  = e.id
     WHERE r.routine_date >= :from_date
     ORDER BY r.username, e.ref_id, r.routine_date
 """
 
 
 def load_raw_drills(db: Session, lookback_days: int = 180) -> pd.DataFrame:
-    """Load all drill records within the lookback window."""
+    """Load all drill records within the lookback window and run data cleaning."""
     from_date = date.today() - timedelta(days=lookback_days)
-    result = db.execute(DRILL_QUERY, {"from_date": from_date})
-    df = pd.DataFrame(result.fetchall(), columns=result.keys())
+    result = db.execute(text(DRILL_QUERY), {"from_date": from_date})
+    df = pd.DataFrame(result.mappings().fetchall())
     df["routine_date"] = pd.to_datetime(df["routine_date"])
-    logger.info(f"Loaded {len(df)} drill records (lookback={lookback_days}d)")
+    logger.info(f"Loaded {len(df)} raw drill records (lookback={lookback_days}d)")
+    df = clean_raw_drills(df)
     return df
 
 
@@ -90,6 +96,11 @@ def build_exercise_features(df: pd.DataFrame, reference_date: date | None = None
             "progression_rate": round(prog_rate, 4),
             "difficulty_level": group.iloc[-1]["difficulty_level"],
             "body_part_ref_id": group.iloc[-1]["body_part_ref_id"],
+            # During training every exercise is evaluated against its own body part
+            # so the match score is always a perfect 1.0.  At prediction time the
+            # caller (fitmate-service) supplies the real score vs the requested
+            # target body part.
+            "body_part_match_score": 1.0,
         })
 
     return pd.DataFrame(features)
@@ -160,6 +171,7 @@ def generate_progression_labels(df: pd.DataFrame) -> pd.DataFrame:
                 "exercise_ref_id": ex_ref_id,
                 "last_weight": curr["weight"],
                 "last_reps": int(curr["reps"]),
+                "training_type_encoded": int(curr.get("training_type_encoded", 1)),
                 "next_weight": nxt["weight"],    # ← regression target
                 "next_reps": int(nxt["reps"]),   # ← secondary target
             })

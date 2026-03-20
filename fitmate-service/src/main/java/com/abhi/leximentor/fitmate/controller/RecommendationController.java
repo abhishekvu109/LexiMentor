@@ -1,7 +1,6 @@
 package com.abhi.leximentor.fitmate.controller;
 
 import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
-import com.abhi.leximentor.fitmate.constants.UrlConstants;
 import com.abhi.leximentor.fitmate.dto.rec.RecommendationDTO;
 import com.abhi.leximentor.fitmate.dto.rec.RecommendationRequestDTO;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping(UrlConstants.Recommendation.BASE_URL)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RecommendationController {
 
@@ -36,7 +34,7 @@ public class RecommendationController {
      * }
      * </pre>
      */
-    @PostMapping(value = UrlConstants.Recommendation.RECOMMEND,
+    @PostMapping(value = "/api/fitmate/recommendations/recommend",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> recommend(
