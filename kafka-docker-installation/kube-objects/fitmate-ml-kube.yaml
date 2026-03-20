@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
         - name: fitmate-ml-app
-          image: localhost:5000/fitmate-ml:latest
+          image: localhost:5000/fitmate-ml-service:latest
           env:
             - name: SERVICE_PORT
               valueFrom:
