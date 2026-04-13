@@ -45,6 +45,14 @@ fitmate:
     ollama:
       url: ${OLLAMA_URL:http://192.168.1.90:11434/api/generate}
       model: ${OLLAMA_MODEL:ministral-3:3b}
+  ml-service:
+    # Base URL of the Python FastAPI ML microservice (fitmate-ml).
+    # Override via env var ML_SERVICE_URL in production / Docker Compose.
+    base-url: ${ML_SERVICE_URL:http://localhost:8001}
+    # TCP connect timeout — fail fast if the Python process is not reachable
+    connect-timeout-ms: 3000
+    # Full response timeout — XGBoost inference is fast (< 100 ms) even on CPU
+    read-timeout-ms: 10000
 
 async:
   jobs:

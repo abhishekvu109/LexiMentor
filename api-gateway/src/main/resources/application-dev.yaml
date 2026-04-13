@@ -36,6 +36,12 @@ spring:
           uri: http://localhost:1515/api/cashflow/
           predicates:
             - Path=/api/cashflow/**
+        - id: fitmate-ml-service
+          uri: http://localhost:8001
+          predicates:
+            - Path=/api/fitmate-ml/**
+          filters:
+            - StripPrefix=2
 management:
   endpoints:
     web:

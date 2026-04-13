@@ -1,0 +1,126 @@
+#Apply the environment dependency
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fitmate-ml-config
+  labels:
+    app: fitmate-ml-app
+data:
+  SERVICE_PORT: "8001"
+  DB_HOST: "mysql-service-k8s.default.svc.cluster.local"
+  DB_PORT: "3306"
+  DB_NAME: "fitmate"
+  MLFLOW_TRACKING_URI: "http://localhost:5000"
+  MLFLOW_EXPERIMENT_NAME: "fitmate-recommendation"
+  MODEL_DIR: "/app/artefacts"
+  APP_ENV: "production"
+  LOG_LEVEL: "INFO"
+  SERVICE_NAME: "fitmate-ml-service-k8s.default.svc.cluster.local"
+
+
+---
+
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitmate-ml-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: fitmate-ml-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fitmate-ml-app
+    spec:
+      containers:
+        - name: fitmate-ml-app
+          image: abhishekofficial109/fitmate-ml:latest
+          env:
+            - name: SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: SERVICE_PORT
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: mysql-user-secret
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: mysql-user-secret
+            - name: MLFLOW_TRACKING_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: MLFLOW_TRACKING_URI
+            - name: MLFLOW_EXPERIMENT_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: MLFLOW_EXPERIMENT_NAME
+            - name: MODEL_DIR
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: MODEL_DIR
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: APP_ENV
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: LOG_LEVEL
+            - name: SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: fitmate-ml-config
+                  key: SERVICE_NAME
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8001
+          volumeMounts:
+            - name: artefacts-storage
+              mountPath: /app/artefacts
+      volumes:
+        - name: artefacts-storage
+          emptyDir: {}
+#      imagePullSecrets:
+#        - name: my-registry-secret
+
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fitmate-ml-service-k8s
+spec:
+  selector:
+    app: fitmate-ml-app
+  ports:
+    - port: 8001
