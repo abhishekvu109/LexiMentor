@@ -1,0 +1,17 @@
+package com.abhi.leximentor.leximentor.dto.drill;
+
+import lombok.*;
+
+@Data
+@ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ChallengeEvaluationDTO {
+    private String key;
+    private ChallengeScoresDTO challengeScoresDTO;
+    private String evaluator;
+    private double confidence;
+    private String reason;
+    private double evaluationTime;
+}
