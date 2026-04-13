@@ -58,7 +58,7 @@ public class Exercise {
     @JoinColumn(name = "target_body_part")
     private BodyPart targetBodyPart;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "fitmate_exercise_muscle", joinColumns = @JoinColumn(name = "exercise_id"), inverseJoinColumns = @JoinColumn(name = "muscle_id"))
     private List<Muscle> targetMuscles;
 

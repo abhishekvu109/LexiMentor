@@ -17,6 +17,20 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @deprecated This God-class has been replaced by dedicated MapStruct mapper beans.
+ * Use the following Spring-injected mappers instead:
+ * <ul>
+ *   <li>{@code TrainingMapper}  — replaces {@code TrainingMetadataUtil}</li>
+ *   <li>{@code BodyPartMapper}  — replaces {@code BodyPartsUtil}</li>
+ *   <li>{@code MuscleMapper}    — replaces {@code MuscleUtil}</li>
+ *   <li>{@code ExerciseMapper}  — replaces {@code ExerciseUtil}</li>
+ *   <li>{@code DrillMapper}     — replaces {@code DrillUtil}</li>
+ *   <li>{@code RoutineMapper}   — replaces {@code RoutineUtil}</li>
+ * </ul>
+ * This class will be removed in a future release.
+ */
+@Deprecated(since = "2.0", forRemoval = true)
 @Component
 public class FitmateServiceUtil {
     public static class TrainingMetadataUtil {
@@ -135,6 +149,7 @@ public class FitmateServiceUtil {
                     .training(training)
                     .drills(drills)
                     .burntCalories(dto.getBurntCalories())
+                    .username(dto.getUsername())
                     .durationInMinutes(dto.getDurationInMinutes())
                     .build();
         }
@@ -148,6 +163,7 @@ public class FitmateServiceUtil {
                     .status(Status.RoutineStatus.NOT_STARTED)
                     .training(training)
                     .burntCalories(dto.getBurntCalories())
+                    .username(dto.getUsername())
                     .durationInMinutes(dto.getDurationInMinutes())
                     .build();
         }
@@ -166,6 +182,7 @@ public class FitmateServiceUtil {
                     .durationInMinutes(entity.getDurationInMinutes())
                     .workoutDate(entity.getRoutineDate() == null ? "" : entity.getRoutineDate().toString())
                     .key(entity.getUuid())
+                    .username(entity.getUsername())
                     .build();
         }
 
@@ -181,6 +198,7 @@ public class FitmateServiceUtil {
                     .durationInMinutes(entity.getDurationInMinutes())
                     .workoutDate(entity.getRoutineDate() == null ? "" : entity.getRoutineDate().toString())
                     .key(entity.getUuid())
+                    .username(entity.getUsername())
                     .build();
         }
     }
@@ -259,7 +277,7 @@ public class FitmateServiceUtil {
                     .burntCalories(entity.getBurntCalories())
                     .notes(entity.getNotes())
                     .creationDate(entity.getCrtnDate())
-                    .muscle(MuscleUtil.buildDTO(entity.getMuscle(), entity.getExercise().getTargetBodyPart().getName()))
+//                    .muscle(MuscleUtil.buildDTO(entity.getMuscle(), entity.getExercise().getTargetBodyPart().getName()))
                     .build();
         }
     }

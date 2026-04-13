@@ -22,5 +22,5 @@ public class DrillDTO {
     private double burntCalories;
     private String notes;
     private LocalDateTime creationDate;
-    private MuscleDTO muscle;
+//    private MuscleDTO muscle;
 }

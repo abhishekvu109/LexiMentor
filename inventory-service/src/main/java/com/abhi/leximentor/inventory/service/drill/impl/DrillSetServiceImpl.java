@@ -28,30 +28,42 @@ public class DrillSetServiceImpl implements DrillSetService {
 
     @Override
     public DrillSetDTO getDrillSetByRefId(long refId) {
+        log.info("Fetching drill set by refId={}", refId);
         DrillSet drillSet = drillSetRepository.findByRefId(refId);
-        return DrillServiceUtil.DrillSetUtil.buildDTO(drillSet);
+        DrillSetDTO response = DrillServiceUtil.DrillSetUtil.buildDTO(drillSet);
+        log.info("Fetched drill set by refId={}", refId);
+        return response;
     }
 
     @Override
     public DrillSetDTO getDrillSetByDrillSetId(long drillSetId) {
+        log.info("Fetching drill set by id={}", drillSetId);
         Optional<DrillSet> drillSet = drillSetRepository.findById(drillSetId);
         if (drillSet.isEmpty()) {
             log.error("Unable to find the Drill set entity");
             throw new RuntimeException("Unable to find the Drill set entity");
         }
-        return DrillServiceUtil.DrillSetUtil.buildDTO(drillSet.get());
+        DrillSetDTO response = DrillServiceUtil.DrillSetUtil.buildDTO(drillSet.get());
+        log.info("Fetched drill set by id={}", drillSetId);
+        return response;
     }
 
     @Override
     public List<DrillSetDTO> getDrillSetsByDrillId(long drillRefId) {
+        log.info("Fetching drill sets by drillRefId={}", drillRefId);
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
-        return drillSetRepository.findDrillSetByDrillId(drillMetadata).stream().map(DrillServiceUtil.DrillSetUtil::buildDTO).collect(Collectors.toList());
+        List<DrillSetDTO> response = drillSetRepository.findDrillSetByDrillId(drillMetadata).stream().map(DrillServiceUtil.DrillSetUtil::buildDTO).collect(Collectors.toList());
+        log.info("Fetched drill sets by drillRefId={}, count={}", drillRefId, response.size());
+        return response;
     }
 
     @Override
     public List<WordDTO> getWordDataFromDrillId(long drillRefId) {
+        log.info("Fetching word data by drillRefId={}", drillRefId);
         DrillMetadata drillMetadata = drillMetadataRepository.findByRefId(drillRefId);
         List<DrillSet> drillSetList = drillSetRepository.findDrillSetByDrillId(drillMetadata);
-        return drillSetList.stream().map(set -> InventoryServiceUtil.WordMetadataUtil.buildDTO(set.getWordId())).toList();
+        List<WordDTO> response = drillSetList.stream().map(set -> InventoryServiceUtil.WordMetadataUtil.buildDTO(set.getWordId())).toList();
+        log.info("Fetched word data by drillRefId={}, count={}", drillRefId, response.size());
+        return response;
     }
 }

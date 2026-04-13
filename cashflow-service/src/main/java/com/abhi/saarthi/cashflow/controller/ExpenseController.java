@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping("/api/cashflow/expenses/expense")
+@RequestMapping("/api/cashflow/households/expenses/expense")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
@@ -64,3 +64,4 @@ public class ExpenseController {
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 }
+

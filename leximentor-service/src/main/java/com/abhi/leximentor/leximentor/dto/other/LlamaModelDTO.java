@@ -1,0 +1,30 @@
+package com.abhi.leximentor.leximentor.dto.other;
+
+
+import lombok.*;
+
+@Data
+@Builder
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
+public class LlamaModelDTO {
+//    private String text;
+//    @JsonProperty("confidence")
+//    private int confidence;
+//    @JsonProperty("explanation")
+//    private String explanation;
+//    @JsonProperty("correct")
+//    private boolean correct;
+//    private String error;
+//    private String modelResponse;
+
+    private int confidence;
+    private String explanation;
+    private boolean correct;
+
+    public static LlamaModelDTO getDefaultInstance() {
+        return LlamaModelDTO.builder().confidence(0).correct(false).explanation("EVALUATION_FAILED").build();
+    }
+}

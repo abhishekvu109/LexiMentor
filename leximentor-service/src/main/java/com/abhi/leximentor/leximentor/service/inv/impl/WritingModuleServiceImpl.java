@@ -1,0 +1,93 @@
+package com.abhi.leximentor.leximentor.service.inv.impl;
+
+import com.abhi.leximentor.leximentor.dto.other.LlmWritingTopicDTO;
+import com.abhi.leximentor.leximentor.service.inv.WritingModuleService;
+import com.abhi.leximentor.leximentor.util.LLMPromptBuilder;
+import com.abhi.leximentor.leximentor.util.RestClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+@Data
+@Slf4j
+@Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class WritingModuleServiceImpl implements WritingModuleService {
+    private final static String LLM_TOPIC = "ollama-llm-writing-module-topics";
+    private final RestClient restClient;
+    private String url;
+    private final Integer RETRY_COUNT = 3;
+
+    @Override
+    public LlmWritingTopicDTO getTopics(LlmWritingTopicDTO request) {
+        log.info("Writing topics generation started. subject={}, numOfTopic={}, exam={}", request == null ? null : request.getSubject(), request == null ? null : request.getNumOfTopic(), request == null ? null : request.getExam());
+        loadModelServiceName();
+        String prompt = LLMPromptBuilder.WritingModule.getTopicsPrompt(request.getSubject(), request.getNumOfTopic(), request.getExam());
+        request.setPrompt(prompt);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        ResponseEntity<String> responseEntity = null;
+        String responseOutput = null;
+        int retry = RETRY_COUNT;
+        while (retry > 0) {
+            try {
+                responseEntity = restClient.post(url, headers, request, String.class);
+                responseOutput = responseEntity.getBody();
+                log.info("The llm service service has returned a response : {}", responseEntity);
+                break;
+            } catch (Exception ex) {
+                log.error("Unable to get response from the llm service {} for {}", LLM_TOPIC, request);
+                log.error(ex.getMessage());
+                log.info("Attempting retry : {}", (RETRY_COUNT - retry));
+                retry--;
+            }
+        }
+        LlmWritingTopicDTO response = mapLlmResponseToObject(responseOutput);
+        log.info("Writing topics generation completed. topicsCount={}", response == null || response.getTopics() == null ? 0 : response.getTopics().size());
+        return response;
+    }
+
+    private void loadModelServiceName() {
+        YamlPropertiesFactoryBean yamlFactory = new YamlPropertiesFactoryBean();
+        yamlFactory.setResources(new ClassPathResource("application.yaml"));
+        Properties properties = yamlFactory.getObject();
+        if (properties == null) {
+            log.error("Unable to load configuration from application.yaml");
+            return;
+        }
+        log.info("Successfully found the llm topic address: {}", properties.getProperty(LLM_TOPIC));
+        setUrl(properties.getProperty(LLM_TOPIC));
+    }
+
+    private String extractJsonFromResponse(String response) {
+        Pattern pattern = Pattern.compile("<response>(.*?)</response>", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(response);
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        }
+        throw new IllegalArgumentException("No valid JSON found in the response");
+    }
+
+    private LlmWritingTopicDTO mapLlmResponseToObject(String response) {
+        try {
+            String json = extractJsonFromResponse(response);
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(json, LlmWritingTopicDTO.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+}

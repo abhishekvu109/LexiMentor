@@ -1,7 +1,6 @@
 package com.abhi.leximentor.inventory.controller.rest.inv;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
-import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.inv.LanguageDTO;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
@@ -23,8 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LanguageController {
     private final LanguageService languageService;
 
-    @PostMapping(value = UrlConstants.Inventory.Language.LANG_CREATE, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(value = "/api/leximentor/inventory/language", produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public @ResponseBody ResponseEntity<RestApiResponse> addLanguage(@Valid @RequestBody LanguageDTO dto) {
+        log.info("Language create requested. language={}", dto == null ? null : dto.getLanguage());
         LanguageDTO response = languageService.add(dto);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }

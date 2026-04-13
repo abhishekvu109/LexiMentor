@@ -16,6 +16,7 @@ public interface BudgetMapper {
     @Mapping(target = "uuid", expression = "java(KeyGeneratorUtil.uuid())")
     @Mapping(target = "refId", expression = "java(KeyGeneratorUtil.refId())")
     @Mapping(target = "status", constant = "1")
+    @Mapping(target = "budgetDate", source = "budgetDate")
     Budget toEntity(BudgetDTO budgetDTO);
 
     @Mapping(target = "householdRefId", source = "household.refId")

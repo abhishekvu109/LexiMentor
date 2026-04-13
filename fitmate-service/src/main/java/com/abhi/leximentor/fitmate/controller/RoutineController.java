@@ -1,11 +1,10 @@
 package com.abhi.leximentor.fitmate.controller;
 
 import com.abhi.leximentor.fitmate.constants.ApplicationConstants;
-import com.abhi.leximentor.fitmate.constants.LogConstants;
-import com.abhi.leximentor.fitmate.constants.UrlConstants;
+import com.abhi.leximentor.fitmate.dto.PagedResponse;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
-import com.abhi.leximentor.fitmate.dto.RoutineSearchFilter;
-import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
+import com.abhi.leximentor.fitmate.dto.RoutineGenerationDTO;
+import com.abhi.leximentor.fitmate.dto.filters.RoutineSearchFilter;
 import com.abhi.leximentor.fitmate.model.ResponseEntityBuilder;
 import com.abhi.leximentor.fitmate.model.RestApiResponse;
 import com.abhi.leximentor.fitmate.service.RoutineGeneratorService;
@@ -13,71 +12,73 @@ import com.abhi.leximentor.fitmate.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping("/api/fitmate/routines/routine")
 public class RoutineController {
     private final RoutineService routineService;
     private final RoutineGeneratorService generateRoutine;
 
-    @PostMapping(value = UrlConstants.RoutineUrl.ROUTINE_ADD, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> add(@RequestBody RoutineDTO request) {
-        RoutineDTO response = routineService.addByNames(request);
-        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, routineService.addByNames(request));
     }
 
-    @GetMapping(value = UrlConstants.RoutineUrl.ROUTINE_GET_REF_ID, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @GetMapping(value = "/{routineRefId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> getByRefId(@PathVariable String routineRefId) {
-        RoutineDTO response = routineService.getByRefId(Long.parseLong(routineRefId));
-        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, routineService.getByRefId(Long.parseLong(routineRefId)));
     }
 
 
-    @GetMapping(value = UrlConstants.RoutineUrl.ROUTINE_GET, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> get(@ModelAttribute RoutineSearchFilter filter) {
-        List<RoutineDTO> result = routineService.search(filter);
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> get(
+            @ModelAttribute RoutineSearchFilter filter,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        PagedResponse<RoutineDTO> result = routineService.search(filter, PageRequest.of(page, size));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, result);
     }
 
 
-    @PutMapping(value = UrlConstants.RoutineUrl.ROUTINE_UPDATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PutMapping(consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> update(@RequestBody RoutineDTO request) {
-        try {
-            RoutineDTO response = routineService.update(request);
-            if (response != null) {
-                return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
-            }
-            return ResponseEntityBuilder.getBuilder(HttpStatus.INTERNAL_SERVER_ERROR).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "Internal server exception");
-        } catch (Exception ex) {
-            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
-        }
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, routineService.update(request));
     }
 
-    @DeleteMapping(value = UrlConstants.RoutineUrl.ROUTINE_DELETE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> delete(@RequestBody List<RoutineDTO> request) {
-        try {
-            routineService.deleteAll(request);
-            return ResponseEntityBuilder.getBuilder(HttpStatus.NO_CONTENT).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Deleted successfully");
-        } catch (Exception ex) {
-            throw new ServerException().new InternalError(LogConstants.GENERIC_EXCEPTION);
-        }
+        routineService.deleteAll(request);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.NO_CONTENT).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Deleted successfully");
     }
 
-    @PostMapping(value = UrlConstants.RoutineUrl.ROUTINE_GENERATE, consumes = ApplicationConstants.MediaType.APPLICATION_JSON, produces = ApplicationConstants.MediaType.APPLICATION_JSON)
-    public @ResponseBody ResponseEntity<RestApiResponse> generateRoutine(@RequestBody Map<String, Object> request) {
-        String trainingType = (String) request.get("trainingType");
-        @SuppressWarnings("unchecked")
-        List<String> targetBodyParts = (List<String>) request.get("targetBodyParts");
-        RoutineDTO response = generateRoutine.generateRoutine(trainingType, targetBodyParts);
+    @PostMapping(value = "/generate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> generateRoutine(@RequestBody RoutineGenerationDTO request) {
+        RoutineDTO response = generateRoutine.generateRoutine(request);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 
+
+    @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> search(
+            @RequestBody(required = false) RoutineSearchFilter filter,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        PagedResponse<RoutineDTO> response = routineService.search(filter, PageRequest.of(page, size));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+    }
+
+    @GetMapping(value = "/log", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> getLog(@RequestParam String username) {
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, routineService.findRoutineDrillLog(username));
+    }
 
 }

@@ -11,17 +11,18 @@ import org.apache.commons.lang3.StringUtils;
 public class BudgetSearchFilter {
     private String refId;
     private String uuid;
-    private String sortBy = "year";
+    private String householdRefId;
+    private String sortBy = "budgetDate";
     private String sortDir = "desc";
 
     public static BudgetSearchFilter defaultFilter() {
         return BudgetSearchFilter.builder()
-                .sortBy("year")
+                .sortBy("budgetDate")
                 .sortDir("desc")
                 .build();
     }
 
     public boolean isEmpty() {
-        return StringUtils.isAllEmpty(getUuid(), getRefId(), getSortBy(), getSortDir());
+        return StringUtils.isAllEmpty(getUuid(), getHouseholdRefId(), getRefId(), getSortBy(), getSortDir());
     }
 }

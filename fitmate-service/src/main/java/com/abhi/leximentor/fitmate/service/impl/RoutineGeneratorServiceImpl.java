@@ -4,8 +4,11 @@ import com.abhi.leximentor.fitmate.constants.MeasurementUnit;
 import com.abhi.leximentor.fitmate.constants.Status;
 import com.abhi.leximentor.fitmate.dto.DrillDTO;
 import com.abhi.leximentor.fitmate.dto.RoutineDTO;
+import com.abhi.leximentor.fitmate.dto.RoutineGenerationDTO;
 import com.abhi.leximentor.fitmate.entities.*;
 import com.abhi.leximentor.fitmate.exceptions.entities.ServerException;
+import com.abhi.leximentor.fitmate.mapper.ExerciseMapper;
+import com.abhi.leximentor.fitmate.mapper.TrainingMapper;
 import com.abhi.leximentor.fitmate.repository.*;
 import com.abhi.leximentor.fitmate.service.RoutineGeneratorService;
 import jakarta.transaction.Transactional;
@@ -33,6 +36,8 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
     private final TrainingRepository trainingRepository;
     private final BodyPartsRepository bodyPartsRepository;
     private final ExerciseRepository exerciseRepository;
+    private final TrainingMapper trainingMapper;
+    private final ExerciseMapper exerciseMapper;
 
     private static final int MIN_EXERCISES_PER_ROUTINE = 8;      // Increased from 5
     private static final int MAX_EXERCISES_PER_ROUTINE = 12;     // New upper cap
@@ -47,9 +52,12 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
 
     @Override
     @Transactional
-    public RoutineDTO generateRoutine(String trainingType, List<String> targetBodyParts) {
-        if (StringUtils.isBlank(trainingType) || CollectionUtils.isEmpty(targetBodyParts)) {
-            throw new ServerException().new InternalError("Training type and target body parts list are required.");
+    public RoutineDTO generateRoutine(RoutineGenerationDTO dto) {
+        String trainingType = dto.getTrainingType();
+        List<String> targetBodyParts = dto.getTargetBodyParts();
+        String username = dto.getUsername();
+        if (StringUtils.isAnyEmpty(trainingType, username) && CollectionUtils.isEmpty(targetBodyParts)) {
+            throw new ServerException().new InternalError("Training type, username and target body parts list are required.");
         }
 
         // Normalize list (uppercase, trim)
@@ -83,7 +91,7 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
         }
 
         // Step 4: Check neglected status (per body part or average for full body)
-        Map<BodyPart, Boolean> neglectedMap = buildNeglectedMap(relevantBodyParts, isFullBody);
+        Map<BodyPart, Boolean> neglectedMap = buildNeglectedMap(relevantBodyParts, isFullBody,username);
 
         // Step 5: Calculate staleness and select balanced exercises
         List<Exercise> selectedExercises = selectBalancedExercises(exercises, neglectedMap, isFullBody, relevantBodyParts);
@@ -105,7 +113,7 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
                 .description(description)
                 .status(Status.RoutineStatus.toString(Status.RoutineStatus.NOT_STARTED))
                 .workoutDate(LocalDate.now().toString())
-                .training(FitmateServiceUtil.TrainingMetadataUtil.buildDto(training))
+                .training(trainingMapper.toDto(training))
                 .drills(drillDtos)
                 .burntCalories(0)
                 .durationInMinutes(0)
@@ -125,9 +133,9 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
     }
 
 
-    private Map<BodyPart, Boolean> buildNeglectedMap(List<BodyPart> bodyParts, boolean isFullBody) {
+    private Map<BodyPart, Boolean> buildNeglectedMap(List<BodyPart> bodyParts, boolean isFullBody,String username) {
         Map<BodyPart, Boolean> neglectedMap = new HashMap<>();
-        List<Routine> recentRoutines = routineRepository.findAllByOrderByRoutineDateDesc();
+        List<Routine> recentRoutines = routineRepository.findByUsernameOrderByRoutineDateDesc(username);
         for (BodyPart bp : bodyParts) {
             boolean neglected = isBodyPartNeglected(bp, recentRoutines);
             neglectedMap.put(bp, neglected);
@@ -180,7 +188,7 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
         Muscle muscle = exercise.getTargetMuscles().isEmpty() ? null : exercise.getTargetMuscles().get(0);
 
         return DrillDTO.builder()
-                .exercise(FitmateServiceUtil.ExerciseUtil.buildDto(exercise))
+                .exercise(exerciseMapper.toDto(exercise))
                 .measurementUnit(unit)
                 .measurement(measurement)
                 .unit(scale)
@@ -188,7 +196,7 @@ public class RoutineGeneratorServiceImpl implements RoutineGeneratorService {
                 .burntCalories(0)
                 .creationDate(LocalDateTime.now())
                 .notes("Auto-generated drill")
-                .muscle(muscle != null ? FitmateServiceUtil.MuscleUtil.buildDTO(muscle, exercise.getTargetBodyPart()) : null)
+//                .muscle(muscle != null ? FitmateServiceUtil.MuscleUtil.buildDTO(muscle, exercise.getTargetBodyPart()) : null)
                 .build();
     }
 

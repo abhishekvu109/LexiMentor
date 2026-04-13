@@ -21,4 +21,6 @@ public class ExpenseDTO {
     private String description;
     private String categoryRefId;
     private ExpenseType type;
+    private String expenseFor;
+    private String paymentMode;
 }

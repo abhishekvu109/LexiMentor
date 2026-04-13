@@ -34,4 +34,13 @@ public interface WordMetadataRepository extends JpaRepository<WordMetadata, Long
 
     @Query(value = QueryConstants.Inventory.WordMetadata.GET_COUNT_OF_WORDS_BY_POS, nativeQuery = true)
     int findCountOfWordsByPos(@Param("pos") String pos);
+
+    @Query(value = QueryConstants.Inventory.WordMetadata.GET_SOURCE_DISTRIBUTION, nativeQuery = true)
+    List<Object[]> findSourceDistribution();
+
+    @Query(value = QueryConstants.Inventory.WordMetadata.GET_CATEGORY_DISTRIBUTION, nativeQuery = true)
+    List<Object[]> findCategoryDistribution();
+
+    @Query(value = QueryConstants.Inventory.WordMetadata.GET_UNUSED_WORD_COUNT, nativeQuery = true)
+    long countUnusedWords();
 }

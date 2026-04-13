@@ -1,7 +1,6 @@
 package com.abhi.leximentor.inventory.controller.rest;
 
 import com.abhi.leximentor.inventory.constants.ApplicationConstants;
-import com.abhi.leximentor.inventory.constants.UrlConstants;
 import com.abhi.leximentor.inventory.dto.NamedObjectDTO;
 import com.abhi.leximentor.inventory.model.rest.ResponseEntityBuilder;
 import com.abhi.leximentor.inventory.model.rest.RestApiResponse;
@@ -23,8 +22,9 @@ import java.util.List;
 public class NamedObjectController {
     private final NamedObjectService namedObjectService;
 
-    @PostMapping(value = UrlConstants.NamedObject.ADD_NAMED_OBJECT, produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
+    @PostMapping(value = "/api/leximentor/v1/named/object", produces = ApplicationConstants.MediaType.APPLICATION_JSON, consumes = ApplicationConstants.MediaType.APPLICATION_JSON)
     public ResponseEntity<RestApiResponse> addAll(@RequestBody List<NamedObjectDTO> dtos) {
+        log.info("NamedObject create requested. count={}", dtos == null ? 0 : dtos.size());
         List<NamedObjectDTO> response = namedObjectService.addAll(dtos);
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }

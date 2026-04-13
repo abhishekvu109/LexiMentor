@@ -14,12 +14,12 @@ public class EarningSearchFilter {
     private Double amountFrom;
     private Double amountTo;
     private String source;
-    private String sortBy = "depositData";
+    private String sortBy = "depositDate";
     private String sortDir = "desc";
 
     public static EarningSearchFilter defaultFilter() {
         return EarningSearchFilter.builder()
-                .sortBy("depositData")
+                .sortBy("depositDate")
                 .sortDir("desc")
                 .build();
     }

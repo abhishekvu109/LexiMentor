@@ -49,7 +49,7 @@ public class Routine {
     @JoinColumn(name = "training_id")
     private Training training;
 
-    @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "routineObj", cascade = CascadeType.ALL, fetch = FetchType.EAGER,orphanRemoval = true)
     private List<Drill> drills;
 
     @Column(name = "routine_date")
@@ -60,4 +60,7 @@ public class Routine {
 
     @Column(name = "duration_in_minutes")
     private double durationInMinutes;
+
+    @Column(name = "username")
+    private String username;
 }

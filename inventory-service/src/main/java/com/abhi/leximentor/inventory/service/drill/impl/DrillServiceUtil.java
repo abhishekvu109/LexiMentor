@@ -52,10 +52,15 @@ public class DrillServiceUtil {
             drillChallenge.setDrillChallengeScoresList(CollectionUtil.isNotEmpty(drillMetadata.getDrillSetList()) ? drillMetadata.getDrillSetList().stream().map(d -> DrillChallengeScoreUtil.buildEntity(drillChallenge, d, drillTypes)).collect(Collectors.toList()) : null);
             return drillChallenge;
         }
+        public static DrillChallenge buildEntity(DrillMetadata drillMetadata, DrillTypes drillTypes, String username) {
+            DrillChallenge drillChallenge = DrillChallenge.builder().status(Status.DrillChallenge.NOT_INITIATED).username(username).evaluationStatus(Status.DrillChallenge.NOT_INITIATED).uuid(KeyGeneratorUtil.uuid()).drillType(drillTypes.name()).refId(KeyGeneratorUtil.refId()).drillId(drillMetadata).drillScore(0).isPass(false).totalCorrect(0).totalWrong(0).build();
+            drillChallenge.setDrillChallengeScoresList(CollectionUtil.isNotEmpty(drillMetadata.getDrillSetList()) ? drillMetadata.getDrillSetList().stream().map(d -> DrillChallengeScoreUtil.buildEntity(drillChallenge, d, drillTypes)).collect(Collectors.toList()) : null);
+            return drillChallenge;
+        }
 
         public static DrillChallengeDTO buildDTO(DrillChallenge entity) {
             DrillMetadata drillMetadata = entity.getDrillId();
-            return DrillChallengeDTO.builder().refId(String.valueOf(entity.getRefId())).drillType(entity.getDrillType()).evaluationStatus(Status.DrillChallenge.getEvaluationStatus(entity.getEvaluationStatus())).status(Status.DrillChallenge.getStatus(entity.getStatus())).drillRefId(String.valueOf(drillMetadata.getRefId())).drillScore(entity.getDrillScore()).isPass(entity.isPass()).totalCorrect(entity.getTotalCorrect()).totalWrong(entity.getTotalWrong()).crtnDate(entity.getCrtnDate()).build();
+            return DrillChallengeDTO.builder().username(entity.getUsername()).refId(String.valueOf(entity.getRefId())).drillType(entity.getDrillType()).evaluationStatus(Status.DrillChallenge.getEvaluationStatus(entity.getEvaluationStatus())).status(Status.DrillChallenge.getStatus(entity.getStatus())).drillRefId(String.valueOf(drillMetadata.getRefId())).drillScore(entity.getDrillScore()).isPass(entity.isPass()).totalCorrect(entity.getTotalCorrect()).totalWrong(entity.getTotalWrong()).crtnDate(entity.getCrtnDate()).build();
         }
 
         public static synchronized boolean isPass(double score) {

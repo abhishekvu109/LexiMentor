@@ -4,13 +4,14 @@ import com.abhi.leximentor.fitmate.entities.BodyPart;
 import com.abhi.leximentor.fitmate.entities.Exercise;
 import com.abhi.leximentor.fitmate.entities.Training;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 @Repository
-public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
+public interface ExerciseRepository extends JpaRepository<Exercise, Long>, JpaSpecificationExecutor<Exercise> {
     Stream<Exercise> findAllBy();
 
     Exercise findByRefId(long refId);
