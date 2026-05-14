@@ -43,6 +43,10 @@ data:
               uri: http://auth-service-k8s.default.svc.cluster.local:4848/api/auth/
               predicates:
                 - Path=/api/auth/**
+            - id: flashcard-service
+              uri: http://flashcard-service-k8s.default.svc.cluster.local:6060/api/flashcard/
+              predicates:
+                - Path=/api/flashcard/**
     management:
       endpoints:
         web:

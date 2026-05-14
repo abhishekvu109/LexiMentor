@@ -36,6 +36,10 @@ spring:
           uri: http://localhost:1515/api/cashflow/
           predicates:
             - Path=/api/cashflow/**
+        - id: flashcard-service
+          uri: http://localhost:6060/api/flashcard/
+          predicates:
+            - Path=/api/flashcard/**
 management:
   endpoints:
     web:
