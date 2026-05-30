@@ -1,6 +1,7 @@
 package com.abhi.writewise.inventory.controller;
 
 import com.abhi.writewise.inventory.constants.ApplicationConstants;
+import com.abhi.writewise.inventory.constants.ModelConstants;
 import com.abhi.writewise.inventory.constants.UrlConstants;
 import com.abhi.writewise.inventory.dto.response.ResponseVersionDTO;
 import com.abhi.writewise.inventory.model.rest.ResponseEntityBuilder;
@@ -63,7 +64,7 @@ public class ResponseVersionController {
             return ResponseEntityBuilder.getBuilder(HttpStatus.BAD_REQUEST).errorResponse(ApplicationConstants.REQUEST_FAILURE_DESCRIPTION, "The API requires topicRefId and versionRefId.");
         }
         log.info("Received a request to submit evaluation results TopicRefId:{} and versionRefId:{}.", request.topicRefId, request.versionRefId);
-        setModelInResponseVersionService(StringUtils.isNotEmpty(request.model()) ? request.model() : "gemma3");
+        setModelInResponseVersionService(StringUtils.isNotEmpty(request.model()) ? request.model() : ModelConstants.CLOUD_LLM);
         ResponseVersionDTO response = responseVersionService.doSubmitResult(Long.parseLong(request.topicRefId), Long.parseLong(request.versionRefId), request.isHighLevel);
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
@@ -91,6 +92,13 @@ public class ResponseVersionController {
         log.info("Received a request to delete a evaluation {} for all a topic: {}", versionRefId, topicRefId);
         responseVersionService.doDeleteEvaluationByVersion(Long.parseLong(topicRefId), Long.parseLong(versionRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.MOVED_PERMANENTLY).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "We have removed an evaluation for a topic.");
+    }
+
+    @DeleteMapping(value = UrlConstants.ResponseVersion.V1.DELETE_RESPONSE_VERSION, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> deleteResponseVersion(@PathVariable String topicRefId, @PathVariable String versionRefId) {
+        log.info("Received a request to delete response version - topicRefId: {}, versionRefId: {}", topicRefId, versionRefId);
+        responseVersionService.deleteResponseVersion(Long.parseLong(topicRefId), Long.parseLong(versionRefId));
+        return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Response version deleted successfully.");
     }
 
     private void setModelInResponseVersionService(String model) {

@@ -23,43 +23,45 @@ public class RepositoryUtil {
 
 
     public ResponseMaster findResponseMasterByTopicRefId(long topicRefId) {
-        return responseMasterRepository.findAll().stream().filter(rm -> {
-            if (CollectionUtils.isNotEmpty(rm.getTopicResponseList())) {
-                Response response = rm.getTopicResponseList().stream().filter(res -> res.getTopic() != null && res.getTopic().getRefId() == topicRefId).findAny().orElseThrow(() -> new ServerException().new InternalError("Response object is null"));
-                return response != null;
-
-            } else {
-                return false;
-            }
-        }).findFirst().orElseThrow(() -> new ServerException().new InternalError("Response Master is null"));
+        return responseMasterRepository.findByTopicRefId(topicRefId)
+                .orElseThrow(() -> new ServerException().new InternalError("ResponseMaster not found for topicRefId: " + topicRefId));
     }
 
     public Response findResponseByTopicRefId(long topicRefId) {
         ResponseMaster responseMaster = findResponseMasterByTopicRefId(topicRefId);
-        return responseMaster.getTopicResponseList().stream().filter(res -> (res.getTopic() != null && res.getTopic().getRefId() == topicRefId)).findAny().orElseThrow(() -> new ServerException().new InternalError("Response entity not found."));
+        return findResponseByTopicRefId(responseMaster, topicRefId);
     }
 
     public Response findResponseByTopicRefId(ResponseMaster responseMaster, long topicRefId) {
-        return responseMaster.getTopicResponseList().stream().filter(res -> (res.getTopic() != null && res.getTopic().getRefId() == topicRefId)).findAny().orElseThrow(() -> new ServerException().new InternalError("Response entity not found."));
+        return responseMaster.getTopicResponseList().stream()
+                .filter(res -> res.getTopic() != null && res.getTopic().getRefId() == topicRefId)
+                .findAny()
+                .orElseThrow(() -> new ServerException().new InternalError("Response not found for topicRefId: " + topicRefId));
     }
 
     public ResponseVersion findResponseVersionByTopicRefIdAndVersionRefId(ResponseMaster responseMaster, long topicRefId, long versionRefId) {
-        return responseMaster.getTopicResponseList().stream().filter(res -> res.getTopic() != null && res.getTopic().getRefId() == topicRefId).findFirst().orElseThrow(() -> new ServerException().new InternalError("Response object is null")).getResponseVersions().stream().filter(rv -> rv.getRefId() == versionRefId).findAny().orElseThrow(() -> new ServerException().new InternalError("ResponseVersion object is null"));
+        Response response = findResponseByTopicRefId(responseMaster, topicRefId);
+        return response.getResponseVersions().stream()
+                .filter(rv -> rv.getRefId() == versionRefId)
+                .findAny()
+                .orElseThrow(() -> new ServerException().new InternalError("ResponseVersion not found for versionRefId: " + versionRefId));
     }
 
     public ResponseVersion findResponseVersionByTopicRefIdAndVersionRefId(long topicRefId, long versionRefId) {
         ResponseMaster responseMaster = findResponseMasterByTopicRefId(topicRefId);
-        return responseMaster.getTopicResponseList().stream().filter(res -> res.getTopic() != null && res.getTopic().getRefId() == topicRefId).findFirst().orElseThrow(() -> new ServerException().new InternalError("Response object is null")).getResponseVersions().stream().filter(rv -> rv.getRefId() == versionRefId).findAny().orElseThrow(() -> new ServerException().new InternalError("ResponseVersion object is null"));
+        return findResponseVersionByTopicRefIdAndVersionRefId(responseMaster, topicRefId, versionRefId);
     }
 
     public Topic findTopicByTopicRefId(long topicRefId) {
-        return topicGenerationRepository.findAll().stream().flatMap(tg -> tg.getTopics().stream()).filter(t -> t.getRefId() == topicRefId).findAny().orElseThrow(() -> new ServerException().new InternalError("Topic Object is not found."));
+        TopicGeneration topicGeneration = findTopicGenerationByTopicRefId(topicRefId);
+        return topicGeneration.getTopics().stream()
+                .filter(t -> t.getRefId() == topicRefId)
+                .findAny()
+                .orElseThrow(() -> new ServerException().new InternalError("Topic not found for topicRefId: " + topicRefId));
     }
 
     public TopicGeneration findTopicGenerationByTopicRefId(long topicRefId) {
-        return topicGenerationRepository.findAll().stream().filter(tg -> {
-            Topic topic = tg.getTopics().stream().filter(t -> t.getRefId() == topicRefId).findAny().orElse(null);
-            return topic != null;
-        }).findAny().orElseThrow(() -> new ServerException().new InternalError("TopicGeneration object is not found"));
+        return topicGenerationRepository.findByTopicRefId(topicRefId)
+                .orElseThrow(() -> new ServerException().new InternalError("TopicGeneration not found for topicRefId: " + topicRefId));
     }
 }

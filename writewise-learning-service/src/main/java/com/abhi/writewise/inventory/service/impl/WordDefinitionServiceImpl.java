@@ -65,8 +65,11 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
                 retry--;
             }
         }
+        if (StringUtils.isEmpty(responseOutput)) {
+            log.error("LLM service returned no response after {} retries", RETRY_COUNT);
+            throw new RuntimeException("LLM service failed to generate word definition");
+        }
         String llmResponse = extractJsonFromResponse(responseOutput);
-//        log.info("LLM has generated the response. {}", llmResponse);
         log.info("LLM has generated the response. {}", responseOutput);
         if (StringUtils.isNotEmpty(llmResponse)) {
             request.setPrompt(prompt);
@@ -87,6 +90,9 @@ public class WordDefinitionServiceImpl implements WordDefinitionService {
 
 
     private String extractJsonFromResponse(String response) {
+        if (StringUtils.isEmpty(response)) {
+            throw new IllegalArgumentException("Response cannot be null or empty");
+        }
         Pattern pattern = Pattern.compile("<response>(.*?)</response>", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(response);
         if (matcher.find()) {

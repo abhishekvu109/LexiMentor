@@ -15,5 +15,6 @@ public interface ResponseVersionService extends InitModelService {
 
     void doDeleteEvaluationAll(long topicRefId);
     void doDeleteEvaluationByVersion(long topicRefId,long versionRefId);
+    void deleteResponseVersion(long topicRefId, long versionRefId);
 
 }
