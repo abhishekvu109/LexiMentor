@@ -67,3 +67,13 @@ surefire-reports/
 dist/
 dump.rdb
 
+.claude/settings.json
+.gitignore
+.claude/settings.local.json
+leximentor-service/.gitattributes
+leximentor-service/mvnw
+leximentor-service/mvnw.cmd
+.gitignore
+./leximentor-service/.mvn/wrapper/maven-wrapper.jar
+leximentor-service/.mvn/wrapper/maven-wrapper.properties
+leximentor-service/.mvn/wrapper/maven-wrapper.jar

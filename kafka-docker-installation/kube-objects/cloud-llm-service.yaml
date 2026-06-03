@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloud-llm-secret
+type: Opaque
+stringData:
+  ollama-api-key: "your-ollama-api-key-here"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloud-llm-config
+data:
+  MODEL_NAME: "gpt-oss:120b"
+  OLLAMA_HOST: "https://ollama.com"
+  SERVICE_PORT: "7070"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-llm-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-llm-app
+  template:
+    metadata:
+      labels:
+        app: cloud-llm-app
+    spec:
+      containers:
+        - name: cloud-llm-app
+          image: localhost:5000/cloud-llm-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7070
+          env:
+            - name: MODEL_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cloud-llm-config
+                  key: MODEL_NAME
+            - name: OLLAMA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: cloud-llm-config
+                  key: OLLAMA_HOST
+            - name: OLLAMA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cloud-llm-secret
+                  key: ollama-api-key
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-llm-service-k8s
+spec:
+  selector:
+    app: cloud-llm-app
+  ports:
+    - port: 7070
+      targetPort: 7070
+      nodePort: 31435
+  type: NodePort

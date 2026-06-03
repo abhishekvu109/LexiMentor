@@ -77,7 +77,7 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
             prevLatest.setLatest(false);
             responseVersion = TopicResponseEvalServiceUtil.ResponseUtil.BuildEntity.buildResponseVersion();
             responseVersion.setLatest(true);
-            ResponseVersion maxResponseVersion = updatedResponse.getResponseVersions().stream().filter(rv -> rv.getResponseStatus() == Status.TopicResponse.SUBMITTED).max(Comparator.comparing(ResponseVersion::getResponseStatus)).orElse(null);
+            ResponseVersion maxResponseVersion = updatedResponse.getResponseVersions().stream().filter(rv -> rv.getResponseStatus() == Status.TopicResponse.SUBMITTED).max(Comparator.comparing(ResponseVersion::getVersionNumber)).orElse(null);
             if (maxResponseVersion == null) {
                 log.error("Unable to find a response version that is in-progress/not-started and has maximum version number.");
                 throw new ServerException().new InternalError("Unable to find the valid Response Version object.");
@@ -106,17 +106,29 @@ public class ResponseAndEvaluationServiceImpl implements ResponseAndEvaluationSe
 
     @Override
     public List<ResponseDTO> submittedResponses() {
-        List<Response> responses = responseMasterRepository.findAll().stream().flatMap(rm -> rm.getTopicResponseList().stream()).filter(res -> CollectionUtils.isNotEmpty(res.getResponseVersions())).toList();
+        List<Response> responses = responseMasterRepository.findAll().stream()
+                .flatMap(rm -> rm.getTopicResponseList().stream())
+                .filter(res -> CollectionUtils.isNotEmpty(res.getResponseVersions()))
+                .toList();
+
         responses.forEach(response -> {
-            List<ResponseVersion> responseVersions = response.getResponseVersions().stream().filter(rv -> rv.getEvaluation() != null && (rv.getResponseStatus() == Status.TopicResponse.SUBMITTED) && rv.getEvaluation().getEvaluationStatus() == Status.EvaluationStatus.NOT_STARTED).toList();
-            response.setResponseVersions(responseVersions);
+            List<ResponseVersion> submitted = response.getResponseVersions().stream()
+                    .filter(rv -> rv.getResponseStatus() == Status.TopicResponse.SUBMITTED
+                            && rv.getEvaluation() != null
+                            && rv.getEvaluation().getEvaluationStatus() != Status.EvaluationStatus.COMPLETED)
+                    .toList();
+            response.setResponseVersions(submitted);
         });
-        return responses.stream().map(TopicResponseEvalServiceUtil.ResponseUtil.BuildDTO::buildResponse).toList();
+
+        return responses.stream()
+                .filter(res -> CollectionUtils.isNotEmpty(res.getResponseVersions()))
+                .map(TopicResponseEvalServiceUtil.ResponseUtil.BuildDTO::buildResponse)
+                .toList();
     }
 
     @Override
     public List<ResponseDTO> draftedResponse() {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

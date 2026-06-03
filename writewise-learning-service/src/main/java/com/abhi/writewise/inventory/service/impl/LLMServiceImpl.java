@@ -33,6 +33,10 @@ public class LLMServiceImpl implements LLMService {
         try {
             responseEntity = restClient.post(URL, headers, request, String.class);
             responseOutput = responseEntity.getBody();
+            if (StringUtils.isEmpty(responseOutput)) {
+                log.error("LLM service returned empty response body");
+                throw new ServerException().new InternalError("LLM service returned empty response");
+            }
             log.info("The llm service service has returned a response : {}", responseEntity);
         } catch (Exception ex) {
             log.error("Unable to get response from the llm service {} for {}", URL, request);
@@ -46,10 +50,8 @@ public class LLMServiceImpl implements LLMService {
         String validationMessage = "";
         if (StringUtils.isEmpty(request.getPrompt())) {
             validationMessage = "Prompt is empty.";
-        } else if (StringUtils.isEmpty(request.getFormat())) {
-            validationMessage = "Response format is empty.";
         } else if (StringUtils.isEmpty(request.getModel())) {
-            validationMessage = "Model is empty";
+            validationMessage = "Model is empty.";
         }
         if (StringUtils.isNotEmpty(validationMessage)) {
             throw new ServerException().new InternalError("Invalid prompt request :" + validationMessage);

@@ -111,95 +111,64 @@ public class LLMPromptBuilder {
     public static class TopicPrompt {
         public static synchronized String prompt(String subject, int numOfTopics, String purpose, Integer wordCount) {
             return String.format("""
+                    You are an expert English writing coach. Generate exactly %d unique writing topics in the subject of "%s" \
+                    to help a student improve their English writing skills for "%s".
+
+                    ## Rules:
+                    - Return ONLY the JSON enclosed in <response>...</response> tags. No extra text, no explanations.
+                    - Do NOT copy the example content below. Generate completely new, relevant topics.
+                    - Each topic must have exactly %d words as the target writing length.
+                    - The subject of every topic must be directly related to "%s".
+
+                    ## Required JSON structure:
                     {
-                        "prompt": "Generate %d unique topics in the subject of '%s' to improve English writing skills for '%s'. \n
-                        The response must strictly follow the JSON structure enclosed in <response>...</response> tags.
-                                        
-                        The JSON example below is for reference only; do NOT copy the content. Generate new, relevant topics instead.
-                                        
-                                        
-                        
-                        ## **JSON Response Format** (Strictly Follow This)
+                      "topics": [
                         {
-                          "topics": [
-                            {
-                              "topicNo": Integer, // The topic number (e.g., 1, 2, etc.)
-                              "topic": "String", // The title of the topic
-                              "subject": "String", // The subject category (e.g., Global Economy, Science, History)
-                              "description": "String", // Short explanation of how this topic improves English writing for '%s'
-                              "points": [ // Key points to cover in writing (adjusted for %d words)
-                                "String",
-                                "String",
-                                "String"
-                              ],
-                              "learning": "String" // What the user will learn from writing about this topic
-                            }
+                          "topicNo": <integer>,
+                          "topic": "<title of the topic>",
+                          "subject": "<subject category>",
+                          "description": "<1-2 sentences explaining how this topic improves English writing>",
+                          "points": [
+                            "<key point 1>",
+                            "<key point 2>",
+                            "<key point 3>"
                           ],
-                          "recommendations": [ // General tips for improving writing skills
-                            "String",
-                            "String",
-                            "String"
-                          ]
+                          "learning": "<what the student will learn by writing about this topic>"
                         }
-                        
-                        ---
-                        ## **Example Response (For Format Only, Do Not Copy Content)**
-                        <response>
-                        {
-                          "topics": [
-                            {
-                              "topicNo": 1,
-                              "topic": "The Role of Artificial Intelligence in Modern Society",
-                              "subject": "Technology",
-                              "description": "This topic explores how artificial intelligence impacts different sectors, encouraging analytical and structured writing.",
-                              "points": [
-                                "Definition and brief history of AI",
-                                "AI's role in industries such as healthcare, finance, and automation",
-                                "Ethical concerns and risks of AI",
-                                "Future predictions about AI development"
-                              ],
-                              "learning": "Writing on this topic will improve your ability to present arguments, use technical vocabulary, and structure your essay effectively."
-                            },
-                            {
-                              "topicNo": 2,
-                              "topic": "Climate Change: Causes, Effects, and Solutions",
-                              "subject": "Environment",
-                              "description": "This topic encourages structured argumentation about climate change, helping refine persuasive writing skills.",
-                              "points": [
-                                "Definition and scientific evidence of climate change",
-                                "Major causes of climate change (e.g., carbon emissions, deforestation)",
-                                "Effects on biodiversity, weather patterns, and human health",
-                                "Possible solutions and global initiatives"
-                              ],
-                              "learning": "This topic enhances persuasive writing by requiring logical reasoning and factual support."
-                            }
-                          ],
-                          "recommendations": [
-                            "Use structured arguments with clear introductions and conclusions.",
-                            "Practice writing with a variety of sentence structures to enhance fluency.",
-                            "Include examples and data to support claims.",
-                            "Use topic-specific vocabulary to demonstrate knowledge.",
-                            "Practice writing under timed conditions for exam preparation."
-                          ]
-                        }
-                        </response>
-                        
-                        ---
-                        ## **Guidelines to Ensure a Consistent Response**
-                        - **Do NOT generate explanations or extra text; return only the JSON.**
-                        - **Ensure the JSON follows the exact format given above.**
-                        - **Always enclose the response in `<response>...</response>` tags.**
-                        - **Each topic should be unique, relevant, and structured for easy writing practice.**
-                        - **Adjust the number of points based on the provided word count (%d words).**
-                        - **The subject must be relevant to '%s'.**
-                        - **Use correct grammar, spelling, and structured sentences.**
-                        
-                        Failure to follow these instructions will result in an incorrect response.
+                      ],
+                      "recommendations": [
+                        "<general writing tip 1>",
+                        "<general writing tip 2>",
+                        "<general writing tip 3>"
+                      ]
                     }
-                    """, numOfTopics, subject, purpose, purpose, wordCount, wordCount, subject);
+
+                    ## Example (structure only — do NOT copy this content):
+                    <response>
+                    {
+                      "topics": [
+                        {
+                          "topicNo": 1,
+                          "topic": "The Role of Artificial Intelligence in Modern Society",
+                          "subject": "Technology",
+                          "description": "Explores how AI impacts industries, encouraging analytical and structured writing.",
+                          "points": [
+                            "Definition and brief history of AI",
+                            "AI's role in healthcare, finance, and automation",
+                            "Ethical concerns and risks of AI"
+                          ],
+                          "learning": "Writing on this topic builds skills in presenting arguments and using technical vocabulary."
+                        }
+                      ],
+                      "recommendations": [
+                        "Use structured arguments with clear introductions and conclusions.",
+                        "Practice a variety of sentence structures to enhance fluency.",
+                        "Include examples and data to support your claims."
+                      ]
+                    }
+                    </response>
+                    """, numOfTopics, subject, purpose, wordCount, subject);
         }
-
-
     }
 
     public static class EvaluationPrompt {
@@ -578,32 +547,32 @@ public class LLMPromptBuilder {
                       "spelling":{
                         "score": 0-100,
                         "comments": ["...minimum 10 critical comments..."],
-                        "alternateSuggestions": ["...minimum 5 suggestions to improve..."]
+                        "alternateSuggestion": ["...minimum 5 suggestions to improve..."]
                       },
                       "grammar":{
                         "score": 0-100,
                         "comments": ["...minimum 10 critical comments..."],
-                        "alternateSuggestions": ["...minimum 5 suggestions to improve..."]
+                        "alternateSuggestion": ["...minimum 5 suggestions to improve..."]
                       },
                       "punctuation":{
                         "score": 0-100,
                         "comments": ["...minimum 10 critical comments..."],
-                        "alternateSuggestions": ["...minimum 5 suggestions to improve..."]
+                        "alternateSuggestion": ["...minimum 5 suggestions to improve..."]
                       },
                       "vocabulary":{
                         "score": 0-100,
                         "comments": ["...minimum 10 critical comments..."],
-                        "alternateSuggestions": ["...minimum 5 suggestions to improve..."]
+                        "alternateSuggestion": ["...minimum 5 suggestions to improve..."]
                       },
                       "styleAndTone":{
                         "score": 0-100,
                         "comments": ["...minimum 10 critical comments..."],
-                        "alternateSuggestions": ["...minimum 5 suggestions to improve..."]
+                        "alternateSuggestion": ["...minimum 5 suggestions to improve..."]
                       },
                       "creativityAndThinking":{
                         "score": 0-100,
                         "comments": ["...minimum 10 critical comments..."],
-                        "alternateSuggestions": ["...minimum 5 suggestions to improve..."]
+                        "alternateSuggestion": ["...minimum 5 suggestions to improve..."]
                       }
                       "OverallRecommendations":[
                         "Suggest on high-level what to improve like a judge."
@@ -641,6 +610,33 @@ public class LLMPromptBuilder {
                     </Request>
                                             
                     """, topic, subject, points, recommendations, userResponse);
+        }
+    }
+
+    public static class AnalyticsPrompt {
+        public static synchronized String getInsightPrompt(String analyticsSummary) {
+            return String.format("""
+                    You are a writing coach. Based on this student's writing performance data, provide concise, actionable feedback.
+
+                    ## Student Performance Summary:
+                    %s
+
+                    ## Your response must include exactly these 4 sections:
+
+                    ### 1. Root Causes (2-3 sentences)
+                    Explain WHY the student makes their most common mistakes.
+
+                    ### 2. Priority Focus Areas
+                    List the top 3 specific things to improve, ordered by impact.
+
+                    ### 3. Practice Exercises
+                    Give 2-3 concrete, specific exercises to address the weaknesses.
+
+                    ### 4. Encouragement
+                    One sentence acknowledging their strengths and overall progress.
+
+                    Be specific, concise, and encouraging. No generic advice.
+                    """, analyticsSummary);
         }
     }
 }

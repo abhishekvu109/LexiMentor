@@ -1,5 +1,6 @@
 package com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -20,5 +21,6 @@ public class EvaluationResult {
     private EvaluationMetric styleAndTone;
     private EvaluationMetric creativityAndThinking;
     private double score;
+    @JsonProperty("OverallRecommendations")
     private List<String> OverallRecommendations;
 }

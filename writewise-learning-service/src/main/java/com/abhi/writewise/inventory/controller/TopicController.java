@@ -2,6 +2,7 @@ package com.abhi.writewise.inventory.controller;
 
 import com.abhi.writewise.inventory.constants.ApplicationConstants;
 import com.abhi.writewise.inventory.constants.UrlConstants;
+import com.abhi.writewise.inventory.dto.topic.CreateTopicManuallyDTO;
 import com.abhi.writewise.inventory.dto.topic.TopicDTO;
 import com.abhi.writewise.inventory.dto.topic.TopicGenerationDTO;
 import com.abhi.writewise.inventory.model.rest.ResponseEntityBuilder;
@@ -30,9 +31,11 @@ public class TopicController {
     @PostMapping(value = UrlConstants.Topic.V1.GENERATE_TOPIC_GENERATIONS, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<RestApiResponse> addTopicGenerationsUsingLLM(@Valid @RequestBody TopicGenerationDTO request) {
         log.info("New request has been received to generate topics from the LLM service.");
-        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-            TopicGenerationDTO response = topicService.addTopicGenerationsUsingLLM(request);
-        });
+//        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+//            TopicGenerationDTO response = topicService.addTopicGenerationsUsingLLM(request);
+//        });
+        TopicGenerationDTO response = topicService.addTopicGenerationsUsingLLM(request);
+
         return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, "Submitted a request to generate the topics.");
     }
 
@@ -76,5 +79,12 @@ public class TopicController {
         log.info("A request has been received to fetch the TopicDTO:{}", topicRefId);
         TopicDTO response = topicService.findTopicByRefId(Long.parseLong(topicRefId));
         return ResponseEntityBuilder.getBuilder(HttpStatus.OK).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
+    }
+
+    @PostMapping(value = UrlConstants.Topic.V1.CREATE_TOPIC_MANUALLY, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<RestApiResponse> createTopicManually(@Valid @RequestBody CreateTopicManuallyDTO request) {
+        log.info("New request has been received to create a topic manually.");
+        TopicGenerationDTO response = topicService.addTopicManually(request);
+        return ResponseEntityBuilder.getBuilder(HttpStatus.CREATED).successResponse(ApplicationConstants.REQUEST_SUCCESS_DESCRIPTION, response);
     }
 }

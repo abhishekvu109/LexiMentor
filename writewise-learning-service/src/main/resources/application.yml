@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   sql:
     init:
       mode: always
@@ -43,3 +43,6 @@ async:
     table-name: async_jobs
     api-enabled: true
     api-base-path: /api/writewise/async-jobs
+
+language-tool:
+  url: http://192.168.1.90:8081/v2/check
