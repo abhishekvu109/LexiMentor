@@ -18,6 +18,11 @@ public class RoutineDrillExportDTO {
 
     private String drillRefId;
     private String exerciseName;
+    private String exerciseUnit;
+    private String exerciseDifficultyLevel;
+    private String exerciseRiskLevel;
+    private String targetBodyPart;
+    private String targetMuscles;
     private String drillMeasurementUnit;
     private double drillMeasurement;
     private String drillUnit;

@@ -5,11 +5,11 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import java.time.LocalDate;
 
 public interface ExportService {
-    StreamingResponseBody exportExercises(String format);
+    StreamingResponseBody exportExercises(String trainingRefId, String bodyPartRefId);
 
-    StreamingResponseBody exportRoutines(String format);
+    StreamingResponseBody exportRoutines(String username, LocalDate fromDate, LocalDate toDate, String status);
 
-    StreamingResponseBody exportRoutineDrills(String format, String username, LocalDate fromDate, LocalDate toDate);
+    StreamingResponseBody exportRoutineDrills(String username, LocalDate fromDate, LocalDate toDate);
 
-    StreamingResponseBody exportNutrition(String format, String username, LocalDate fromDate, LocalDate toDate);
+    StreamingResponseBody exportNutrition(String username, LocalDate fromDate, LocalDate toDate, String mealType);
 }
