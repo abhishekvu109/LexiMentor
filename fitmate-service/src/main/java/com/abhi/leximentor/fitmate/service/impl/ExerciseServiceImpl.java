@@ -143,22 +143,31 @@ public class ExerciseServiceImpl implements ExerciseService {
     public void delete(ExerciseDTO exerciseDTO) throws ServerException.EntityObjectNotFound {
         Exercise exercise = exerciseRepository.findByRefId(Long.parseLong(exerciseDTO.getRefId()));
         if (exercise == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
-        exerciseRepository.delete(exercise);
+        deleteExercisesByDbIds(List.of(exercise.getId()));
     }
 
     @Override
     @Transactional
     public void deleteAll(List<ExerciseDTO> exerciseDTOS) {
-        List<Long> exerciseRefIds = exerciseDTOS.stream().map(dto -> Long.parseLong(dto.getRefId())).toList();
-        log.info("Converted all the list of exercise IDs: {}", exerciseRefIds);
-        List<Exercise> exercises = exerciseRepository.findByRefIdIn(exerciseRefIds);
-        log.info("Fetched all the exercise data from the database: {}", exercises);
-        exercises.forEach(exercise -> {
-            if (exercise.getEquipments() != null) exercise.getEquipments().clear();
-            if (exercise.getResources() != null) exercise.getResources().clear();
-            if (exercise.getTargetMuscles() != null) exercise.getTargetMuscles().clear();
-        });
-        exerciseRepository.deleteAll(exercises);
+        List<Long> refIds = exerciseDTOS.stream().map(dto -> Long.parseLong(dto.getRefId())).toList();
+        log.info("Deleting exercises with refIds: {}", refIds);
+        List<Exercise> exercises = exerciseRepository.findByRefIdIn(refIds);
+        if (exercises.isEmpty()) {
+            log.warn("No exercises found for refIds: {}", refIds);
+            return;
+        }
+        List<Long> dbIds = exercises.stream().map(Exercise::getId).toList();
+        deleteExercisesByDbIds(dbIds);
+        log.info("Deleted exercises with dbIds: {}", dbIds);
+    }
+
+    // Deletes exercises in FK-safe order using explicit native SQL to avoid JPA cascade issues.
+    private void deleteExercisesByDbIds(List<Long> dbIds) {
+        drillRepository.nullifyExerciseRefs(dbIds);          // 1. break drill → exercise FK
+        exerciseRepository.deleteResourceLinks(dbIds);        // 2. join table: exercise_resources
+        exerciseRepository.deleteMuscleLinks(dbIds);          // 3. join table: exercise_muscle
+        exerciseRepository.deleteEquipmentLinks(dbIds);       // 4. element collection: equipments
+        exerciseRepository.deleteByDbIds(dbIds);              // 5. main row
     }
 
     @Override
