@@ -58,6 +58,8 @@ public class ExpenseServiceImpl implements ExpenseService {
             Expense expense = expenseRepository.findByRefId(Long.parseLong(dto.getRefId()))
                     .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object expense not found for refId : %s", dto.getRefId())));
             expenseMapper.updateEntityFromDto(dto, expense);
+            expense.getItems().clear();
+            if (dto.getItems() != null) expense.getItems().addAll(dto.getItems());
             expense.setHousehold(householdRepository.findByRefId(Long.parseLong(dto.getHouseholdRefId()))
                     .orElseThrow(() -> new ServerException.EntityObjectNotFound(String.format("Entity object household not found for refId : %s", dto.getHouseholdRefId()))));
             if (StringUtils.isNotEmpty(dto.getCategoryRefId())) {

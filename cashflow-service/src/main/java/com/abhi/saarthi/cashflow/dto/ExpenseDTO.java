@@ -4,6 +4,8 @@ import com.abhi.saarthi.cashflow.constants.ExpenseType;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -23,4 +25,6 @@ public class ExpenseDTO {
     private ExpenseType type;
     private String expenseFor;
     private String paymentMode;
+    @Builder.Default
+    private List<String> items = new ArrayList<>();
 }
