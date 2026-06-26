@@ -29,5 +29,6 @@ public interface ExpenseMapper {
 
     @Mapping(target = "expenseFor", expression = "java(ExpenseFor.parse(expenseDTO.getExpenseFor()))")
     @Mapping(target = "paymentMode", expression = "java(PaymentMode.of(expenseDTO.getPaymentMode()))")
+    @Mapping(target = "items", ignore = true)
     void updateEntityFromDto(ExpenseDTO expenseDTO, @MappingTarget Expense expense);
 }

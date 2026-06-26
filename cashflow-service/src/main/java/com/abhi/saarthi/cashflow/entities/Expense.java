@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "expense")
@@ -68,4 +70,10 @@ public class Expense {
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_mode")
     private PaymentMode paymentMode;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "expense_items", joinColumns = @JoinColumn(name = "expense_id"))
+    @Column(name = "item_name", length = 255)
+    @Builder.Default
+    private List<String> items = new ArrayList<>();
 }
