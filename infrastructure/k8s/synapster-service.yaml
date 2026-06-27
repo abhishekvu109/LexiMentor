@@ -1,0 +1,84 @@
+#Apply the environment dependency
+apiVersion: v1
+kind: ConfigMap # Resource type
+metadata:
+  name: synapster-config
+  labels:
+    app: synapster-app
+data:
+  SERVICE_PORT: "9292"
+  MYSQL_HOST: "mysql-service-k8s.default.svc.cluster.local"
+  MYSQL_PORT: "3306"
+  SERVICE_NAME: "synapster-service-k8s.default.svc.cluster.local"
+
+
+---
+
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapster-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: synapster-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: synapster-app
+    spec:
+      containers:
+        - name: synapster-app
+          image: localhost:5000/synapster-service:latest
+          env:
+            - name: SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: synapster-config
+                  key: SERVICE_PORT
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: synapster-config
+                  key: MYSQL_HOST
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_PORT
+                  name: synapster-config
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: mysql-user-secret
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: mysql-user-secret
+            - name: SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: SERVICE_NAME
+                  name: synapster-config
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9292
+#      imagePullSecrets:
+#        - name: my-registry-secret
+
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: synapster-service-k8s
+spec:
+  selector:
+    app: synapster-app
+  ports:
+    - port: 9292
