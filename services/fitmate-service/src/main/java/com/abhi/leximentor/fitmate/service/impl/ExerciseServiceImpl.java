@@ -1,6 +1,8 @@
 package com.abhi.leximentor.fitmate.service.impl;
 
+import com.abhi.leximentor.fitmate.constants.DifficultyLevel;
 import com.abhi.leximentor.fitmate.constants.LogConstants;
+import com.abhi.leximentor.fitmate.constants.RiskLevel;
 import com.abhi.leximentor.fitmate.constants.Status;
 import com.abhi.leximentor.fitmate.constants.Unit;
 import com.abhi.leximentor.fitmate.dto.ExerciseAnalyticsDTO;
@@ -123,6 +125,15 @@ public class ExerciseServiceImpl implements ExerciseService {
         exercise.setDescription(exerciseDTO.getDescription());
         exercise.setUnit(Unit.from(exerciseDTO.getUnit()).getValue());
         exercise.setStatus(Status.ApplicationStatus.getStatus(exerciseDTO.getStatus()));
+        exercise.setDifficultyLevel(DifficultyLevel.parse(exerciseDTO.getDifficultyLevel()).getScore());
+        exercise.setRiskLevel(RiskLevel.parse(exerciseDTO.getRiskLevel()).getScore());
+
+        Training training = StringUtils.isNotEmpty(exerciseDTO.getTraining().getRefId())
+                ? trainingRepository.findByRefId(Long.parseLong(exerciseDTO.getTraining().getRefId()))
+                : trainingRepository.findByNameIgnoreCase(exerciseDTO.getTraining().getName());
+        if (training == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND + " {Training Object.}");
+        exercise.setTraining(training);
+
         BodyPart targetBodyPart = bodyPartsRepository.findByNameIgnoreCase(exerciseDTO.getBodyPart().getName());
         if (targetBodyPart == null) throw new ServerException().new EntityObjectNotFound(LogConstants.ENTITY_NOT_FOUND);
         exercise.setTargetBodyPart(targetBodyPart);
