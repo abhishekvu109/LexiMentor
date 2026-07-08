@@ -1,0 +1,36 @@
+# Apply the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leximentor-util-deployment-k8s
+spec:
+  selector:
+    matchLabels:
+      app: leximentor-util-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: leximentor-util-app
+    spec:
+      containers:
+        - name: leximentor-util-app
+          image: localhost:5000/leximentor-util-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4545
+---
+
+# Adding the service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: leximentor-util-service-k8s
+spec:
+  selector:
+    app: leximentor-util-app
+  ports:
+    - port: 4545
+      nodePort: 32545
+  type: NodePort

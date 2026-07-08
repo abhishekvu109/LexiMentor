@@ -1,0 +1,119 @@
+# Apply the config maps
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway-config
+  labels:
+    app: api-gateway
+data:
+  application.yaml: |
+    spring:
+      application:
+        name: api-gateway
+      cloud:
+        discovery:
+          enabled: false
+        gateway:
+          routes:
+            - id: leximentor-service
+              uri: http://word-inventory-service-k8s.default.svc.cluster.local:9191/api/leximentor/
+              predicates:
+                - Path=/api/leximentor/**
+            - id: fitmate-service
+              uri: http://fitmate-service-k8s.default.svc.cluster.local:9393/api/fitmate/
+              predicates:
+                - Path=/api/fitmate/**
+            - id: synapster-service
+              uri: http://synapster-service-k8s.default.svc.cluster.local:9292/api/synapster/
+              predicates:
+                - Path=/api/synapster/**
+            - id: tts-service
+              uri: http://text-to-speech-service-k8s.default.svc.cluster.local:8300/api/tts/
+              predicates:
+                - Path=/api/tts/**
+            - id: writewise-service
+              uri: http://writewise-learning-service-k8s.default.svc.cluster.local:8989/api/writewise/
+              predicates:
+                - Path=/api/writewise/**
+            - id: api-util-service
+              uri: http://leximentor-util-service-k8s.default.svc.cluster.local:4545/api/app-util/
+              predicates:
+                - Path=/api/app-util/**
+            - id: auth-service
+              uri: http://auth-service-k8s.default.svc.cluster.local:4848/api/auth/
+              predicates:
+                - Path=/api/auth/**
+            - id: flashcard-service
+              uri: http://flashcard-service-k8s.default.svc.cluster.local:8085
+              predicates:
+                - Path=/api/flashcard/**
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+
+    server:
+      port: 8085
+    
+    auth:
+      validate:
+        url: "http://auth-service-k8s.default.svc.cluster.local:4848/api/auth/v1/validate"
+
+    eureka:
+      client:
+        enabled: false
+      
+---
+
+# Apply the deployments
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-deployment
+  labels:
+    app: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway-service
+          image: localhost:5000/api-gateway-service:latest
+          ports:
+            - containerPort: 8085
+          volumeMounts:
+            - name: api-gateway-config-volume
+              mountPath: /config
+      volumes:
+        - name: api-gateway-config-volume
+          configMap:
+            name: api-gateway-config # Refers to the ConfigMap created earlier
+            items:
+              - key: application.yaml
+                path: application.yaml
+
+---
+
+# Apply the service
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-service
+  labels:
+    app: api-gateway
+spec:
+  selector:
+    app: api-gateway
+  ports:
+    - protocol: TCP
+      port: 8085
+      targetPort: 8085
+      nodePort: 31372
+  type: NodePort

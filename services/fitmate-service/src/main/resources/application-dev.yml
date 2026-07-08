@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: fitmate-service
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+      enabled: true
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USERNAME:mongoroot}:${MONGODB_PASSWORD:mongopass}@${MONGODB_HOST:192.168.1.90}:${MONGODB_PORT:31120}/${MONGODB_DATABASE:fitmate}?authSource=admin
+      database: ${MONGODB_DATABASE:fitmate}
+      username: ${MONGODB_USERNAME:mongoroot}
+      password: ${MONGODB_PASSWORD:mongopass}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    generate-ddl: true
+  datasource:
+    username: ${MYSQL_USER:abhishek}
+    password: ${MYSQL_PASSWORD:abhishek}
+    url: jdbc:mysql://${MYSQL_HOST:192.168.1.90}:${MYSQL_PORT:31124}/${MYSQL_DATABASE:abhishek}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      idle-timeout: 900000
+      maximum-pool-size: 50
+      keepalive-time: 900000
+server:
+  port: ${SERVICE_PORT:9393}
+logging:
+  level:
+    org.springframework.boot.context.config: DEBUG
+
+resource:
+  path: D:/fitmate
+
+
+fitmate:
+  ai:
+    ollama:
+      url: ${OLLAMA_URL:http://192.168.1.90:11434/api/generate}
+      model: ${OLLAMA_MODEL:ministral-3:3b}
