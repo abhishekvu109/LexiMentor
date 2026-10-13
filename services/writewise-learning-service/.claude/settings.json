@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find \"D:\\\\code-repository\\\\leximentor-ui\" -type f -name \"package.json\" -o -name \"*.tsx\" -o -name \"*.ts\" | head -20)",
+      "Read(//d/code-repository/leximentor-ui/**)",
+      "PowerShell(Get-ChildItem -Recurse \"D:\\\\code-repository\\\\leximentor-ui\\\\pages\" -Directory | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"D:\\\\code-repository\\\\leximentor-ui\\\\pages\\\\\", \"\"\\) } | Sort-Object)",
+      "Bash(grep -E \"\\\\.\\(js|ts\\)$\")",
+      "Bash(mvn spring-boot:run -q)",
+      "Bash(cat > *)"
+    ],
+    "additionalDirectories": [
+      "D:\\code-repository\\LexiMentor\\kafka-docker-installation\\kube-objects",
+      "D:\\code-repository\\leximentor-ui\\components\\common",
+      "\\tmp"
+    ]
+  }
+}

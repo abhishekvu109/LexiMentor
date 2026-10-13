@@ -1,0 +1,33 @@
+package com.abhi.writewise.inventory.entities.nosql.mongodb.response;
+
+import com.abhi.writewise.inventory.entities.nosql.mongodb.evaluation.Evaluation;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ResponseVersion {
+    private long refId;
+    private String uuid;
+    private int versionNumber;
+    private LocalDateTime createDate;
+    private LocalDateTime lastUpdDate;
+    private boolean isLatest;
+    private int status;
+    private String response;
+    private int responseStatus;
+    private Evaluation evaluation;
+    private List<Evaluation> evaluations;
+    private String llmEvaluationText;
+    private int llmEvaluationStatus;
+    private String lowLevelEvaluationText;
+    private int lowLevelEvaluationStatus;
+    private String lowLevelEvaluationModel;
+    private String highLevelEvaluationModel;
+}
